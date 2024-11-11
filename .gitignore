@@ -396,3 +396,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/ProjectCpp_2024/ProjectCpp_2024.exe
