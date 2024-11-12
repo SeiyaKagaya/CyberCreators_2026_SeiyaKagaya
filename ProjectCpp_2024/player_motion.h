@@ -17,7 +17,9 @@ public:
 	static const int AABB_BOX_PLAYER = 90;
 	static const int RESET_CNT = 90;
 	static const int  MOVESPEED = 9;
-	static const int GRAVITY = 99;//重力
+	static const int GRAVITY = 29;//重力
+	const float JoyStickDiff = 0.0004f;
+	static const int BULLETSPEED = 35;
 
 	CObjectMotionPlayer(int nPriority = CObject::LAYERINDEX_MOTIONPLAYER);//コンストラクタ
 	~CObjectMotionPlayer() override;//デストラクタ

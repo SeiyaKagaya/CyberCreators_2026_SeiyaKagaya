@@ -175,6 +175,7 @@
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="MathUtilities.cpp" />
     <ClCompile Include="ModelParts.cpp" />
+    <ClCompile Include="movesmoke.cpp" />
     <ClCompile Include="newbullet.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="object2D.cpp" />
@@ -200,6 +201,7 @@
     <ClCompile Include="result.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="score.cpp" />
+    <ClCompile Include="ShotFire.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="StageCollisionBox.cpp" />
     <ClCompile Include="tankfootprint.cpp" />
@@ -229,6 +231,7 @@
     <ClInclude Include="manager.h" />
     <ClInclude Include="MathUtilities.h" />
     <ClInclude Include="ModelParts.h" />
+    <ClInclude Include="movesmoke.h" />
     <ClInclude Include="newbullet.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="object2D.h" />
@@ -245,6 +248,7 @@
     <ClInclude Include="result.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="score.h" />
+    <ClInclude Include="ShotFire.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="StageCollisionBox.h" />
     <ClInclude Include="tankfootprint.h" />

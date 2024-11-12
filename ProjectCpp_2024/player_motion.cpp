@@ -14,6 +14,8 @@
 //#include "target_UI.h"
 //#include "linerinterUI.h"
 #include "Explosion3D.h"
+#include "ShotFire.h"
+#include "movesmoke.h"
 //#include "movesmoke.h"
 
 int CObjectMotionPlayer::m_nNumPlayerAll = START_PLAYER_NUM;//初期値３
@@ -156,11 +158,13 @@ void CObjectMotionPlayer::Update()
 			m_TargetPos += m_BulletPosMove;
 
 			//移動量を更新(疑似慣性で減衰)
-			m_BulletPosMove.x += (0.0f - m_BulletPosMove.x) * (DAMPING_RATIO);
-			m_BulletPosMove.y += (0.0f - m_BulletPosMove.y) * (DAMPING_RATIO);
-			m_BulletPosMove.z += (0.0f - m_BulletPosMove.z) * (DAMPING_RATIO);
+			m_BulletPosMove.x += (0.0f - m_BulletPosMove.x) * (DAMPING_RATIO_LOAD_XZ);
+			m_BulletPosMove.y += (0.0f - m_BulletPosMove.y) * (DAMPING_RATIO_Y);
+			m_BulletPosMove.z += (0.0f - m_BulletPosMove.z) * (DAMPING_RATIO_LOAD_XZ);
 
-
+			//m_CrassData.move.x += (0.0f - m_CrassData.move.x) * (DAMPING_RATIO_LOAD_XZ);
+//m_CrassData.move.y += (0.0f - m_CrassData.move.y) * (DAMPING_RATIO_Y);
+//m_CrassData.move.z += (0.0f - m_CrassData.move.z) * (DAMPING_RATIO_LOAD_XZ);
 			
 			if (dwResult == ERROR_SUCCESS)
 			{//パッド接続あり
@@ -449,10 +453,15 @@ void CObjectMotionPlayer::Update()
 				// 接地判定
 				if (bHit || classData.Pos.y <= 0.0f)
 				{//接触
-					/*if (classData.Pos.y <= 0.0f)
+	/*				if (bHit==false && classData.Pos.y <= 0.0f)
 					{
-
+						classData.Pos.y = 0.0f;
 					}*/
+
+					if (classData.move.y <= 0.0f)
+					{
+						classData.move.y = 0.0f;
+					}
 
 
 					if (!GetIsOnGroundBool())
@@ -582,11 +591,26 @@ void CObjectMotionPlayer::Update()
 			SetClassData(classData);
 
 
+			classData = GetClassData();
+
+			//移動量を更新(疑似慣性で減衰)
+			classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_LOAD_XZ);
+			classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_Y);
+			classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_LOAD_XZ);
+
+
+			SetClassData(classData);
 
 
 			CObjectMotion::Update();//------------------更新
 
+		
+
 			classData = GetClassData();
+
+
+
+			
 		}
 		else
 		{
@@ -755,8 +779,8 @@ CObjectMotionPlayer* CObjectMotionPlayer::Create(const char* pfilePass, DATA Set
 	// 取得
 	DATA EscData = pObstacle->GetClassData();
 	SetData.Radius = 110.0f;
-	SetData.MaxLength = D3DXVECTOR3((float)AABB_BOX_PLAYER, (float)AABB_BOX_PLAYER*2.5f, (float)AABB_BOX_PLAYER);
-	SetData.MinLength = D3DXVECTOR3(-(float)AABB_BOX_PLAYER, 0.0f, -(float)AABB_BOX_PLAYER);
+	SetData.MaxLength = D3DXVECTOR3((float)AABB_BOX_PLAYER, (float)AABB_BOX_PLAYER*3.0f, (float)AABB_BOX_PLAYER);
+	SetData.MinLength = D3DXVECTOR3(-(float)AABB_BOX_PLAYER, +55.0f, -(float)AABB_BOX_PLAYER);
 	pObstacle->SetClassData(SetData);
 
 
@@ -1051,94 +1075,11 @@ void CObjectMotionPlayer::ControllerInput()
 	bool bNomalMove = false;
 
 
-	//----------------------------------------------------------------------------------------------------------キーボード
-	//キーボード
-	if (keyboard->GetPress(DIK_A) == true)
-	{//Aがおされた(左)
-		Xdate = 1;
-		bMoveNow = true;
-		bNomalMove = true;//通常移動状態にする
-	}
-	else if (keyboard->GetPress(DIK_D) == true)
-	{//Dがおされた(右)
-		Xdate = -1;
-		bMoveNow = true;
-		bNomalMove = true;//通常移動状態にする
-	}
-
-	if (keyboard->GetPress(DIK_W) == true)
-	{//Wがおされた(上)
-		Zdate = -1.0f;
-		bMoveNow = true;
-		bNomalMove = true;//通常移動状態にする
-	}
-	else if (keyboard->GetPress(DIK_S) == true)
-	{//Sがおされた(下)
-		Zdate = 1.0f;
-		bMoveNow = true;
-		bNomalMove = true;//通常移動状態にする
-	}
-
-
-
-
-
-	//移動する状態の時
-	if (bMoveNow == true)
-	{
-		m_nMoveCnt++;
-
-
-		SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT);//移動motion
-
-		m_OldInputMotionParent = MOTIONTYPE_MOVE_FRONT;//移動系入力を保持
-
-		float Angle = atan2f(Xdate, Zdate);//これが方角
-
-		CCamera* pCamera = pManager->GetCamera();
-
-		D3DXVECTOR3 CameraRot = pCamera->GetRot();
-
-		//------これは差分
-		fRotDest = (Angle - CameraRot.y - (1.0f * D3DX_PI));
-
-
-		classData.move.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
-		classData.move.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
-
-	//変換
-		classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, fRotDest + D3DX_PI);
-
-	}
-	else
-	{//移動入力なし
-
-		if (GetNowMotionParent() != MOTIONTYPE_STANDBY &&
-			GetNowMotionParent() != MOTIONTYPE_JUMP &&
-			GetNowMotionParent() != MOTIONTYPE_RANDING &&
-			GetNowMotionParent() != MOTIONTYPE_ATTACK)
-		{
-			// モーション変動
-			SetNowMotion_Parent(MOTIONTYPE_STANDBY); // 待機
-
-			m_OldInputMotionParent = MOTIONTYPE_STANDBY; // 移動系入力を保持
-		}
-
-
-		if (GetNowMotionSub() != MOTIONTYPE_ATTACK)
-		{//モーション変動
-			SetNowMotion_Sub(MOTIONTYPE_STANDBY);//待機
-
-			m_OldInputMotionParent = MOTIONTYPE_STANDBY;//移動系入力を保持
-		}
-	}
-#if 1
 
 	if (ShotDelay <= 0)
 	{
-		if (keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) || joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
-		{//左ボタンが押された
-
+		if (joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+		{//
 				//動くモデルのデータ
 			CModelParts* pParts = GetModelParts(GetChangeDataPartsIndex());
 
@@ -1181,7 +1122,7 @@ void CObjectMotionPlayer::ControllerInput()
 			D3DXVec3Normalize(&direction, &direction);
 
 
-			float speed = 14.0f;//速度(後々変更)
+			float speed = (int)BULLETSPEED;//速度(後々変更)
 			SetData.move = direction * speed;//速度をかける
 
 
@@ -1213,26 +1154,23 @@ void CObjectMotionPlayer::ControllerInput()
 
 				CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
 
-				pBulletAll->SetBullet(SetData, 2, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
+				pBulletAll->SetBullet(SetData, 0, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
 
-				ShotDelay = 3;
+				ShotDelay = 4;
 
-		//		CObjectShotFire::Create(SetData.Pos);
-		//		CObjectShotFire::Create(SetData.Pos);
+				CObjectShotFire::Create(SetData.Pos);
+				//CObjectShotFire::Create(SetData.Pos);
 				bShot = true;
 			}
 		}
 	}
-#else
-
-#endif // 1
 
 
 	if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
 	{
 		m_nMoveCnt = 0;
 		CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-	//	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
+		CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
 	}
 
 
@@ -1379,8 +1317,8 @@ void CObjectMotionPlayer::ControllerInput()
 		//	classData.move = classData.move * fMag;
 		//}
 
-		classData.move = D3DXVECTOR3(joykeystate.Gamepad.sThumbLX * 0.0002f, 0.0f, joykeystate.Gamepad.sThumbLY * 0.0002f);
-
+		classData.move.x = (joykeystate.Gamepad.sThumbLX * JoyStickDiff);
+		classData.move.z = (joykeystate.Gamepad.sThumbLY * JoyStickDiff);
 
 		classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, fRotDest + D3DX_PI);
 	
@@ -1556,7 +1494,7 @@ void CObjectMotionPlayer::ControllerInput()
 
 	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A))
 	{
-		classData.move.y += 35.0f;
+		classData.move.y += 15.0f;
 	}
 
 	SetClassData(classData);

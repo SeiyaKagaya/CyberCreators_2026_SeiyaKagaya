@@ -291,7 +291,11 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 
 	// 自分
 	// あたり判定用のHitBox
-	D3DXVECTOR3 My_Collision_Min_Pos = MyPos + MyMinLength;
+	D3DXVECTOR3 My_Collision_Min_Pos;
+	My_Collision_Min_Pos.x = MyPos.x + MyMinLength.x;
+	My_Collision_Min_Pos.y = MyPos.y + MyMinLength.y;
+	My_Collision_Min_Pos.z = MyPos.z + MyMinLength.z;
+
 	D3DXVECTOR3 My_Collision_Max_Pos = MyPos + MyMaxLength;
 
 	bool bLandingHit = false;
@@ -708,25 +712,43 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 						SETDATA = ((CObjectMotionPlayer*)pCaller)->GetClassData();
 
 						SETDATA.Pos = EscData2.Pos;
-						SETDATA.move = EscData2.move;
+
+						//SETDATA.move
+
+						if (HitData.HitAngle.x == 1)
+						{//+x
+							SETDATA.move.x = 0.0f;
+						}
+						else if (HitData.HitAngle.x == -1)
+						{//-x
+
+							SETDATA.move.x = 0.0f;
+						}
+						else if (HitData.HitAngle.y == 1)
+						{//+y
+							SETDATA.move.y = 0.0f;
+						}
+						else if (HitData.HitAngle.y == -1)
+						{//-y
+							SETDATA.move.y = 0.0f;
+						}
+						else if (HitData.HitAngle.z == 1)
+						{//+z
+						
+							SETDATA.move.z = 0.0f;
+						}
+						else if (HitData.HitAngle.z == -1)
+						{//-z
+							SETDATA.move.z = 0.0f;
+						}
+
+					//	SETDATA.move = EscData2.move;
 
 						((CObjectMotionPlayer*)pCaller)->SetClassData(SETDATA);
 
 						if (HitData.HitAngle.y == 1)
 						{//ヒットアングルが上(着地)の時
 							bLandingHit = true;
-
-					////		if (((CObjectMotionPlayer*)pCaller)->GetLandingBool() == false)
-					////		{//着地状態じゃない問
-					//			int nTest = ((CObjectMotionPlayer*)pCaller)->GetNowMotionParent();
-
-					//			if (((CObjectMotionPlayer*)pCaller)->GetNowMotionParent() == CObjectMotionPlayer::MOTIONTYPE_JUMP || ((CObjectMotionPlayer*)pCaller)->GetNowMotionParent() == CObjectMotionPlayer::MOTIONTYPE_RANDING || ((CObjectMotionPlayer*)pCaller)->GetNowMotionParent() == CObjectMotionPlayer::MOTIONTYPE_STANDBY)
-					//			{
-					//				((CObjectMotionPlayer*)pCaller)->SetNowMotion_Parent(CObjectMotionPlayer::MOTIONTYPE_RANDING);
-					//				((CObjectMotionPlayer*)pCaller)->SetLandingBool(true);
-					//			}
-					////		}
-
 						}
 
 

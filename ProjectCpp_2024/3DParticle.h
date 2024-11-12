@@ -21,7 +21,7 @@ public:
 //	static const int EX_WIDE = 150;
 //	static const int EX_HEIGHT = 150;
 
-	const int START_LIFE = 75;
+	const int START_LIFE = 15;
 //	const int DIVISION_NUMBER = 8;	//テクスチャ分割数
 
 

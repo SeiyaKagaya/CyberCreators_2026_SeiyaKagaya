@@ -3062,7 +3062,7 @@ MOTIONSET
 	NUM_KEY = 2		# ÉLÅ[êî
 
 	KEYSET			# --- << KEY : 0 / 2 >> ---
-		FRAME = 4
+		FRAME = 1
 		KEY	# ----- [ 0 ] -----
 			POS = 0.00 -7.90 0.00
 			ROT = -0.06 0.00 0.00

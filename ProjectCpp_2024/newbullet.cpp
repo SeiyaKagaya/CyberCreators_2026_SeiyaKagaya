@@ -112,6 +112,8 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
 
         if (m_NewBullet[i]->GetbUse() == false)
         {
+  
+         
             m_NewBullet[i]->SetBulletData(SetData, ReflectCnt, col, pCaller);
 
             CRenderer* pRenderer = nullptr;
@@ -224,7 +226,7 @@ HRESULT CNewBullet::Init()
 
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
     //ÉtÉ@ÉCÉãÇÃì«Ç›çûÇ›
-    D3DXLoadMeshFromX("DATA\\MODEL\\Bullet.x",
+    D3DXLoadMeshFromX("DATA\\MODEL\\Bullet2.x",
         D3DXMESH_SYSTEMMEM,
         EscDevice,
         NULL,
@@ -264,7 +266,7 @@ HRESULT CNewBullet::Init()
     SetDATA(EscData);//äiî[
 
 
-    SetSizeMag(D3DXVECTOR3(5.5f, 5.5f, 5.5f));//ëÂÇ´Ç≥î{ó¶
+    SetSizeMag(D3DXVECTOR3(1.5f, 1.5f, 1.5f));//ëÂÇ´Ç≥î{ó¶
 
     m_bUse = false;
 
@@ -328,6 +330,9 @@ void CNewBullet::Update()
 
             EscData = GetDATA();//çƒéÊìæ
 
+           
+          
+
 
         //OBBÇ‹ÇÌÇË
             m_OBB.m_Pos = EscData.Pos;
@@ -350,7 +355,9 @@ void CNewBullet::Update()
             if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 )
             {//ÉQÅ[ÉÄíÜ
 
-        //        CObject3DParticle::Create(EscData.Pos, m_col);
+                D3DXCOLOR SetCol = D3DXCOLOR(m_col.r, m_col.g, m_col.b, 0.2f);
+
+                CObject3DParticle::Create(EscData.Pos, SetCol);
 
             }
         }

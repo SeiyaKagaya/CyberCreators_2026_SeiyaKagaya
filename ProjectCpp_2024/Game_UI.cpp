@@ -117,10 +117,10 @@ HRESULT CGameUI::Init()
             pVtx[2].rhw = 1.0f;
             pVtx[3].rhw = 1.0f;
 
-            pVtx[0].col = D3DCOLOR_RGBA(15, 35, 15, 155);
-            pVtx[1].col = D3DCOLOR_RGBA(15, 35, 15, 155);
-            pVtx[2].col = D3DCOLOR_RGBA(15, 35, 15, 155);
-            pVtx[3].col = D3DCOLOR_RGBA(15, 35, 15, 155);
+            pVtx[0].col = D3DCOLOR_RGBA(0, 0, 0, 0);
+            pVtx[1].col = D3DCOLOR_RGBA(0, 0, 0, 0);
+            pVtx[2].col = D3DCOLOR_RGBA(0, 0, 0, 0);
+            pVtx[3].col = D3DCOLOR_RGBA(0, 0, 0, 0);
 
             pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
             pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
@@ -476,7 +476,7 @@ void CGameUI::Draw()
 {
     CScene::MODE NowState = CScene::GetNowScene();
 
-    if (NowState != CScene::MODE_TITLE || NowState != CScene::MODE_RESULT)
+    if (NowState != CScene::MODE_TITLE && NowState != CScene::MODE_RESULT)
     {//ƒ^ƒCƒgƒ‹
 
 
@@ -556,6 +556,7 @@ CGameUI* CGameUI::Create()
 {
     CGameUI* pObject = new CGameUI;
     pObject->Init();
+
     return pObject;
 }
 //=============================
@@ -672,7 +673,7 @@ void CGameUI::OnlineTrigger(int nCnt)
 
 
 
-    if (nCnt == UI_WEPON1_BACK|| nCnt == UI_WEPON2_BACK || nCnt == UI_WEPON3_BACK || nCnt == UI_MAP_BACK)
+    if (nCnt == UI_WEPON1_BACK|| nCnt == UI_WEPON2_BACK || nCnt == UI_WEPON3_BACK || nCnt == UI_MAP_BACK || nCnt == UI_NOMAL || nCnt == UI_NOMAL2)
     {
         m_nWeponUIDrawA[nCnt] = 0;
 
@@ -960,11 +961,15 @@ void CGameUI::OfflineTrigger(int nCnt)
 
     m_pVtxBuff[nCnt]->Lock(0, 0, (void**)&pVtx, 0);
 
+    pVtx[0].col = D3DCOLOR_RGBA(0, 0, 0, 0);
+    pVtx[1].col = D3DCOLOR_RGBA(0, 0, 0, 0);
+    pVtx[2].col = D3DCOLOR_RGBA(0, 0, 0, 0);
+    pVtx[3].col = D3DCOLOR_RGBA(0, 0, 0, 0);
 
-    pVtx[0].col = D3DCOLOR_RGBA(15, 35, 15, 155);
-    pVtx[1].col = D3DCOLOR_RGBA(15, 35, 15, 155);
-    pVtx[2].col = D3DCOLOR_RGBA(15, 35, 15, 155);
-    pVtx[3].col = D3DCOLOR_RGBA(15, 35, 15, 155);
+    //pVtx[0].col = D3DCOLOR_RGBA(15, 35, 15, 155);
+    //pVtx[1].col = D3DCOLOR_RGBA(15, 35, 15, 155);
+    //pVtx[2].col = D3DCOLOR_RGBA(15, 35, 15, 155);
+    //pVtx[3].col = D3DCOLOR_RGBA(15, 35, 15, 155);
 
 
     switch (nCnt)
@@ -1036,9 +1041,14 @@ void CGameUI::AllUiRestart()
         m_nWeponUIDrawA[UI_WEPON1] = 0;
         m_nWeponUIDrawA[UI_WEPON2] = 0;
         m_nWeponUIDrawA[UI_WEPON3] = 0;
+
         //Reset
         UIDrawReset(CGameUI::UI_MAP_BACK);
         UIDrawReset(CGameUI::UI_MAP);
+
+
+        UIDrawReset(CGameUI::UI_NOMAL);
+        UIDrawReset(CGameUI::UI_NOMAL2);
 
         UIDrawReset(CGameUI::UI_WEPON1_BACK);
         UIDrawReset(CGameUI::UI_WEPON1);
@@ -1071,9 +1081,13 @@ void CGameUI::AllUiRestart()
                     break;
                 case 1:
                     SetStateChangeUi(true, CGameUI::UI_WEPON1_BACK);
+               
+                    SetStateChangeUi(true, CGameUI::UI_NOMAL);
                     break;
                 case 2:
                     SetStateChangeUi(true, CGameUI::UI_WEPON2_BACK);
+                    
+                    SetStateChangeUi(true, CGameUI::UI_NOMAL2);
                     break;
                 case 3:
                     SetStateChangeUi(true, CGameUI::UI_WEPON3_BACK);

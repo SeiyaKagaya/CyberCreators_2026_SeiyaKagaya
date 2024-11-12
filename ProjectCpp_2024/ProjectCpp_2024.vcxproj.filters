@@ -157,6 +157,12 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\3D-2DHitObject">
       <UniqueIdentifier>{07396408-dd58-4ec4-a3eb-0dbc33d3fd77}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\shotfire">
+      <UniqueIdentifier>{844daae1-bce7-47f5-8013-d9f15aa1bc6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke">
+      <UniqueIdentifier>{e0b436ca-e4e7-4596-b956-5eda5c02992b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -288,6 +294,12 @@
     <ClCompile Include="3D-2DhitObject.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\3D-2DHitObject</Filter>
     </ClCompile>
+    <ClCompile Include="ShotFire.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\shotfire</Filter>
+    </ClCompile>
+    <ClCompile Include="movesmoke.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -418,6 +430,12 @@
     </ClInclude>
     <ClInclude Include="3D-2DhitObject.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\3D-2DHitObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ShotFire.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\shotfire</Filter>
+    </ClInclude>
+    <ClInclude Include="movesmoke.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

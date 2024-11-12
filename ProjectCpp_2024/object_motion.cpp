@@ -106,10 +106,10 @@ void CObjectMotion::Update()
 
 		bool bHit = false;
 
-		//移動量を更新(疑似慣性で減衰)
-		m_CrassData.move.x += (0.0f - m_CrassData.move.x) * (DAMPING_RATIO);
-		m_CrassData.move.y += (0.0f - m_CrassData.move.y) * (DAMPING_RATIO);
-		m_CrassData.move.z += (0.0f - m_CrassData.move.z) * (DAMPING_RATIO);
+		////移動量を更新(疑似慣性で減衰)
+		//m_CrassData.move.x += (0.0f - m_CrassData.move.x) * (DAMPING_RATIO_LOAD_XZ);
+		//m_CrassData.move.y += (0.0f - m_CrassData.move.y) * (DAMPING_RATIO_Y);
+		//m_CrassData.move.z += (0.0f - m_CrassData.move.z) * (DAMPING_RATIO_LOAD_XZ);
 
 		//OBBまわり
 		m_Obb.m_Pos = m_CrassData.Pos;

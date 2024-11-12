@@ -44,7 +44,9 @@ public:
 
 	 const float  BULLET_SHOT_POS_Y = 45.0f;//balletÇÃçÇÇ≥Y
 
-	const  float DAMPING_RATIO = 0.5f;
+	const  float DAMPING_RATIO_LOAD_XZ = 0.3f;
+	const  float DAMPING_RATIO_Y = 0.095f;
+
 
 	static const int MAX_PARTS = 30;//ç≈ëÂpartsêî
 	static const int MAX_WORD = 1000;
