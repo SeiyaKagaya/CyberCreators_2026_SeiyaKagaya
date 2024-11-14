@@ -235,90 +235,95 @@ HRESULT CGame::Init()
 	SetData.Pos = D3DXVECTOR3(-3600.0f, 150.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(3600.0f, 150.0f, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-3600.0f, -150.0f, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 	//一番右下段
 	SetData.Pos = D3DXVECTOR3(-750.0f,600.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(750.0f, 300.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-750.0f, -300.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//一番右中段
 	SetData.Pos = D3DXVECTOR3(-300.0f, 1950.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(300.0f, 450.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-300.0f, -450.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//一番上段右
 	SetData.Pos = D3DXVECTOR3(-1200.0f, 2850.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(1200.0f, 450.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-1200.0f,-450.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//一番上段左
 	SetData.Pos = D3DXVECTOR3(-3900.0f, 3000.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(1500.0f, 300.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-1500.0f, -300.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 	//右２番目上段
 	SetData.Pos = D3DXVECTOR3(-1500.0f, 2250.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(900.0f, 150.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-900.0f, -150.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//右２番目中上段
 	SetData.Pos = D3DXVECTOR3(-1650.0f, 1650.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(450.0f, 150.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-450.0f, -150.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
-	//右２番目中下段
-	SetData.Pos = D3DXVECTOR3(-1950.0f, 1350.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(150.0f, 150.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-150.0f, -150.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	////右２番目中下段
+	//SetData.Pos = D3DXVECTOR3(-1950.0f, 1350.0f, ZPos);
+	//SetData.MaxLength = D3DXVECTOR3(150.0f, 150.0, Zlong);
+	//SetData.MinLength = D3DXVECTOR3(-150.0f, -150.0, -Zlong);
+	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
-
-	//右２番目下段
-	SetData.Pos = D3DXVECTOR3(-1650.0f, 450.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(150.0f, 150.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-150.0f, -150.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+		//右２番目中下段
+	SetData.Pos = D3DXVECTOR3(-1800.0f, 600.0f, ZPos);
+	SetData.MaxLength = D3DXVECTOR3(300.0f, 300.0, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-300.0f, -300.0, -Zlong);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_LEFTSLOPE);
+	
+	////右２番目下段
+	//SetData.Pos = D3DXVECTOR3(-1650.0f, 450.0f, ZPos);
+	//SetData.MaxLength = D3DXVECTOR3(150.0f, 150.0, Zlong);
+	//SetData.MinLength = D3DXVECTOR3(-150.0f, -150.0, -Zlong);
+	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//右3番目中段
 	SetData.Pos = D3DXVECTOR3(-3000.0f, 1500.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(600.0f, 300.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-600.0f, -300.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 	//中央中段右
 	SetData.Pos = D3DXVECTOR3(-3750.0f, 1050.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(150.0f, 750.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-150.0f, -750.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//中央中段左
 	SetData.Pos = D3DXVECTOR3(-4350.0f, 1200.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(450.0f, 600.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-450.0f, -600.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 	//中央左上部
 	SetData.Pos = D3DXVECTOR3(-6000.0f, 2250.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(600.0f, 1050.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-600.0f, -1050.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//中央左中部
 	SetData.Pos = D3DXVECTOR3(-6300.0f, 1050.0f, ZPos);
 	SetData.MaxLength = D3DXVECTOR3(300.0f, 150.0, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-300.0f, -150.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 
@@ -327,7 +332,7 @@ HRESULT CGame::Init()
 SetData.Pos = D3DXVECTOR3(-8550.0f, 1050.0f, ZPos);
 SetData.MaxLength = D3DXVECTOR3(1350.0f, 1050.0, Zlong);
 SetData.MinLength = D3DXVECTOR3(-1350.0f, -1050.0, -Zlong);
-CStageCollisionBox3D2D::Create(SetData);
+CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 

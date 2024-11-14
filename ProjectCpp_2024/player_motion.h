@@ -20,6 +20,8 @@ public:
 	static const int GRAVITY = 29;//重力
 	const float JoyStickDiff = 0.0004f;
 	static const int BULLETSPEED = 35;
+	static const int RANDINGTRIGGER_FARAME = 10;
+
 
 	CObjectMotionPlayer(int nPriority = CObject::LAYERINDEX_MOTIONPLAYER);//コンストラクタ
 	~CObjectMotionPlayer() override;//デストラクタ
@@ -69,6 +71,7 @@ private:
 
 
 	bool m_GameStart = false;
+	int m_RandingCutCnt = 0;
 };
 
 #endif

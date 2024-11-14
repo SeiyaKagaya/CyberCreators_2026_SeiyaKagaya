@@ -431,6 +431,16 @@ void CNewBullet::HitCollision()
                 m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_NEWBULLET, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, EscData.move, this);
             }
 
+            if (m_HitData.bHit == false)
+            {
+                //ìñÇΩÇËîªíËåvéZ
+                m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, EscData.move, this);
+
+            }
+
+
+
+
             if (m_HitData.bHit == true)
             {//ê⁄êG
                 CScene::MODE NowState = CScene::GetNowScene();

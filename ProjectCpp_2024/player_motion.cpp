@@ -46,9 +46,9 @@ HRESULT CObjectMotionPlayer::Init()
 	SetObjectType(CObject::OBJECT_MOTIONPLAYER);
 
 	float fLength[3];
-	fLength[0] = 90.0f;
-	fLength[1] = 90.0f;
-	fLength[2] = 120.0f;
+	fLength[0] = 70.0f;
+	fLength[1] = 140.0f;
+	fLength[2] = 60.0f;
 
 	m_nMoveCnt = 0;
 
@@ -149,12 +149,6 @@ void CObjectMotionPlayer::Update()
 			//Mouseで画面に指してる3D空間座標取得
 			D3DXVECTOR3 TargetPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-
-			//操作方法--falseでキーマウ/trueはパッド
-		//	pManager->bSetInputState(false);
-
-
-
 			m_TargetPos += m_BulletPosMove;
 
 			//移動量を更新(疑似慣性で減衰)
@@ -162,9 +156,6 @@ void CObjectMotionPlayer::Update()
 			m_BulletPosMove.y += (0.0f - m_BulletPosMove.y) * (DAMPING_RATIO_Y);
 			m_BulletPosMove.z += (0.0f - m_BulletPosMove.z) * (DAMPING_RATIO_LOAD_XZ);
 
-			//m_CrassData.move.x += (0.0f - m_CrassData.move.x) * (DAMPING_RATIO_LOAD_XZ);
-//m_CrassData.move.y += (0.0f - m_CrassData.move.y) * (DAMPING_RATIO_Y);
-//m_CrassData.move.z += (0.0f - m_CrassData.move.z) * (DAMPING_RATIO_LOAD_XZ);
 			
 			if (dwResult == ERROR_SUCCESS)
 			{//パッド接続あり
@@ -235,12 +226,6 @@ void CObjectMotionPlayer::Update()
 			//--------------------------------------
 
 
-
-	
-
-
-		
-
 			//-----------------------------------------被弾系
 			for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
 			{
@@ -289,21 +274,11 @@ void CObjectMotionPlayer::Update()
 					}
 				}
 			}
+			//D3DXVECTOR3 SetPos = classData.Pos;
+			//SetPos.x -= 150.0f;
+			//SetPos.y += 400.0f;
+			//SetPos.z += 100.0f;
 
-						
-			
-			//for (int i = 0; i < GetMaxLoadPartsNum(); i++)
-			//{//パーツもDEATH
-			//	GetModelParts(i)->SetColorChangeBool(true);
-			//	GetModelParts(i)->SetChangeColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-
-			//}
-			D3DXVECTOR3 SetPos = classData.Pos;
-			SetPos.x -= 150.0f;
-			SetPos.y += 400.0f;
-			SetPos.z += 100.0f;
-
-	
 			if (m_nLife <= 0)
 			{
 				m_bDown = true;
@@ -322,17 +297,8 @@ void CObjectMotionPlayer::Update()
 
 					Explosion3D::Create(GetClassData().Pos);
 
-
-
-
 				}
 			}
-
-
-
-
-
-
 			//衝突相殺--敵と
 			CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_NOMAL, LAYERINDEX_MOTIONENEMY_NOMAL, this);
 
@@ -375,6 +341,16 @@ void CObjectMotionPlayer::Update()
 			}
 
 			//当たり判定計算
+			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, classData.move, this);
+
+			if (m_HitData.HitAngle.y == 1.0f)
+			{
+				bHit = true;
+				SetClassData(TestData);//テスト判定なので、結果を戻す
+			}
+
+
+			//当たり判定計算
 			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
 
 			if (m_HitData.HitAngle.y == 1.0f)
@@ -394,8 +370,6 @@ void CObjectMotionPlayer::Update()
 			}
 
 			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
 
 			//重力
 			if (!GetIsOnGroundBool())
@@ -422,6 +396,15 @@ void CObjectMotionPlayer::Update()
 			if (m_HitData.HitAngle.y==1.0f)
 			{
 				bHit = true;
+			}
+
+			//当たり判定計算
+			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, classData.move, this);
+
+			if (m_HitData.HitAngle.y == 1.0f)
+			{
+				bHit = true;
+			
 			}
 
 			//当たり判定計算
@@ -478,9 +461,20 @@ void CObjectMotionPlayer::Update()
 			float NOWPOSY = std::floor(classData.Pos.y);
 			if (NOWPOSY != POSY)
 			{
-				// 接地状態の解除
-				SetIsOnGroundBool(false);
+				m_RandingCutCnt++;
+				if (m_RandingCutCnt >= RANDINGTRIGGER_FARAME)
+				{
+					// 接地状態の解除
+					SetIsOnGroundBool(false);
+				}
+			
+
 			}
+			else
+			{
+				m_RandingCutCnt = 0;
+			}
+
 
 			// モーション再生処理
 			// 空中モーションの処理
@@ -496,27 +490,7 @@ void CObjectMotionPlayer::Update()
 				SetIsLandingTriggerBool(false); // 着地トリガーをリセット
 			}
 
-
-
-
-
-
-
-
 			SetClassData(classData);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -565,11 +539,6 @@ void CObjectMotionPlayer::Update()
 
 			//線形補完地点
 			SetLinearInterpolation();
-
-
-
-
-
 
 
 			//// 親の向きを考慮して補正

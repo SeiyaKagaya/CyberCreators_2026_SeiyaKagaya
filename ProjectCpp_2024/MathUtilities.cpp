@@ -34,6 +34,8 @@
 #include "renderer.h"
 #include "manager.h"
 
+#include"3D-2DhitObject.h"
+
 //算出用セル
 CMathProc::Cell CMathProc::GRID[GRIDROW][GRIDCOL] = {};
 
@@ -310,12 +312,12 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 	Cline::Create(My_Collision_Max_Pos, D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
 	/*Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
 	Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	
-	
+
+
 	Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
 	Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
 	Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	
+
 	Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
 	Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));*/
 
@@ -329,7 +331,7 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 
 #endif // _
 
-	
+
 	// 配置物プライオリティの先頭を取得
 	CObject* pObject = CObject::GetpTop(TargetLayer);
 
@@ -358,10 +360,11 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 
 				CObstacleSet* pObstacleObject;
 				StageCollisionBox* pStageHitBox;
+				CStageCollisionBox3D2D* pStageHitBox_2D3D;
 				CObjectMotionEnemyNomal* pEnemyNomal;
 				CObjectMotionPlayer* pMotionPlayer;
-		
-	
+				bool bSkip = false;
+
 				//switch (MyType)
 				//{
 				//case CObject::OBJECT_MOTIONPLAYER:
@@ -408,6 +411,12 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 					EscData = pStageHitBox->GetDATA();
 					break;
 
+				case CObject::OBJECT_HITBOX_2D3D:
+					pStageHitBox_2D3D = (CStageCollisionBox3D2D*)pObject;
+
+					EscData = pStageHitBox_2D3D->GetDATA();
+					break;
+
 				case CObject::OBJECT_MOTIONPLAYER:
 					pMotionPlayer = (CObjectMotionPlayer*)pObject;
 
@@ -420,7 +429,7 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 
 					EscData = pEnemyNomal->GetClassData();
 					break;
-			
+
 
 				case CObject::OBJECT_MAX:
 					return HitData;
@@ -429,354 +438,365 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 					break;
 				}
 
-				
-				TarGet_Collision_Min_Pos = EscData.Pos + EscData.MinLength;
-				TarGet_Collision_Max_Pos = EscData.Pos + EscData.MaxLength;
-
-				D3DXVECTOR3 normal = D3DXVECTOR3(0.0f, 0.0f, 0.0f); // 法線ベクトル
-
-				//---------------------------------------X方向
-				if (My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
-					My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
-					My_Collision_Max_Pos.x - MyPos.x + MyOldPos.x <= TarGet_Collision_Min_Pos.x &&
-					My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
-					My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
-					My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+				if (CObject::OBJECT_HITBOX_2D3D == TargetType)
 				{
-					MyPos.x = TarGet_Collision_Min_Pos.x + (My_Collision_Min_Pos.x - MyPos.x) - 0.1f; // 接触面押し返し
-
-					HitData.bHit = true;
-
-					HitData.HitAngle.x = -1;
-
-					// 食い込んだ距離の差分(自分中心とあいて面)を計算
-					HitData.ResultDistance.x = std::abs(My_Collision_Max_Pos.x - TarGet_Collision_Min_Pos.x);
-					normal = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-				}
-
-				if (My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
-					My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
-					My_Collision_Min_Pos.x - MyPos.x + MyOldPos.x >= TarGet_Collision_Max_Pos.x &&
-					My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
-					My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
-					My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
-				{
-
-					MyPos.x = TarGet_Collision_Max_Pos.x + (My_Collision_Max_Pos.x - MyPos.x) + 0.1f; // 接触面押し返し
-					HitData.bHit = true;
-					HitData.HitAngle.x = 1;
-
-					// 食い込んだ距離の差分を計算
-					HitData.ResultDistance.x = std::abs(TarGet_Collision_Max_Pos.x - My_Collision_Min_Pos.x);
-					normal = D3DXVECTOR3(-1.0f, 0.0f, 0.0f);
-				}
-
-				//---------------------------------------Z方向
-				if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
-					My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
-					My_Collision_Min_Pos.z - MyPos.z + MyOldPos.z >= TarGet_Collision_Max_Pos.z &&
-					My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
-					My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
-					My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
-				{
-
-					MyPos.z = TarGet_Collision_Max_Pos.z - (My_Collision_Min_Pos.z - MyPos.z) + 0.1f; // 接触面押し返し
-
-					HitData.bHit = true;
-					HitData.HitAngle.z = 1;
-					// 食い込んだ距離の差分(自分中心とあいて面)を計算
-					HitData.ResultDistance.z = std::abs(My_Collision_Min_Pos.z - TarGet_Collision_Max_Pos.z);
-					normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-				}
-
-				if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
-					My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
-					My_Collision_Max_Pos.z - MyPos.z + MyOldPos.z <= TarGet_Collision_Min_Pos.z &&
-					My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
-					My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
-					My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
-				{
-					MyPos.z = TarGet_Collision_Min_Pos.z - (My_Collision_Max_Pos.z - MyPos.z) - 0.1f; // 接触面押し返し
-					HitData.bHit = true;
-					HitData.HitAngle.z = -1;
-					// 食い込んだ距離の差分(自分中心とあいて面)を計算
-					HitData.ResultDistance.z = std::abs(My_Collision_Max_Pos.z - TarGet_Collision_Min_Pos.z);
-					normal = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
-				}
-
-				//------------------------------------Y方向
-				if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
-					My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
-					My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
-					My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
-					My_Collision_Min_Pos.y - MyPos.y + MyOldPos.y >= TarGet_Collision_Max_Pos.y &&
-					My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y)
-				{
-
-					MyPos.y = TarGet_Collision_Max_Pos.y + (My_Collision_Min_Pos.y - MyPos.y + 0.1f); // 接触面押し返し
-					HitData.bHit = true;
-					HitData.HitAngle.y = 1;
-					
-					// 食い込んだ距離の差分(自分中心とあいて面)を計算
-					HitData.ResultDistance.y = std::abs(My_Collision_Min_Pos.y - TarGet_Collision_Max_Pos.y);
-					normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-				}
-				
-
-				// -Y方向の当たり判定
-				if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
-					My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
-					My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
-					My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
-					My_Collision_Max_Pos.y - MyPos.y + MyOldPos.y <= TarGet_Collision_Min_Pos.y &&
-					My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
-				{
-					MyPos.y = TarGet_Collision_Min_Pos.y - (My_Collision_Max_Pos.y - MyPos.y - 0.1f); // 接触面押し返し
-					HitData.bHit = true;
-					HitData.HitAngle.y = -1;
-					// 食い込んだ距離の差分(自分中心とあいて面)を計算
-					HitData.ResultDistance.y = std::abs(My_Collision_Max_Pos.y - TarGet_Collision_Min_Pos.y);
-					normal = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
-				}
-
-
-
-
-				if (HitData.bHit == true)
-				{ // 衝突時
-					EscHit = true;
-
-
-					HitData.targetIndex = nIndex;
-
-					D3DXVECTOR3 moveVector;//ベクトル格納
-					D3DXVECTOR3 reflectionVector;//反射ベクトル格納
-					float dotProduct;//内積格納
-					float moveVectorLength;//ベクトルの長さ
-					bool bBreak = false;
-
-					switch (MyType)
+					pStageHitBox_2D3D = (CStageCollisionBox3D2D*)pObject;
+					if (pStageHitBox_2D3D->GetHitBoxType() == CStageCollisionBox3D2D::TYPE_LEFTSLOPE)
 					{
-					case CObject::OBJECT_BULLET3D://砲弾
+						bSkip = true;
+					}
+				}
+
+				if (bSkip == false)
+				{
+
+					TarGet_Collision_Min_Pos = EscData.Pos + EscData.MinLength;
+					TarGet_Collision_Max_Pos = EscData.Pos + EscData.MaxLength;
+
+					D3DXVECTOR3 normal = D3DXVECTOR3(0.0f, 0.0f, 0.0f); // 法線ベクトル
+
+					//---------------------------------------X方向
+					if (My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
+						My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
+						My_Collision_Max_Pos.x - MyPos.x + MyOldPos.x <= TarGet_Collision_Min_Pos.x &&
+						My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
+						My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
+						My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+					{
+						MyPos.x = TarGet_Collision_Min_Pos.x + (My_Collision_Min_Pos.x - MyPos.x) - 0.1f; // 接触面押し返し
+
+						HitData.bHit = true;
+
+						HitData.HitAngle.x = -1;
+
+						// 食い込んだ距離の差分(自分中心とあいて面)を計算
+						HitData.ResultDistance.x = std::abs(My_Collision_Max_Pos.x - TarGet_Collision_Min_Pos.x);
+						normal = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+					}
+
+					if (My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
+						My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
+						My_Collision_Min_Pos.x - MyPos.x + MyOldPos.x >= TarGet_Collision_Max_Pos.x &&
+						My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
+						My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
+						My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+					{
+
+						MyPos.x = TarGet_Collision_Max_Pos.x + (My_Collision_Max_Pos.x - MyPos.x) + 0.1f; // 接触面押し返し
+						HitData.bHit = true;
+						HitData.HitAngle.x = 1;
+
+						// 食い込んだ距離の差分を計算
+						HitData.ResultDistance.x = std::abs(TarGet_Collision_Max_Pos.x - My_Collision_Min_Pos.x);
+						normal = D3DXVECTOR3(-1.0f, 0.0f, 0.0f);
+					}
+
+					//---------------------------------------Z方向
+					if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
+						My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
+						My_Collision_Min_Pos.z - MyPos.z + MyOldPos.z >= TarGet_Collision_Max_Pos.z &&
+						My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
+						My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
+						My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+					{
+
+						MyPos.z = TarGet_Collision_Max_Pos.z - (My_Collision_Min_Pos.z - MyPos.z) + 0.1f; // 接触面押し返し
+
+						HitData.bHit = true;
+						HitData.HitAngle.z = 1;
+						// 食い込んだ距離の差分(自分中心とあいて面)を計算
+						HitData.ResultDistance.z = std::abs(My_Collision_Min_Pos.z - TarGet_Collision_Max_Pos.z);
+						normal = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+					}
+
+					if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
+						My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
+						My_Collision_Max_Pos.z - MyPos.z + MyOldPos.z <= TarGet_Collision_Min_Pos.z &&
+						My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
+						My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
+						My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+					{
+						MyPos.z = TarGet_Collision_Min_Pos.z - (My_Collision_Max_Pos.z - MyPos.z) - 0.1f; // 接触面押し返し
+						HitData.bHit = true;
+						HitData.HitAngle.z = -1;
+						// 食い込んだ距離の差分(自分中心とあいて面)を計算
+						HitData.ResultDistance.z = std::abs(My_Collision_Max_Pos.z - TarGet_Collision_Min_Pos.z);
+						normal = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
+					}
+
+					//------------------------------------Y方向
+					if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
+						My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
+						My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
+						My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
+						My_Collision_Min_Pos.y - MyPos.y + MyOldPos.y >= TarGet_Collision_Max_Pos.y &&
+						My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y)
+					{
+
+						MyPos.y = TarGet_Collision_Max_Pos.y + (My_Collision_Min_Pos.y - MyPos.y + 0.1f); // 接触面押し返し
+						HitData.bHit = true;
+						HitData.HitAngle.y = 1;
+
+						// 食い込んだ距離の差分(自分中心とあいて面)を計算
+						HitData.ResultDistance.y = std::abs(My_Collision_Min_Pos.y - TarGet_Collision_Max_Pos.y);
+						normal = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
+					}
+
+
+					// -Y方向の当たり判定
+					if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
+						My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
+						My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
+						My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
+						My_Collision_Max_Pos.y - MyPos.y + MyOldPos.y <= TarGet_Collision_Min_Pos.y &&
+						My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+					{
+						MyPos.y = TarGet_Collision_Min_Pos.y - (My_Collision_Max_Pos.y - MyPos.y - 0.1f); // 接触面押し返し
+						HitData.bHit = true;
+						HitData.HitAngle.y = -1;
+						// 食い込んだ距離の差分(自分中心とあいて面)を計算
+						HitData.ResultDistance.y = std::abs(My_Collision_Max_Pos.y - TarGet_Collision_Min_Pos.y);
+						normal = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+					}
+
+
+
+
+					if (HitData.bHit == true)
+					{ // 衝突時
+						EscHit = true;
+
+
+						HitData.targetIndex = nIndex;
+
+						D3DXVECTOR3 moveVector;//ベクトル格納
+						D3DXVECTOR3 reflectionVector;//反射ベクトル格納
+						float dotProduct;//内積格納
+						float moveVectorLength;//ベクトルの長さ
+						bool bBreak = false;
+
+						switch (MyType)
+						{
+						case CObject::OBJECT_BULLET3D://砲弾
+
+
+							// ここで本来のデータ取得
+							switch (TargetType)
+							{
+
+
+							case CObject::OBJECT_NEWBULLET:
+								pNewBullet = (CNewBullet*)pObject;
+								EscData = pNewBullet->GetDATA();
+
+								//pNewBullet->SetDeath(true);//相手砲弾破壊
+								pNewBullet->SetGoodby();
+								//	CObjectExplosionBill::Create(EscData.Pos);
+								bBreak = true;
+								break;
+
+							}
+
+							if (bBreak == false)
+							{
+								//反射ベクトル生成して返す
+								// 反射ベクトルの計算
+								moveVector = Mymove;
+								dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
+								reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
+
+							   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
+								moveVectorLength = D3DXVec3Length(&moveVector);
+								D3DXVec3Normalize(&reflectionVector, &reflectionVector);
+								reflectionVector *= 12.0f;
+
+								HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
+
+								break;
+							}
+							else
+							{//自弾も破壊
+
+							}
+							break;
+
+						case CObject::OBJECT_NEWBULLET://砲弾
 
 
 						// ここで本来のデータ取得
-						switch (TargetType)
-						{
-					
+							switch (TargetType)
+							{
 
-						case CObject::OBJECT_NEWBULLET:
-							pNewBullet = (CNewBullet*)pObject;
-							EscData = pNewBullet->GetDATA();
+							case CObject::OBJECT_NEWBULLET:
+								pNewBullet = (CNewBullet*)pObject;
+								EscData = pNewBullet->GetDATA();
 
-							//pNewBullet->SetDeath(true);//相手砲弾破壊
-							pNewBullet->SetGoodby();
-						//	CObjectExplosionBill::Create(EscData.Pos);
-							bBreak = true;
+								//pNewBullet->SetDeath(true);//相手砲弾破壊
+								pNewBullet->SetGoodby();
+								//	CObjectExplosionBill::Create(EscData.Pos);
+								bBreak = true;
+								break;
+
+							}
+
+							if (bBreak == false)
+							{
+								//反射ベクトル生成して返す
+								// 反射ベクトルの計算
+								moveVector = Mymove;
+								dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
+								reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
+
+							   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
+								moveVectorLength = D3DXVec3Length(&moveVector);
+								D3DXVec3Normalize(&reflectionVector, &reflectionVector);
+								reflectionVector *= 12.0f;
+
+								HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
+
+								break;
+							}
+							else
+							{//自弾も破壊
+
+							}
 							break;
 
-						}
-
-						if (bBreak == false)
-						{
-							//反射ベクトル生成して返す
-							// 反射ベクトルの計算
-							moveVector = Mymove;
-							dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
-							reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
-
-						   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
-							moveVectorLength = D3DXVec3Length(&moveVector);
-							D3DXVec3Normalize(&reflectionVector, &reflectionVector);
-							reflectionVector *= 12.0f;
-
-							HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
-
-							break;
-						}
-						else
-						{//自弾も破壊
-							
-						}
-						break;
-
-					case CObject::OBJECT_NEWBULLET://砲弾
 
 
-					// ここで本来のデータ取得
-						switch (TargetType)
-						{
-					
-						case CObject::OBJECT_NEWBULLET:
-							pNewBullet = (CNewBullet*)pObject;
-							EscData = pNewBullet->GetDATA();
+						case CObject::OBJECT_MOTIONMODEL://player/enemy
 
-							//pNewBullet->SetDeath(true);//相手砲弾破壊
-							pNewBullet->SetGoodby();
-						//	CObjectExplosionBill::Create(EscData.Pos);
-							bBreak = true;
+							//押し返すだけ
 							break;
 
-						}
-
-						if (bBreak == false)
-						{
-							//反射ベクトル生成して返す
-							// 反射ベクトルの計算
-							moveVector = Mymove;
-							dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
-							reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
-
-						   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
-							moveVectorLength = D3DXVec3Length(&moveVector);
-							D3DXVec3Normalize(&reflectionVector, &reflectionVector);
-							reflectionVector *= 12.0f;
-
-							HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
-
-							break;
-						}
-						else
-						{//自弾も破壊
-						
-						}
-						break;
-
-
-
-					case CObject::OBJECT_MOTIONMODEL://player/enemy
-
+						case CObject::OBJECT_HITBOX://player/enemy
 						//押し返すだけ
-						break;
-
-					case CObject::OBJECT_HITBOX://player/enemy
-					//押し返すだけ
-						break;
-					}
+							break;
+						}
 
 
 
-					//data格納
-					CObject::DATA EscData2 = CObject::DataInit();
+						//data格納
+						CObject::DATA EscData2 = CObject::DataInit();
 
 
-					EscData2.Pos= MyPos;
-
-					if (HitData.HitAngle.x == 1)
-					{//+x
-						EscData2.Pos.x += HitData.ResultDistance.x ;
-
-						EscData2.move.x = 0.0f;
-					}
-					else if (HitData.HitAngle.x == -1)
-					{//-x
-
-						EscData2.Pos.x -= HitData.ResultDistance.x ;
-						EscData2.move.x = 0.0f;
-					}
-					else if (HitData.HitAngle.y == 1)
-					{//+y
-						EscData2.Pos.y +=  (HitData.ResultDistance.y);
-		//				EscData2.Pos.y = TarGet_Collision_Max_Pos.y + (My_Collision_Min_Pos.y - MyPos.y + 15.1f);
-						EscData2.move.y = 0.0f;
-					}
-					else if (HitData.HitAngle.y == -1)
-					{//-y
-						EscData2.Pos.y -= HitData.ResultDistance.y;
-						EscData2.move.y = 0.0f;
-					}
-					else if (HitData.HitAngle.z == 1)
-					{//+z
-						EscData2.Pos.z +=HitData.ResultDistance.z ;
-
-						EscData2.move.z = 0.0f;
-					}
-					else if (HitData.HitAngle.z == -1)
-					{//-z
-						EscData2.Pos.z -= HitData.ResultDistance.z;
-						EscData2.move.z = 0.0f;
-					}
-
-
-					//-------------------------------------------ここをなんとか自身のポインタにする
-
-					//ここでこの関数を呼んだ元のクラスの値にデータを代入する
-
-					CObject::DATA SETDATA = CObject::DataInit();
-
-					switch (MyType)
-					{
-					case CObject::OBJECT_MOTIONPLAYER:
-
-						SETDATA = ((CObjectMotionPlayer*)pCaller)->GetClassData();
-
-						SETDATA.Pos = EscData2.Pos;
-
-						//SETDATA.move
+						EscData2.Pos = MyPos;
 
 						if (HitData.HitAngle.x == 1)
 						{//+x
-							SETDATA.move.x = 0.0f;
+							EscData2.Pos.x += HitData.ResultDistance.x;
+
+							EscData2.move.x = 0.0f;
 						}
 						else if (HitData.HitAngle.x == -1)
 						{//-x
 
-							SETDATA.move.x = 0.0f;
+							EscData2.Pos.x -= HitData.ResultDistance.x;
+							EscData2.move.x = 0.0f;
 						}
 						else if (HitData.HitAngle.y == 1)
 						{//+y
-							SETDATA.move.y = 0.0f;
+							EscData2.Pos.y += (HitData.ResultDistance.y);
+							//				EscData2.Pos.y = TarGet_Collision_Max_Pos.y + (My_Collision_Min_Pos.y - MyPos.y + 15.1f);
+							EscData2.move.y = 0.0f;
 						}
 						else if (HitData.HitAngle.y == -1)
 						{//-y
-							SETDATA.move.y = 0.0f;
+							EscData2.Pos.y -= HitData.ResultDistance.y;
+							EscData2.move.y = 0.0f;
 						}
 						else if (HitData.HitAngle.z == 1)
 						{//+z
-						
-							SETDATA.move.z = 0.0f;
+							EscData2.Pos.z += HitData.ResultDistance.z;
+
+							EscData2.move.z = 0.0f;
 						}
 						else if (HitData.HitAngle.z == -1)
 						{//-z
-							SETDATA.move.z = 0.0f;
-						}
-
-					//	SETDATA.move = EscData2.move;
-
-						((CObjectMotionPlayer*)pCaller)->SetClassData(SETDATA);
-
-						if (HitData.HitAngle.y == 1)
-						{//ヒットアングルが上(着地)の時
-							bLandingHit = true;
+							EscData2.Pos.z -= HitData.ResultDistance.z;
+							EscData2.move.z = 0.0f;
 						}
 
 
+						//-------------------------------------------ここをなんとか自身のポインタにする
 
-						break;
-					case CObject::OBJECT_MOTIONENEMY_NOMAL:
+						//ここでこの関数を呼んだ元のクラスの値にデータを代入する
 
-						SETDATA = ((CObjectMotionEnemyNomal*)pCaller)->GetClassData();
+						CObject::DATA SETDATA = CObject::DataInit();
 
-						SETDATA.Pos = EscData2.Pos;
-						SETDATA.move = EscData2.move;
+						switch (MyType)
+						{
+						case CObject::OBJECT_MOTIONPLAYER:
 
-						((CObjectMotionEnemyNomal*)pCaller)->SetClassData(SETDATA);
-						break;
-						// 他の呼び出し元のケース
+							SETDATA = ((CObjectMotionPlayer*)pCaller)->GetClassData();
+
+							SETDATA.Pos = EscData2.Pos;
+
+							//SETDATA.move
+
+							if (HitData.HitAngle.x == 1)
+							{//+x
+								SETDATA.move.x = 0.0f;
+							}
+							else if (HitData.HitAngle.x == -1)
+							{//-x
+
+								SETDATA.move.x = 0.0f;
+							}
+							else if (HitData.HitAngle.y == 1)
+							{//+y
+								SETDATA.move.y = 0.0f;
+							}
+							else if (HitData.HitAngle.y == -1)
+							{//-y
+								SETDATA.move.y = 0.0f;
+							}
+							else if (HitData.HitAngle.z == 1)
+							{//+z
+
+								SETDATA.move.z = 0.0f;
+							}
+							else if (HitData.HitAngle.z == -1)
+							{//-z
+								SETDATA.move.z = 0.0f;
+							}
+
+							//	SETDATA.move = EscData2.move;
+
+							((CObjectMotionPlayer*)pCaller)->SetClassData(SETDATA);
+
+							if (HitData.HitAngle.y == 1)
+							{//ヒットアングルが上(着地)の時
+								bLandingHit = true;
+							}
+
+
+
+							break;
+						case CObject::OBJECT_MOTIONENEMY_NOMAL:
+
+							SETDATA = ((CObjectMotionEnemyNomal*)pCaller)->GetClassData();
+
+							SETDATA.Pos = EscData2.Pos;
+							SETDATA.move = EscData2.move;
+
+							((CObjectMotionEnemyNomal*)pCaller)->SetClassData(SETDATA);
+							break;
+							// 他の呼び出し元のケース
+						}
+
+
 					}
-
-
-
 
 					CObject* pNext = pObject->GetNext();
 					pObject = pNext;
 					nIndex++;
 
-				//		break;
-				
+					//		break;
 
-}
+
+				}
 				else
 				{
 					CObject* pNext = pObject->GetNext();
@@ -1121,7 +1141,13 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	D3DXVECTOR3 NBe1 = obb2.GetDirect(0), Be1 = NBe1 * obb2.GetLen(0);
 	D3DXVECTOR3 NBe2 = obb2.GetDirect(1), Be2 = NBe2 * obb2.GetLen(1);
 	D3DXVECTOR3 NBe3 = obb2.GetDirect(2), Be3 = NBe3 * obb2.GetLen(2);
+
+//	D3DXVECTOR3 EscPos = obb1.GetPos();
+	obb1.SetPos(D3DXVECTOR3(obb1.GetPos().x, obb1.GetPos().y + obb1.GetLen(1), obb1.GetPos().z));
+	obb2.SetPos(D3DXVECTOR3(obb2.GetPos().x, obb2.GetPos().y + obb2.GetLen(1), obb2.GetPos().z));
+
 	D3DXVECTOR3 Interval = obb1.GetPos() - obb2.GetPos();
+
 
 
 
@@ -1149,18 +1175,18 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	obb2Vertices[6] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] + obb2.m_Direct[2] * obb2.m_fLength[2];
 	obb2Vertices[7] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] - obb2.m_Direct[2] * obb2.m_fLength[2];
 
-	//// OBBの頂点間にラインを引く
-	//for (int i = 0; i < 4; ++i)
-	//{
-	//	for (int j = 4; j < 8; ++j)
-	//	{
-	//		if (i != j)
-	//		{
-	//			Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
-	//			Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
-	//		}
-	//	}
-	//}
+	// OBBの頂点間にラインを引く
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 4; j < 8; ++j)
+		{
+			if (i != j)
+			{
+				Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
+				Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
+			}
+		}
+	}
 
 	Cline::Create(obb1Vertices[0], obb1Vertices[1], D3DXCOLOR(1, 0, 0, 1));
 	Cline::Create(obb2Vertices[0], obb2Vertices[1], D3DXCOLOR(0, 1, 0, 1));

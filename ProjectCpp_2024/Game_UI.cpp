@@ -701,7 +701,7 @@ void CGameUI::OnlineTrigger(int nCnt)
             nDrawA[3] = nDrawA[2];
         }
     }
-    else  if (nCnt == UI_WEPON1|| nCnt == UI_WEPON2 || nCnt == UI_WEPON3 || nCnt == UI_MAP)
+    else  if (nCnt == UI_WEPON1|| nCnt == UI_WEPON2 || nCnt == UI_WEPON3 || nCnt == UI_MAP|| nCnt == UI_PLAYERPIN)
     {
          //ïêäÌUIñ{ëÃ
 
@@ -720,8 +720,14 @@ void CGameUI::OnlineTrigger(int nCnt)
             divisionFrame = PHASE3RAME;
         }
 
-        
-      
+        else if (nCnt == UI_PLAYERPIN)
+        {
+            DrawR = 255;
+            DrawG = 15;
+            DrawB = 15;
+            divisionFrame = PHASE1RAME;
+
+        }
 
         if (m_nMotionCnt[nCnt] <= divisionFrame)
         {
@@ -854,10 +860,13 @@ void CGameUI::OnlineTrigger(int nCnt)
             case UI_MAP_BACK:
 
                 m_UiState[UI_MAP] = UISTATE_ONLINE_TRIGGER;
+           
+                
+
                 break;
 
             case  UI_MAP:
-
+     m_UiState[UI_PLAYERPIN] = UISTATE_ONLINE_TRIGGER;
                 break;
 
 
@@ -942,6 +951,11 @@ void CGameUI::OnlineTrigger(int nCnt)
 
                 UIDrawReset(CGameUI::UI_LOAD_GAUGE_BACK_WEPON3);
                 UIDrawReset(CGameUI::UI_LOAD_GAUGE_WEPON3);
+
+                break;
+
+            case UI_PLAYERPIN://PLAYERPIN//playerpin
+
 
                 break;
             }
@@ -1065,6 +1079,8 @@ void CGameUI::AllUiRestart()
         UIDrawReset(CGameUI::UI_LOAD_GAUGE_BACK_WEPON3);
         UIDrawReset(CGameUI::UI_LOAD_GAUGE_WEPON3);
 
+        UIDrawReset(CGameUI::UI_PLAYERPIN);
+        
     }
     else
     {//ãNìÆçœÇ›

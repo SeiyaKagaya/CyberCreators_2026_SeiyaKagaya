@@ -33,6 +33,7 @@ public:
 
         LAYERINDEX_PARTICLE,
         LAYERINDEX_HITBOX,
+        LAYERINDEX_HITBOX_2D3D,
         LAYERINDEX_DEBUGWALL,
 
         LAYERINDEX_BULLET,
@@ -87,6 +88,7 @@ public:
     {
         OBJECT_FADE,
         OBJECT_HITBOX,
+        OBJECT_HITBOX_2D3D,
         OBJECT_OBJECT,
         OBJECT_DEBUGWALL,
         OBJECT_LINE,
