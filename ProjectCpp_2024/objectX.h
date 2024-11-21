@@ -32,7 +32,8 @@ public:
 
 	void SizeMagChangebool(bool bChange);//サイズ変動の有無
 	void SetSizeMag(D3DXVECTOR3 SizeMag);//倍率
-	
+	D3DXVECTOR3 GetSizeMag();
+
 	DATA GetDATA();//基礎情報取得
 	void SetDATA(DATA data);//基礎情報設定
 
@@ -52,7 +53,8 @@ public:
 
 	void ChengeStageTex(bool Change);
 
-
+	void SetNotLight(bool NotRight) { m_NotRight = NotRight; };
+	bool GetNotLight() { return m_NotRight; };
 
 private:			  
 
@@ -79,6 +81,10 @@ private:
 	bool bFast = false;//最初の一回のみ
 
 	bool m_bStageTexChange = false;
+
+
+	bool m_NotRight = false;//ライト無視
+
 };
 
 #endif

@@ -31,6 +31,7 @@
 #include "newbullet.h"
 #include "debugwall.h"
 #include "3D-2DhitObject.h"
+#include "sky.h"
 
 // 静的メンバー変数の定義
 CScene::MODE CScene::m_NowState = CScene::MODE_TITLE; // 初期値をMODE_TITLEに設定
@@ -164,6 +165,8 @@ HRESULT CGame::Init()
 {
 	CTime::Create();
 
+	Sky3D::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
 	CObject3D::Create();//現状床
 
 	CObstacleSet::DataLoad("DATA\\\MAPS\\STAGE1\\model.txt");//ステージ配置物ロード
@@ -281,12 +284,12 @@ HRESULT CGame::Init()
 	//SetData.MinLength = D3DXVECTOR3(-150.0f, -150.0, -Zlong);
 	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
-		//右２番目中下段
-	SetData.Pos = D3DXVECTOR3(-1800.0f, 600.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(300.0f, 300.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-300.0f, -300.0, -Zlong);
-	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_LEFTSLOPE);
-	
+	//	//右２番目中下段
+	//SetData.Pos = D3DXVECTOR3(-1800.0f, 600.0f, ZPos);
+	//SetData.MaxLength = D3DXVECTOR3(300.0f, 300.0, Zlong);
+	//SetData.MinLength = D3DXVECTOR3(-300.0f, -300.0, -Zlong);
+	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_LEFTSLOPE);
+	//
 	////右２番目下段
 	//SetData.Pos = D3DXVECTOR3(-1650.0f, 450.0f, ZPos);
 	//SetData.MaxLength = D3DXVECTOR3(150.0f, 150.0, Zlong);
@@ -343,7 +346,8 @@ CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK)
 	//playerが最初！
 	//-------------------------------------------------------------
 	SetData = CObject::DataInit();//初期化
-	SetData.Pos = D3DXVECTOR3(-4200.0f, 3200.0f, 0.0f);
+//	SetData.Pos = D3DXVECTOR3(-4200.0f, 3200.0f, 0.0f);
+	SetData.Pos = D3DXVECTOR3(-8000.0f, 2700.0f, 0.0f);
 	CObjectMotionPlayer::Create("DATA\\motion_ARES-42.txt", SetData);
 	//-------------------------------------------------------------
 

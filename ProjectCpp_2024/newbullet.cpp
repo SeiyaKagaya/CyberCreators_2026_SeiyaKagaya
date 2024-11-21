@@ -20,6 +20,7 @@ CNewBullet* CNewBulletALL::m_NewBullet[CNewBulletALL::MAXBULLETALL] = { nullptr 
 //=============================
 CNewBulletALL::CNewBulletALL()
 {
+
 }
 //=============================
 // デストラクタ
@@ -435,8 +436,16 @@ void CNewBullet::HitCollision()
             {
                 //当たり判定計算
                 m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, EscData.move, this);
-
             }
+
+
+
+            //if (m_HitData.bHit == false)
+            //{
+            //    //当たり判定計算
+            //    m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, EscData.move, this);
+
+            //}
 
 
 
@@ -541,7 +550,7 @@ void CNewBullet::SetBulletData(DATA SetData, int ReflectCnt, D3DXCOLOR col, void
     SetChangeColor(col);//モデルColorも変更
     SetColorChangeBool(true);//色変更をtrueに
 
-    m_nLife = 200;
+    m_nLife = 120;
 
     m_OBB.m_fLength[0] = 15.0f;
     m_OBB.m_fLength[1] = 15.0f;

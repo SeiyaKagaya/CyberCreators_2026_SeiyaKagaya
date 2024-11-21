@@ -47,6 +47,9 @@ public:
 	const  float DAMPING_RATIO_LOAD_XZ = 0.3f;
 	const  float DAMPING_RATIO_Y = 0.095f;
 
+	const  float DAMPING_RATIO_BOOST_XZ = 0.001f;
+	const  float DAMPING_RATIO_BOOST_Y = 0.0005f;
+
 
 	static const int MAX_PARTS = 30;//最大parts数
 	static const int MAX_WORD = 1000;
@@ -174,29 +177,27 @@ public:
 	void HitCollisionToStageBlock();
 
 	//このときのmove値取得
-	D3DXVECTOR3 GetNowMove();
+	D3DXVECTOR3 GetNowMove() {	return m_CrassData.move;};
 
 	//着地状態か
-	void SetIsOnGroundBool(bool bSet);
-	bool GetIsOnGroundBool();// { return m_isOnGround; };
+	void SetIsOnGroundBool(bool bSet) {m_isOnGround = bSet;};
+	bool GetIsOnGroundBool() { return m_isOnGround; };
 
-	////空中状態か
-	//void SetIsInAirBool(bool bSet);
-	//bool GetIsInAirBool();// { return m_isInAir; };
+	
+	//着地motion発動したかか
+	void SetIsLandingTriggerBool(bool bSet) {m_isLandingTriggered = bSet;};
+	bool GetIsLandingTriggerBool() {return m_isLandingTriggered;};
 
 	//着地motion発動したかか
-	void SetIsLandingTriggerBool(bool bSet);
-	bool GetIsLandingTriggerBool();// { return m_isLandingTriggered; };
+	void SetOldPosY(float OldPosY) {m_OldPosY = OldPosY;};
+	float GetOldPosY() {return m_OldPosY;};
 
-	//着地motion発動したかか
-	void SetOldPosY(float OldPosY);
-	float GetOldPosY();
+	//正面前進か
+	bool GetFrontMove() { return m_bFrontMove; };
+	void SetFrontMove(bool SetFrontbool) { m_bFrontMove=SetFrontbool; };
 
-
-
-
-	int GetGroundFrame();
-	void SetGroundFrame(int cnt);
+	bool GetBoostNow() {return m_bBoostNow;};
+	void SetBoostNow(bool bSet) { m_bBoostNow = bSet; };
 
 private:
 
@@ -242,20 +243,8 @@ private:
 	//---------------------------------------------------------------
 
 
-
-
-
-
-
-
-
-
-
-
-
 	CModelParts* m_pModelParts[MAX_PARTS];
 	int m_ChangeDataModelIndex;//データ変更のあるモデルのインデックス
-
 
 	//OBBの当たり判定用
 	COBB m_Obb;
@@ -265,15 +254,17 @@ private:
 	int m_RunCnt = 0;
 
 
-
-
 //	bool m_isInAir=true;//空中にいるかどうか
 	bool m_isLandingTriggered=false;//着地モーションが発動したかどうか
 	bool m_isOnGround=false;//地面に接触しているかどうか
 	// 接地状態を保持するための変数
 	int m_groundCounter; // 接地状態のカウンター
 
-	float m_OldPosY = 0.0f;
+	float m_OldPosY = 0.0f;//古いY座標
+
+	bool m_bFrontMove = true;//正面いどうか
+
+	bool m_bBoostNow = false;
 };
 
 #endif

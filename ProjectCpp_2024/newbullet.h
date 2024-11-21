@@ -91,7 +91,7 @@ private:
 class CNewBulletALL// : public CObjectX
 {
 public:
-	static const int MAXBULLETALL = 120;
+	static const int MAXBULLETALL = 240;
 	
 	CNewBulletALL();//コンストラクタ
 	~CNewBulletALL();//デストラクタ

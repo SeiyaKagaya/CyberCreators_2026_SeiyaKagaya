@@ -413,6 +413,17 @@ void CObjectMotion::DataLoad()
 						fscanf(pFile, "%s", &aString[0]);
 						fscanf(pFile, "%d", &m_Model.nMaxPartsCnt);
 					}
+					else if (strcmp(&aString[0], "CHANGE_MODEL_INDEX") == 0)
+					{//モデルデータ変更のあるモデルのインデックス
+						int nChangeIndex = 0;
+						fscanf(pFile, "%s", &aString[0]);
+
+						fscanf(pFile, "%d", &nChangeIndex);
+
+						//Changeboolをtrueに
+						m_pModelParts[nChangeIndex]->m_DataChangeModel(true);
+						m_ChangeDataModelIndex = nChangeIndex;
+					}
 					else if (strcmp(&aString[0], "PARTSSET") == 0)
 					{//Parts設定が来たら
 						while (1)
@@ -422,7 +433,7 @@ void CObjectMotion::DataLoad()
 							if (strcmp(&aString[0], "END_PARTSSET") == 0)
 							{//Parts数エンドが来たら
 								//クリエイト
-								m_pModelParts[nfirstEscapePartsCnt] = CModelParts::Create(m_PartfilePass[nfirstEscapePartsCnt]);
+								m_pModelParts[nfirstEscapePartsCnt] = CModelParts::Create(m_PartfilePass[nfirstEscapePartsCnt],nfirstEscapePartsCnt);
 								//親設定
 								m_pModelParts[nfirstEscapePartsCnt]->SetParent(m_pModelParts[EscapeParentIndex]);
 								//オフセット格納
@@ -591,17 +602,17 @@ void CObjectMotion::DataLoad()
 					}
 				}
 			}
-			//else if(strcmp(&aString[0], "CHANGE_MODEL_INDEX") == 0)
-			//{//モデルデータ変更のあるモデルのインデックス
-			//int nChangeIndex = 0;
-			//fscanf(pFile, "%s", &aString[0]);
+			else if(strcmp(&aString[0], "CHANGE_MODEL_INDEX") == 0)
+			{//モデルデータ変更のあるモデルのインデックス
+			int nChangeIndex = 0;
+			fscanf(pFile, "%s", &aString[0]);
 
-			//fscanf(pFile, "%d", &nChangeIndex);
+			fscanf(pFile, "%d", &nChangeIndex);
 
-			////Changeboolをtrueに
-			//m_pModelParts[nChangeIndex]->m_DataChangeModel(true);
-			//m_ChangeDataModelIndex = nChangeIndex;
-			//}
+			//Changeboolをtrueに
+			m_pModelParts[nChangeIndex]->m_DataChangeModel(true);
+			m_ChangeDataModelIndex = nChangeIndex;
+			}
 		}
 	}
 
@@ -1287,59 +1298,23 @@ void CObjectMotion::HitCollisionToStageBlock()
 	SetClassData(EscData);//格納
 }
 
-D3DXVECTOR3 CObjectMotion::GetNowMove()
-{
-	return m_CrassData.move;
-}
 
-void CObjectMotion::SetIsOnGroundBool(bool bSet)
-{
-	m_isOnGround = bSet;
-}
 
-bool CObjectMotion::GetIsOnGroundBool()
-{
-	return m_isOnGround;
-}
-
-//void CObjectMotion::SetIsInAirBool(bool bSet)
-//{
-//	m_isInAir = bSet;
-//}
+////=============================
+////
+////=============================
 //
-//bool CObjectMotion::GetIsInAirBool()
+//int CObjectMotion::GetGroundFrame()
 //{
-//	return m_isInAir;
+//	return m_groundCounter;
 //}
-
-void CObjectMotion::SetIsLandingTriggerBool(bool bSet)
-{
-	m_isLandingTriggered = bSet;
-}
-
-bool CObjectMotion::GetIsLandingTriggerBool()
-{
-	return m_isLandingTriggered;
-}
-
-void CObjectMotion::SetOldPosY(float OldPosY)
-{
-	m_OldPosY = OldPosY;
-}
-
-float CObjectMotion::GetOldPosY()
-{
-	return m_OldPosY;
-}
-
-int CObjectMotion::GetGroundFrame()
-{
-	return m_groundCounter;
-}
-
-void CObjectMotion::SetGroundFrame(int cnt)
-{
-	m_groundCounter += cnt;
-}
+////=============================
+//
+////=============================
+//
+//void CObjectMotion::SetGroundFrame(int cnt)
+//{
+//	m_groundCounter += cnt;
+//}
 
 

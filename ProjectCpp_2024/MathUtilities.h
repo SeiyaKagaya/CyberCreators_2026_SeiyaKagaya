@@ -15,6 +15,7 @@
 #include <stdbool.h>
 #include <limits.h>
 #include <queue>
+#include <typeinfo>
 
 class  COBB//OBB用
 {
@@ -196,6 +197,8 @@ public:
 	//自分と相手の間の障害物判定
 	static CollisionData AdjustMyPosToCollision_Partner(D3DXVECTOR3 MyPos, D3DXVECTOR3 MyMin, D3DXVECTOR3 MyMax,D3DXVECTOR3 TargetPos,float MaxLength,CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer);
 
+	//頂点バッファから法線を取得する関数
+	static D3DXVECTOR3 GetMeshNormal(ID3DXMesh* pMesh, DWORD faceIndex);
 
 private:  
 	

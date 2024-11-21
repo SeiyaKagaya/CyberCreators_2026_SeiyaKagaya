@@ -93,8 +93,8 @@ HRESULT CObject3D::Init()
     {//ゲーム中
 
 #if _DEBUG
-        float fTest = 3300.0f;
-        float fTest2 = 3300.0f;
+        float fTest = 6600.0f;
+        float fTest2 = 6600.0f;
 
         //頂点座標の設定
         pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, fTest);
@@ -123,7 +123,7 @@ HRESULT CObject3D::Init()
         pVtx[3].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z - fTest);
     }
     else if (NowState == CScene::MODE_RESULT)
-    {//タイトル
+    {//タイトル mngasd
         fTest = 13300.0f;
         //頂点座標の設定
         pVtx[0].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z + fTest);
@@ -145,10 +145,10 @@ HRESULT CObject3D::Init()
     pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
     //頂点カラーの設定
-    pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-    pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-    pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-    pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
+    pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
+    pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
+    pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
 
     //テクスチャ座標を設定
     pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
@@ -166,7 +166,8 @@ HRESULT CObject3D::Init()
     CAllTexture* pTexture = pManager->GetTexture();
 
 #if _DEBUG
-    int texIndex = pTexture->Regist("DATA\\TEXTURE\\TestField.png", EscDevice);//テクスチャ登録
+//    int texIndex = pTexture->Regist("DATA\\TEXTURE\\TestField.png", EscDevice);//テクスチャ登録
+    int texIndex = pTexture->Regist("DATA\\TEXTURE\\umi1.jpg", EscDevice);//テクスチャ登録
 
 #else
     int texIndex = pTexture->Regist("DATA\\TEXTURE\\yuka.jpg", EscDevice);//テクスチャ登録

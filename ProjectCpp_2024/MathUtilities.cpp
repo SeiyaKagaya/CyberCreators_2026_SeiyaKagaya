@@ -1175,18 +1175,18 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	obb2Vertices[6] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] + obb2.m_Direct[2] * obb2.m_fLength[2];
 	obb2Vertices[7] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] - obb2.m_Direct[2] * obb2.m_fLength[2];
 
-	// OBBの頂点間にラインを引く
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int j = 4; j < 8; ++j)
-		{
-			if (i != j)
-			{
-				Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
-				Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
-			}
-		}
-	}
+	//// OBBの頂点間にラインを引く
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	for (int j = 4; j < 8; ++j)
+	//	{
+	//		if (i != j)
+	//		{
+	//			Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
+	//			Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
+	//		}
+	//	}
+	//}
 
 	Cline::Create(obb1Vertices[0], obb1Vertices[1], D3DXCOLOR(1, 0, 0, 1));
 	Cline::Create(obb2Vertices[0], obb2Vertices[1], D3DXCOLOR(0, 1, 0, 1));
@@ -1901,6 +1901,7 @@ bool CMathProc::AvoidInternalSpawn_3D_BoxCollision(CObject::OBJECTTYPE MyType, D
 				CObstacleSet* pObstacleObject;
 				StageCollisionBox* pStageHitBox;
 
+				CStageCollisionBox3D2D* pStageHitBox_2D3D;
 
 				// ここで本来のデータ取得
 				switch (TargetType)
@@ -1919,6 +1920,13 @@ bool CMathProc::AvoidInternalSpawn_3D_BoxCollision(CObject::OBJECTTYPE MyType, D
 
 					EscData = pStageHitBox->GetDATA();
 					break;
+				case CObject::OBJECT_HITBOX_2D3D:
+					pStageHitBox_2D3D = (CStageCollisionBox3D2D*)pObject;
+
+					EscData = pStageHitBox_2D3D->GetDATA();
+					break;
+
+
 
 
 
@@ -2704,6 +2712,46 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 	}
 
 	return HitData;
+}
+D3DXVECTOR3 CMathProc::GetMeshNormal(ID3DXMesh* pMesh, DWORD faceIndex)
+{
+	if (pMesh == nullptr) return D3DXVECTOR3(0, 0, 0);
+
+	struct Vertex {
+		D3DXVECTOR3 position;
+		D3DXVECTOR3 normal;
+	};
+
+	// 頂点バッファをロック
+	Vertex* vertices;
+	if (FAILED(pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&vertices))) {
+		return D3DXVECTOR3(0, 0, 0);  // ロックに失敗した場合、エラーハンドリング
+	}
+
+	// インデックスバッファをロック
+	DWORD* indices;
+	if (FAILED(pMesh->LockIndexBuffer(D3DLOCK_READONLY, (void**)&indices))) {
+		pMesh->UnlockVertexBuffer();  // インデックスのロックに失敗したら、頂点バッファをアンロック
+		return D3DXVECTOR3(0, 0, 0);  // エラーハンドリング
+	}
+
+	DWORD numFaces = pMesh->GetNumFaces();
+	if (faceIndex >= numFaces) {
+		pMesh->UnlockVertexBuffer();  // 範囲外のインデックスは無効
+		pMesh->UnlockIndexBuffer();
+		return D3DXVECTOR3(0, 0, 0);
+	}
+
+	DWORD index1 = indices[faceIndex * 3];
+	DWORD index2 = indices[faceIndex * 3 + 1];
+	DWORD index3 = indices[faceIndex * 3 + 2];
+
+	D3DXVECTOR3 normal = (vertices[index1].normal + vertices[index2].normal + vertices[index3].normal) / 3.0f;
+
+	pMesh->UnlockVertexBuffer();
+	pMesh->UnlockIndexBuffer();
+
+	return normal;
 }
 //=============================
 // Routeテーブル取得

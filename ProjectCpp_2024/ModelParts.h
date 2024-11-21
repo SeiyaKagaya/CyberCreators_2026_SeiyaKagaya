@@ -30,8 +30,9 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CModelParts* Create(const char* FilePass);//オブジェクト生成
+	static CModelParts* Create(const char* FilePass,int PartsNum);//オブジェクト生成
 
+	void SetPartsNum(int nNum) { m_nPartNum = nNum ;};
 	void SetFilePass(const char* FilePass);//ファイルパス格納
 	void SetParent(CModelParts* pParentParts);
 
@@ -41,6 +42,7 @@ public:
 	D3DXMATRIX GetMtxWorld();//マトリックス取得
 
 	CModelParts* GetParent();//親取得
+	//void SetPartsNum(int nNum) {}
 
 	void SetNowData(DATA data);//現行データ
 	DATA GetNowData();
@@ -83,11 +85,6 @@ public:
 private:
 	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE_XFILE];//テクスチャ
 
-
-	//LPD3DXMESH m_pMesh;//Meshポインタ
-	//LPD3DXBUFFER m_pBuffMat;//マテリアルへのポインタ
-	//DWORD m_dwNumMat;//マテリアルの数
-
 	//ここではDATAを最終的な描画などに使用。
 	//下地用(親マトリックスとの融合など)は別の変数に入れる
 	D3DXMATRIX m_mtxWorld;
@@ -117,6 +114,9 @@ private:
 
 	D3DXCOLOR m_ChengeCol;
 	bool m_bChengeCol = false;
+
+	int m_nPartNum = 0;
+
 };
 
 #endif

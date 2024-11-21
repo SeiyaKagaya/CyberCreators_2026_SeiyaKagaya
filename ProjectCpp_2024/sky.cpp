@@ -1,10 +1,10 @@
 //=======================================================
 //
-// Explosion3Dに関する処理[Explosion3D.cpp]
+// Sky3Dに関する処理[Sky3D.cpp]
 // Auther seiya kagaya
 //
 //=======================================================
-#include "Explosion3D.h"
+#include "sky.h"
 #include "renderer.h"
 #include "main.h"
 #include "manager.h"
@@ -14,9 +14,9 @@
 //=============================
 // コンストラクタ
 //=============================
-Explosion3D::Explosion3D(int nPriority) :CObject(nPriority)
+Sky3D::Sky3D(int nPriority) :CObject(nPriority)
 {
-    m_nLife = 60;
+ //   m_nLife = 60;
 
     m_pMesh = nullptr;
     m_pBuffMat = nullptr;
@@ -26,6 +26,7 @@ Explosion3D::Explosion3D(int nPriority) :CObject(nPriority)
     m_ChangeCol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
     m_bMagChange = true;//倍率変動
+    m_Data.rot.x = 0.0f;
 
 
 #if 0
@@ -48,12 +49,12 @@ Explosion3D::Explosion3D(int nPriority) :CObject(nPriority)
     }
 #endif
 
-
+    //  m_bModelParts = false;
 }
 //=============================
 // デストラクタ
 //=============================
-Explosion3D::~Explosion3D()
+Sky3D::~Sky3D()
 {
 #if 0
     // テクスチャの破棄
@@ -81,7 +82,7 @@ Explosion3D::~Explosion3D()
 //=============================
 // 初期設定(頂点バッファ生成)
 //=============================
-HRESULT Explosion3D::Init()
+HRESULT Sky3D::Init()
 {
     m_Data.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_Data.OldPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -101,13 +102,13 @@ HRESULT Explosion3D::Init()
 
     pRenderer = pManager->GetRenderer();
 
-//    LPD3DXMESH pMesh = nullptr;//Meshポインタ
-//    LPD3DXBUFFER pBuffMat = nullptr;//マテリアルへのポインタ
-  //  DWORD dwNumMat = 0;//マテリアルの数
+    //    LPD3DXMESH pMesh = nullptr;//Meshポインタ
+    //    LPD3DXBUFFER pBuffMat = nullptr;//マテリアルへのポインタ
+      //  DWORD dwNumMat = 0;//マテリアルの数
 
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
     //ファイルの読み込み
-    D3DXLoadMeshFromX("DATA\\MODEL\\Sphere.x",
+    D3DXLoadMeshFromX("DATA\\MODEL\\SKY.x",
         D3DXMESH_SYSTEMMEM,
         EscDevice,
         NULL,
@@ -127,22 +128,22 @@ HRESULT Explosion3D::Init()
         pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);//色をここで指定
     }
 
- //   SetXfireData(m_pMesh, m_pBuffMat, m_dwNumMat);//データ格納
+    //   SetXfireData(m_pMesh, m_pBuffMat, m_dwNumMat);//データ格納
 
-    //// SetXfireDataの直後での確認
-    //if (pBuffMat == nullptr)
-    //{
-    //    MessageBox(NULL, "m_pBuffMat is nullptr after SetXfireData in Init", "Error", MB_OK);
-    //}
-    //else 
-    //{
-    //    MessageBox(NULL, "m_pBuffMat is valid after SetXfireData in Init", "Info", MB_OK);
-    //}
+       //// SetXfireDataの直後での確認
+       //if (pBuffMat == nullptr)
+       //{
+       //    MessageBox(NULL, "m_pBuffMat is nullptr after SetXfireData in Init", "Error", MB_OK);
+       //}
+       //else 
+       //{
+       //    MessageBox(NULL, "m_pBuffMat is valid after SetXfireData in Init", "Info", MB_OK);
+       //}
 
 
-  //  SetObjectType(CObject::OBJECT_BLOCK3D);
+     //  SetObjectType(CObject::OBJECT_BLOCK3D);
 
-    m_SetSize = D3DXVECTOR3(3.0f, 3.0f, 3.0f);
+    m_SetSize = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
     SetSizeMag(m_SetSize);//大きさ倍率
     //仮で大きくする
 
@@ -153,7 +154,7 @@ HRESULT Explosion3D::Init()
     //テクスチャ取得
     CAllTexture* pTexture = pManager->GetTexture();
 
-    int texIndex = pTexture->Regist("DATA\\TEXTURE\\EXPLOSION3D_2.png", EscDevice);//テクスチャ登録
+    int texIndex = pTexture->Regist("DATA\\TEXTURE\\title000.png", EscDevice);//テクスチャ登録
 
 
     m_ESCpTexture = pTexture->GetAddress(texIndex);
@@ -162,12 +163,12 @@ HRESULT Explosion3D::Init()
     //LPDIRECT3DTEXTURE9	m_ESCpTexture = CAllTexture::GetTexture(CObject::OBJECT_EXPLOSION, EscDevice);
 
     //BindTexture(m_ESCpTexture);//設定
+    m_Data.rot.x = D3DX_PI;
+    m_Data.rot.y = D3DX_PI*0.2f;
 
-    m_Data.rot.y = 4.5f;
-    m_Data.rot.x = 4.5f;
 
     CSound* pSound = pManager->GetSound();
-  //  pSound->PlaySound(CSound::SOUND_LABEL_SE_EXPLOSION);
+    //  pSound->PlaySound(CSound::SOUND_LABEL_SE_EXPLOSION);
 
 
     return S_OK;
@@ -175,7 +176,7 @@ HRESULT Explosion3D::Init()
 //=============================
 // 終了処理(頂点バッファ破棄)
 //=============================
-void Explosion3D::Uninit()
+void Sky3D::Uninit()
 {
     //メッシュの破棄
     if (m_pMesh != nullptr)
@@ -205,72 +206,35 @@ void Explosion3D::Uninit()
 //=============================
 // 更新(頂点情報の更新)
 //=============================
-void Explosion3D::Update()
+void Sky3D::Update()
 {
-    //m_nCnt++;
-    //if (m_nCnt >= 10)
-    //{
-        
+    m_Data.Pos = CCamera::GetCameraPos();
+
+    
     CManager* pManager = CManager::GetInstance();
 
-    if (m_nCnt<=18)
+  
+
+    //SetSizeMag(m_SetSize);//大きさ倍率
+
+    m_Data.rot.y += 0.0001f;
+
+
+    //m_nCnt++;
+    //// テクスチャオフセットの更新 (アニメーション速度)
+    //m_texOffsetX += (1.0f / (float)ANIMNUM);  // X方向に少しずつ移動
+
+    /*if (m_nCnt >= ANIMNUM)
     {
+        m_texOffsetX = 0.0f;
 
-        pManager->GetCamera()->SetShake(85, 85);
-     
-        m_SetSize.x += 2.3f;
-        m_SetSize.y += 2.3f;
-        m_SetSize.z += 2.3f;
-    }
-    else if(m_nCnt > 18 || m_nCnt <= 40)
-    {
-        pManager->GetCamera()->SetShake(55, 55);
-
-        m_SetSize.x += 0.7f;
-        m_SetSize.y += 0.7f;
-        m_SetSize.z += 0.7f;
-    }
-    else
-    {
-        pManager->GetCamera()->SetShake(5, 5);
-
-        m_SetSize.x += 0.3f;
-        m_SetSize.y += 0.3f;
-        m_SetSize.z += 0.3f;
-    }
-
-    
-    SetSizeMag(m_SetSize);//大きさ倍率
-    
-    m_Data.rot.y += 0.03f;
-    m_Data.rot.x += 0.03f;
-
-    m_nCnt++;
-        // テクスチャオフセットの更新 (アニメーション速度)
-        m_texOffsetX += (1.0f / (float)ANIMNUM);  // X方向に少しずつ移動
-     
-                                                  
-        if (m_nCnt >= 60)
-        {
-            m_texOffsetX = 0.0f;
-
-            m_nCnt = 0;
-        }
-                                                  
-                                                  //   m_texOffsetY += 0.01f;  // Y方向に少しずつ移動
- //   }
- 
-    // 残りの通常の更新処理
-    m_nLife--;
-    if (m_nLife <= 0)
-    {
-        SetDeath(true);
-    }
+        m_nCnt = 0;
+    }*/
 }
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
-void Explosion3D::Draw()
+void Sky3D::Draw()
 {
     CRenderer* pRenderer = nullptr;
     CManager* pManager = CManager::GetInstance();
@@ -293,7 +257,7 @@ void Explosion3D::Draw()
  //   EscDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 
     // カリング（裏面の非表示）を設定（オプション）
-    EscDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+ //   EscDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 
 
@@ -303,13 +267,13 @@ void Explosion3D::Draw()
 
 
 
-    D3DXMatrixScaling(&matTexTransform, (1.0f/ (float)ANIMNUM), 1.0f, 1.0f);  // 0.5倍にスケーリング
-    matTexTransform._31 = m_texOffsetX; // X方向のオフセット設定
-    matTexTransform._32 = m_texOffsetY; // Y方向のオフセット設定
-                                    
-    // テクスチャ変換を有効にする
-    EscDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2); // 2D変換
-    EscDevice->SetTransform(D3DTS_TEXTURE0, &matTexTransform);  // テクスチャ行列を設定
+    //D3DXMatrixScaling(&matTexTransform, (1.0f / (float)ANIMNUM), 1.0f, 1.0f);  // 0.5倍にスケーリング
+    //matTexTransform._31 = m_texOffsetX; // X方向のオフセット設定
+    //matTexTransform._32 = m_texOffsetY; // Y方向のオフセット設定
+
+    //// テクスチャ変換を有効にする
+    //EscDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2); // 2D変換
+    //EscDevice->SetTransform(D3DTS_TEXTURE0, &matTexTransform);  // テクスチャ行列を設定
 
 
     // ワールドマトリックスの初期化
@@ -317,9 +281,9 @@ void Explosion3D::Draw()
 
 
     if (m_bMagChange == true)
-    {   
+    {
         // モデルのサイズを変更
-    
+
         D3DXMatrixScaling(&m_mtxWorld, m_SizeMag.x, m_SizeMag.y, m_SizeMag.z);
     }
 
@@ -327,7 +291,7 @@ void Explosion3D::Draw()
     D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Data.rot.y, m_Data.rot.x, m_Data.rot.z);
     D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
 
-        // 位置を反映
+    // 位置を反映
     D3DXMatrixTranslation(&mtxTrans, m_Data.Pos.x, m_Data.Pos.y, m_Data.Pos.z);
     D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
 
@@ -380,10 +344,10 @@ void Explosion3D::Draw()
                     originalColor = m_OriginalColor;
                 }
 
-                if (m_nCnt >= 40)
-                {//透過率
-                    originalColor.a = ((float)60 - m_nCnt) * 0.5f;
-                }
+                //if (m_nCnt >= 40)
+                //{//透過率
+                //    originalColor.a = ((float)60 - m_nCnt) * 0.5f;
+                //}
 
                 pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(
                     originalColor.r * m_SizeMag.x,
@@ -418,15 +382,15 @@ void Explosion3D::Draw()
  //   EscDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
     // カリングを無効化（オプション）
-    EscDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+ //   EscDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 }
 //=============================
 // Object生成
 //=============================
-Explosion3D* Explosion3D::Create(D3DXVECTOR3 Pos)
+Sky3D* Sky3D::Create(D3DXVECTOR3 Pos)
 {
-    Explosion3D* pObjectX = new Explosion3D;
+    Sky3D* pObjectX = new Sky3D;
     pObjectX->Init();
     pObjectX->SetPos(Pos);
     return pObjectX;
@@ -435,18 +399,21 @@ Explosion3D* Explosion3D::Create(D3DXVECTOR3 Pos)
 //=============================
 // サイズ変動の有無
 //=============================
-void Explosion3D::SizeMagChangebool(bool bChange)
+void Sky3D::SizeMagChangebool(bool bChange)
 {
     m_bMagChange = bChange;
 }
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
-void Explosion3D::SetSizeMag(D3DXVECTOR3 SizeMag)
+void Sky3D::SetSizeMag(D3DXVECTOR3 SizeMag)
 {
     m_SizeMag = SizeMag;
 }
-void Explosion3D::SetPos(D3DXVECTOR3 pos)
+//=============================
+// 座標格納
+//=============================
+void Sky3D::SetPos(D3DXVECTOR3 pos)
 {
     m_Data.Pos = pos;
 }

@@ -12,6 +12,7 @@
 
 #include "MathUtilities.h"
 
+
 class CStageCollisionBox3D2D : public CObjectX
 {
 public:
@@ -42,8 +43,9 @@ public:
 	void SetType(HITBOX type);
 	HITBOX GetHitBoxType();
 
+	LPD3DXMESH GetMesh();//ÉÅÉbÉVÉÖÇï‘Ç∑
 
-	static bool bHitColision(D3DXVECTOR3 pos, D3DXVECTOR3 rayDirection, CObject::OBJECTTYPE MyType, void* pCaller);
+	static CMathProc::CollisionData bHitColision(D3DXVECTOR3 pos, D3DXVECTOR3 rayDirection, CObject::OBJECTTYPE MyType, void* pCaller);
 
 
 private:

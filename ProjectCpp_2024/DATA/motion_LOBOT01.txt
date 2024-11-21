@@ -32,6 +32,13 @@ MODEL_FILENAME = data/MODEL/LOBOT01/14_footL.x	# [14]左足
 MODEL_FILENAME = data/MODEL/LOBOT01/15_WEAPON.x	# [15]武器
 MODEL_FILENAME = data/MODEL/LOBOT01/15_WEAPON.x	# [16]武器
 
+
+
+#データ変更ありモデルの番号(この場合は胸の旋回)
+
+CHANGE_MODEL_INDEX = 1
+
+
 #------------------------------------------------------------------------------
 # キャラクター情報
 #------------------------------------------------------------------------------
@@ -41,8 +48,6 @@ CHARACTERSET
 	JUMP = 11.25					# ジャンプ量
 	RADIUS = 40.0					#半径
 	HEIGHT = 120.0					#高さ 
-	
-	
 	
 
 	PARTSSET
@@ -181,11 +186,11 @@ CHARACTERSET
 				MOTIONPARENT = 0
 	END_PARTSSET
 	
-	#データ変更ありモデルの番号(この場合は胸の旋回)
 
-	CHANGE_MODEL_INDEX = 1
 	
 END_CHARACTERSET
+
+
 
 #------------------------------------------------------------------------------
 # モーション情報

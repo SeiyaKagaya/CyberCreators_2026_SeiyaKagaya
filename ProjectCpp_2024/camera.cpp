@@ -16,6 +16,8 @@
 
 
 
+D3DXVECTOR3 CCamera::CameraPos = D3DXVECTOR3(0.0f,0.0f,0.0f);
+
 float CCamera::m_Screen_Width = (float)SCREEN_WIDTH;//スクリーン横幅
 float CCamera::m_Screen_Height = (float)SCREEN_HEIGHT;//スクリーン縦幅
 
@@ -199,7 +201,7 @@ void CCamera::Update()
 	//posRは			ここがPosV	ここは+に変更
 
 //	m_posR.z += 150.0f;
-
+	CameraPos = m_posV;
 }
 //=============================
 //カメラ設定
@@ -223,7 +225,7 @@ void CCamera::SetCamera()
 		D3DXToRadian(45.0f),//視野角
 		(float)m_Screen_Width / (float)m_Screen_Height,//画面のアスペクト比
 		10.0f,//ｚ軸最小値
-		9000.0f);//z軸最大値
+		59000.0f);//z軸最大値
 
 	//プロジェクションマトリックスの設定
 	EscDevice->SetTransform(D3DTS_PROJECTION, &m_mtxProjection);

@@ -256,7 +256,11 @@ void CObjectX::Draw()
     //EscDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
     //}
 
-
+    if (GetNotLight() == true)
+    {
+        // ライトを無効にする
+        EscDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+    }
 
     // 通常のオブジェクトの描画
     if (m_pBuffMat != nullptr)
@@ -333,7 +337,13 @@ void CObjectX::Draw()
     }
 
 
-
+    if (GetNotLight() == true)
+    {
+        // ライトを有効にする
+        EscDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+        SetNotLight(false);
+        
+    }
 
        //// アルファブレンディングを加算合成に設定
        //EscDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -472,6 +482,11 @@ void CObjectX::SizeMagChangebool(bool bChange)
 void CObjectX::SetSizeMag(D3DXVECTOR3 SizeMag)
 {
     m_SizeMag = SizeMag;
+}
+
+D3DXVECTOR3 CObjectX::GetSizeMag()
+{
+    return m_SizeMag;
 }
 
 //=============================

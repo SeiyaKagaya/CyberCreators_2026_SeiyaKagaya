@@ -23,9 +23,6 @@
     <Filter Include="ソース ファイル\SYSTEM\ALL_TEXTURE">
       <UniqueIdentifier>{0782a2c6-9714-42eb-8bc6-fe886d940967}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\SYSTEM\RENDERER">
-      <UniqueIdentifier>{09b08ee8-1ac3-4307-b7d5-76ef12824be5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\リソース ファイル">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
@@ -163,10 +160,22 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke">
       <UniqueIdentifier>{e0b436ca-e4e7-4596-b956-5eda5c02992b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\RENDERER">
+      <UniqueIdentifier>{09b08ee8-1ac3-4307-b7d5-76ef12824be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\LineUI">
+      <UniqueIdentifier>{9f23bdb6-ecbd-48ce-a9ac-d0f435d0d25a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\SKY">
+      <UniqueIdentifier>{cdee272f-5860-443b-a830-75f9c20f444a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\shield">
+      <UniqueIdentifier>{5f8a0a10-a3f8-4bf3-bdc2-2e22d43b3f22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
-      <Filter>ソース ファイル\SYSTEM\RENDERER</Filter>
+      <Filter>ソース ファイル\RENDERER</Filter>
     </ClCompile>
     <ClCompile Include="object2D.cpp">
       <Filter>ソース ファイル\OBJECT\OBJECT_2D</Filter>
@@ -300,10 +309,19 @@
     <ClCompile Include="movesmoke.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke</Filter>
     </ClCompile>
+    <ClCompile Include="LinerinterUI.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\LineUI</Filter>
+    </ClCompile>
+    <ClCompile Include="sky.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\SKY</Filter>
+    </ClCompile>
+    <ClCompile Include="shield.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\shield</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
-      <Filter>ソース ファイル\SYSTEM\RENDERER</Filter>
+      <Filter>ソース ファイル\RENDERER</Filter>
     </ClInclude>
     <ClInclude Include="object.h">
       <Filter>ソース ファイル\OBJECT</Filter>
@@ -386,9 +404,6 @@
     <ClInclude Include="StageCollisionBox.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\StageCollisionBox</Filter>
     </ClInclude>
-    <ClInclude Include="player_motion.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION</Filter>
-    </ClInclude>
     <ClInclude Include="tankfootprint.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\TANKFOOTPRINTS</Filter>
     </ClInclude>
@@ -436,6 +451,18 @@
     </ClInclude>
     <ClInclude Include="movesmoke.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke</Filter>
+    </ClInclude>
+    <ClInclude Include="linerinterUI.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\LineUI</Filter>
+    </ClInclude>
+    <ClInclude Include="player_motion.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION</Filter>
+    </ClInclude>
+    <ClInclude Include="sky.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\SKY</Filter>
+    </ClInclude>
+    <ClInclude Include="shield.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\shield</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

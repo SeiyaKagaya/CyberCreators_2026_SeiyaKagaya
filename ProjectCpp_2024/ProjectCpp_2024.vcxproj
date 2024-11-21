@@ -171,6 +171,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="line.cpp" />
+    <ClCompile Include="LinerinterUI.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="MathUtilities.cpp" />
@@ -201,7 +202,9 @@
     <ClCompile Include="result.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="score.cpp" />
+    <ClCompile Include="shield.cpp" />
     <ClCompile Include="ShotFire.cpp" />
+    <ClCompile Include="sky.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="StageCollisionBox.cpp" />
     <ClCompile Include="tankfootprint.cpp" />
@@ -227,6 +230,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="line.h" />
+    <ClInclude Include="linerinterUI.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="MathUtilities.h" />
@@ -248,7 +252,9 @@
     <ClInclude Include="result.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="score.h" />
+    <ClInclude Include="shield.h" />
     <ClInclude Include="ShotFire.h" />
+    <ClInclude Include="sky.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="StageCollisionBox.h" />
     <ClInclude Include="tankfootprint.h" />

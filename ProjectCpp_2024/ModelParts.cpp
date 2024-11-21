@@ -8,6 +8,8 @@
 #include "renderer.h"
 #include "manager.h"
 #include "object_motion.h"
+#include "3DParticle.h"
+#include "player_motion.h"
 
 //=============================
 // コンストラクタ
@@ -107,7 +109,194 @@ void CModelParts::Uninit()
 //=============================
 void CModelParts::Update()
 {
-   // CObjectX::Update();
+    if (typeid(*pMotion) == typeid(CObjectMotionPlayer))
+    {
+
+
+        if (m_nPartNum == 9 || m_nPartNum == 10 || m_nPartNum == 17 || m_nPartNum == 18)
+        {
+            CRenderer* pRenderer = nullptr;
+
+            CManager* pManager = CManager::GetInstance();
+
+            pRenderer = pManager->GetRenderer();
+
+            LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
+
+
+            if (m_ChangeDatabool == true)
+            {//データ変更アリの時
+
+                //これは親のマトリックスを考慮していない
+                m_NowData = m_ChangeDATA;
+
+                m_NowData.Pos = m_offSetData.Pos;
+
+                //親のマトリックス
+                D3DXMATRIX m_mtxWorldParent = m_pParentParts->GetMtxWorld();
+
+                // 親の向きを考慮して補正
+                float parentAngle = atan2f(m_mtxWorldParent._31, m_mtxWorldParent._11);
+                m_NowData.rot.y -= parentAngle;
+            }
+            //---------------------------------------------------------------------------------------------------------------------------------------
+
+
+            DATA EscData = GetDATA();//再取得
+
+            D3DXMATRIX EscMtxWorld;
+
+            D3DXMATRIX mtxRot, mtxTrans, mtxParent;//計算用マトリックス
+
+            //ワールドマトリックスの初期化
+            D3DXMatrixIdentity(&m_mtxWorld);
+
+            //向きを反映
+            D3DXMatrixRotationYawPitchRoll(&mtxRot, m_NowData.rot.y, m_NowData.rot.x, m_NowData.rot.z);
+
+            D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+
+            //位置を反映
+            D3DXMatrixTranslation(&mtxTrans, m_NowData.Pos.x, m_NowData.Pos.y, m_NowData.Pos.z);
+
+            D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+
+            //親子関係
+            if (m_pParentParts == nullptr)
+            {
+                //自分の主のマトリックスとかける(player/enemy)など
+
+                //
+                EscDevice->GetTransform(D3DTS_WORLD, &EscMtxWorld);//とりあえず最新のマトリックス取得
+
+
+                D3DXMATRIX EscMat = pMotion->GetMatrix();
+
+                //始祖とかける
+                D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &EscMat);
+            }
+            else
+            {
+                D3DXMATRIX m_mtxWorldParent = m_pParentParts->GetMtxWorld();
+
+                //自分の親のマトリックス欠けてる
+                D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxWorldParent);
+            }
+
+            D3DXVECTOR3 BOOSTPos[4] = {};
+            D3DXMATRIX m_Boost_mtxWorld[4] = {};
+
+            float BoostMag = 1.0f;
+
+            if (((CObjectMotionPlayer*)pMotion)->GetBoostNow() == true)
+            {//
+                //ブースト時
+                BoostMag = (float)CObjectMotionPlayer::BOOST_MAG;
+                BoostMag /= 10.0f;
+            }
+
+       
+
+            switch (m_nPartNum)
+            {
+            case 9://足部
+                //左
+                BOOSTPos[0] = D3DXVECTOR3(30.0f, 0.0f, 19.0f);	//位置
+                BOOSTPos[1] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+
+
+                BOOSTPos[2] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                BOOSTPos[3] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+
+                break;
+
+            case 10://足部
+                BOOSTPos[0] = D3DXVECTOR3(-30.0f, 0.0f, 19.0f);	//位置
+                BOOSTPos[1] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+
+
+                BOOSTPos[2] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                BOOSTPos[3] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                break;
+
+            case 17://肩部
+                BOOSTPos[0] = D3DXVECTOR3(10.0f, 0.0f, 19.0f);	//位置
+                BOOSTPos[1] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+
+
+                BOOSTPos[2] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                BOOSTPos[3] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                break;
+
+            case 18://肩部
+                BOOSTPos[0] = D3DXVECTOR3(-10.0f, 0.0f, 19.0f);	//位置
+                BOOSTPos[1] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+
+
+                BOOSTPos[2] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                BOOSTPos[3] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                break;
+            }
+
+
+            for (int i = 0; i < 4; i++)
+            {
+                if (i == 0)
+                {
+                    //ワールドマトリックスの初期化
+                    D3DXMatrixIdentity(&m_Boost_mtxWorld[i]);
+
+                    //位置を反映
+                    D3DXMatrixTranslation(&mtxTrans, BOOSTPos[i].x, BOOSTPos[i].y, BOOSTPos[i].z);
+
+                    D3DXMatrixMultiply(&m_Boost_mtxWorld[i], &m_Boost_mtxWorld[i], &mtxTrans);
+
+                    //始祖とかける
+                    D3DXMatrixMultiply(&m_Boost_mtxWorld[i], &m_Boost_mtxWorld[i], &m_mtxWorld);
+                }
+                else
+                {
+                    //ワールドマトリックスの初期化
+                    D3DXMatrixIdentity(&m_Boost_mtxWorld[i]);
+
+                    //位置を反映
+                    D3DXMatrixTranslation(&mtxTrans, BOOSTPos[i].x, BOOSTPos[i].y, BOOSTPos[i].z);
+
+                    D3DXMatrixMultiply(&m_Boost_mtxWorld[i], &m_Boost_mtxWorld[i], &mtxTrans);
+
+                    //始祖とかける
+                    D3DXMatrixMultiply(&m_Boost_mtxWorld[i], &m_Boost_mtxWorld[i], &m_Boost_mtxWorld[i - 1]);
+                }
+
+                D3DXVECTOR3 SETPOS = D3DXVECTOR3(m_Boost_mtxWorld[i]._41, m_Boost_mtxWorld[i]._42, m_Boost_mtxWorld[i]._43);
+
+                D3DXCOLOR setcol = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
+                switch (i)
+                {
+                case 0://根本
+                    setcol = D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.1f * BoostMag);
+                    break;
+
+                case 1:
+                    setcol = D3DXCOLOR(0.25f, 0.0f, 0.75f, 0.1f * BoostMag);
+                    break;
+
+                case 2:
+                    setcol = D3DXCOLOR(0.5f, 0.0f, 0.5f, 0.1f * BoostMag);
+                    break;
+
+                case 3://先端
+                    setcol = D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.1f * BoostMag);
+                    break;
+                }
+
+                CObject3DParticle::Create(SETPOS, setcol);
+            }
+
+
+        }
+    }
 }
 //=============================
 //描画
@@ -201,6 +390,10 @@ void CModelParts::Draw()
 
     if (m_bDrawBool == true)
     {
+
+
+
+
         if (m_bChengeCol==true)
         {
             CObjectX::SetColorChangeBool(true);
@@ -273,12 +466,13 @@ void CModelParts::Draw()
 //=============================
 //生成
 //=============================
-CModelParts* CModelParts::Create(const char* FilePass)
+CModelParts* CModelParts::Create(const char* FilePass, int PartsNum)
 {
     CModelParts* pModelParts = new CModelParts;
 
     pModelParts->SetFilePass(FilePass);
     pModelParts->Init();
+    pModelParts->SetPartsNum(PartsNum);
     return pModelParts;
 }
 //=============================

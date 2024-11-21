@@ -29,7 +29,7 @@ public:
 	static D3DXVECTOR2 GetScreenSize();
 
 	D3DXVECTOR3 GetRot();
-
+	static D3DXVECTOR3 GetCameraPos() { return CameraPos; };
 
 private:
 	D3DXVECTOR3 m_posV;//Ž‹“_
@@ -45,6 +45,8 @@ private:
 	static float m_Screen_Width;
 	static float m_Screen_Height;
 	bool m_CameraType = false;
+
+	static D3DXVECTOR3 CameraPos;
 };
 
 

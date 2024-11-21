@@ -111,7 +111,7 @@ HRESULT CStageCollisionBox3D2D::Init()
 
 
     float USize = m_TexSize.x / 150.0f;
-    float VSize = m_TexSize.y / 150.0f;;
+    float VSize = m_TexSize.y / 150.0f;
 
     m_pMesh = ScaleMeshUVs(m_pMesh, USize,VSize);
 
@@ -254,277 +254,148 @@ CStageCollisionBox3D2D::HITBOX CStageCollisionBox3D2D::GetHitBoxType()
 {
     return m_hitbox;
 }
+LPD3DXMESH CStageCollisionBox3D2D::GetMesh()
+{
+	return m_pMesh;
+}
+
+
 CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D3DXVECTOR3 rayDirection, CObject::OBJECTTYPE MyType, void* pCaller)
 {
-    return CMathProc::CollisionData();
-
-  //  一度でも接触があればtrueに
-	bool EscHit = false;
-
-	// 必要に応じて改良、下記は試験運用段階
-	CMathProc::CollisionData HitData;
-
-	HitData.bHit = false;
-	HitData.HitAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	HitData.ResultDistance = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	HitData.targetIndex = -1;
-
-	// 自分
-	// あたり判定用のHitBox
-	D3DXVECTOR3 My_Collision_Min_Pos;
-	//My_Collision_Min_Pos.x = MyPos.x + MyMinLength.x;
-	//My_Collision_Min_Pos.y = MyPos.y + MyMinLength.y;
-	//My_Collision_Min_Pos.z = MyPos.z + MyMinLength.z;
-
-	//D3DXVECTOR3 My_Collision_Max_Pos = MyPos + MyMaxLength;
-
-	bool bLandingHit = false;
-
-
-	
-	
-
-
-	// 配置物プライオリティの先頭を取得
-	CObject* pObject = CObject::GetpTop(LAYERINDEX_HITBOX_2D3D);
-
-	if (pObject != nullptr)
-	{ // 先頭がない==プライオリティまるっとない
-
-		int nIndex = 0;
-
-		while (pObject != nullptr)
-		{
-			bool bSkip = false;
-
-
-			HitData.bHit = false;
-			HitData.HitAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			HitData.ResultDistance = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			HitData.targetIndex = -1;
-
-			if (pObject->GetObjectType() == LAYERINDEX_HITBOX_2D3D)
-			{ // 対象のモデルのとき
-
-				D3DXVECTOR3 TarGet_Collision_Min_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				D3DXVECTOR3 TarGet_Collision_Max_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-				CObject::DATA EscData;
-
-				// ここで使用分宣言
-				CNewBullet* pNewBullet = {};
-
-				CStageCollisionBox3D2D* pStageHitBox_2D3D;
-
-				pStageHitBox_2D3D = (CStageCollisionBox3D2D*)pObject;
-
-				EscData = pStageHitBox_2D3D->GetDATA();
-				
-
-				if (pStageHitBox_2D3D->GetHitBoxType() != CStageCollisionBox3D2D::TYPE_LEFTSLOPE)
-				{
-					bSkip = true;
-				}
-	
-				if (bSkip == false)
-				{
-
-					
-					//ここで接触判定
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-					if (HitData.bHit == true)
-					{ // 衝突時
-						EscHit = true;
-
-
-						HitData.targetIndex = nIndex;
-
-						D3DXVECTOR3 moveVector;//ベクトル格納
-						D3DXVECTOR3 reflectionVector;//反射ベクトル格納
-						float dotProduct;//内積格納
-						float moveVectorLength;//ベクトルの長さ
-						bool bBreak = false;
-
-						//data格納
-						CObject::DATA EscData2 = CObject::DataInit();
-
-
-						EscData2.Pos = pos;
-
-						if (HitData.HitAngle.x == 1)
-						{//+x
-							EscData2.Pos.x += HitData.ResultDistance.x;
-
-							EscData2.move.x = 0.0f;
-						}
-						else if (HitData.HitAngle.x == -1)
-						{//-x
-
-							EscData2.Pos.x -= HitData.ResultDistance.x;
-							EscData2.move.x = 0.0f;
-						}
-						else if (HitData.HitAngle.y == 1)
-						{//+y
-							EscData2.Pos.y += (HitData.ResultDistance.y);
-							//				EscData2.Pos.y = TarGet_Collision_Max_Pos.y + (My_Collision_Min_Pos.y - MyPos.y + 15.1f);
-							EscData2.move.y = 0.0f;
-						}
-						else if (HitData.HitAngle.y == -1)
-						{//-y
-							EscData2.Pos.y -= HitData.ResultDistance.y;
-							EscData2.move.y = 0.0f;
-						}
-						else if (HitData.HitAngle.z == 1)
-						{//+z
-							EscData2.Pos.z += HitData.ResultDistance.z;
-
-							EscData2.move.z = 0.0f;
-						}
-						else if (HitData.HitAngle.z == -1)
-						{//-z
-							EscData2.Pos.z -= HitData.ResultDistance.z;
-							EscData2.move.z = 0.0f;
-						}
-
-
-						//-------------------------------------------ここをなんとか自身のポインタにする
-
-						//ここでこの関数を呼んだ元のクラスの値にデータを代入する
-
-						CObject::DATA SETDATA = CObject::DataInit();
-
-						switch (MyType)
-						{
-						case CObject::OBJECT_MOTIONPLAYER:
-
-							SETDATA = ((CObjectMotionPlayer*)pCaller)->GetClassData();
-
-							SETDATA.Pos = EscData2.Pos;
-
-							//SETDATA.move
-
-							if (HitData.HitAngle.x == 1)
-							{//+x
-								SETDATA.move.x = 0.0f;
-							}
-							else if (HitData.HitAngle.x == -1)
-							{//-x
-
-								SETDATA.move.x = 0.0f;
-							}
-							else if (HitData.HitAngle.y == 1)
-							{//+y
-								SETDATA.move.y = 0.0f;
-							}
-							else if (HitData.HitAngle.y == -1)
-							{//-y
-								SETDATA.move.y = 0.0f;
-							}
-							else if (HitData.HitAngle.z == 1)
-							{//+z
-
-								SETDATA.move.z = 0.0f;
-							}
-							else if (HitData.HitAngle.z == -1)
-							{//-z
-								SETDATA.move.z = 0.0f;
-							}
-
-							//	SETDATA.move = EscData2.move;
-
-							((CObjectMotionPlayer*)pCaller)->SetClassData(SETDATA);
-
-							if (HitData.HitAngle.y == 1)
-							{//ヒットアングルが上(着地)の時
-								bLandingHit = true;
-							}
-
-
-
-							break;
-						case CObject::OBJECT_MOTIONENEMY_NOMAL:
-
-							SETDATA = ((CObjectMotionEnemyNomal*)pCaller)->GetClassData();
-
-							SETDATA.Pos = EscData2.Pos;
-							SETDATA.move = EscData2.move;
-
-							((CObjectMotionEnemyNomal*)pCaller)->SetClassData(SETDATA);
-							break;
-							// 他の呼び出し元のケース
-						}
-
-
-					}
-
-					CObject* pNext = pObject->GetNext();
-					pObject = pNext;
-					nIndex++;
-
-					//		break;
-
-
-				}
-				else
-				{
-					CObject* pNext = pObject->GetNext();
-					pObject = pNext;
-					nIndex++;
-				}
-
-
-			}
-		}
-	}
-
-
-	if (EscHit == true)
-	{
-		HitData.bHit = true;
-	}
-	else
-	{
-		switch (MyType)
-		{
-		case CObject::OBJECT_MOTIONPLAYER:
-
-			int test = 0;
-			break;
-		}
-	}
-
-	if (bLandingHit == true)
-	{
-		HitData.HitAngle.y = 1;
-	}
-	else
-	{
-		switch (MyType)
-		{
-		case CObject::OBJECT_MOTIONPLAYER:
-
-			int test = 0;
-			break;
-		}
-	}
-
-	return HitData;
-
-
-
-
-
+    CRenderer* pRenderer = nullptr;
+    CManager* pManager = CManager::GetInstance();
+    pRenderer = pManager->GetRenderer();
+    LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
+
+    bool EscHit = false;
+    CMathProc::CollisionData HitData;
+    HitData.bHit = false;
+    HitData.HitAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    HitData.ResultDistance = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    HitData.targetIndex = -1;
+
+    bool bLandingHit = false;
+
+    CObject* pObject = CObject::GetpTop(LAYERINDEX_HITBOX_2D3D);
+    int nIndex = 0;
+
+    while (pObject != nullptr)
+    {
+        bool bSkip = false;
+
+        // オブジェクトタイプの確認
+        if (pObject->GetObjectType() == LAYERINDEX_HITBOX_2D3D)
+        {
+            CStageCollisionBox3D2D* pStageHitBox_2D3D = (CStageCollisionBox3D2D*)pObject;
+            CObject::DATA EscData = pStageHitBox_2D3D->GetDATA();
+
+            // スロープ以外のオブジェクトをスキップ
+            if (pStageHitBox_2D3D->GetHitBoxType() != CStageCollisionBox3D2D::TYPE_LEFTSLOPE)
+            {
+                bSkip = true;
+            }
+
+            if (!bSkip)
+            {
+                D3DXMATRIX matWorld;
+                D3DXMatrixIdentity(&matWorld);
+
+                // メッシュのスケーリングと回転・位置を適用
+                D3DXMatrixScaling(&matWorld, pStageHitBox_2D3D->GetSizeMag().x, pStageHitBox_2D3D->GetSizeMag().y, pStageHitBox_2D3D->GetSizeMag().z);
+                D3DXMatrixRotationYawPitchRoll(&matWorld, pStageHitBox_2D3D->GetDATA().rot.y, pStageHitBox_2D3D->GetDATA().rot.x, pStageHitBox_2D3D->GetDATA().rot.z);
+                D3DXMatrixTranslation(&matWorld, pStageHitBox_2D3D->GetDATA().Pos.x, pStageHitBox_2D3D->GetDATA().Pos.y, pStageHitBox_2D3D->GetDATA().Pos.z);
+
+                LPD3DXMESH pMesh;
+                pStageHitBox_2D3D->GetMesh()->CloneMeshFVF(
+                    D3DXMESH_MANAGED,
+                    D3DFVF_XYZ | D3DFVF_NORMAL,
+                    EscDevice,
+                    &pMesh);
+
+                // 衝突検出用の最短距離と交差情報の初期化
+                float nearestDist = FLT_MAX;
+                D3DXVECTOR3 hitPoint, hitNormal;
+                BOOL hit = FALSE;
+                DWORD faceIndex;
+                FLOAT u, v, dist;
+
+                if (SUCCEEDED(D3DXIntersect(pMesh, &pos, &rayDirection, &hit, &faceIndex, &u, &v, &dist, NULL, NULL)))
+                {
+                    if (hit && dist < nearestDist)
+                    {
+                        nearestDist = dist;
+                        EscHit = true;
+                        bLandingHit = true;
+
+                        // ワールド行列の設定
+                        D3DXMATRIX matScale, matRot, matTrans, matWorld;
+                        D3DXMatrixScaling(&matScale, pStageHitBox_2D3D->GetSizeMag().x, pStageHitBox_2D3D->GetSizeMag().y, pStageHitBox_2D3D->GetSizeMag().z);
+                        D3DXMatrixRotationYawPitchRoll(&matRot, pStageHitBox_2D3D->GetDATA().rot.y, pStageHitBox_2D3D->GetDATA().rot.x, pStageHitBox_2D3D->GetDATA().rot.z);
+                        D3DXMatrixTranslation(&matTrans, pStageHitBox_2D3D->GetDATA().Pos.x, pStageHitBox_2D3D->GetDATA().Pos.y, pStageHitBox_2D3D->GetDATA().Pos.z);
+                        matWorld = matScale * matRot * matTrans;
+
+                        // インデックスバッファと頂点バッファから交差面の頂点座標を取得
+                        LPDIRECT3DVERTEXBUFFER9 pVertexBuffer = nullptr;
+                        LPDIRECT3DINDEXBUFFER9 pIndexBuffer = nullptr;
+                        pMesh->GetVertexBuffer(&pVertexBuffer);
+                        pMesh->GetIndexBuffer(&pIndexBuffer);
+
+                        // 三角形の頂点インデックスを取得
+                        WORD* pIndices = nullptr;
+                        pIndexBuffer->Lock(0, 0, (void**)&pIndices, D3DLOCK_READONLY);
+                        WORD i0 = pIndices[faceIndex * 3 + 0];
+                        WORD i1 = pIndices[faceIndex * 3 + 1];
+                        WORD i2 = pIndices[faceIndex * 3 + 2];
+                        pIndexBuffer->Unlock();
+
+                        // 三角形の頂点座標を取得
+                        D3DXVECTOR3* pVertices = nullptr;
+                        pVertexBuffer->Lock(0, 0, (void**)&pVertices, D3DLOCK_READONLY);
+                        D3DXVECTOR3 v0 = pVertices[i0];
+                        D3DXVECTOR3 v1 = pVertices[i1];
+                        D3DXVECTOR3 v2 = pVertices[i2];
+                        pVertexBuffer->Unlock();
+
+                        // 頂点座標をワールド行列で変換
+                        D3DXVec3TransformCoord(&v0, &v0, &matWorld);
+                        D3DXVec3TransformCoord(&v1, &v1, &matWorld);
+                        D3DXVec3TransformCoord(&v2, &v2, &matWorld);
+
+                        // バリュエーション補間で接触点を計算
+                        D3DXVECTOR3 hitPoint = (1 - u - v) * v0 + u * v1 + v * v2;
+
+                        // 法線ベクトルを計算（クロス積を用いる）
+                        D3DXVECTOR3 edge1 = v1 - v0;
+                        D3DXVECTOR3 edge2 = v2 - v0;
+                        D3DXVECTOR3 hitNormal;
+                        D3DXVec3Cross(&hitNormal, &edge1, &edge2);
+                        D3DXVec3Normalize(&hitNormal, &hitNormal);
+
+                        // ヒットデータに情報を反映
+                        HitData.bHit = true;
+                        HitData.HitAngle = hitNormal;  // ヒット角度として法線を設定
+                        HitData.ResultDistance = hitPoint - pos;  // 接触点までのベクトル
+                        HitData.targetIndex = nIndex;
+
+                        // 後処理
+                        pVertexBuffer->Release();
+                        pIndexBuffer->Release();
+                    }
+                }
+
+                pMesh->Release();
+            }
+        }
+
+        pObject = pObject->GetNext();
+        nIndex++;
+    }
+
+    HitData.bHit = EscHit;
+    if (bLandingHit)
+    {
+        HitData.HitAngle.y = 1;  // 必要に応じてY軸の角度を修正
+    }
+
+    return HitData;
 }
