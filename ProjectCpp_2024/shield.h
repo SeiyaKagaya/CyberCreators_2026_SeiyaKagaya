@@ -13,6 +13,9 @@
 #include "MathUtilities.h"
 #include "player_motion.h"
 
+#include "manager.h"
+#include "newbullet.h"
+
 class CShield : public CObjectX
 {
 public:
@@ -40,6 +43,16 @@ public:
 
 private:
 	D3DXMATRIX m_mtxWorld;
+
+	LPD3DXMESH m_pMesh[2]; // Meshポインタ
+	LPD3DXBUFFER m_pBuffMat[2]; // マテリアルへのポインタ
+	DWORD m_dwNumMat[2]; // マテリアルの数
+		//テクスチャ読み込み
+	LPDIRECT3DTEXTURE9	m_ESCpTexture[2];
+	bool m_bFast[2];
+	D3DXCOLOR m_OriginalColor[2];
+
+
 	CMathProc::CollisionData m_HitData;//当たり判定データ
 
 	CObjectMotionPlayer* m_pParent;//すべての親のポインタ
@@ -48,6 +61,19 @@ private:
 
 	CModelParts* m_pParentParts;//親モデルへのポインタ
 
+
+		//OBBの当たり判定用
+	COBB m_Obb;
+
+	int m_nLife = 300;
+
+
 };
 
 #endif
+
+
+
+
+
+

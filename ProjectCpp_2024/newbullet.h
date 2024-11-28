@@ -88,34 +88,37 @@ private:
 
 
 
-class CNewBulletALL// : public CObjectX
+class CNewBulletALL : public CObjectX
 {
 public:
-	static const int MAXBULLETALL = 240;
+	static const int MAXBULLETALL = 120;
 	
-	CNewBulletALL();//コンストラクタ
-	~CNewBulletALL();//デストラクタ
-	HRESULT Init();
-	void Uninit();
+	CNewBulletALL(int nPriority = CObject::LAYERINDEX_NEWBULLET_MNG);//コンストラクタ
+	~CNewBulletALL() override;//デストラクタ
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+	static CNewBulletALL* Create();//オブジェクト生成
 
 	void ReleaseAllBullet();
 
 	//バグ回避のため凍結
-	static CNewBulletALL* Create();//オブジェクト生成
+	//static CNewBulletALL* Create();//オブジェクト生成
 
 	//規定数を初期化する
 	void AllClean();
 
-	static CNewBullet* GetBulletData(int nNum);
+	CNewBullet* GetBulletData(int nNum);
 
 	//すでに生成されているもののbUseをtrueにして稼働させる
-	static void SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR col, void* pCaller);
+	void SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR col, void* pCaller);
 
 
 private:
 
 	//先に確保し、回す
-	static CNewBullet* m_NewBullet[MAXBULLETALL];
+	CNewBullet* m_NewBullet[MAXBULLETALL];
 };
 
 #endif

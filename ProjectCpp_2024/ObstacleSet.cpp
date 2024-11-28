@@ -11,6 +11,8 @@
 std::vector<CObstacleSet::OBSTACLEINFO> CObstacleSet::m_ObstacleInfo = {}; // xfileとインデックスの格納
 int CObstacleSet::m_ObstacleCount = 10; // 上の構造体のサイズ
 
+bool CObstacleSet::m_bRelease = false;//開放したか
+
 int CObstacleSet::m_NowSetModelIndex = 0;//現在のモデルタイプ
 int CObstacleSet::m_MAXModelIndex = 0;//最大モデル数
 D3DXVECTOR3 CObstacleSet::m_SetRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);//現在のモデルタイプ
@@ -104,7 +106,21 @@ HRESULT CObstacleSet::Init()
 //=============================
 void CObstacleSet::Uninit()
 {
+    int test = 0;
+
+    if (m_bRelease == false)
+    {
+        m_bRelease = true;
+        for (int i = 0; i < m_ObstacleCount; i++)
+        {
+            delete m_ObstacleInfo[i].pFilePass;
+        }
+    }
+ 
+    
     CObjectX::Uninit();
+
+   // delete this;
 }
 
 //=============================
@@ -127,54 +143,6 @@ void CObstacleSet::Update()
     {
 
     }
-
-#if 0
-
-
-    if (m_bPreview == true)
-    {
-
-        DATA EscData = GetDATA();//取得
-
-        //Mouseで画面に指してる3D空間座標取得
-        EscData.Pos = keyboard->GetMouseRayIntersection(*pManager->GetCamera());
-        
-        EscData.rot = m_SetRot;
-
-        SetDATA(EscData); // 格納
-   
-    }
-    else
-    {
-        //消されるか判別
-        if (keyboard->GetTrigger(DIK_F1) == true)
-        {//削除
-               //Mouseで画面に指してる3D空間座標取得
-            DATA EscData2;
-            EscData2.Pos = keyboard->GetMouseRayIntersection(*pManager->GetCamera());
-
-            //範囲制定
-            D3DXVECTOR3 HitMin = D3DXVECTOR3(EscData2.Pos.x - 200.0f, 0.0f, EscData2.Pos.z - 200.0f);
-            D3DXVECTOR3 HitMax = D3DXVECTOR3(EscData2.Pos.x + 200.0f, 0.0f, EscData2.Pos.z + 200.0f);
-
-            if (HitMin.x <= EscData.Pos.x && HitMax.x >= EscData.Pos.x)
-            {
-                if (HitMin.z <= EscData.Pos.z && HitMax.z >= EscData.Pos.z)
-                {//判定内
-                    SetDeath(true);
-  //                  Release();//対象をリリース
-//                       break;
-                }
-            }
-        }
-    }
-
-
-
-#else
-
-#endif // 0
-
 
 }
 
@@ -230,6 +198,14 @@ CObstacleSet* CObstacleSet::Create(DATA SetData, int SetType, bool bBreak, bool 
 //=============================
 void CObstacleSet::Resize(int count)
 {
+
+    //// 既存の動的メモリを解放
+    //for (size_t i = 0; i < m_ObstacleInfo.size(); ++i)
+    //{
+    //    delete[] m_ObstacleInfo[i].pFilePass; // 動的に確保したメモリを解放
+    //    m_ObstacleInfo[i].pFilePass = nullptr; // ポインタを無効化
+    //}
+
     m_ObstacleInfo.resize(count);
 }
 

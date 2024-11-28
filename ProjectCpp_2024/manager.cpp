@@ -32,7 +32,6 @@ CScene* CManager::m_pScene = nullptr;
 
 CAllTexture* CManager::m_allTexture = nullptr;
 
-
 //=============================
 // コンストラクタ
 //=============================
@@ -59,6 +58,13 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	//レンダラー
 	m_pRenderer = new CRenderer();
 	m_pRenderer->Init(hWnd,TRUE);
+
+
+	
+	
+	//	pManager->SetNewBulletAll(CNewBulletALL::Create());
+	
+
 
 	//キーボード
 	m_pKeyboard = new CInputKeyboard();
@@ -103,6 +109,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	m_Sound = CSound::Create(hWnd);
 
+
 //	m_pScore=CScore::Create();
 
 	//CObject3D::Create();
@@ -118,39 +125,78 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 //=============================
 void CManager::Uninit()
 {
-	m_NewBulletAll->ReleaseAllBullet();
+	
 
 	m_Sound->UninitSound();
 	if (m_Sound != nullptr)
 	{
 		delete m_Sound;
+		m_Sound = nullptr;
 	}
 
-
 	m_Pause->Uninit();
-	m_StayUI->Uninit();
 
 	if (m_Pause != nullptr)
 	{
 		delete m_Pause;
+		m_Pause = nullptr;
 	}
-	if (m_pCamera != nullptr)
+
+	m_StayUI->Uninit();
+	if (m_StayUI != nullptr)
 	{
 		delete m_StayUI;
+		m_StayUI = nullptr;
 	}
 
 	m_pLight->Uninit();
+	if (m_pLight != nullptr)
+	{
+		delete m_pLight;
+		m_pLight = nullptr;
+	}
+
 	m_pCamera->Uninit();
+	if (m_pCamera != nullptr)
+	{
+		delete m_pCamera;
+		m_pCamera = nullptr;
+	}
 
 	m_pFade->Uninit();
+	if (m_pFade != nullptr)
+	{
+		delete m_pFade;
+		m_pFade = nullptr;
+	}
 
 	m_allTexture->Uninit();
+	if (m_allTexture != nullptr)
+	{
+		delete m_allTexture;
+		m_allTexture = nullptr;
+	}
 
 	m_pjoyPad->Uninit();
+	if (m_pjoyPad != nullptr)
+	{
+		delete m_pjoyPad;
+		m_pjoyPad = nullptr;
+	}
 
 	m_pKeyboard->Uninit();
+	if (m_pKeyboard != nullptr)
+	{
+		delete m_pKeyboard;
+		m_pKeyboard = nullptr;
+	}
 
 	m_pFont->UninitText();
+	if (m_pFont != nullptr)
+	{
+		delete m_pFont;
+		m_pFont = nullptr;
+	}
 
 	CObject::ReleaseAll();//全オブジェクト開放
 
@@ -160,13 +206,6 @@ void CManager::Uninit()
 		delete m_pRenderer;
 		m_pRenderer = nullptr;
 	}
-
-	//if (m_pScore != nullptr)
-	//{
-	//	m_pScore->Uninit();
-	//	delete m_pScore;
-	//	m_pScore = nullptr;
-	//}
 
 
 
@@ -354,17 +393,17 @@ CFade* CManager::GetFade()
 {
 	return m_pFade;
 }
-//==========================
-//バレット管理取得
-//==========================
-CNewBulletALL* CManager::GetNewBulletAll()
-{
-	return m_NewBulletAll;
-}
-void CManager::SetNewBulletAll(CNewBulletALL* GetNewBulletAll)
-{
-	m_NewBulletAll = GetNewBulletAll;
-}
+////==========================
+////バレット管理取得
+////==========================
+//CNewBulletALL* CManager::GetNewBulletAll()
+//{
+//	return m_NewBulletAll;
+//}
+//void CManager::SetNewBulletAll(CNewBulletALL* GetNewBulletAll)
+//{
+//	m_NewBulletAll = GetNewBulletAll;
+//}
 //CScore* CManager::GetScore()
 //{
 //	return m_pScore;

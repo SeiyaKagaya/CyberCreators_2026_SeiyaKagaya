@@ -102,6 +102,9 @@ HRESULT CModelParts::Init()
 //=============================
 void CModelParts::Uninit()
 {
+    delete m_PartfilePass;
+    m_PartfilePass = nullptr;
+
     CObjectX::Uninit();
 }
 //=============================
@@ -291,7 +294,7 @@ void CModelParts::Update()
                     break;
                 }
 
-                CObject3DParticle::Create(SETPOS, setcol);
+  //              CObject3DParticle::Create(SETPOS, setcol);
             }
 
 

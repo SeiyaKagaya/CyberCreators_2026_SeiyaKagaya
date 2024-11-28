@@ -38,12 +38,11 @@ public:
 		UI_LOAD_GAUGE_BACK_WEPON3,
 		UI_LOAD_GAUGE_WEPON3,
 
-
-
-
-
 		UI_ACTION,
 		UI_PLAYERPIN,
+
+		UI_TEXTWINDOW,
+		UI_TEXTIMAGE,
 		UI_MAX,
 	}UITYPE;
 
@@ -67,6 +66,7 @@ public:
 	static const int DELAYRAME1 = 4;
 	static const int PHASE2RAME = 30;
 	static const int PHASE3RAME = 50;
+	static const int PHASE4RAME = 15;
 
 	static const int DELAY_UI_TO_UI =10;//UI起動時ラグ
 
@@ -87,7 +87,7 @@ public:
 
 	//UIのモーション
 	void OnlineTrigger(int nCnt);
-	void OfflineTrigger(int nCnt);//最後はReleaseする。
+	void OfflineTrigger(int nCnt);
 
 	void UIDrawReset(int nCnt);//描画を一からにx
 
@@ -122,9 +122,12 @@ private:
 
 	int m_nWeponUIDrawA[UI_MAX];//武器用UIのアルファ値
 
+	bool m_bFirst[UI_MAX];
+
 	bool m_bNowRestart = false;
 	int m_NowUiCount = 0;//現在のUI階層
 	int m_NowUiFrameCnt = 0;//現在のカウント
+
 };
 
 #endif

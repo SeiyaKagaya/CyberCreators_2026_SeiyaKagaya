@@ -9,6 +9,7 @@
 
 #include <Windows.h>
 #include <d3dx9.h>
+#include <memory>
 
 class CObject
 {
@@ -55,6 +56,8 @@ public:
         LAYERINDEX_OBJECTX,
         LAYERINDEX_PLAYER3D,
         LAYERINDEX_MODELPARTS,
+
+        LAYERINDEX_NEWBULLET_MNG,
         LAYERINDEX_NEWBULLET,
         LAYERINDEX_MOTIONMODEL,
         LAYERINDEX_MOTIONPLAYER,
@@ -82,6 +85,7 @@ public:
         LAYERINDEX_RESULTUI,
         LAYERINDEX_TIME,
         LAYERINDEX_SCORE,
+        LAYERINDEX_TEXTWINDOW,
         LAYERINDEX_MAX,
     } LAYERINDEX;
 
@@ -129,6 +133,7 @@ public:
         OBJECT_PLAYER3D,
         OBJECT_BLOCK3D,
 
+        OBJECT_NEWBULLET_MNG,
         OBJECT_NEWBULLET,
         OBJECT_MOTIONMODEL,
         OBJECT_MOTIONPLAYER,
@@ -138,9 +143,10 @@ public:
 
         OBJECT_MODELPARTS,
         OBJECT_SHIELD,
-
+        OBJECT_TEXTWINDOW,
         OBJECT_GAMEUI,
         OBJECT_RESULTUI,
+
         OBJECT_MAX,
     } OBJECTTYPE;
 

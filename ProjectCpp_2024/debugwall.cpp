@@ -60,7 +60,7 @@ HRESULT CDebugwall::Init()
     //テクスチャ取得
     CAllTexture* pTexture = pManager->GetTexture();
 
-    int texIndex = pTexture->Regist("DATA\\TEXTURE\\TestField.png", EscDevice);//テクスチャ登録
+    int texIndex = pTexture->Regist("DATA\\TEXTURE\\iwaWall.png", EscDevice);//テクスチャ登録
 
     m_ESCpTexture = pTexture->GetAddress(texIndex);
 
@@ -137,10 +137,10 @@ void CDebugwall::InputpVtx()
     pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
     //頂点カラーの設定
-    pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.55f);
-    pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.55f);
-    pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.55f);
-    pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.55f);
+    pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
     //テクスチャ座標を設定
     pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上

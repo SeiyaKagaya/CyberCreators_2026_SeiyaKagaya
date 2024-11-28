@@ -132,57 +132,57 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision(D3DXVECTOR3 MyPos, floa
 //	D3DXVECTOR3 TargetPos = D3DXVECTOR3(500.0f, 500.0f, 0.0f);
 //	float ftarget_Radius = 25.0;
 
-	if (TargetType == CObject::OBJECT_NEWBULLET)
-	{
-		CRenderer* pRenderer = nullptr;
+	//if (TargetType == CObject::OBJECT_NEWBULLET)
+	//{
+	//	CRenderer* pRenderer = nullptr;
 
-		CManager* pManager = CManager::GetInstance();
-
-
-		for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
-		{
-			CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
-
-			CNewBullet* pBullet = pBulletAll->GetBulletData(i);
-			
-			if (nID != i)
-			{//自身じゃないとき
-				if (pBullet->GetbUse() == true)
-				{
-					CObject::DATA EscData = pBullet->GetDATA();
-
-					if (pBullet->GetDeathNow() == false)
-					{//死亡判定じゃない時
-
-						EscData.Pos;//相手座標
-						EscData.Radius;//相手半径
+	//	CManager* pManager = CManager::GetInstance();
 
 
-						//ここで衝突判定
-						//どれだけ食い込んでるかも計算
+	//	for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
+	//	{
+	//		CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
 
-						D3DXVECTOR3 diff = MyPos - EscData.Pos; // 2点間の距離
-						float Distance = D3DXVec3Length(&diff);       // 距離を絶対値に
+	//		CNewBullet* pBullet = pBulletAll->GetBulletData(i);
+	//		
+	//		if (nID != i)
+	//		{//自身じゃないとき
+	//			if (pBullet->GetbUse() == true)
+	//			{
+	//				CObject::DATA EscData = pBullet->GetDATA();
 
-						float HitDistance = fMy_Radius + EscData.Radius;//半径同士足したの長さ
+	//				if (pBullet->GetDeathNow() == false)
+	//				{//死亡判定じゃない時
 
-						if (HitDistance > Distance)
-						{//半径同士合算より現在の距離が近い時==接触
+	//					EscData.Pos;//相手座標
+	//					EscData.Radius;//相手半径
 
-							HitData.bHit = true;
 
-							pBullet->SetGoodby();
-							//CObjectExplosionBill::Create(EscData.Pos);
+	//					//ここで衝突判定
+	//					//どれだけ食い込んでるかも計算
 
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-	else
-	{
+	//					D3DXVECTOR3 diff = MyPos - EscData.Pos; // 2点間の距離
+	//					float Distance = D3DXVec3Length(&diff);       // 距離を絶対値に
+
+	//					float HitDistance = fMy_Radius + EscData.Radius;//半径同士足したの長さ
+
+	//					if (HitDistance > Distance)
+	//					{//半径同士合算より現在の距離が近い時==接触
+
+	//						HitData.bHit = true;
+
+	//						pBullet->SetGoodby();
+	//						//CObjectExplosionBill::Create(EscData.Pos);
+
+	//						break;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+	//else
+	//{
 		//ここに円形当たり判定追加
 
 		// 配置物プライオリティの先頭を取得
@@ -214,6 +214,7 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision(D3DXVECTOR3 MyPos, floa
 
 						
 						case CObject::OBJECT_NEWBULLET:
+
 							pNewBullet = (CNewBullet*)pObject;
 							EscData = pNewBullet->GetDATA();
 
@@ -271,7 +272,7 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision(D3DXVECTOR3 MyPos, floa
 				nIndex++;
 			}
 		}
-	}
+//	}
 
 	return HitData;
 }
@@ -1175,20 +1176,20 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	obb2Vertices[6] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] + obb2.m_Direct[2] * obb2.m_fLength[2];
 	obb2Vertices[7] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] - obb2.m_Direct[2] * obb2.m_fLength[2];
 
-	//// OBBの頂点間にラインを引く
-	//for (int i = 0; i < 4; ++i)
-	//{
-	//	for (int j = 4; j < 8; ++j)
-	//	{
-	//		if (i != j)
-	//		{
-	//			Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
-	//			Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
-	//		}
-	//	}
-	//}
+	// OBBの頂点間にラインを引く
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 4; j < 8; ++j)
+		{
+			if (i != j)
+			{
+				Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
+				Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
+			}
+		}
+	}
 
-	Cline::Create(obb1Vertices[0], obb1Vertices[1], D3DXCOLOR(1, 0, 0, 1));
+	/*Cline::Create(obb1Vertices[0], obb1Vertices[1], D3DXCOLOR(1, 0, 0, 1));
 	Cline::Create(obb2Vertices[0], obb2Vertices[1], D3DXCOLOR(0, 1, 0, 1));
 
 	Cline::Create(obb1Vertices[0], obb1Vertices[4], D3DXCOLOR(1, 0, 0, 1));
@@ -1198,9 +1199,12 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	Cline::Create(obb2Vertices[1], obb2Vertices[5], D3DXCOLOR(0, 1, 0, 1));
 
 	Cline::Create(obb1Vertices[5], obb1Vertices[4], D3DXCOLOR(1, 0, 0, 1));
-	Cline::Create(obb2Vertices[5], obb2Vertices[4], D3DXCOLOR(0, 1, 0, 1));
+	Cline::Create(obb2Vertices[5], obb2Vertices[4], D3DXCOLOR(0, 1, 0, 1));*/
 
 	
+
+
+
 	//--------------------------------------------------------------------------------
 #else
 
@@ -2713,6 +2717,9 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 
 	return HitData;
 }
+//=============================
+// mesh
+//=============================
 D3DXVECTOR3 CMathProc::GetMeshNormal(ID3DXMesh* pMesh, DWORD faceIndex)
 {
 	if (pMesh == nullptr) return D3DXVECTOR3(0, 0, 0);
@@ -2759,33 +2766,47 @@ D3DXVECTOR3 CMathProc::GetMeshNormal(ID3DXMesh* pMesh, DWORD faceIndex)
 void CMathProc::LoadRouteCSV(const char* filename)
 {
 	std::ifstream file(filename);
-	
-	if (!file.is_open()) 
+
+	if (!file.is_open())
 	{
 		std::cerr << "ファイルを開けませんでした: " << filename << std::endl;
 		return;
 	}
 
-	std::string line;
-	int y = 0;
-
-	while (std::getline(file, line) && y < GRIDROW * GRIDCOL)
+	try
 	{
-		std::istringstream lineStream(line);
-		std::string cell;
-		int x = 0;
+		std::string line;
+		int y = 0;
 
-		while (std::getline(lineStream, cell, ',') && x < GRIDROW * GRIDCOL)
+		while (std::getline(file, line) && y < GRIDROW)
 		{
-			RouteTable[x][y] = std::stoi(cell);
-			x++;
+			std::istringstream lineStream(line);
+			std::string cell;
+			int x = 0;
+
+			while (std::getline(lineStream, cell, ',') && x < GRIDCOL)
+			{
+				try
+				{
+					RouteTable[x][y] = std::stoi(cell);
+				}
+				catch (const std::invalid_argument&)
+				{
+					std::cerr << "数値変換エラー: " << cell << std::endl;
+					RouteTable[x][y] = -1; // エラー時のデフォルト値
+				}
+				x++;
+			}
+			y++;
 		}
-		y++;
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "読み込み中にエラーが発生しました: " << e.what() << std::endl;
 	}
 
-	file.close();
+	file.close(); // 明示的な close（不要だが記述しても問題ない）
 }
-
 
 
 

@@ -59,24 +59,27 @@ void CObject::ReleaseAll()
 {
 	for (int nCnt2 = 0; nCnt2 < LAYERINDEX_MAX; nCnt2++)
 	{
-		CObject* pObj = m_pTop[nCnt2];//先頭取得
-		
-		if (m_pTop[nCnt2] != nullptr)
-		{//先頭がない==プライオリティまるっとない
-		
-		 //最大数不明のためwhile
-			while (pObj != nullptr)
-			{
-				CObject* pNext = pObj->m_pNext;
-				if (pObj->m_ObjectType != OBJECT_FADE)
-				{
-					pObj->m_bDeath = true;//フラグ建てる
-					pObj->Release();//開放
-				}
-				pObj = pNext;
+		// 先頭オブジェクトを取得
+		CObject* pObj = m_pTop[nCnt2];
 
+		while (pObj != nullptr)
+		{
+			// 次のノードを先に保持しておく
+			CObject* pNext = pObj->m_pNext;
+
+			// オブジェクトタイプの確認
+			if (pObj->m_ObjectType != OBJECT_FADE)
+			{
+				pObj->m_bDeath = true;  // フラグを立てる
+				pObj->Release();       // 開放
 			}
+
+			// 次のノードへ進む
+			pObj = pNext;
 		}
+
+		// レイヤの先頭をリセット（全て開放済みのため）
+		m_pTop[nCnt2] = nullptr;
 	}
 }
 //=============================
@@ -119,25 +122,25 @@ void CObject::DrawAll()
 {
 	for (int nCnt2 = 0; nCnt2 < LAYERINDEX_MAX; nCnt2++)
 	{
-		if (m_pTop[nCnt2] != nullptr)
-		{
-			CObject* pObj = m_pTop[nCnt2];//先頭取得
-			
-			if (nCnt2 == (int)LAYERINDEX_LINE)
-			{
-				int test = 0;
-			}
-			if (m_pTop[nCnt2] != nullptr)
-			{//先頭がない==プライオリティまるっとない
+		// レイヤー先頭オブジェクトを取得
+		CObject* pObj = m_pTop[nCnt2];
 
-				//最大数不明のためwhile
-				while (pObj != nullptr)
-				{
-					CObject* pNext = pObj->m_pNext;
-					pObj->Draw();
-					pObj = pNext;
-				}
+		
+		// リストが空でない場合に描画
+		while (pObj != nullptr)
+		{
+			// 次のオブジェクトを先に保持
+			CObject* pNext = pObj->m_pNext;
+
+			// オブジェクトが有効か確認してから描画
+			if (pObj->m_bDeath == false)  // "死亡フラグ" が立っていない
+			{
+				pObj->Draw();
 			}
+		
+
+			// 次のオブジェクトへ
+			pObj = pNext;
 		}
 	}
 }
@@ -232,32 +235,35 @@ int CObject::GetNum()
 //=============================
 void CObject::Release()
 {
-	// 前後をつなげる
+	// デバッグ用ログ（削除前のポインタ状態を出力）
+//	std::cout << "Releasing object: " << this << std::endl;
+//	std::cout << "Prev: " << m_pPrev << ", Next: " << m_pNext << std::endl;
+
 	if (m_pPrev != nullptr)
-	{//自分より前がいる時
-		m_pPrev->m_pNext = m_pNext;//次を前に
+	{
+		if (m_pNext != nullptr)
+		{
+			m_pPrev->m_pNext = m_pNext;
+		}
+		else
+		{
+			m_pPrev->m_pNext = nullptr;
+		}
 	}
-	else
+	else if (m_pTop[m_nPriority] == this)
 	{
 		m_pTop[m_nPriority] = m_pNext;
 	}
 
-	if (m_pTop[m_nPriority] == this)
-	{//自身が先頭のとき
-		m_pTop[m_nPriority] = m_pNext;//先頭を前に
-	}
-
 	if (m_pNext != nullptr)
-	{//次がある時
-		m_pNext->m_pPrev = m_pPrev;//次の"前"を自身の前に
+	{
+		m_pNext->m_pPrev = m_pPrev;
 	}
 
 	Uninit();
-
-	m_nNumAll--;//総数をデクリメント
+	m_nNumAll--;
 
 	delete this;
-
 }
 
 //=============================

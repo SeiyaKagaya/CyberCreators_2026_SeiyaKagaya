@@ -56,6 +56,9 @@ private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff2;//頂点バッファ
 	//テクスチャや頂点座標などの保持
 	VERTEX_2D m_pVtx2[BASE_INDEX];
+
+
+	bool bBulletSet = false;
 };
 
 

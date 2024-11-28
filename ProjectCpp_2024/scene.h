@@ -24,11 +24,13 @@
 #include "GameStayUI.h"
 
 #include "Game_UI.h"
+#include "textwindow.h"
+
 class CScene
 {
 public:
 	static const int STAYFRAME = 90;
-	static const int STAYFRAME2 = 70;
+	static const int STAYFRAME2 = 45;//世界を若干伸ばす
 	static const int BUTTONCNT = 100;
 	typedef enum
 	{
@@ -57,9 +59,13 @@ public:
 	static void SetStageClear(bool bSet);
 	static bool GetStageClear();
 
+
+
 private:
 	static  MODE m_NowState;
 	static bool m_bStageClear;
+	//static bool m_bNow3DMode;//現在3Dモードか
+
 
 	MODE m_Mode;	//現在のモード
 
@@ -72,18 +78,23 @@ protected:
 
 	CGameUI* m_CGameUI;
 
-	int m_StayTime = STAYFRAME;
+	CTextWindow* m_CTextWindow;
 
-	bool m_StayPush = false;
+	int m_StayTime = STAYFRAME;//ゲーム終了後UIでるまで待機
 
-	int m_Stay2 = STAYFRAME2;
+	bool m_StayPush = false;//ボタン入力待機
 
-	bool m_bStay2BOOL = false;
+	int m_Stay2 = STAYFRAME2;//若干伸ばす終了時間
 
-	bool m_bNext = false;
+	bool m_bStay2BOOL = false;//終了を若干伸ばす
 
+	bool m_bNext = false;//次にすすめるか
+
+	//ボタン点滅関係
 	int m_nbuttonCnt=0;
 	bool m_bButtonBool = false;
+
+	bool m_bSetTextWindow=false;//テキストウィンドウが描画されていたか
 };
 
 

@@ -20,6 +20,8 @@
 #include "linerinterUI.h"
 #include "linerinterUI.h"
 #include "shield.h"
+#include "enemy_motion_Nomal.h"
+#include "enemy_motion_fast.h"
 //#include "movesmoke.h"
 
 int CObjectMotionPlayer::m_nNumPlayerAll = START_PLAYER_NUM;//初期値３
@@ -149,11 +151,6 @@ void CObjectMotionPlayer::Update()
 	
 		if (m_bDown == false)
 		{
-			if (m_ShotDelay > 0)
-			{
-				m_ShotDelay--;
-			}
-
 			CRenderer* pRenderer = nullptr;
 
 			CManager* pManager = CManager::GetInstance();
@@ -167,94 +164,113 @@ void CObjectMotionPlayer::Update()
 			//ショイパットの状態を取得
 			DWORD dwResult = XInputGetState(0, &joykeystate);
 
-			//Mouseで画面に指してる3D空間座標取得
-			D3DXVECTOR3 TargetPos = D3DXVECTOR3(0.0f, 0.0f, -140.0f);
+			if (pManager->GetbNow3DMode() == false)
+			{//2D
+			}
+			else
+			{//3D
+			}
 
+
+
+
+
+
+			if (m_ShotDelay > 0)
+			{
+				m_ShotDelay--;
+			}
+
+
+	
 			DATA classData = GetClassData();
 
 			m_TargetPos += classData.move;
-			TargetPos = m_TargetPos;
-
-			m_pShield->SetPos(TargetPos);
-		
 
 
 
+			if (pManager->GetbNow3DMode() == false)
+			{//2D
 
-
-
-
-			//Mouseの方向にballetを飛ばす
+			//	シールド周り
 			//----------------------------------------------------------------------------------
+			// 中心座標 DirectionPos を設定
+				D3DXVECTOR3 DirectionPos = classData.Pos;
+				DirectionPos.y += SHIELD_SET_ADDPOS;
 
-			D3DXVECTOR3 DirectionPos = classData.Pos;
-			DirectionPos.y += 150.0f;
+				// 方向ベクトルを計算
+				D3DXVECTOR3 direction = m_TargetPos - DirectionPos;
 
-			//Mouseで画面に指してる3D空間座標取得
-			D3DXVECTOR3 TargetPos2 = m_TargetPos;
-			// 方向ベクトルを計算
-			D3DXVECTOR3 direction = TargetPos2 - DirectionPos;
+				// XZ 平面での角度を計算 (上方向を基準とする円周角度)
+				float angleRadians = atan2f(direction.x, -direction.y); // -direction.x で基準を上方向に変更
 
-			// XZ 平面での角度を計算 (DirectionPos を中心とした円の角度)
-			float angleRadians = atan2f(direction.z, direction.x);
+				// 回転データを設定 (X 軸回転として渡す場合)
+				D3DXVECTOR3 SetRot = D3DXVECTOR3(angleRadians + (-D3DX_PI * 0.5f), (-D3DX_PI * 0.5f), 0.0f);
 
-			// 角度をラジアンから度に変換（必要であれば）
-			float angleDegrees = D3DXToDegree(angleRadians);
+				// シールドの回転を設定
+				m_pShield->SetRot(SetRot);
 
-			D3DXVECTOR3 SetRot = D3DXVECTOR3(0.0f, angleDegrees, 0.0f);
+				D3DXVECTOR3 SETPOS = m_TargetPos;
 
-		//	m_pShield->SetRot(SetRot);
+				D3DXVec3Normalize(&direction, &direction);
 
+				SETPOS -= direction * 180.0f;
 
+				m_pShield->SetPos(SETPOS);
+				//----------------------------------------------------------------------------------
+			}
+			else
+			{//3D
+				//	シールド周り
+			//----------------------------------------------------------------------------------
+		
+				D3DXVECTOR3 ESCDATA = D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 150.0f, classData.Pos.z);
 
+				m_pShield->SetPos(ESCDATA);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			}
 
 
 
 
-			
-			if (dwResult == ERROR_SUCCESS)
+			if (pManager->GetbNow3DMode() == false)
+			{//2D
+
+				//線形補完地点
+				SetLinearInterpolation();
+			}
+			else
+			{//3D
+			}
+
+			if (dwResult != ERROR_SUCCESS)
 			{//パッド接続あり
+				pManager->bSetInputState(true);
+			}
+
+
+
+
+
+			if (pManager->GetbNow3DMode() == false)
+			{//2D
+				if (pManager->bGetInputState() == true)
+				{//操作方法--trueでコントローラー
+					//キーボード/コントローラー入力反映(移動)
+					ControllerInput2D();
+				}
+
 			}
 			else
-			{
-				pManager->bSetInputState(false);
+			{//3D
+				if (pManager->bGetInputState() == true)
+				{//操作方法--trueでコントローラー
+					//キーボード/コントローラー入力反映(移動)
+					ControllerInput3D();
+				}
 			}
 			
-			//線形補完地点
-			SetLinearInterpolation();
-
-			if (pManager->bGetInputState() == true)
-			{//操作方法--trueでコントローラー
-				//キーボード/コントローラー入力反映(移動)
-				ControllerInput();
-				TargetPos = m_TargetPos;
-			}
-			else
-			{//キーボード入力反映(移動)
-				Input();
-
-				TargetPos = keyboard->GetMouseRayIntersection(*pManager->GetCamera());//マウス位置
-
-				m_TargetPos = TargetPos;
-			}
-
-
+			//GUARD描画するか
 			if (m_guard == true)
 			{
 				m_pShield->setDrawOk(true);
@@ -264,57 +280,67 @@ void CObjectMotionPlayer::Update()
 				m_pShield->setDrawOk(false);
 			}
 
-
-		/*	m_TargetPos.x += GetClassData().move.x*0.7f;
-			m_TargetPos.y += GetClassData().move.y*0.9f;
-			m_TargetPos.z += GetClassData().move.z*0.7f;*/
-
 			 classData = GetClassData();
 
-			//2D
-			//--------------------------------------
-			//照準位置制限(自機より円形)
-
-			if (pManager->bGetInputState() == true)
-			{//操作方法--trueでコントローラー
-				D3DXVECTOR3 PlayerPos = GetClassData().Pos;
-				float fRadius = 300.0f;
-
-				//m_TargetPosをこの円の中に収める
-				PlayerPos.y += 150.0f;
-
-				//ベクトル計算
-				D3DXVECTOR3 VEC = m_TargetPos - PlayerPos;
-
-				//ベクトルの長さ
-				float fDistance = D3DXVec3Length(&VEC);
-
-				//長さが半径を超えた
-				if (fDistance > fRadius)
-				{
-					// ベクトルを正規化
-					D3DXVec3Normalize(&VEC, &VEC);
-
-					// ベクトルの方向に半径切りまで動かす
-					m_TargetPos = PlayerPos + VEC * fRadius;
 
 
-				}
-			}
 
-			if (m_TargetPos.x >= classData.Pos.x)
-			{//右正面
-				SetFrontMove(true);//右正面かboolをset
-				classData.rot.y = -D3DX_PI*0.5f;
-			}
-			else
-			{//左正面
-				SetFrontMove(false);
-				classData.rot.y = D3DX_PI*0.5f;
-			}
-			
+
+				//--------------------------------------
+				//照準位置制限(自機より円形)
+			 if (pManager->GetbNow3DMode() == false)
+			 {//2D
+
+
+
+				 if (pManager->bGetInputState() == true)
+				 {//操作方法--trueでコントローラー
+					 D3DXVECTOR3 PlayerPos = GetClassData().Pos;
+					 float fRadius = TARGET_SET_ADDPOS * 2.0f;
+
+					 //m_TargetPosをこの円の中に収める
+					 PlayerPos.y += TARGET_SET_ADDPOS;
+
+					 //ベクトル計算
+					 D3DXVECTOR3 VEC = m_TargetPos - PlayerPos;
+
+					 //ベクトルの長さ
+					 float fDistance = D3DXVec3Length(&VEC);
+
+					 //長さが半径を超えた
+					 if (fDistance > fRadius)
+					 {
+						 // ベクトルを正規化
+						 D3DXVec3Normalize(&VEC, &VEC);
+
+						 // ベクトルの方向に半径切りまで動かす
+						 m_TargetPos = PlayerPos + VEC * fRadius;
+
+					 }
+				 }
+
+
+				 //体向き変動(2D)
+				 if (m_TargetPos.x >= classData.Pos.x)
+				 {//右正面
+					 SetFrontMove(true);//右正面かboolをset
+					 classData.rot.y = -D3DX_PI * 0.5f;
+				 }
+				 else
+				 {//左正面
+					 SetFrontMove(false);
+					 classData.rot.y = D3DX_PI * 0.5f;
+				 }
+
+			 }
+			 else
+			 {//3D
+
+			 }
+
+
+
 			SetClassData(classData);
-
 			classData = GetClassData();
 
 
@@ -322,42 +348,24 @@ void CObjectMotionPlayer::Update()
 
 
 
+			//被弾系
+	//----------------------------------------------------------------------------------
+			CObject* pObj = nullptr;
+			pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
 
-
-
-			//--------------------------------------
-
-
-			//-----------------------------------------被弾系
-			for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
+			if (pObj != nullptr)
 			{
-				CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
+				CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
 
-				CNewBullet* pBullet = pBulletAll->GetBulletData(i);
-
-				if (pBullet->GetbUse() == true)
+				for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
 				{
-					if (pBullet->GetHitEscapeTime() <= 0)
-					{//自爆抑制以降の時
+					CNewBullet* pBullet = pBulletMNG->GetBulletData(i);
 
-						COBB pObb2 = pBullet->GetOBB();
-						COBB MyObb = GetOBB();
+					if (pBullet->GetbUse() == true)
+					{//弾が機能しているとき
+						if (pBullet->GetHitEscapeTime() <= 0)
+						{//自爆抑制以降の時
 
-						D3DXVECTOR3 HitPos;
-						bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
-
-						if (btest == true)
-						{
-							//pBullet->SetDeath(true);
-							pBullet->SetGoodby();
-
-							m_nLife -= 100;
-						}
-					}
-					else
-					{//抑制期間
-						if (pBullet->GetCaller() != this)
-						{//発射した親が自身じゃないとき
 							COBB pObb2 = pBullet->GetOBB();
 							COBB MyObb = GetOBB();
 
@@ -372,15 +380,82 @@ void CObjectMotionPlayer::Update()
 								m_nLife -= 100;
 							}
 						}
+						else
+						{//抑制期間
+							if (pBullet->GetCaller() != this)
+							{//発射した親が自身じゃないとき
+								COBB pObb2 = pBullet->GetOBB();
+								COBB MyObb = GetOBB();
 
+								D3DXVECTOR3 HitPos;
+								bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+
+								if (btest == true)
+								{
+									//pBullet->SetDeath(true);
+									pBullet->SetGoodby();
+
+									m_nLife -= 100;
+								}
+							}
+						}
 					}
 				}
 			}
-			//D3DXVECTOR3 SetPos = classData.Pos;
-			//SetPos.x -= 150.0f;
-			//SetPos.y += 400.0f;
-			//SetPos.z += 100.0f;
 
+
+			
+			////-----------------------------------------被弾系
+			//for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
+			//{
+			//	CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
+
+			//	CNewBullet* pBullet = pBulletAll->GetBulletData(i);
+
+			//	if (pBullet->GetbUse() == true)
+			//	{
+			//		if (pBullet->GetHitEscapeTime() <= 0)
+			//		{//自爆抑制以降の時
+
+			//			COBB pObb2 = pBullet->GetOBB();
+			//			COBB MyObb = GetOBB();
+
+			//			D3DXVECTOR3 HitPos;
+			//			bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+
+			//			if (btest == true)
+			//			{
+			//				//pBullet->SetDeath(true);
+			//				pBullet->SetGoodby();
+
+			//				m_nLife -= 100;
+			//			}
+			//		}
+			//		else
+			//		{//抑制期間
+			//			if (pBullet->GetCaller() != this)
+			//			{//発射した親が自身じゃないとき
+			//				COBB pObb2 = pBullet->GetOBB();
+			//				COBB MyObb = GetOBB();
+
+			//				D3DXVECTOR3 HitPos;
+			//				bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+
+			//				if (btest == true)
+			//				{
+			//					//pBullet->SetDeath(true);
+			//					pBullet->SetGoodby();
+
+			//					m_nLife -= 100;
+			//				}
+			//			}
+
+			//		}
+			//	}
+			//}
+
+
+			//体力--------------------------------------------------------
 			if (m_nLife <= 0)
 			{
 				m_bDown = true;
@@ -401,7 +476,13 @@ void CObjectMotionPlayer::Update()
 
 				}
 			}
-			//衝突相殺--敵と
+
+
+
+
+
+
+			//衝突相殺--敵と-------------------------------------------------------
 			CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_NOMAL, LAYERINDEX_MOTIONENEMY_NOMAL, this);
 
 			if (HitData.bHit == true)
@@ -416,11 +497,11 @@ void CObjectMotionPlayer::Update()
 			{
 				classData.Pos += HitData.ResultDistance;
 			}
+			//------------------------------------------------------------------------
 
 
 			bool bHit = false;//着地判定
 			
-
 			SetClassData(classData);
 
 
@@ -461,8 +542,6 @@ void CObjectMotionPlayer::Update()
 				SetClassData(TestData);//テスト判定なので、結果を戻す
 			}
 
-
-
 			//当たり判定計算
 			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
 
@@ -481,10 +560,11 @@ void CObjectMotionPlayer::Update()
 					SetIsOnGroundBool(false);//着地状態解除
 				}
 			}
-
 			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-			//重力
+
+
+			//重力--------------------------------------------------------
 			if (!GetIsOnGroundBool())
 			{//着地状態でない時
 
@@ -493,15 +573,15 @@ void CObjectMotionPlayer::Update()
 			}
 			else
 			{//着地
-	//			classData.Pos.y = 0.0f;
 
 			}
 			SetClassData(classData);
+			//------------------------------------------------------------
 
 
 
 			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-			//当たり判定本体
+			//当たり判定本体（着地系）
 
 			//当たり判定計算
 			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, classData.move, this);
@@ -520,14 +600,6 @@ void CObjectMotionPlayer::Update()
 			
 			}
 
-	/*		m_HitData = CStageCollisionBox3D2D::bHitColision(TestPos, rayDirection, OBJECT_MOTIONPLAYER, this);
-
-			if (m_HitData.HitAngle.y == 1.0f)
-			{
-				bHit = true;
-			}*/
-
-
 			//当たり判定計算
 			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
 
@@ -535,38 +607,19 @@ void CObjectMotionPlayer::Update()
 			{
 				bHit = true;
 			}
-			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 			classData = GetClassData();
-
-
-			// 移動処理
-			// moveでpos移動
-			// 重力処理
-			// 重力でpos移動
-			
-			// 地面接触の判定
-			
-			// 地面接触の判定
-			
-			// 地面接触の判定
-
 
 			if (!GetIsLandingTriggerBool())
 			{//着地している状態でない時
 				// 接地判定
 				if (bHit || classData.Pos.y <= 0.0f)
 				{//接触
-	/*				if (bHit==false && classData.Pos.y <= 0.0f)
-					{
-						classData.Pos.y = 0.0f;
-					}*/
 
 					if (classData.move.y <= 0.0f)
 					{
 						classData.move.y = 0.0f;
 					}
-
 
 					if (!GetIsOnGroundBool())
 					{// 現在接地している状態でない
@@ -580,16 +633,16 @@ void CObjectMotionPlayer::Update()
 			// 位置変化による接地状態の解除
 			float POSY = std::floor(GetOldPosY());
 			float NOWPOSY = std::floor(classData.Pos.y);
+		
 			if (NOWPOSY != POSY)
 			{
 				m_RandingCutCnt++;
+				
 				if (m_RandingCutCnt >= RANDINGTRIGGER_FARAME)
 				{
 					// 接地状態の解除
 					SetIsOnGroundBool(false);
 				}
-			
-
 			}
 			else
 			{
@@ -601,7 +654,20 @@ void CObjectMotionPlayer::Update()
 			// 空中モーションの処理
 			if (!GetIsOnGroundBool() && !GetIsLandingTriggerBool())
 			{//着地状態じゃないかつ着地瞬間じゃない
-				SetNowMotion_Parent(MOTIONTYPE_JUMP); // 空中モーションの再生
+
+			
+				if (/*GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_FRONT &&*/
+					GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_LEFT &&
+					GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_RIGHT &&
+					GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_BACK)
+				{
+					SetNowMotion_Parent(MOTIONTYPE_JUMP); // 空中モーションの再生
+
+					// モーション変動
+					SetNowMotion_Parent(MOTIONTYPE_STANDBY); // 待機
+
+					m_OldInputMotionParent = MOTIONTYPE_STANDBY; // 移動系入力を保持
+				}
 			}
 
 			// 着地モーションのトリガー
@@ -613,46 +679,193 @@ void CObjectMotionPlayer::Update()
 
 			SetClassData(classData);
 
-
-
+			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 			classData = GetClassData();
 
-
 			//ターゲットの方向に砲口を向ける(腰)
+			if (pManager->GetbNow3DMode() == false)
+			{//2D
+
+			  //ターゲットの方向に砲口を向ける(腰)2D
 			  //----------------------------------------------------------------------------------
 
-			DATA ChangeData = DataInit();
+				DATA ChangeData = DataInit();
 
-			float minYAngle = -1.1f; // 下側の角度の限界
-			float maxYAngle = 1.1f;  // 上側の角度の限界
+				float minYAngle = -1.1f; // 下側の角度の限界
+				float maxYAngle = 1.1f;  // 上側の角度の限界
+
+				//方向
+				D3DXVECTOR3 enemyDirection = D3DXVECTOR3(m_TargetPos.x, m_TargetPos.y, m_TargetPos.z) - classData.Pos;
+
+				// XZ平面上の角度
+				float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
+
+				ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
+				ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
+				ChangeData.rot.z = 0.0f;
+
+				//		 Y軸の角度
+				float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
+
+				// Y軸角度をクランプ
+				if (angleY < minYAngle)
+				{
+					angleY = minYAngle;
+				}
+				else if (angleY > maxYAngle)
+				{
+					angleY = maxYAngle;
+				}
+
+				ChangeData.rot.x = angleY; // Y方向を向ける
 
 
-			//方向
-			D3DXVECTOR3 enemyDirection = D3DXVECTOR3(TargetPos.x, TargetPos.y, TargetPos.z) - classData.Pos;
-
-			// XZ平面上の角度
-			float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
-
-			ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
-			ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
-			ChangeData.rot.z = 0.0f;
-
-			//		 Y軸の角度
-			float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z))-(D3DX_PI*0.124f));
-
-			// Y軸角度をクランプ
-			if (angleY < minYAngle)
-			{
-				angleY = minYAngle;
+				//基底クラスからパーツにデータを受け渡し
+				SetChangeDataInObjectMotion(ChangeData);
 			}
-			else if (angleY > maxYAngle)
-			{
-				angleY = maxYAngle;
+			else
+			{//3D
+				//ターゲットの方向に砲口を向ける(腰)3D
+			  //----------------------------------------------------------------------------------
+				bool bLockOn = false;
+
+				DATA ChangeData = DataInit();
+
+				// 配置物プライオリティの先頭を取得
+				CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_FAST);
+
+				if (pObject != nullptr)
+				{ // 先頭がない==プライオリティまるっとない
+
+					CObjectMotionEnemyfast* pEnemyFast;
+					pEnemyFast = (CObjectMotionEnemyfast*)pObject;
+
+					while (pObject != nullptr)
+					{
+						CObject::DATA EscEnemyData = pEnemyFast->GetClassData();
+
+						if (pEnemyFast->GetPriorityAttackTarget() == true)
+						{//バレットロックオンが存在する
+							bLockOn = true;
+
+							float minYAngle = -1.1f; // 下側の角度の限界
+							float maxYAngle = 1.1f;  // 上側の角度の限界
+
+							//方向
+							D3DXVECTOR3 enemyDirection = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y, EscEnemyData.Pos.z) - classData.Pos;
+
+							// XZ平面上の角度
+							float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
+
+							ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
+							ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
+							ChangeData.rot.z = 0.0f;
+
+							//		 Y軸の角度
+							float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
+
+							// Y軸角度をクランプ
+							if (angleY < minYAngle)
+							{
+								angleY = minYAngle;
+							}
+							else if (angleY > maxYAngle)
+							{
+								angleY = maxYAngle;
+							}
+
+							ChangeData.rot.x = angleY; // Y方向を向ける
+
+							break;
+						}
+						else
+						{
+							CObject* pNext = pObject->GetNext();
+							pObject = pNext;
+						}
+					}
+				}
+
+				if (bLockOn == false)
+				{//まだロックオンがない
+				// 配置物プライオリティの先頭を取得
+					CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_NOMAL);
+
+					if (pObject != nullptr)
+					{ // 先頭がない==プライオリティまるっとない
+
+						CObjectMotionEnemyNomal* pEnemyNomal;
+						pEnemyNomal = (CObjectMotionEnemyNomal*)pObject;
+
+						while (pObject != nullptr)
+						{
+							CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
+
+							if (pEnemyNomal->GetPriorityAttackTarget() == true)
+							{//バレットロックオンが存在する
+								bLockOn = true;
+
+								float minYAngle = -1.1f; // 下側の角度の限界
+								float maxYAngle = 1.1f;  // 上側の角度の限界
+
+								//方向
+								D3DXVECTOR3 enemyDirection = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y, EscEnemyData.Pos.z) - classData.Pos;
+
+								// XZ平面上の角度
+								float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
+
+								ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
+								ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
+								ChangeData.rot.z = 0.0f;
+
+								//		 Y軸の角度
+								float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
+
+								// Y軸角度をクランプ
+								if (angleY < minYAngle)
+								{
+									angleY = minYAngle;
+								}
+								else if (angleY > maxYAngle)
+								{
+									angleY = maxYAngle;
+								}
+
+								ChangeData.rot.x = angleY; // Y方向を向ける
+
+								break;
+							}
+							else
+							{
+								CObject* pNext = pObject->GetNext();
+								pObject = pNext;
+							}
+						}
+					}
+				}
+
+
+
+
+				//基底クラスからパーツにデータを受け渡し(だれも対象じゃないときは初期値が入る)
+				SetChangeDataInObjectMotion(ChangeData);
 			}
 
-			ChangeData.rot.x = angleY; // Y方向を向ける
+
+
+			
+			
+
+
+
+
+
+
+
+
+
 
 
 			//		//ターゲットの方向に砲口を向ける(腰)
@@ -690,13 +903,11 @@ void CObjectMotionPlayer::Update()
 			//ChangeData.rot.x = angleY; // Y方向を向ける
 
 
-			//基底クラスからパーツにデータを受け渡し
-			SetChangeDataInObjectMotion(ChangeData);
 
 
 
-
-			if (classData.Pos.y<=0)
+			//底抜け対策
+			if (classData.Pos.y <= 0)
 			{
 				classData.Pos.y = 0;
 			}
@@ -705,9 +916,8 @@ void CObjectMotionPlayer::Update()
 			SetClassData(classData);
 
 
-
+			//慣性
 			//----------------------------------------------------------------------------
-
 			if (GetBoostNow() == true)
 			{
 				classData = GetClassData();
@@ -720,10 +930,6 @@ void CObjectMotionPlayer::Update()
 				SetClassData(classData);
 
 				CObjectMotion::Update();//------------------更新
-				////移動量を更新(疑似慣性で減衰)
-				//m_BulletPosMove.x += (0.0f - m_BulletPosMove.x) * (DAMPING_RATIO_BOOST_XZ);
-				//m_BulletPosMove.y += (0.0f - m_BulletPosMove.y) * (DAMPING_RATIO_BOOST_XZ);
-				//m_BulletPosMove.z += (0.0f - m_BulletPosMove.z) * (DAMPING_RATIO_BOOST_XZ);
 			}
 			else
 			{
@@ -752,10 +958,6 @@ void CObjectMotionPlayer::Update()
 				SetClassData(classData);
 
 				CObjectMotion::Update();//------------------更新
-				////移動量を更新(疑似慣性で減衰)
-				//m_BulletPosMove.x += (0.0f - m_BulletPosMove.x) * (DAMPING_RATIO_LOAD_XZ);
-				//m_BulletPosMove.y += (0.0f - m_BulletPosMove.y) * (DAMPING_RATIO_LOAD_XZ);
-				//m_BulletPosMove.z += (0.0f - m_BulletPosMove.z) * (DAMPING_RATIO_LOAD_XZ);
 			}
 			
 			//--------------------------------------------------------------------------------
@@ -767,7 +969,7 @@ void CObjectMotionPlayer::Update()
 			
 		}
 		else
-		{
+		{//Restartまで
 			m_ResetCnt++;
 
 			if (m_ResetCnt >= RESET_CNT)
@@ -784,10 +986,7 @@ void CObjectMotionPlayer::Update()
 					GetModelParts(i)->DrawOkBool(true);
 
 				}
-
-			
 			}
-
 		}
 	}
 	else if (NowState == CScene::MODE_TITLE)
@@ -854,9 +1053,6 @@ void CObjectMotionPlayer::Update()
 
 
 	}
-
-
-
 }
 
 //=============================
@@ -864,59 +1060,7 @@ void CObjectMotionPlayer::Update()
 //=============================
 void CObjectMotionPlayer::Draw()
 {
-//	if (m_bDown == false)
-////	{
-//		for (int i = 0; i < GetMaxLoadPartsNum(); i++)
-//		{//パーツもDEATH
-//			GetModelParts(i)->SetColorChangeBool(true);
-//			GetModelParts(i)->SetChangeColor(D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f));
-//		}
-//
-//		CObjectMotion::Draw();
-//	}
-//	else
-//	{
-//		for (int i = 0; i < GetMaxLoadPartsNum(); i++)
-//		{//パーツもDEATH
-//			GetModelParts(i)->SetColorChangeBool(true);
-//			GetModelParts(i)->SetChangeColor(D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f));
-//
-//		}
-
 		CObjectMotion::Draw();
-//	}
-
-#if _DEBUG
-
-	/*if (btest == true)
-	{
-		const char* aData = "接触";
-
-
-		CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, 0.0f), 50, CFont::FONT_DIGITAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), aData);
-	}
-	else if (btest == false)
-	{
-		const char* aData = "みす";
-
-		CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT / 2.0f, 0.0f), 50, CFont::FONT_DIGITAL, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), aData);
-	}*/
-
-	
-	char cData2[100] = {};
-	snprintf(cData2, sizeof(cData2), "現在のGRID/%d", (int)GetNowGRIDNum()); // 数値を文字列に変換してCDataにコピー
-	// mousePos.x と mousePos.y がマウスの位置
-	CFont::DrawTextSet(D3DXVECTOR3(1000.0f, 550.0f, 0.0f), 40, CFont::FONT_DIGITAL, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), cData2);
-
-#endif // 
-
-	//char cData3[100] = {};
-	//snprintf(cData3, sizeof(cData3), "現在のtama/%d", CBullet3D::GetNumBuulet()); // 数値を文字列に変換してCDataにコピー
-	//// mousePos.x と mousePos.y がマウスの位置
-	//CFont::DrawTextSet(D3DXVECTOR3(1000.0f, 550.0f, 0.0f), 40, CFont::FONT_DIGITAL, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), cData3);
-
-
-	
 }
 
 //=============================
@@ -938,268 +1082,31 @@ CObjectMotionPlayer* CObjectMotionPlayer::Create(const char* pfilePass, DATA Set
 	pObstacle->SetClassData(SetData);
 
 
-
 	return pObstacle;
 }
 
+
 //=============================
-//キーボード入力
+// Controller入力--2D
 //=============================
-void CObjectMotionPlayer::Input()
+void CObjectMotionPlayer::ControllerInput2D()
 {
-
 	CRenderer* pRenderer = nullptr;
-
-	CManager* pManager = CManager::GetInstance();
-
-	CInputKeyboard* keyboard = pManager->GetKeyboard();
-
-
-
-	//中間点までの距離
-	float fEscape = (32000 - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000) / 2.0f;//差分を半分に
-
-	//中間点をたしてデッドゾーンと最大点の中間点を算出(通常入力、微入力の判別分岐点)
-	float BranchPoint = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 + fEscape;
-
-	DATA classData = GetClassData();
 	
-	bool bMoveNow = false;
-
-	float Xdate = 0.0f;
-	float Zdate = 0.0f;
-
-	float fRotDest = 0.0f;
-
-	//球を生成してよいかを検索
-	bool bNoShot = false;
-	bool bShot = false;
-	//----------------------------------------------------------------------------------------------------------キーボード
-	//キーボード
-	if (keyboard->GetPress(DIK_A) == true)
-	{//Aがおされた(左)
-		Xdate =	1;
-		bMoveNow = true;
-	}
-	else if (keyboard->GetPress(DIK_D) == true)
-	{//Dがおされた(右)
-		Xdate = -1;
-		bMoveNow = true;
-	}
-
-	if (keyboard->GetPress(DIK_W) == true)
-	{//Wがおされた(上)
-		Zdate = -1.0f;
-		bMoveNow = true;
-	}
-	else if (keyboard->GetPress(DIK_S) == true)
-	{//Sがおされた(下)
-		Zdate = 1.0f;
-		bMoveNow = true;
-	}
-
-
-
-	if (keyboard->GetPress(DIK_LSHIFT)==true)
-	{//左ボタンが押された
-		classData.move.y += 35.0f;
-	}
-
-	if (keyboard->GetPress(DIK_LCONTROL) == true)
-	{//左ボタンが押された
-		classData.move.y -= 3.0f;
-	}
-
-
-	//移動する状態の時
-	if (bMoveNow == true)
-	{
-		m_nMoveCnt++;
-
-
-		SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT);//移動motion
-		m_OldInputMotionParent = MOTIONTYPE_MOVE_FRONT;//移動系入力を保持
-
-		float Angle = atan2f(Xdate, Zdate);//これが方角
-
-		CCamera* pCamera = pManager->GetCamera();
-
-		D3DXVECTOR3 CameraRot = pCamera->GetRot();
-
-		//------これは差分
-		fRotDest = (Angle - CameraRot.y - (1.0f * D3DX_PI));
-		
-
-		classData.move.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
-		classData.move.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
-		
-	//変換
-		classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, fRotDest + D3DX_PI);
-
-	}
-	else
-	{//移動入力なし
-
-		int Test = GetNowMotionParent();
-
-		if (GetNowMotionParent() != MOTIONTYPE_STANDBY &&
-			GetNowMotionParent() != MOTIONTYPE_JUMP &&
-			GetNowMotionParent() != MOTIONTYPE_RANDING &&
-			GetNowMotionParent() != MOTIONTYPE_ATTACK)
-		{
-			// モーション変動
-			SetNowMotion_Parent(MOTIONTYPE_STANDBY); // 待機
-
-			m_OldInputMotionParent = MOTIONTYPE_STANDBY; // 移動系入力を保持
-		}
-
-
-		if (GetNowMotionSub() != MOTIONTYPE_ATTACK)
-		{//モーション変動
-			SetNowMotion_Sub(MOTIONTYPE_STANDBY);//待機
-		}
-		
-	}
-
-	//if (keyboard->GetTrigger(DIK_DELETE) == true)
-	//{
-	//	CManager* pManager = CManager::GetInstance();
-	//	pManager->GetCamera()->SetShake(45, 45);
-	//}
-
-#if 1
-
-	if (m_ShotDelay <= 0)
-	{
-		if (keyboard->GetMouseButtonPress(CInputKeyboard::MouseKey_Left))
-		{//左ボタンが押された
-
-				//動くモデルのデータ
-			CModelParts* pParts = GetModelParts(GetChangeDataPartsIndex());
-
-			D3DXMATRIX pMat = pParts->GetMtxWorld();
-
-			D3DXMATRIX EscMtxWorld;
-
-			D3DXMATRIX mtxTrans;//計算用マトリックス
-
-			//ワールドマトリックスの初期化
-			D3DXMatrixIdentity(&EscMtxWorld);
-
-			//位置を反映
-			D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
-
-			D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
-
-			//自分の親のマトリックス欠けてる
-			D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &pMat);
-
-
-			//Mouseの方向にballetを飛ばす
-			//----------------------------------------------------------------------------------
-
-			DATA SetData;
-			SetData.Pos = D3DXVECTOR3(EscMtxWorld._41, EscMtxWorld._42, EscMtxWorld._43);
-
-			D3DXVECTOR3 DirectionPos = D3DXVECTOR3(pMat._41,/* pMat._42*/BULLET_SHOT_POS_Y, pMat._43);
-
-
-			//Mouseで画面に指してる3D空間座標取得
-			D3DXVECTOR3 TargetPos = keyboard->GetMouseRayIntersection(*pManager->GetCamera());
-
-			TargetPos.y = BULLET_SHOT_POS_Y;
-
-			// TargetPos から SetData.Pos への方向ベクトルを計算
-			D3DXVECTOR3 direction = TargetPos - DirectionPos;
-
-			// 方向ベクトルを正規化（単位ベクトルにする）
-			D3DXVec3Normalize(&direction, &direction);
-
-
-			float speed = 14.0f;//速度(後々変更)
-			SetData.move = direction * speed;//速度をかける
-
-
-			// SetData.rot.y をターゲットの方向に合わせる
-			SetData.rot.x = 0.0f;
-			SetData.rot.y = (float)atan2(direction.x, direction.z) + D3DX_PI;
-			SetData.rot.z = 0.0f;
-
-			//----------------------------------------------------------------------------------
-
-
-			D3DXVECTOR3 SetHitMin = D3DXVECTOR3(-9.0f, -9.0f, -9.0f);
-			D3DXVECTOR3 SetHitMax = D3DXVECTOR3(9.0f, 9.0f, 9.0f);
-
-			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SetData.Pos, SetHitMin, SetHitMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
-
-			if (bNoShot == false)
-			{
-				bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SetData.Pos, SetHitMin, SetHitMax, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE);
-			}
-
-			SetNowMotion_Sub(MOTIONTYPE_ATTACK);//攻撃motion
-			
-			if (bNoShot == false)
-			{
-
-			
-
-				CRenderer* pRenderer = nullptr;
-
-				CManager* pManager = CManager::GetInstance();
-
-				CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
-
-			//	pBulletAll->SetBullet(SetData, 2, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
-				
-				m_ShotDelay = 0;
-
-			}
-
-
-
-		}
-	}
-#else
-
-#endif // 1
-
-
-	if (m_nMoveCnt>= CObjectFootPrint::STANPFLAME)
-	{
-		m_nMoveCnt = 0;
-		CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x,3.0f, classData.Pos.z), classData.rot);
-	///	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
-	}
-
-
-	SetClassData(classData);
-
-}
-//=============================
-// Controller入力
-//=============================
-void CObjectMotionPlayer::ControllerInput()
-{
-
-	CRenderer* pRenderer = nullptr;
-
 	CManager* pManager = CManager::GetInstance();
 
 	CInputKeyboard* keyboard = pManager->GetKeyboard();
 
-		CCamera* pCamera = pManager->GetCamera();
+	CCamera* pCamera = pManager->GetCamera();
 
-		D3DXVECTOR3 CameraRot = pCamera->GetRot();
+	D3DXVECTOR3 CameraRot = pCamera->GetRot();
 
-		CInputJoyPad* JoyPad = pManager->GetJoyPad();
+	CInputJoyPad* JoyPad = pManager->GetJoyPad();
 
-		XINPUT_STATE joykeystate;
+	XINPUT_STATE joykeystate;
 
-		//ショイパットの状態を取得
-		DWORD dwResult = XInputGetState(0, &joykeystate);
-
+	//ショイパットの状態を取得
+	DWORD dwResult = XInputGetState(0, &joykeystate);
 
 	//中間点までの距離
 	float fEscape = (32000 - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000) / 2.0f;//差分を半分に
@@ -1207,31 +1114,30 @@ void CObjectMotionPlayer::ControllerInput()
 	//中間点をたしてデッドゾーンと最大点の中間点を算出(通常入力、微入力の判別分岐点)
 	float BranchPoint = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 + fEscape;
 
-
-	bool bMoveNow = false;
+//	bool bMoveNow = false;
 
 	float Xdate = 0.0f;
 	float Zdate = 0.0f;
-
 	float fRotDest = 0.0f;
 
-	bool MoveNow = false;//移動入力できてるか
-
-
-//	float MoveSpeed = 4.5f * 1.8f;
+//	bool MoveNow = false;//移動入力できてるか
 
 	DATA classData = GetClassData();
 
 	//球を生成してよいかを検索
 	bool bNoShot = false;
 	bool bShot = false;
-
 	bool bNomalMove = false;
 
+	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_L1))
+	{
+		SetNowMotion_Sub(MOTIONTYPE_GUARD);//防御
+		SetbGuard(true);
+	}
 
 	if (GetbGuard() == false)
 	{//GUARDしてない
-
+		//----------------------------------------------------------------射撃
 		if (m_ShotDelay <= 0)
 		{
 			if (joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
@@ -1249,13 +1155,12 @@ void CObjectMotionPlayer::ControllerInput()
 				D3DXMatrixIdentity(&EscMtxWorld);
 
 				//位置を反映
-				D3DXMatrixTranslation(&mtxTrans, 0.0f, +70.0f, -190.0f);
+				D3DXMatrixTranslation(&mtxTrans, 0.0f, SHOTPOS_Y, SHOTPOS_Z);
 
 				D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
 				//自分の親のマトリックス欠けてる
 				D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &pMat);
-
 
 				//Mouseの方向にballetを飛ばす
 				//----------------------------------------------------------------------------------
@@ -1265,11 +1170,8 @@ void CObjectMotionPlayer::ControllerInput()
 
 				D3DXVECTOR3 DirectionPos = D3DXVECTOR3(pMat._41, pMat._42/*BULLET_SHOT_POS_Y*/, /*pMat._43*/0.0f);
 
-
 				//Mouseで画面に指してる3D空間座標取得
 				D3DXVECTOR3 TargetPos = m_TargetPos;
-				//	SetData.Pos = classData.Pos;
-				///	SetData.Pos.y = 150.0f;//test---------------------------------------------------------------------
 
 					// TargetPos から SetData.Pos への方向ベクトルを計算
 				D3DXVECTOR3 direction = TargetPos - DirectionPos;
@@ -1313,32 +1215,30 @@ void CObjectMotionPlayer::ControllerInput()
 
 					CManager* pManager = CManager::GetInstance();
 
-					CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
+					//CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
 
-					pBulletAll->SetBullet(SetData, 0, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
+					//pBulletAll->SetBullet(SetData, 0, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
+					CObject* pObj = nullptr;
+					pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
+
+					if (pObj != nullptr)
+					{
+						CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
+						pBulletMNG->SetBullet(SetData, 0, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
+					}
 
 					m_ShotDelay = 4;
 
 					CObjectShotFire::Create(SetData.Pos);
-					//CObjectShotFire::Create(SetData.Pos);
 					bShot = true;
 				}
 			}
 		}
+		//----------------------------------------------------------------射撃
 	}
-
-	//if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
-	//{
-	//	m_nMoveCnt = 0;
-	//
-	//	CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-	////	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
-	//}
-
 
 	SetClassData(classData);
 	
-
 	if (GetBoostNow() == false)
 	{
 		if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_X))
@@ -1357,39 +1257,8 @@ void CObjectMotionPlayer::ControllerInput()
 		}
 	}
 	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-
-
-
-
-
-
-	////----------------------------------------------------------------------------------------------------------コントローラー
-
-
-	
+	////-----------------------------------------------------------コントローラー左
 	bool MoveNowCom = false;//入力の有無(コントローラ)
-
 
 	if (joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
 	{//Aがおされた(左)
@@ -1414,40 +1283,8 @@ void CObjectMotionPlayer::ControllerInput()
 
 
 
-	
-
-	if (MoveNowCom == false)
-	{
-	}
-	else
-	{//Controller
-
-		////Controller移動
-
-		//float Angle2 = atan2f((float)-joykeystate.Gamepad.sThumbLX, (float)-joykeystate.Gamepad.sThumbLY);//これが方角
-
-		//fRotDest = (Angle2 - CameraRot.y - (1.0f * D3DX_PI));
-
-
-		//if (GetBoostNow() == true)
-		//{
-
-		//}
-		//else
-		//{
-		//	classData.move.x = sinf(Angle2 - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
-		//	classData.move.z = cosf(Angle2 - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
-		//}
-		MoveNow = true;
-
-
-
-	}
-
-
-
 	//移動する状態の時
-	if (MoveNow == true)
+	if (MoveNowCom == true)
 	{
 		m_nMoveCnt++;
 
@@ -1455,29 +1292,20 @@ void CObjectMotionPlayer::ControllerInput()
 		{
 			m_nMoveCnt = 0;
 			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-		//	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
 		}
-
-		
-
-
-
-
-
-
 
 		if (GetBoostNow() == true)
 		{
 			if (m_nBoostCnt<= BOOST_FARAME&& m_nBoostCnt< BOOST_FARAME*0.4f)
 			{//序盤
 				classData.move.x += (joykeystate.Gamepad.sThumbLX * JoyStickDiff) * 1.3f;
-				classData.move.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 1.3f;
+//				classData.move.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 1.3f;
 
 			}
 			else
 			{//終盤
 				classData.move.x += (joykeystate.Gamepad.sThumbLX * JoyStickDiff) * 1.1f;
-				classData.move.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 1.1f;
+//				classData.move.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 1.1f;
 
 			}
 			
@@ -1486,15 +1314,13 @@ void CObjectMotionPlayer::ControllerInput()
 		{
 			if (m_BoostRestCnt > 0)
 			{
-			
-
 				classData.move.x += (joykeystate.Gamepad.sThumbLX * JoyStickDiff) * 1.05f;
-				classData.move.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 1.05f;
+//				classData.move.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 1.05f;
 			}
 			else
 			{
 				classData.move.x = (joykeystate.Gamepad.sThumbLX * JoyStickDiff);
-				classData.move.z = (joykeystate.Gamepad.sThumbLY * JoyStickDiff);
+//				classData.move.z = (joykeystate.Gamepad.sThumbLY * JoyStickDiff);
 			}
 		}
 
@@ -1593,13 +1419,10 @@ void CObjectMotionPlayer::ControllerInput()
 		}
 
 	}
-
-
 	//-------------------------------------------------------------------------------------------------------------------------
 	//右スティック
 
 	 bool MoveNowCom2 = false;//入力の有無(コントローラ)
-
 
 	if (joykeystate.Gamepad.sThumbRX <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
 	{//Aがおされた(左)
@@ -1621,9 +1444,6 @@ void CObjectMotionPlayer::ControllerInput()
 		//Zdate = 1.0f;
 		MoveNowCom2 = true;
 	}
-
-
-
 
 	int sThumbRX = joykeystate.Gamepad.sThumbRX;
 	int sThumbRY = joykeystate.Gamepad.sThumbRY;
@@ -1651,38 +1471,11 @@ void CObjectMotionPlayer::ControllerInput()
 		vecY = 0.0f;
 	}
 
-	
-
-
-
-
-
-
-
-
-//	D3DXVECTOR3 BulletMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
 	float MoveSpeed2 = MOVESPEED;
 
 	if (MoveNowCom2 == false)
 	{
-		//移動する状態の時
-		if (bMoveNow == true)
-		{
-		//	float Angle = atan2f(Xdate, Zdate);//これが方角
 
-
-		//	//------これは差分
-		//	fRotDest = (Angle - CameraRot.y - (1.0f * D3DX_PI));
-
-
-		//	m_BulletPosMove.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed2;//三角関数利用して移動の長さを代入
-		//	m_BulletPosMove.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed2;//三角関数利用して移動の長さを代入
-
-		////変換
-		////	classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, fRotDest + D3DX_PI);
-		//	MoveNow = true;
-		}
 	}
 	else
 	{//Controller
@@ -1708,35 +1501,17 @@ void CObjectMotionPlayer::ControllerInput()
 
 				ESCTargetMove.x += (joykeystate.Gamepad.sThumbLX * JoyStickDiff) * 3.0f;//三角関数利用して移動の長さを代入
 				ESCTargetMove.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 3.0f;//三角関数利用して移動の長さを代入
-
 			}
-
 		}
 		else
 		{
 			ESCTargetMove.x = (joykeystate.Gamepad.sThumbLX * JoyStickDiff);
 			ESCTargetMove.z = (joykeystate.Gamepad.sThumbLY * JoyStickDiff);
-
 		}
 
 		m_TargetPos+= ESCTargetMove;
 
-
-		//m_BulletPosMove.x = sinf(Angle2 - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed2;//三角関数利用して移動の長さを代入
-		//m_BulletPosMove.z = cosf(Angle2 - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed2;//三角関数利用して移動の長さを代入
-		//
-		
-		
-		MoveNow = true;
-
-
-
-	//	m_BulletPosMove = D3DXVECTOR3(joykeystate.Gamepad.sThumbRX * 0.0015f, 0.0f, joykeystate.Gamepad.sThumbRY * 0.0015f);
 	}
-
-
-
-
 	//-------------------------------------------------------------------------------------------------------------------------
 
 	//飛翔
@@ -1745,6 +1520,57 @@ void CObjectMotionPlayer::ControllerInput()
 		classData.move.y += 15.0f;
 	}
 
+	SetClassData(classData);
+
+	classData = GetClassData();
+	classData.Pos.z = 0.0f;
+
+	SetClassData(classData);
+}
+//=============================
+// Controller入力--3D
+//=============================
+void CObjectMotionPlayer::ControllerInput3D()
+{
+	CRenderer* pRenderer = nullptr;
+
+	CManager* pManager = CManager::GetInstance();
+
+	CInputKeyboard* keyboard = pManager->GetKeyboard();
+
+	CCamera* pCamera = pManager->GetCamera();
+
+	D3DXVECTOR3 CameraRot = pCamera->GetRot();
+
+	CInputJoyPad* JoyPad = pManager->GetJoyPad();
+
+	XINPUT_STATE joykeystate;
+
+	
+		
+
+	//ショイパットの状態を取得
+	DWORD dwResult = XInputGetState(0, &joykeystate);
+
+	//中間点までの距離
+	float fEscape = (32000 - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000) / 2.0f;//差分を半分に
+
+	//中間点をたしてデッドゾーンと最大点の中間点を算出(通常入力、微入力の判別分岐点)
+	float BranchPoint = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 + fEscape;
+
+	
+	float Xdata = 0.0f;
+	float Zdata = 0.0f;
+	float fRotDest = 0.0f;
+
+//	bool MoveNow = false;//移動入力できてるか
+
+	DATA classData = GetClassData();
+
+	//球を生成してよいかを検索
+	bool bNoShot = false;
+	bool bShot = false;
+	bool bNomalMove = false;
 
 	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_L1))
 	{
@@ -1752,8 +1578,442 @@ void CObjectMotionPlayer::ControllerInput()
 		SetbGuard(true);
 	}
 
+	if (GetbGuard() == false)
+	{//GUARDしてない
+		//----------------------------------------------------------------射撃
+		if (m_ShotDelay <= 0)
+		{
+			if (joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+			{//
+					//動くモデルのデータ
+				CModelParts* pParts = GetModelParts(GetChangeDataPartsIndex());
+
+				D3DXMATRIX pMat = pParts->GetMtxWorld();
+
+				D3DXMATRIX EscMtxWorld;
+
+				D3DXMATRIX mtxTrans;//計算用マトリックス
+
+				//ワールドマトリックスの初期化
+				D3DXMatrixIdentity(&EscMtxWorld);
+
+				//位置を反映
+				D3DXMatrixTranslation(&mtxTrans, 0.0f, SHOTPOS_Y, SHOTPOS_Z);
+
+				D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
+
+				//自分の親のマトリックス欠けてる
+				D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &pMat);
+
+				//Mouseの方向にballetを飛ばす
+				//----------------------------------------------------------------------------------
+
+				DATA SetData;
+				SetData.Pos = D3DXVECTOR3(EscMtxWorld._41, EscMtxWorld._42, EscMtxWorld._43);
+
+				D3DXVECTOR3 DirectionPos = D3DXVECTOR3(pMat._41, pMat._42/*BULLET_SHOT_POS_Y*/, /*pMat._43*/0.0f);
+
+				//Mouseで画面に指してる3D空間座標取得
+				D3DXVECTOR3 TargetPos = m_TargetPos;
+
+				// TargetPos から SetData.Pos への方向ベクトルを計算
+				D3DXVECTOR3 direction = TargetPos - DirectionPos;
+
+				// 方向ベクトルを正規化（単位ベクトルにする）
+				D3DXVec3Normalize(&direction, &direction);
+
+
+				float speed = (int)BULLETSPEED;//速度(後々変更)
+				SetData.move = direction * speed;//速度をかける
+
+				// SetData.rot.y をターゲットの方向に合わせる
+				SetData.rot.x = 0.0f;
+				SetData.rot.y = (float)atan2(direction.x, direction.z) + D3DX_PI;
+				SetData.rot.z = 0.0f;
+
+				//----------------------------------------------------------------------------------
+
+
+				D3DXVECTOR3 SetHitMin = D3DXVECTOR3(-9.0f, -9.0f, -9.0f);
+				D3DXVECTOR3 SetHitMax = D3DXVECTOR3(9.0f, 9.0f, 9.0f);
+
+				bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SetData.Pos, SetHitMin, SetHitMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
+
+				if (bNoShot == false)
+				{
+					bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SetData.Pos, SetHitMin, SetHitMax, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE);
+				}
+
+				if (bNoShot == false)
+				{
+					bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SetData.Pos, SetHitMin, SetHitMax, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D);
+				}
+
+
+				if (bNoShot == false)
+				{
+					SetNowMotion_Sub(MOTIONTYPE_ATTACK);//攻撃motion
+
+					CRenderer* pRenderer = nullptr;
+
+					CManager* pManager = CManager::GetInstance();
+
+				//	CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
+
+				//	pBulletAll->SetBullet(SetData, 0, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
+
+					CObject* pObj = nullptr;
+					pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
+
+					if (pObj != nullptr)
+					{
+						CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
+						pBulletMNG->SetBullet(SetData, 0, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
+					}
+
+					m_ShotDelay = 4;
+
+					CObjectShotFire::Create(SetData.Pos);
+					bShot = true;
+				}
+			}
+		}
+		//----------------------------------------------------------------射撃
+	}
 
 	SetClassData(classData);
+
+	if (GetBoostNow() == false)
+	{
+		if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_X))
+		{//Boost
+			m_nBoostCnt = BOOST_FARAME;
+			m_BoostRestCnt = BOOST_RESTFARAME;
+			SetBoostNow(true);
+		}
+	}
+	else
+	{
+		m_nBoostCnt--;
+		if (m_nBoostCnt <= 0)
+		{
+			SetBoostNow(false);
+		}
+	}
+
+	////-----------------------------------------------------------コントローラー左
+	bool MoveNowCom = false;//入力の有無(コントローラ)
+
+	if (joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
+	{//Aがおされた(左)
+		Xdata = 1;
+		MoveNowCom = true;
+	}
+	else if (joykeystate.Gamepad.sThumbLX >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
+	{//Dがおされた(右)
+		Xdata = -1;
+		MoveNowCom = true;
+	}
+	else if (joykeystate.Gamepad.sThumbLY >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
+	{//Wがおされた(上)
+		Zdata = -1.0f;
+		MoveNowCom = true;
+	}
+	else if (joykeystate.Gamepad.sThumbLY <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
+	{//Sがおされた(下)
+		Zdata = 1.0f;
+		MoveNowCom = true;
+	}
+
+
+
+
+
+
+
+
+
+	//移動する状態の時
+	if (MoveNowCom == true)
+	{
+		m_nMoveCnt++;
+
+		if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
+		{
+			m_nMoveCnt = 0;
+			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
+		}
+
+
+		//カメラの角度取得
+		D3DXVECTOR3 SETROT = pManager->GetCamera()->GetRot();
+
+		// 移動ベクトル
+		float moveX = joykeystate.Gamepad.sThumbLX * JoyStickDiff;
+		float moveZ = joykeystate.Gamepad.sThumbLY * JoyStickDiff;
+
+		// もしブースト中なら、移動量を調整
+		if (GetBoostNow() == true)
+		{
+			if (m_nBoostCnt <= BOOST_FARAME && m_nBoostCnt < BOOST_FARAME * 0.4f)
+			{//序盤
+				moveX *= 1.3f;
+				moveZ *= 1.3f;
+			}
+			else
+			{//終盤
+				moveX *= 1.1f;
+				moveZ *= 1.1f;
+			}
+		}
+		else
+		{
+			if (m_BoostRestCnt > 0)
+			{
+				moveX *= 1.05f;
+				moveZ *= 1.05f;
+			}
+			else
+			{
+				moveX *= 0.55f;
+				moveZ *= 0.55f;
+			}
+		}
+
+		// カメラの角度に合わせて移動ベクトルを回転
+		float rotatedX = moveX * cos(SETROT.y) - moveZ * sin(SETROT.y);
+		float rotatedZ = moveX * sin(SETROT.y) + moveZ * cos(SETROT.y);
+
+		fRotDest = -SETROT.y + D3DX_PI;
+
+		classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, fRotDest);
+
+
+		// 最終的な移動量
+		classData.move.x += rotatedX;
+		classData.move.z += rotatedZ;
+
+
+		//先頭移動rotとmoveの方向の差異を元に足運びを変動させる
+		//----------------------------------------------------
+		//classData.move.zとclassData.move.xの方角(移動方向をrotとする)とfRotDest(目標角度)の差異で変動
+		//float FrontLineR = -(D3DX_PI * 0.5f - 0.57f);
+		//float FrontLine2R = -(D3DX_PI * 0.5f + 0.57f);
+		//float FrontLineL = (D3DX_PI * 0.5f - 0.57f);
+		//float FrontLine2L = (D3DX_PI * 0.5f + 0.57f);
+
+
+
+	
+
+		int sThumbLX = joykeystate.Gamepad.sThumbLX;
+		int sThumbLY = joykeystate.Gamepad.sThumbLY;
+
+		// スティックの方向を角度で計算
+		float angle = std::atan2(static_cast<float>(sThumbLY), static_cast<float>(sThumbLX)) - D3DX_PI * 0.5f;
+
+		// 角度を正規化 (-π ~ π)
+		if (angle < -D3DX_PI) angle += 2 * D3DX_PI;
+		if (angle > D3DX_PI) angle -= 2 * D3DX_PI;
+
+		// Boost状態かを判定
+//		if (GetBoostNow() == true)
+//		{
+		if (!GetIsOnGroundBool())
+		{//着地状態でない時
+			// 前方
+			if (angle >= -D3DX_PI / 4 && angle <= D3DX_PI / 4)
+			{
+				SetNowMotion_Parent(MOTIONTYPE_HIGH_MOVE_FRONT); // 前移動
+				m_OldInputMotionParent = MOTIONTYPE_HIGH_MOVE_FRONT;
+			}
+			// 左方向
+			else if (angle > D3DX_PI / 4 && angle <= 3 * D3DX_PI / 4)
+			{
+				SetNowMotion_Parent(MOTIONTYPE_HIGH_MOVE_LEFT); // 左移動
+				m_OldInputMotionParent = MOTIONTYPE_HIGH_MOVE_LEFT;
+			}
+			// 右方向
+			else if (angle < -D3DX_PI / 4 && angle >= -3 * D3DX_PI / 4)
+			{
+				SetNowMotion_Parent(MOTIONTYPE_HIGH_MOVE_RIGHT); // 右移動
+				m_OldInputMotionParent = MOTIONTYPE_HIGH_MOVE_RIGHT;
+			}
+			// 後方
+			else
+			{
+				SetNowMotion_Parent(MOTIONTYPE_HIGH_MOVE_BACK); // 後移動
+				m_OldInputMotionParent = MOTIONTYPE_HIGH_MOVE_BACK;
+			}
+		}
+		else
+		{
+			// 前方
+			if (angle >= -D3DX_PI / 4 && angle <= D3DX_PI / 4)
+			{
+				SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT); // 前移動
+				m_OldInputMotionParent = MOTIONTYPE_MOVE_FRONT;
+			}
+			// 右方向
+			else if (angle > D3DX_PI / 4 && angle <= 2 * D3DX_PI / 4)
+			{
+				SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT); // 右移動
+				m_OldInputMotionParent = MOTIONTYPE_MOVE_FRONT;
+			}
+			// 左方向
+			else if (angle < -D3DX_PI / 4 && angle >= -2 * D3DX_PI / 4)
+			{
+				SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT); // 左移動
+				m_OldInputMotionParent = MOTIONTYPE_MOVE_FRONT;
+			}
+			// 後方
+			else
+			{
+				SetNowMotion_Parent(MOTIONTYPE_MOVE_BACK); // 後移動
+				m_OldInputMotionParent = MOTIONTYPE_MOVE_BACK;
+			}
+		}
+	}
+	else
+	{//移動がなかった場合
+
+		if (GetNowMotionParent() != MOTIONTYPE_STANDBY &&
+			GetNowMotionParent() != MOTIONTYPE_JUMP &&
+			GetNowMotionParent() != MOTIONTYPE_RANDING &&
+			GetNowMotionParent() != MOTIONTYPE_ATTACK)
+		{
+			// モーション変動
+			SetNowMotion_Parent(MOTIONTYPE_STANDBY); // 待機
+
+			m_OldInputMotionParent = MOTIONTYPE_STANDBY; // 移動系入力を保持
+		}
+
+		if (GetNowMotionSub() != MOTIONTYPE_ATTACK)
+		{//モーション変動
+			SetNowMotion_Sub(MOTIONTYPE_STANDBY);//待機
+
+			m_OldInputMotionParent = MOTIONTYPE_STANDBY;//移動系入力を保持
+		}
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//-------------------------------------------------------------------------------------------------------------------------
+	//右スティック
+
+	bool MoveNowCom2 = false;//入力の有無(コントローラ)
+
+	if (joykeystate.Gamepad.sThumbRX <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	{//Aがおされた(左)
+	//	Xdate = 1;
+		MoveNowCom2 = true;
+	}
+	else if (joykeystate.Gamepad.sThumbRX >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	{//Dがおされた(右)
+	//	Xdate = -1;
+		MoveNowCom2 = true;
+	}
+	else if (joykeystate.Gamepad.sThumbRY >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	{//Wがおされた(上)
+		//Zdate = -1.0f;
+		MoveNowCom2 = true;
+	}
+	else if (joykeystate.Gamepad.sThumbRY <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	{//Sがおされた(下)
+		//Zdate = 1.0f;
+		MoveNowCom2 = true;
+	}
+
+	int sThumbRX = joykeystate.Gamepad.sThumbRX;
+	int sThumbRY = joykeystate.Gamepad.sThumbRY;
+
+	// スティックの入力値からベクトルの大きさを計算
+	float magnitude = std::sqrt(static_cast<float>(sThumbRX * sThumbRX) + static_cast<float>(sThumbRY * sThumbRY));
+
+	float vecX, vecY;
+
+	if (magnitude > 0)
+	{
+		// 値を正規化（単位ベクトルを計算）
+		vecX = sThumbRX / magnitude;
+		vecY = sThumbRY / magnitude;
+		// ターゲットの位置を計算
+		m_TargetPos.x = classData.Pos.x + vecX * 500.0f; // X方向に一定距離進む
+		m_TargetPos.y = (classData.Pos.y + 150.0f) + vecY * 500.0f; // Y方向に一定距離進む
+		m_TargetPos.z = 0;
+
+	}
+	else
+	{
+		// スティックが中央の場合はベクトルを0に
+		vecX = 0.0f;
+		vecY = 0.0f;
+	}
+
+	float MoveSpeed2 = MOVESPEED;
+
+	if (MoveNowCom2 == false)
+	{
+
+	}
+	else
+	{//Controller
+
+		//Controller移動
+
+		float Angle2 = atan2f((float)-joykeystate.Gamepad.sThumbRX, (float)-joykeystate.Gamepad.sThumbRY);//これが方角
+
+		fRotDest = (Angle2 - CameraRot.y - (1.0f * D3DX_PI));
+
+		D3DXVECTOR3 ESCTargetMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+		if (GetBoostNow() == true)
+		{
+			if (m_nBoostCnt <= BOOST_FARAME && m_nBoostCnt > BOOST_FARAME * 0.5f)
+			{//序盤
+				ESCTargetMove.x += (joykeystate.Gamepad.sThumbLX * JoyStickDiff) * 4.0f;//三角関数利用して移動の長さを代入
+				ESCTargetMove.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 4.0f;//三角関数利用して移動の長さを代入
+
+			}
+			else
+			{//終盤
+
+				ESCTargetMove.x += (joykeystate.Gamepad.sThumbLX * JoyStickDiff) * 3.0f;//三角関数利用して移動の長さを代入
+				ESCTargetMove.z += (joykeystate.Gamepad.sThumbLY * JoyStickDiff) * 3.0f;//三角関数利用して移動の長さを代入
+			}
+		}
+		else
+		{
+			ESCTargetMove.x = (joykeystate.Gamepad.sThumbLX * JoyStickDiff);
+			ESCTargetMove.z = (joykeystate.Gamepad.sThumbLY * JoyStickDiff);
+		}
+
+		m_TargetPos += ESCTargetMove;
+
+		
+	}
+	//-------------------------------------------------------------------------------------------------------------------------
+
+	//飛翔
+	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A))
+	{
+		classData.move.y += 15.0f;
+	}
+
+	SetClassData(classData);
+
 }
 //=============================
 // 残機格納
@@ -1769,10 +2029,16 @@ int CObjectMotionPlayer::GetPlayerNum()
 {
 	return m_nNumPlayerAll;
 }
+//=============================
+// Restart地点格納
+//=============================
 void CObjectMotionPlayer::SetStartPos(D3DXVECTOR3 pos)
 {
 	m_RESTART_POS = pos;
 }
+//=============================
+// 射撃位置取得
+//=============================
 D3DXVECTOR3 CObjectMotionPlayer::GetTARGETPOS()
 {
 	return m_TargetPos;

@@ -7,6 +7,22 @@
 #include"main.h"
 
 #include "manager.h"
+// メモリーリーク検出
+#define _CRTDBG_MAP_ALLOC
+#include <cstdlib>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define FIND_MEM_LEAKS
+#endif // _DEBUG
+
+#ifdef FIND_MEM_LEAKS
+#define _NEW new (NORMALBLOCK, FILE, __LINE)
+#else
+#define _NEW new
+#endif // FIND_MEM_LEAKS
+
+
 
 int g_nCountFPS = 0;
 
@@ -21,6 +37,14 @@ int WINAPI WinMain(	_In_ HINSTANCE hInstance,
 					_In_ LPSTR lpCmdLine,
 					_In_ int nCmdShow)
 {
+//	// メモリリーク検出を有効化
+_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+//#define _CRTDBG_MAP_ALLOC
+//#include <crtdbg.h>
+//
+	_CrtSetBreakAlloc(41770);
+
+
 	WNDCLASSEX wcex =
 	{
 		sizeof(WNDCLASSEX),					//WNDCLASSEXのメモリサイズ

@@ -49,9 +49,9 @@ private:
 
 	D3DXVECTOR3 m_Pos = {};
 
-	D3DXCOLOR m_col = D3DXCOLOR(0.0f,1.0f, 1.0f, 1.0f);
+	D3DXCOLOR m_col = D3DXCOLOR(1.0f,0.0f, 0.0f, 1.0f);
 
-	int m_nLife = 3;
+	int m_nLife = 6;
 };
 
 #endif

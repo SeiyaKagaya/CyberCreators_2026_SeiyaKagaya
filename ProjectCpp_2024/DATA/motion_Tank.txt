@@ -15,7 +15,7 @@ NUM_MODEL = 8
 # モデルファイル名
 #------------------------------------------------------------------------------
 MODEL_FILENAME = data/MODEL/Tank/00_body.x			# [0]体
-MODEL_FILENAME = data/MODEL/Tank/01_head.x			# [1]頭
+MODEL_FILENAME = data/MODEL/Tank/01_head_2.x			# [1]頭
 MODEL_FILENAME = data/MODEL/Tank/02_catR.x			# [2]キャタ右
 MODEL_FILENAME = data/MODEL/Tank/03_catL.x			# [3]キャタ左
 MODEL_FILENAME = data/MODEL/Tank/04_CannonBase.x	# [4]主砲軸
@@ -44,7 +44,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 1					# 頭
 		PARENT = 0					# (親)体
-		POS = 0.0 21.0 0.0
+		POS = 0.0 31.0 0.0
 		ROT = 0.0 0.0 0.0
 		MOTIONPARENT = 0
 	END_PARTSSET

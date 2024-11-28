@@ -93,6 +93,13 @@ HRESULT CObjectMotion::Init()
 //=============================
 void CObjectMotion::Uninit()
 {
+	for (int nCnt = 0; nCnt < MAX_PARTS; nCnt++)
+	{
+		delete m_PartfilePass[nCnt];
+	}
+
+	delete m_FilePass;
+
     CObjectX::Uninit();
 }
 

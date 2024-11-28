@@ -47,6 +47,10 @@ public:
 
 	static int GetEnemyAllNum();
 
+	//MainTarget‚©
+	void SetPriorityAttackTarget(bool bSet) { m_PriorityAttackTarget = bSet; };
+	bool GetPriorityAttackTarget() { return m_PriorityAttackTarget; };
+
 private:
 
 	CMathProc::CollisionData m_HitData;//“–‚½‚è”»’èƒf[ƒ^
@@ -56,6 +60,9 @@ private:
 	int m_nLife;
 
 	static int m_nNumENemyAll;//“G‘”
+
+
+	bool m_PriorityAttackTarget = false;//mainTarget
 };
 
 #endif

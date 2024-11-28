@@ -12,13 +12,13 @@
 //#include "ReflectEffect.h"
 
 // 静的メンバ変数の定義
-CNewBullet* CNewBulletALL::m_NewBullet[CNewBulletALL::MAXBULLETALL] = { nullptr };
+//CNewBullet* CNewBulletALL::m_NewBullet[CNewBulletALL::MAXBULLETALL] = { nullptr };
 
 
 //=============================
 // コンストラクタ
 //=============================
-CNewBulletALL::CNewBulletALL()
+CNewBulletALL::CNewBulletALL(int nPriority) : CObjectX(nPriority)
 {
 
 }
@@ -41,16 +41,17 @@ HRESULT CNewBulletALL::Init()
 
     for (int i = 0; i < MAXBULLETALL; i++)
     {
-        CNewBullet* pBlock3D = new CNewBullet;
-        pBlock3D->Init();
+        m_NewBullet[i] = CNewBullet::Create(); 
+     //   pBlock3D->Init();
 
-        pBlock3D->SetID(i);
+        m_NewBullet[i]->SetID(i);
 
-        m_NewBullet[i] = pBlock3D;
+        //m_NewBullet[i] = pBlock3D;
 
     }
 
 
+    SetObjectType(CObject::OBJECT_NEWBULLET_MNG);
 
 
     return E_NOTIMPL;
@@ -60,11 +61,17 @@ HRESULT CNewBulletALL::Init()
 //=============================
 void CNewBulletALL::Uninit()
 {
-  //  for (int i = 0; i < MAXBULLETALL; i++)
-  //  {
-  ////      delete m_NewBullet[i];
-  //  }
+    for (int i = 0; i < MAXBULLETALL; i++)
+    {
+         m_NewBullet[i]->SetDeath(true);
+    }
 
+}
+void CNewBulletALL::Update()
+{
+}
+void CNewBulletALL::Draw()
+{
 }
 //=============================
 // Release
@@ -83,6 +90,7 @@ CNewBulletALL* CNewBulletALL::Create()
     CNewBulletALL* pNewBulletALL = new CNewBulletALL;
     pNewBulletALL->Init();
     return pNewBulletALL;
+
 }
 //=============================
 // Clean
@@ -193,9 +201,9 @@ CNewBullet::CNewBullet(int nPriority) :CObjectX(nPriority)
 
     m_bUse = false;
 
-    m_OBB.m_fLength[0] = 15.0f;
-    m_OBB.m_fLength[1] = 15.0f;
-    m_OBB.m_fLength[2] = 30.0f;
+    m_OBB.m_fLength[0] = 6.0f;
+    m_OBB.m_fLength[1] = 6.0f;
+    m_OBB.m_fLength[2] = 6.0f;
     m_Reflection = NEWMAXREFLECTION;
     m_ShotByHitEscapeTime = 30;//3フレーム当たり判定抑制
     m_pCaller = nullptr;
@@ -259,8 +267,8 @@ HRESULT CNewBullet::Init()
 
     //仮
     
-    EscData.MinLength = D3DXVECTOR3(-30.0f, -30.0f, -30.0f);
-    EscData.MaxLength = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
+    EscData.MinLength = D3DXVECTOR3(-6.0f, -6.0f, -6.0f);
+    EscData.MaxLength = D3DXVECTOR3(6.0f, 6.0f, 6.0f);
     EscData.Radius = 30.0f;
 
 
@@ -268,8 +276,6 @@ HRESULT CNewBullet::Init()
 
 
     SetSizeMag(D3DXVECTOR3(1.5f, 1.5f, 1.5f));//大きさ倍率
-
-    m_bUse = false;
 
 
 

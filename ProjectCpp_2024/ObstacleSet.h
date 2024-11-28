@@ -83,6 +83,7 @@ private:
 
 	CMathProc::CollisionData m_HitData;//“–‚½‚è”»’èƒf[ƒ^
 
+	static bool m_bRelease;
 	static std::vector<OBSTACLEINFO> m_ObstacleInfo;
 
 	static int m_ObstacleCount;

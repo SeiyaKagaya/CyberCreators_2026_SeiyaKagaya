@@ -32,10 +32,13 @@
 #include "debugwall.h"
 #include "3D-2DhitObject.h"
 #include "sky.h"
+#include "enemy_motion_fast.h"
 
 // 静的メンバー変数の定義
 CScene::MODE CScene::m_NowState = CScene::MODE_TITLE; // 初期値をMODE_TITLEに設定
 bool CScene::m_bStageClear = false;
+
+
 
 //===================================
 // コンストラクタ
@@ -179,6 +182,10 @@ HRESULT CGame::Init()
 
 	CObjectMotion::DATA SetData = CObject::DataInit();//初期化同時
 	
+	m_CTextWindow = CTextWindow::Create();
+
+	CNewBulletALL::Create();
+
 	//配置物
 	//-------------------------------------------------------------------------------------------------------------------
 	
@@ -214,17 +221,17 @@ HRESULT CGame::Init()
 
 	//-------------------------------------------------------------------------------------------------------------------
 
-	SetData.Pos = D3DXVECTOR3(-(3300.0f*0.5f), (3300.0f * 0.5f), +(3300.0f * 0.5f));
+	SetData.Pos = D3DXVECTOR3(-(3300.0f*0.5f), (3300.0f * 0.5f), +(3300.0f * 0.8f));
 	CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
 
-	SetData.Pos = D3DXVECTOR3(-(3300.0f * 1.5f), (3300.0f * 0.5f), +(3300.0f * 0.5f));
+	SetData.Pos = D3DXVECTOR3(-(3300.0f * 1.5f), (3300.0f * 0.5f), +(3300.0f * 0.8f));
 	CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
 
-	SetData.Pos = D3DXVECTOR3(-(3300.0f * 2.5f), (3300.0f * 0.5f), +(3300.0f * 0.5f));
+	SetData.Pos = D3DXVECTOR3(-(3300.0f * 2.5f), (3300.0f * 0.5f), +(3300.0f * 0.8f));
 	CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
 
-	SetData.Pos = D3DXVECTOR3(-(3300.0f * 0.5f), (3300.0f * 0.5f), +(3300.0f * 0.5f));
-	CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
+	//SetData.Pos = D3DXVECTOR3(-(3300.0f * 0.5f), (3300.0f * 0.5f), +(3300.0f * 0.5f));
+	//CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
 
 
 
@@ -357,8 +364,9 @@ CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK)
 	//-------------------------------------------------------------
 	SetData = CObject::DataInit();//初期化
 
-	SetData.Pos = D3DXVECTOR3(2000.0f, 0.0f, 2000.0f);
-
+	SetData.Pos = D3DXVECTOR3(-7500.0f, 2100.0f, 0.0f);
+	SetData.rot = D3DXVECTOR3(0.0f,/* D3DX_PI * 0.5f*/0.0f , 0.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 	//CObjectMotionEnemyNomal::Create("DATA\\motion_Tank.txt", SetData);
 
 
@@ -386,6 +394,11 @@ CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK)
 
 	CSound* pSound = pManager->GetSound();
 //	pSound->PlaySound(CSound::SOUND_LABEL_BGM001);
+
+	//m_bNow3DMode = true;
+
+	//
+	pManager->SetbNow3DMode(true);
 
 	return S_OK;
 }
@@ -446,8 +459,15 @@ void CGame::Update()
 	//	}
 	//}
 
-
-
+	if (m_bSetTextWindow == true)
+	{		
+		if (m_CTextWindow->GetCloseWindowNow() == true)
+		{//ウィンドウ閉じろ状態か
+			m_bSetTextWindow = false;
+			m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+			
+		}
+	}
 
 	CRenderer* pRenderer = nullptr;
 
@@ -457,16 +477,16 @@ void CGame::Update()
 	{
 		if (pManager->GetPauseState() == false)
 		{
-
-
-
 			if (m_CGameUI->GetAllUiRestartNow() == false)
 			{//Reset起動してない
 				CInputKeyboard* keyboard = pManager->GetKeyboard();
 				if (keyboard->GetPress(DIK_RSHIFT) == true)
-				{//左ボタンが押された
+				{//右シフト押された
 					m_CGameUI->AllUiRestart();
 
+
+					m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f-310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f),20, 3, "これは実験です。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),90);
+					m_bSetTextWindow = true;
 				}
 			}
 			else
@@ -1238,7 +1258,7 @@ void CTitle::Uninit()
 {
 	CManager* pManager = CManager::GetInstance();
 	CSound* pSound = pManager->GetSound();
-	pSound->StopSound(CSound::SOUND_LABEL_BGM000);
+//	pSound->StopSound(CSound::SOUND_LABEL_BGM000);
 }
 //===================================
 // 更新

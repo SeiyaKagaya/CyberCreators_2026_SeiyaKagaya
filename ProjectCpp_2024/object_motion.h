@@ -56,7 +56,7 @@ public:
 	static const int MAXKEY = 60;
 	static const int MAX_MOTION = MOTIONTYPE_MAX;
 	static const int MAX_TEXTURE = 10;
-	static const int BRENDFLAME = 2;
+	static const int BRENDFLAME = 12;
 
 	//------------------------------------------------------------------------
 	typedef struct

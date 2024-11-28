@@ -29,6 +29,12 @@ public:
 	static const int BOOST_RESTFARAME = 5;		//Boost後の余韻
 	static const int BOOST_MAG = 3;				//ブースト時アフターバーナー倍率
 
+	const float SHIELD_SET_ADDPOS = 130.0f;
+	const float TARGET_SET_ADDPOS = 150.0f;
+	const float SHOTPOS_Y = 70.0f;
+	const float SHOTPOS_Z = -190.0f;
+
+
 	CObjectMotionPlayer(int nPriority = CObject::LAYERINDEX_MOTIONPLAYER);//コンストラクタ
 	~CObjectMotionPlayer() override;//デストラクタ
 	HRESULT Init()override;
@@ -38,8 +44,9 @@ public:
 
 	static CObjectMotionPlayer* Create(const char* pfilePass, DATA SetData);//オブジェクト生成
 
-	void Input();//入力系(static)
-	void ControllerInput();//コントローラ入力
+
+	void ControllerInput2D();//コントローラ入力--2D
+	void ControllerInput3D();//コントローラ入力--3D
 
 	static void SetPlayerNum(int SetNum);//残機格納
 	static int GetPlayerNum();//残機取得

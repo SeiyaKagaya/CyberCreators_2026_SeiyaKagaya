@@ -47,8 +47,8 @@ public:
 	CScene* GetScene();
 	CFade* GetFade();
 
-	CNewBulletALL* GetNewBulletAll();
-	void SetNewBulletAll(CNewBulletALL* GetNewBulletAll);
+	/*CNewBulletALL* GetNewBulletAll();
+	void SetNewBulletAll(CNewBulletALL* GetNewBulletAll);*/
 
 //	CScore* GetScore();
 
@@ -80,6 +80,9 @@ public:
 
 //	CNewBullet* GetNewBullet();
 
+	//3Dモードかどうか
+	void SetbNow3DMode(bool Set) { m_bNow3DMode = Set; };
+	bool GetbNow3DMode() { return m_bNow3DMode; };
 
 private:
 
@@ -103,7 +106,7 @@ private:
 
 	CSound* m_Sound;
 
-	CNewBulletALL* m_NewBulletAll;
+	//CNewBulletALL* m_NewBulletAll;
 
 //	CNewBullet* m_NewBullet;
 
@@ -120,5 +123,7 @@ private:
 
 	//trueで勝利
 	bool m_EndState = false;
+
+	bool m_bNow3DMode = false;//現在3Dモードか
 };
 #endif

@@ -159,15 +159,12 @@ void CFade::Update(void)
 			{
 			CObject::ReleaseAll();//全オブジェクト開放
 
+			
+
 
 				//モード設定(次の画面に移行)
 				CManager::SetMode(m_ModeNext);
 
-				CRenderer* pRenderer = nullptr;
-
-				CManager* pManager = CManager::GetInstance();
-
-				pManager->SetNewBulletAll(CNewBulletALL::Create());
 
 				m_SetMode = true;
 			}

@@ -161,6 +161,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="debugwall.cpp" />
     <ClCompile Include="enemy_motion_base.cpp" />
+    <ClCompile Include="enemy_motion_fast.cpp" />
     <ClCompile Include="enemy_motion_Nomal.cpp" />
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="Explosion3D.cpp" />
@@ -208,6 +209,7 @@
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="StageCollisionBox.cpp" />
     <ClCompile Include="tankfootprint.cpp" />
+    <ClCompile Include="textwindow.cpp" />
     <ClCompile Include="time.cpp" />
     <ClCompile Include="Tutorial.cpp" />
   </ItemGroup>
@@ -220,6 +222,7 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="debugwall.h" />
     <ClInclude Include="enemy_motion_base.h" />
+    <ClInclude Include="enemy_motion_fast.h" />
     <ClInclude Include="enemy_motion_Nomal.h" />
     <ClInclude Include="explosion.h" />
     <ClInclude Include="Explosion3D.h" />
@@ -258,6 +261,7 @@
     <ClInclude Include="sound.h" />
     <ClInclude Include="StageCollisionBox.h" />
     <ClInclude Include="tankfootprint.h" />
+    <ClInclude Include="textwindow.h" />
     <ClInclude Include="time.h" />
     <ClInclude Include="Tutorial.h" />
   </ItemGroup>
