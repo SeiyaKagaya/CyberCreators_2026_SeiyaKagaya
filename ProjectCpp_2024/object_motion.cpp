@@ -13,6 +13,17 @@
 //=============================
 CObjectMotion::CObjectMotion(int nPriority) :CObjectX(nPriority)
 {
+	m_Obb.m_Direct[0] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Obb.m_Direct[1] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Obb.m_Direct[2] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Obb.m_fLength[0] = 0.0f;
+	m_Obb.m_fLength[1] = 0.0f;
+	m_Obb.m_fLength[2] = 0.0f;
+
+	m_Obb.m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+
+
     m_FilePass = {};
 
     m_CrassData = {};//一個体としてのデータ
@@ -402,7 +413,6 @@ void CObjectMotion::DataLoad()
 				m_PartfilePass[nEscapeCntModel] = filePass;
 
 				nEscapeCntModel++;//モデル格納後インクリ
-
 			}
 			else if (strcmp(&aString[0], "CHARACTERSET") == 0)
 			{//キャラセットがきたら
@@ -665,7 +675,7 @@ void CObjectMotion::Motion_Parent()
 				m_MotionLoopStop_Parent = false;
 			}
 		}
-		if (m_NowMotionIndex_Parent == MOTIONTYPE_ATTACK)
+		if (m_NowMotionIndex_Parent == MOTIONTYPE_ATTACK|| m_NowMotionIndex_Parent == MOTIONTYPE_OP0 || m_NowMotionIndex_Parent == MOTIONTYPE_OP1 || m_NowMotionIndex_Parent == MOTIONTYPE_OP2 || m_NowMotionIndex_Parent == MOTIONTYPE_OP3)
 		{
 
 		}
@@ -1179,7 +1189,7 @@ void CObjectMotion::SetClassData(DATA data)
 //=============================
 CObjectMotion::DATA CObjectMotion::GetClassData()
 {
-	return m_CrassData;
+	return m_CrassData;//なぜかここで止まる
 }
 //=============================
 //マトリックス取得

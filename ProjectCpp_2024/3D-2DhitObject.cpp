@@ -61,6 +61,12 @@ HRESULT CStageCollisionBox3D2D::Init()
     
         aData = "DATA\\MODEL\\iwa.x";
         break;
+
+    case TYPE_3DSTAGE:
+
+        aData = "DATA\\MODEL\\iwa2.x";
+        break;
+    
     }
 
     // ÉÅÉbÉVÉÖÇÃì«Ç›çûÇ›
@@ -126,6 +132,11 @@ HRESULT CStageCollisionBox3D2D::Init()
 //=============================
 void CStageCollisionBox3D2D::Uninit()
 {
+    //if (m_pMesh != nullptr)
+    //{
+    //    delete m_pMesh;
+    //    m_pMesh = nullptr;
+    //}
     CObjectX::Uninit();
 }
 
@@ -144,7 +155,7 @@ void CStageCollisionBox3D2D::Update()
 void CStageCollisionBox3D2D::Draw()
 {
 
-#if _DEBUG
+//#if _DEBUG
 
     ChengeStageTex(true);
     SizeMagChangebool(true);
@@ -152,9 +163,10 @@ void CStageCollisionBox3D2D::Draw()
     CObjectX::Draw();
     ChengeStageTex(false);
 
-#else
+//#else
 
-#endif // _D
+//#endif // _D
+
 }
 
 //=============================

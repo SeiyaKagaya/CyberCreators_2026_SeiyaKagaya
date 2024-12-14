@@ -4,9 +4,9 @@
 // Author seiya kagaya
 //
 //=========================================================
-#ifndef _NEWBULLET_H
+#ifndef _MISSILE_H
 
-#define _NEWBULLET_H//二重インクルード防止
+#define _MISSILE_H//二重インクルード防止
 
 #include "object.h"
 #include "objectX.h"
@@ -17,9 +17,9 @@
 //
 
 
-class CNewBullet;
+class CMissile;
 
-class CNewBulletALL : public CObjectX
+class CMissileALL : public CObjectX
 {
 public:
 	typedef enum
@@ -30,47 +30,52 @@ public:
 	}SHOTTYPE;
 
 
-	static const int MAXBULLETALL = 120;
+	static const int MAXMISSILEALL = 120;
 
-	CNewBulletALL(int nPriority = CObject::LAYERINDEX_NEWBULLET_MNG);//コンストラクタ
-	~CNewBulletALL() override;//デストラクタ
+	CMissileALL(int nPriority = CObject::LAYERINDEX_MISSILE_MNG);//コンストラクタ
+	~CMissileALL() override;//デストラクタ
 	HRESULT Init()override;
 	void Uninit()override;
 	//void Update()override;
 	//void Draw()override;
-	static CNewBulletALL* Create();//オブジェクト生成
+	static CMissileALL* Create();//オブジェクト生成
 
 	void ReleaseAllBullet();
 
 	//バグ回避のため凍結
-	//static CNewBulletALL* Create();//オブジェクト生成
+	//static CMissileALL* Create();//オブジェクト生成
 
 	//規定数を初期化する
 	void AllClean();
 
-	CNewBullet* GetBulletData(int nNum);
+	CMissile* GetBulletData(int nNum);
 
 	//すでに生成されているもののbUseをtrueにして稼働させる
-	void SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR col, void* pCaller, SHOTTYPE ShotType);
+	void SetMissile(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR col, void* pCaller, SHOTTYPE ShotType);
 
+	//追尾対象死亡時処理
+	void KillMissileTarget(void* pCaller);
 
 private:
 
 	//先に確保し、回す
-	CNewBullet* m_NewBullet[MAXBULLETALL];
+	CMissile* m_Missile[MAXMISSILEALL];
 };
 
 
-class CNewBullet : public CObjectX
+class CMissile : public CObjectX
 {
 public:
 	static const int NEWMAXREFLECTION = 2;//反射回数
+	const float MISSILEROT = 4.0f;//ミサイルの誘導角度
 
-	CNewBullet(int nPriority = CObject::LAYERINDEX_NEWBULLET);//コンストラクタ
-	~CNewBullet() override;//デストラクタ
+	const float MISSILEMOVESPEED = 80.0f;//ミサイルスピード
+
+	CMissile(int nPriority = CObject::LAYERINDEX_MISSILE);//コンストラクタ
+	~CMissile() override;//デストラクタ
 	HRESULT Init()override;
 	void Uninit()override;
-    void Update()override;
+	void Update()override;
 	void Draw()override;
 
 
@@ -81,13 +86,13 @@ public:
 	void SetCOL(D3DXCOLOR col);
 
 	//バグ回避のため凍結
-	static CNewBullet* Create();//オブジェクト生成
+	static CMissile* Create();//オブジェクト生成
 
 	void SetbUse(bool bUse);
 
 	bool GetbUse();
 
-	void SetBulletData(DATA SetData, int ReflectCnt, D3DXCOLOR col, void* pCaller, CNewBulletALL::SHOTTYPE ShotType);
+	void SetBulletData(DATA SetData, int ReflectCnt, D3DXCOLOR col, void* pCaller, CMissileALL::SHOTTYPE ShotType);
 
 
 	//射撃手への当たり判定抑制取得
@@ -105,10 +110,15 @@ public:
 
 	void* GetpCaller() { return m_pCaller; };
 	//射撃タイプ
-	CNewBulletALL::SHOTTYPE GetShotType() { return m_ShotType; };
+	CMissileALL::SHOTTYPE GetShotType() { return m_ShotType; };
+
+	void Homing();
+
+	// ベクトルの大きさを保ちつつ角度を変更する関数
+	void ChangeVectorDirection(D3DXVECTOR3& vector, const D3DXVECTOR3& newDirection, float maxAngleChange);
 
 private:
-	
+
 	bool m_bUse = false;
 
 	int m_nReflect = 0;
@@ -128,7 +138,7 @@ private:
 	int m_bGoodbyNow = false;
 
 	int m_nID = 0;
-	CNewBulletALL::SHOTTYPE m_ShotType = CNewBulletALL::SHOTTYPE_MAX;
+	CMissileALL::SHOTTYPE m_ShotType = CMissileALL::SHOTTYPE_MAX;
 
 };
 

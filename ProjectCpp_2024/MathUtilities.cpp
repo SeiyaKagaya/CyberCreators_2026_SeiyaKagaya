@@ -35,6 +35,9 @@
 #include "manager.h"
 
 #include"3D-2DhitObject.h"
+#include "missile.h"
+#include "enemy_motion_fast.h"
+
 
 //算出用セル
 CMathProc::Cell CMathProc::GRID[GRIDROW][GRIDCOL] = {};
@@ -358,6 +361,7 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 
 				// ここで使用分宣言
 				CNewBullet* pNewBullet = {};
+				CMissile* pMissile = {};
 
 				CObstacleSet* pObstacleObject;
 				StageCollisionBox* pStageHitBox;
@@ -397,6 +401,12 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 				case CObject::OBJECT_NEWBULLET:
 					pNewBullet = (CNewBullet*)pObject;
 					EscData = pNewBullet->GetDATA();
+
+					break;
+
+				case CObject::OBJECT_MISSILE:
+					pMissile = (CMissile*)pObject;
+					EscData = pMissile->GetDATA();
 
 					break;
 
@@ -579,48 +589,57 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 
 						switch (MyType)
 						{
-						case CObject::OBJECT_BULLET3D://砲弾
+						//case CObject::OBJECT_BULLET3D://砲弾
 
 
-							// ここで本来のデータ取得
-							switch (TargetType)
-							{
+						//	// ここで本来のデータ取得
+						//	switch (TargetType)
+						//	{
 
 
-							case CObject::OBJECT_NEWBULLET:
-								pNewBullet = (CNewBullet*)pObject;
-								EscData = pNewBullet->GetDATA();
+						//	case CObject::OBJECT_NEWBULLET:
+						//		pNewBullet = (CNewBullet*)pObject;
+						//		EscData = pNewBullet->GetDATA();
 
-								//pNewBullet->SetDeath(true);//相手砲弾破壊
-								pNewBullet->SetGoodby();
-								//	CObjectExplosionBill::Create(EscData.Pos);
-								bBreak = true;
-								break;
+						//		//pNewBullet->SetDeath(true);//相手砲弾破壊
+						//		pNewBullet->SetGoodby();
+						//		//	CObjectExplosionBill::Create(EscData.Pos);
+						//		bBreak = true;
+						//		break;
+						//	case CObject::OBJECT_MISSILE:
+						//		pMissile = (CMissile*)pObject;
+						//		EscData = pMissile->GetDATA();
 
-							}
+						//		//pNewBullet->SetDeath(true);//相手砲弾破壊
+						//		pMissile->SetGoodby();
+						//		//	CObjectExplosionBill::Create(EscData.Pos);
+						//		bBreak = true;
+						//		break;
 
-							if (bBreak == false)
-							{
-								//反射ベクトル生成して返す
-								// 反射ベクトルの計算
-								moveVector = Mymove;
-								dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
-								reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
+						//	}
 
-							   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
-								moveVectorLength = D3DXVec3Length(&moveVector);
-								D3DXVec3Normalize(&reflectionVector, &reflectionVector);
-								reflectionVector *= 12.0f;
+						//	if (bBreak == false)
+						//	{
+						//		//反射ベクトル生成して返す
+						//		// 反射ベクトルの計算
+						//		moveVector = Mymove;
+						//		dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
+						//		reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
 
-								HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
+						//	   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
+						//		moveVectorLength = D3DXVec3Length(&moveVector);
+						//		D3DXVec3Normalize(&reflectionVector, &reflectionVector);
+						//		reflectionVector *= 12.0f;
 
-								break;
-							}
-							else
-							{//自弾も破壊
+						//		HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
 
-							}
-							break;
+						//		break;
+						//	}
+						//	else
+						//	{//自弾も破壊
+
+						//	}
+						//	break;
 
 						case CObject::OBJECT_NEWBULLET://砲弾
 
@@ -664,7 +683,9 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 							}
 							break;
 
+						case CObject::OBJECT_MISSILE://砲弾
 
+							break;
 
 						case CObject::OBJECT_MOTIONMODEL://player/enemy
 
@@ -1152,7 +1173,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 
 
 
-#if _DEBUG
+
 	//--------------------------------------------------------------------------------当たり判定ライン
 	// OBB1の頂点を計算
 	D3DXVECTOR3 obb1Vertices[8];
@@ -1176,6 +1197,8 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	obb2Vertices[6] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] + obb2.m_Direct[2] * obb2.m_fLength[2];
 	obb2Vertices[7] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] - obb2.m_Direct[2] * obb2.m_fLength[2];
 
+
+#if _DEBUG
 	// OBBの頂点間にラインを引く
 	for (int i = 0; i < 4; ++i)
 	{
@@ -1980,7 +2003,52 @@ bool CMathProc::AvoidInternalSpawn_3D_BoxCollision(CObject::OBJECTTYPE MyType, D
 
 	return bHit;
 }
+//=============================
+// 射撃位置設定処理
+//=============================
+D3DXVECTOR3 CMathProc::SetPositionldPredictedImpactPoint(D3DXVECTOR3 BulletPos, D3DXVECTOR3 BulletMove, D3DXVECTOR3 TargetPos, D3DXVECTOR3 TargetMove, float BULLETSPEED)
+{
+	// 初期化
+	D3DXVECTOR3 impactPoint(0, 0, 0);
 
+	// 弾の速度がゼロの場合、計算不可
+	float bulletSpeedSquared = D3DXVec3Dot(&BulletMove, &BulletMove);
+	if (bulletSpeedSquared < 1e-6f)
+	{
+		return impactPoint; // 初期値（ゼロ）を返す
+	}
+
+	// ターゲットとの相対位置
+	D3DXVECTOR3 relativePos = TargetPos - BulletPos;
+
+	// 弾の速度ベクトルを正規化（速度方向を抽出）
+	D3DXVec3Normalize(&BulletMove, &BulletMove);
+	BulletMove *= BULLETSPEED; // 弾の速度ベクトルを反映
+
+	// ターゲットとの相対速度
+	D3DXVECTOR3 relativeVelocity = TargetMove - BulletMove;
+
+	// 相対速度の大きさの二乗
+	float relativeSpeedSquared = D3DXVec3Dot(&relativeVelocity, &relativeVelocity);
+	if (relativeSpeedSquared < 1e-6f)
+	{
+		return TargetPos; // 移動速度がない場合、現在のターゲット位置を返す
+	}
+
+	// ターゲットへの相対位置と相対速度の内積
+	float t = -D3DXVec3Dot(&relativePos, &relativeVelocity) / relativeSpeedSquared;
+
+	// tが負の場合、ターゲットに到達する前に通過
+	if (t < 0.0f)
+	{
+		return TargetPos; // 現在のターゲット位置を返す
+	}
+
+	// 命中点を計算
+	impactPoint = TargetPos + TargetMove * t;
+
+	return impactPoint;
+}
 //---------------------------------------------------------------------------------------------------------------------------------------------
 //=============================
 // 有効な座標かどうかを確認する関数

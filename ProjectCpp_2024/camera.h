@@ -10,7 +10,8 @@
 #define _CAMERA_H_//二重インクルード防止のマクロ定義
 
 #include"main.h"
-
+#include "LockOnUI.h"
+#include "LockOnUIMain.h"
 class CCamera
 {
 public:
@@ -19,8 +20,8 @@ public:
 	const float  CAMERA_ROT_DAMPING_RATIO = 0.5f;//カメラ回転慣性
 	const float  CAMERA_ROT_SPEED = 0.015f;//カメラ旋回速度
 	const float JoyStickDiffCamera = 0.0000008f;			//スティック倍率
-
-
+	const float LOCKMISSLEDDISTANCE = 7500.0f;
+	//const float LOCKBULLETDISTANCE = 3000.0f;
 
 	CCamera();
 	~CCamera();
@@ -46,6 +47,27 @@ public:
 	D3DXVECTOR3 GetRot();
 	static D3DXVECTOR3 GetCameraPos() { return CameraPos; };
 
+
+	void LockOnEnemy();//ロックオン敵処理
+	void SetAllEnemyScreenPos();//スクリーン座標変換セット
+
+
+	// スクリーン座標が画面内にあるかどうかを判定
+	bool IsInScreen(D3DXVECTOR3 screenPosition);
+
+	// カメラが対象の方を向いているかどうかを判定
+	bool IsFacingCamera(D3DXVECTOR3 enemyPosition);
+
+	bool IntersectRayAABB(const D3DXVECTOR3& rayStart, const D3DXVECTOR3& rayDir, const D3DXVECTOR3& boxMin, const D3DXVECTOR3& boxMax, float& tMin, float& tMax);
+
+	//障害物の妨害判定
+//	bool IsBlockedByObstacle(const D3DXVECTOR3& rayStart, const D3DXVECTOR3& rayDir, float rayLength, CObject* pObstacleTop);
+
+	//距離の平方値計算
+//	float CalculateDistanceSquared(const D3DXVECTOR3& screenPos, float screenWidth, float screenHeight);
+
+
+
 private:
 	D3DXVECTOR3 m_posV;//視点
 	D3DXVECTOR3 m_posR;//注視点
@@ -66,6 +88,14 @@ private:
 	bool m_CameraType = false;
 
 	static D3DXVECTOR3 CameraPos;
+
+	////以下"基本は3D"のみ
+	//CLockOnUI* m_LockOnUI[8] ={};	       //--ロックオン
+	//CLockOnUIMain* m_LockOnUI_Main;//---バレットロックオン
+	
+
+	int m_nCntFrane = 0;
+	float DebuCameraLength = 700.0f;
 };
 
 

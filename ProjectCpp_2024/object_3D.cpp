@@ -92,24 +92,14 @@ HRESULT CObject3D::Init()
     if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 )
     {//ゲーム中
 
-#if _DEBUG
-        float fTest = 6600.0f;
-        float fTest2 = 6600.0f;
+        float fTest = 9900.0f;
+        float fTest2 = 9900.0f;
 
         //頂点座標の設定
-        pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, fTest);
-        pVtx[1].pos = D3DXVECTOR3(fTest2, 0.0f, fTest);
-        pVtx[2].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        pVtx[3].pos = D3DXVECTOR3(fTest2, 0.0f, 0.0f);
-
-#else
-        //頂点座標の設定
-        pVtx[0].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z + fTest);
-        pVtx[1].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z + fTest);
-        pVtx[2].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z - fTest);
-        pVtx[3].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z - fTest);
-
-#endif // _DEBUG
+        pVtx[0].pos = D3DXVECTOR3(0.0f, 30.0f, fTest);
+        pVtx[1].pos = D3DXVECTOR3(fTest2, 30.0f, fTest);
+        pVtx[2].pos = D3DXVECTOR3(0.0f, 30.0f, 0.0f);
+        pVtx[3].pos = D3DXVECTOR3(fTest2, 30.0f, 0.0f);
 
 
     }
@@ -165,13 +155,8 @@ HRESULT CObject3D::Init()
     //テクスチャ取得
     CAllTexture* pTexture = pManager->GetTexture();
 
-#if _DEBUG
 //    int texIndex = pTexture->Regist("DATA\\TEXTURE\\TestField.png", EscDevice);//テクスチャ登録
     int texIndex = pTexture->Regist("DATA\\TEXTURE\\umi1.jpg", EscDevice);//テクスチャ登録
-
-#else
-    int texIndex = pTexture->Regist("DATA\\TEXTURE\\yuka.jpg", EscDevice);//テクスチャ登録
-#endif // _DEBUG
 
 
     

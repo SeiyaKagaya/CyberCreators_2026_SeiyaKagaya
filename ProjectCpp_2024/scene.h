@@ -39,6 +39,7 @@ public:
 		MODE_GAME2,
 		MODE_RESULT,
 		MODE_TUTORIAL,
+		MODE_OP,
 		MODE_MAX,
 	}MODE;
 
@@ -207,5 +208,20 @@ private:
 };
 
 
+class COP :public CScene
+{
 
+public:
+	COP();
+	~COP() override;
+
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+
+
+
+
+};
 #endif

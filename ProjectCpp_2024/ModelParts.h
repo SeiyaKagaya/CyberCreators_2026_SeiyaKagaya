@@ -83,7 +83,7 @@ public:
 	void ChengeRGBAbool(bool chenge, D3DXCOLOR col );
 
 private:
-	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE_XFILE];//テクスチャ
+//	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE_XFILE];//テクスチャ
 
 	//ここではDATAを最終的な描画などに使用。
 	//下地用(親マトリックスとの融合など)は別の変数に入れる

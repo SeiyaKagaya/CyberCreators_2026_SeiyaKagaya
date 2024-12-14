@@ -117,6 +117,26 @@ HRESULT CShield::Init()
 //=============================
 void CShield::Uninit()
 {
+    //for (int i = 0; i < 2; i++)
+    //{
+    //    if (m_pMesh[i] != nullptr)
+    //    {
+    //        delete m_pMesh[i];
+    //        m_pMesh[i] = nullptr; // Meshポインタ
+    //    }
+ 
+    //    if (m_pBuffMat[i] != nullptr)
+    //    {
+    //        delete m_pBuffMat[i];
+    //        m_pBuffMat[i] = nullptr; // Meshポインタ
+    //    }
+    //    if (m_ESCpTexture[i] != nullptr)
+    //    {
+    //        delete m_ESCpTexture[i];
+    //        m_ESCpTexture[i] = nullptr; // Meshポインタ
+    //    }
+    //}
+
     CObjectX::Uninit();
 }
 
@@ -291,7 +311,7 @@ void CShield::Draw()
 
 
 
-#if _DEBUG
+
     if (m_bDrawOk == true)
     {
         DATA EscData = GetDATA();
@@ -415,14 +435,16 @@ void CShield::Draw()
 
         
     }
+
+#if _DEBUG
+    //char cData2[100] = {};
+    //DATA EscData = GetDATA();//再取得
+    //snprintf(cData2, sizeof(cData2), "現在のGRID/%d", (int)EscData.rot.x); // 数値を文字列に変換してCDataにコピー
+    //CFont::DrawTextSet(D3DXVECTOR3(900.0f, 450.0f, 0.0f), 40, CFont::FONT_DIGITAL, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), cData2);
 #else
 
 #endif // _D
 
-    char cData2[100] = {};
-    DATA EscData = GetDATA();//再取得
-    snprintf(cData2, sizeof(cData2), "現在のGRID/%d", (int)EscData.rot.x); // 数値を文字列に変換してCDataにコピー
-    CFont::DrawTextSet(D3DXVECTOR3(900.0f, 450.0f, 0.0f), 40, CFont::FONT_DIGITAL, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), cData2);
 
 }
 

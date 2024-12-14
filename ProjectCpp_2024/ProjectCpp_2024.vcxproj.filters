@@ -145,17 +145,11 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\LINE">
       <UniqueIdentifier>{d44d692a-716b-43c1-9050-3cc9f1ecd6c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\TANKFOOTPRINTS">
-      <UniqueIdentifier>{f120f49e-2294-4eb1-97ac-9e745bc41a00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\DEBUGWALL">
       <UniqueIdentifier>{30221ad0-4138-4478-8f0a-b14acca14c39}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\3D-2DHitObject">
       <UniqueIdentifier>{07396408-dd58-4ec4-a3eb-0dbc33d3fd77}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\shotfire">
-      <UniqueIdentifier>{844daae1-bce7-47f5-8013-d9f15aa1bc6b}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke">
       <UniqueIdentifier>{e0b436ca-e4e7-4596-b956-5eda5c02992b}</UniqueIdentifier>
@@ -177,6 +171,27 @@
     </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST%282D%29">
       <UniqueIdentifier>{2cd5c5ad-82f5-42db-8eaa-d9661e939f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\SEA">
+      <UniqueIdentifier>{a0b7e959-50b6-4ee7-9ae2-40f0f4fee11d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\TANKFOOTPRINTS">
+      <UniqueIdentifier>{f120f49e-2294-4eb1-97ac-9e745bc41a00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\LockOnUI">
+      <UniqueIdentifier>{c36b311b-ac76-4003-9703-47b115a8e878}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\LockOnUIMain">
+      <UniqueIdentifier>{8a2a5e0f-bfd0-4992-b979-19c02dbd60e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\shotfire">
+      <UniqueIdentifier>{844daae1-bce7-47f5-8013-d9f15aa1bc6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\MISSILE">
+      <UniqueIdentifier>{aec800e0-6d51-46c7-919b-b4d06c735108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTION_B2">
+      <UniqueIdentifier>{3cdce39f-949d-4257-aec3-ef6aa9e8d01b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -330,6 +345,21 @@
     <ClCompile Include="enemy_motion_fast.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST%282D%29</Filter>
     </ClCompile>
+    <ClCompile Include="sea.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\SEA</Filter>
+    </ClCompile>
+    <ClCompile Include="LockOnUI.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\LockOnUI</Filter>
+    </ClCompile>
+    <ClCompile Include="LockOnUIMain.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\LockOnUIMain</Filter>
+    </ClCompile>
+    <ClCompile Include="missile.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\MISSILE</Filter>
+    </ClCompile>
+    <ClCompile Include="object_B2.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTION_B2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -481,6 +511,21 @@
     </ClInclude>
     <ClInclude Include="enemy_motion_fast.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST%282D%29</Filter>
+    </ClInclude>
+    <ClInclude Include="sea.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\SEA</Filter>
+    </ClInclude>
+    <ClInclude Include="LockOnUI.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\LockOnUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LockOnUIMain.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\LockOnUIMain</Filter>
+    </ClInclude>
+    <ClInclude Include="missile.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\MISSILE</Filter>
+    </ClInclude>
+    <ClInclude Include="object_B2.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTION_B2</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

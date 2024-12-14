@@ -72,8 +72,8 @@ Sky3D::~Sky3D()
     {
         if (m_pTexture[nCnt] != nullptr)
         {
-            m_pTexture[nCnt]->Release();
-            m_pTexture[nCnt] = nullptr; // ‰ð•úŒã‚É nullptr ‚ðÝ’è
+       //     m_pTexture[nCnt]->Release();
+            m_pTexture[nCnt] = nullptr; // texturecpp‚ÅŠJ•ú‚·‚é
         }
     }
 #endif

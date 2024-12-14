@@ -91,6 +91,11 @@ public:
 
 	static bool AvoidInternalSpawn_3D_BoxCollision(CObject::OBJECTTYPE MyType, D3DXVECTOR3 MyPos, D3DXVECTOR3 MyMinLength, D3DXVECTOR3 MyMaxLength, CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer);
 	
+	
+	
+	//ËŒ‚ˆÊ’uİ’èˆ—
+	static D3DXVECTOR3 SetPositionldPredictedImpactPoint(D3DXVECTOR3 BulletPos, D3DXVECTOR3 BulletMove, D3DXVECTOR3 TargetPos, D3DXVECTOR3 TargetMove, float BULLETSPEED);
+
 
 	//‹…“¯m“–‚½‚è”»’è(player/enemy‹Ï“™”½”­)
 //	static CollisionData CheckCircleCollision_Cancel(D3DXVECTOR3 MyPos, float fMy_Radius, CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer);

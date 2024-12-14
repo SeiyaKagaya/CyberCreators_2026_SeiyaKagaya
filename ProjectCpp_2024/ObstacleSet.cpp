@@ -62,6 +62,107 @@ HRESULT CObstacleSet::Init()
         NULL,
         &dwNumMat,
         &pMesh);
+    
+
+
+
+
+
+    //// バウンディングボックスを格納するための変数
+    //D3DXVECTOR3 vMin, vMax;
+
+    //// 頂点バッファを取得
+    //LPDIRECT3DVERTEXBUFFER9 pVertexBuffer = NULL;
+    //pMesh->GetVertexBuffer(&pVertexBuffer);
+    //
+    //// 頂点データをメモリにロックする
+    //void* pVertices = NULL;
+    //pVertexBuffer->Lock(0, 0, &pVertices, 0);
+    //
+    //// 頂点フォーマットを取得し、頂点の位置情報が格納されているオフセットを求める
+    //DWORD vertexSize = pMesh->GetNumVertices();
+    //DWORD fvf = pMesh->GetFVF();
+    //DWORD vertexPosOffset = (fvf & D3DFVF_XYZRHW) ? sizeof(D3DXVECTOR3) : 0;
+
+    //// バウンディングボックスを計算
+    //D3DXComputeBoundingBox(
+    //    (const D3DXVECTOR3*)pVertices,  // 頂点データ（位置情報）
+    //    vertexSize,                     // 頂点の数
+    //    vertexPosOffset,                // 頂点フォーマットに基づくオフセット（位置情報のオフセット）
+    //    &vMin,                          // 最小点
+    //    &vMax                           // 最大点
+    //);
+
+   // // 頂点バッファのロックを解除
+   // pVertexBuffer->Unlock();
+
+
+    // 取得
+    DATA EscData = GetDATA();
+
+    EscData.MinLength = D3DXVECTOR3(100000.0f, 1000000.0f, 100000.0f); //モデルの最小位置
+    EscData.MaxLength = D3DXVECTOR3(-10000.0f, -1000000.0f, -100000.0f); //モデルの最大位置
+
+    int nNumVtx; //頂点数
+    DWORD sizeFVF; //頂点フォーマットのサイズ
+    BYTE* pVtxBuff; //頂点バッファのポインタ
+
+    //頂点数の取得
+    nNumVtx = pMesh->GetNumVertices();
+    //頂点フォーマットのサイズを取得
+    sizeFVF = D3DXGetFVFVertexSize(pMesh->GetFVF());
+
+    //頂点バッファのロック
+    pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
+    for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
+    {
+        //頂点座標の代入
+        D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
+
+        // 座標変換行列を作成
+        D3DXMATRIXA16 matRotation;
+        D3DXMatrixRotationYawPitchRoll(&matRotation, EscData.rot.y, EscData.rot.x, EscData.rot.z);
+
+        // 頂点座標を回転
+        D3DXVec3TransformCoord(&vtx, &vtx, &matRotation);
+
+
+        if (vtx.x > EscData.MaxLength.x)
+        {
+            EscData.MaxLength.x = vtx.x;
+        }
+        if (vtx.x < EscData.MinLength.x)
+        {
+            EscData.MinLength.x = vtx.x;
+        }
+
+        if (vtx.y > EscData.MaxLength.y)
+        {
+            EscData.MaxLength.y = vtx.y;
+        }
+        if (vtx.y < EscData.MinLength.y)
+        {
+            EscData.MinLength.y = vtx.y;
+        }
+
+        if (vtx.z > EscData.MaxLength.z)
+        {
+            EscData.MaxLength.z = vtx.z;
+        }
+        if (vtx.z < EscData.MinLength.z)
+        {
+            EscData.MinLength.z = vtx.z;
+        }
+
+        // 次の頂点に進む
+        pVtxBuff += sizeFVF;
+    }
+
+    SetDATA(EscData); // 格納
+
+
+
+
 
     D3DXMATERIAL* pMat = (D3DXMATERIAL*)pBuffMat->GetBufferPointer();
 
@@ -91,12 +192,7 @@ HRESULT CObstacleSet::Init()
 
     SetSizeMag(D3DXVECTOR3(1.0f,1.0f,1.0f)); // 大きさ倍率
 
-    // 取得
-    DATA EscData = GetDATA();
-    EscData = GetDATA(); // 再取得
-
-
-    SetDATA(EscData); // 格納
+ 
 
     return S_OK;
 }
@@ -163,7 +259,7 @@ CObstacleSet* CObstacleSet::Create(DATA SetData, int SetType, bool bBreak, bool 
     CObstacleSet* pObstacle = new CObstacleSet;
 
     pObstacle->m_nType = SetType;
-    pObstacle->Init();
+
 
     // 取得
     DATA EscData = pObstacle->GetDATA();
@@ -172,23 +268,9 @@ CObstacleSet* CObstacleSet::Create(DATA SetData, int SetType, bool bBreak, bool 
     pObstacle->m_bBreak = bBreak;
     pObstacle->m_bPreview = bPreview;
 
-    if (pObstacle->m_nType == (m_ObstacleCount - 1))
-    {//最大値のモデルタイプのとき
-        pObstacle->m_StageBlock = true;//ステージblock扱い
-
-        EscData.MinLength = D3DXVECTOR3(-150.0f, 0.0f, -150.0f);
-        EscData.MaxLength = D3DXVECTOR3(150.0f, 300.0f, 150.0f);
-
-    }
-    else
-    {
-        EscData.MinLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        EscData.MaxLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-    }
-
-
     pObstacle->SetDATA(EscData); // 格納
+
+    pObstacle->Init();
 
     return pObstacle;
 }

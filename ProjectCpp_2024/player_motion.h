@@ -9,7 +9,7 @@
 #define _MOTIONPLAYER_H//二重インクルード防止
 
 #include "object_motion.h"
-
+#include "newbullet.h"
 
 
 class CShield;//前方宣言
@@ -17,22 +17,27 @@ class CShield;//前方宣言
 class CObjectMotionPlayer : public CObjectMotion
 {
 public:
+	static const int START_LIFE = 500;
 	static const int START_PLAYER_NUM = 3;		//残基数
 	static const int AABB_BOX_PLAYER = 90;		//AABBサイズ
 	static const int RESET_CNT = 90;			//復活速度
 	static const int  MOVESPEED = 9;			//移動速度
 	static const int GRAVITY = 29;				//重力
 	const float JoyStickDiff = 0.0004f;			//スティック倍率
-	static const int BULLETSPEED = 35;			//砲弾速度
+	static const int BULLETSPEED = 130;			//砲弾速度
 	static const int RANDINGTRIGGER_FARAME = 10;//着地判定フレーム
 	static const int BOOST_FARAME = 4;			//Boostのフレーム
 	static const int BOOST_RESTFARAME = 5;		//Boost後の余韻
 	static const int BOOST_MAG = 3;				//ブースト時アフターバーナー倍率
+	
+	static const int MISSILEMAX = 6;			//ミサイルのストック最大値
+	static const int RECOVERY_MISSILE = 45;		//記載フレームで1回復
 
 	const float SHIELD_SET_ADDPOS = 130.0f;
 	const float TARGET_SET_ADDPOS = 150.0f;
 	const float SHOTPOS_Y = 70.0f;
 	const float SHOTPOS_Z = -190.0f;
+
 
 
 	CObjectMotionPlayer(int nPriority = CObject::LAYERINDEX_MOTIONPLAYER);//コンストラクタ
@@ -59,6 +64,17 @@ public:
 	void SetbGuard(bool bSet) { m_guard = bSet; };
 	bool GetbGuard() { return m_guard; };
 
+	int GetLife() { return m_nLife; };
+
+	//敵ロックオン処理
+	void LockOnEnemy();
+
+//	bool IsInScreen(D3DXVECTOR3 screenPosition);
+
+	void SetDamage(int nDamage) { m_nLife -= nDamage;  };
+
+
+
 private:
 
 	static int m_nNumPlayerAll;//総数
@@ -69,6 +85,8 @@ private:
 	bool m_btest = false;
 
 	int m_nLife;//体力
+
+
 	int m_nMoveCnt;//足跡
 
 	int m_ResetCnt = 0;//Resetフレーム
@@ -93,8 +111,16 @@ private:
 	//GUARD状態
 	bool m_guard = false;
 	
-
 	CShield* m_pShield;//シールドを格納
+
+	bool m_bBuletLockOn = false;//
+
+
+
+
+
+	int m_nMissileStock = MISSILEMAX;//ミサイルストック数
+	int m_nMissileRecoveryCnt = 0;	 //ミサイルの回復カウント
 };
 
 #endif

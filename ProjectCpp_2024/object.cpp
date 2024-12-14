@@ -67,8 +67,8 @@ void CObject::ReleaseAll()
 			// 次のノードを先に保持しておく
 			CObject* pNext = pObj->m_pNext;
 
-			// オブジェクトタイプの確認
-			if (pObj->m_ObjectType != OBJECT_FADE)
+			// オブジェクトタイプの確認(フェード/カメラ所有物を除く)
+			if (pObj->m_ObjectType != OBJECT_FADE&& pObj->m_ObjectType != OBJECT_LOCKONUI && pObj->m_ObjectType != OBJECT_LOCKONUIMAIN)
 			{
 				pObj->m_bDeath = true;  // フラグを立てる
 				pObj->Release();       // 開放
@@ -122,6 +122,11 @@ void CObject::DrawAll()
 {
 	for (int nCnt2 = 0; nCnt2 < LAYERINDEX_MAX; nCnt2++)
 	{
+		if (nCnt2==46)
+		{
+			int test;
+			test = 2;
+		}
 		// レイヤー先頭オブジェクトを取得
 		CObject* pObj = m_pTop[nCnt2];
 

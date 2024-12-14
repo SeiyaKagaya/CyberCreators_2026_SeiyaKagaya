@@ -252,7 +252,7 @@ void CManager::Update()
 	
 	m_pKeyboard->Update();
 	m_pjoyPad->Update();
-	m_pRenderer->Update();
+	m_pRenderer->Update();//-------------‚±‚±‚Éobject‚·‚×‚Ä‚ÌXV‚ª“ü‚Á‚Ä‚é
 	
 	
 

@@ -54,7 +54,7 @@ private:
 
 	DATA m_Data;
 	D3DXMATRIX m_mtxWorld;
-	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE_XFILE];//テクスチャ
+//	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE_XFILE];//テクスチャ
 
 
 	LPD3DXMESH m_pMesh;//Meshポインタ

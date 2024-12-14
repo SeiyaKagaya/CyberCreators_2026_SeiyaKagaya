@@ -49,6 +49,7 @@ private:
 	DWORD m_dwNumMat[2]; // マテリアルの数
 		//テクスチャ読み込み
 	LPDIRECT3DTEXTURE9	m_ESCpTexture[2];
+
 	bool m_bFast[2];
 	D3DXCOLOR m_OriginalColor[2];
 

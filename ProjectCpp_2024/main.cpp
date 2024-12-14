@@ -42,7 +42,7 @@ _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 //#define _CRTDBG_MAP_ALLOC
 //#include <crtdbg.h>
 //
-	_CrtSetBreakAlloc(41770);
+//	_CrtSetBreakAlloc(1384);
 
 
 	WNDCLASSEX wcex =

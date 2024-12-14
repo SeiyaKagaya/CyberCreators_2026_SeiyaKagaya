@@ -14,7 +14,7 @@
 #include <Windows.h>
 #include "d3dx9.h"//•`Êˆ—‚Ég‚¤
 #include <cmath>
-
+#include <vector>
 #define DIRECTINPUT_VERSION (0x0800)//Œx‘Îô
 #include "dinput.h"//“ü—Í
 

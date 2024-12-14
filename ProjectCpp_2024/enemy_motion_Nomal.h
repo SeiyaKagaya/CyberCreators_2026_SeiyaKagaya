@@ -18,7 +18,8 @@
 //#include "object_motion.h"
 
 #include "enemy_motion_base.h"
-
+#include "LockOnUI.h"
+#include "LockOnUIMain.h"
 
 
 //これはCObjectMotionEnemyBaseの派生クラス
@@ -54,12 +55,29 @@ public:
 	void TurretRotation(D3DXVECTOR3 ShotPos, D3DXVECTOR3 TargetPos, D3DXVECTOR3 BulletMove);
 	void ShotBullet(D3DXVECTOR3 ShotPos, D3DXVECTOR3 TargetPos, D3DXVECTOR3 BulletMove);//砲塔旋回と射撃を統括
 
+
+
+	//スクリーンポジションを取得
+	void SetSCREENPOS(D3DXVECTOR3 pos) { m_ScreenPosition = pos; };
+	D3DXVECTOR3 GetScreenPos() { return m_ScreenPosition; };
+
+	////LOCK ON関係
+	//void SetNormalLockOn(bool bSet) { m_bNormalLockOn = bSet; };
+	//bool GetNormalLockOn() { return m_bNormalLockOn; };
+
+	//void SetBulletLockOn(bool bSet) { m_bBulletLockOn = bSet; };
+	//bool GetBulletLockOn() { return m_bBulletLockOn; };
+	CLockOnUI* GetLockOnUI() { return m_LockOnUI; };
+	CLockOnUIMain* GetLockOnUIMain() { return m_LockOnUI_Main; };
+
+	void SetDamage(int nDamage) { m_nLife -= nDamage; };
+
 private:
 
 	CMathProc::CollisionData m_HitData;//当たり判定データ
 
 //	COBB m_Obb;
-
+	
 	bool btest = false;
 
 	int m_nLife;
@@ -82,6 +100,14 @@ private:
 
 //	int nTurretRotationCnt;//目標角までの分割フレーム数//ある一定の差分まで角度の差異が縮めば射撃開始
 	int m_nMoveCnt;
+
+	//以下"基本は3D"のみ
+	CLockOnUI* m_LockOnUI;
+	CLockOnUIMain* m_LockOnUI_Main;
+
+//	bool m_bNormalLockOn = false;//普通ロック
+//	bool m_bBulletLockOn = false;//射撃ロック
+	D3DXVECTOR3 m_ScreenPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 };
 
 #endif

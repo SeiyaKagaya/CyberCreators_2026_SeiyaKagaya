@@ -177,7 +177,7 @@ void CRenderer::Update()
 		if (pManager->GetPauseState() == false)
 		{
 
-			m_pCObject->UpdateAll();
+			m_pCObject->UpdateAll();//---------------------------------------------------------すべてのオブジェクト更新
 
 			if (keyboard->GetTrigger(DIK_F4) == true)//-----------------メッシュ表示系
 			{
@@ -239,30 +239,11 @@ void CRenderer::Draw()
 			pManager->GetFade()->Draw();
 		}
 
-#if _DEBUG
-
-		//デバッグ使用
-		////---------------------------------------------------------------------------------------------------------------------------------
-		//CInputKeyboard* keyboard = pManager->GetKeyboard();
-		//// ここで、マウスの位置を取得して表示する処理を行う
-		//POINT mousePos = keyboard->GetMousePosition();
-		//char cData[100] = {};
-		//snprintf(cData, sizeof(cData), "スクリーン/%d,%d", mousePos.x, mousePos.y); // 数値を文字列に変換してCDataにコピー
-		//// mousePos.x と mousePos.y がマウスの位置
-		//CFont::DrawTextSet(D3DXVECTOR3(50.0f, 50.0f, 0.0f), 40, CFont::FONT_DIGITAL, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), cData);
-		//
-		//D3DXVECTOR3 POS = keyboard->GetMouseRayIntersection(*pManager->GetCamera());
-		//char cData2[100] = {};
-		//snprintf(cData2, sizeof(cData2), "3D交差/%d,%d,%d", (int)POS.x, (int)POS.y, (int)POS.z); // 数値を文字列に変換してCDataにコピー
-		//// mousePos.x と mousePos.y がマウスの位置
-		//CFont::DrawTextSet(D3DXVECTOR3(50.0f, 150.0f, 0.0f), 40, CFont::FONT_DIGITAL, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), cData2);
-
-
+//#if _DEBUG
 
 		DrawFPS();
-#else
-
-#endif // _DEBUG
+//#else
+//#endif // _DEBUG
 
 		//----------------------------------------------------------------------------------------------------------------------------------
 

@@ -22,13 +22,15 @@ CModelParts::CModelParts(int nPriority) :CObjectX(nPriority), m_ChangeDatabool(f
      m_CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);//モーションでの移動量move
      m_calculationExecution=false;//補正値計算したかbool
 
-     for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
+     D3DXMatrixIdentity(&m_mtxWorld);
+
+   /*  for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
      {
          if (m_pTexture[nCnt] != nullptr)
          {
              m_pTexture[nCnt] = nullptr;
          }
-     }
+     }*/
 }
 //=============================
 //デストラクタ
@@ -102,8 +104,11 @@ HRESULT CModelParts::Init()
 //=============================
 void CModelParts::Uninit()
 {
-    delete m_PartfilePass;
-    m_PartfilePass = nullptr;
+    if (m_PartfilePass != nullptr)
+    {
+        delete m_PartfilePass;
+        m_PartfilePass = nullptr;
+    }
 
     CObjectX::Uninit();
 }
@@ -202,25 +207,25 @@ void CModelParts::Update()
 
             switch (m_nPartNum)
             {
-            case 9://足部
-                //左
-                BOOSTPos[0] = D3DXVECTOR3(30.0f, 0.0f, 19.0f);	//位置
-                BOOSTPos[1] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+            //case 9://足部
+            //    //左
+            //    BOOSTPos[0] = D3DXVECTOR3(30.0f, 0.0f, 19.0f);	//位置
+            //    BOOSTPos[1] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
 
 
-                BOOSTPos[2] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
-                BOOSTPos[3] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+            //    BOOSTPos[2] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+            //    BOOSTPos[3] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
 
-                break;
+            //    break;
 
-            case 10://足部
-                BOOSTPos[0] = D3DXVECTOR3(-30.0f, 0.0f, 19.0f);	//位置
-                BOOSTPos[1] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+            //case 10://足部
+            //    BOOSTPos[0] = D3DXVECTOR3(-30.0f, 0.0f, 19.0f);	//位置
+            //    BOOSTPos[1] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
 
 
-                BOOSTPos[2] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
-                BOOSTPos[3] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
-                break;
+            //    BOOSTPos[2] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+            //    BOOSTPos[3] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+            //    break;
 
             case 17://肩部
                 BOOSTPos[0] = D3DXVECTOR3(10.0f, 0.0f, 19.0f);	//位置
@@ -278,15 +283,15 @@ void CModelParts::Update()
                 switch (i)
                 {
                 case 0://根本
-                    setcol = D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.1f * BoostMag);
+                    setcol = D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.3f * BoostMag);
                     break;
 
                 case 1:
-                    setcol = D3DXCOLOR(0.25f, 0.0f, 0.75f, 0.1f * BoostMag);
+                    setcol = D3DXCOLOR(0.25f, 0.0f, 0.75f, 0.3f * BoostMag);
                     break;
 
                 case 2:
-                    setcol = D3DXCOLOR(0.5f, 0.0f, 0.5f, 0.1f * BoostMag);
+                    setcol = D3DXCOLOR(0.5f, 0.0f, 0.5f, 0.3f * BoostMag);
                     break;
 
                 case 3://先端
@@ -294,7 +299,32 @@ void CModelParts::Update()
                     break;
                 }
 
-  //              CObject3DParticle::Create(SETPOS, setcol);
+
+                // 配置物プライオリティの先頭を取得
+                CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONPLAYER);
+
+                if (pObject != nullptr)
+                { // 先頭がない==プライオリティまるっとない
+
+                    int nIndex = 0;
+
+                    CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObject);
+
+                    if (pPlayer->GetBoostNow() == true)
+                    {
+
+                        CObject* pObj = nullptr;
+                        pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_3DPARTICLE_MNG, CObject::OBJECT_3DPARTICLE_MNG);
+
+                        if (pObj != nullptr)
+                        {
+                            CObject3DParticleAll* pParticleMNG = static_cast<CObject3DParticleAll*>(pObj);
+                            pParticleMNG->SetParticle(SETPOS, setcol, 32,150.0f);
+                        }
+                    }
+
+
+                }
             }
 
 
@@ -388,15 +418,8 @@ void CModelParts::Draw()
 
     SetDATA(EscData);//格納(描画時にこの計算後のposRotを使用するようになる)
 
-
-
-
     if (m_bDrawBool == true)
     {
-
-
-
-
         if (m_bChengeCol==true)
         {
             CObjectX::SetColorChangeBool(true);
@@ -406,63 +429,6 @@ void CModelParts::Draw()
 
         CObjectX::Draw();
     }
-
-
-
-    //D3DMATERIAL9 matDef;//現在のマテリアル保存用(一時退避)
-
-    //D3DXMATERIAL* pMat;//マテリアルデータへのポインタ
-
-    //D3DXMATRIX ESCMatrix = m_mtxWorld;
-
-    ////---------------------------------------------------------------------------------------------------モデルの位置
-    //DATA ESCNOWDATA = EscData;
-
-
-    ////ワールドマトリックスの設定
-    //EscDevice->SetTransform(D3DTS_WORLD, &ESCMatrix);
-
-    ////現在のマテリアルを取得
-    //EscDevice->GetMaterial(&matDef);
-
-    ////マテリアルデータへのポインタを取得
-    //pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
-
-    //for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
-    //{
-
-    //    bool g_test = false;
-
-    //    //------------------------カラーチェンジ
-    //    if (g_test == true)
-    //    {
-    //        // マテリアルの設定
-    //        D3DMATERIAL9 matTemp = pMat[nCntMat].MatD3D;
-    //        matTemp.Diffuse = D3DXCOLOR(1.0f, 0.1f, 0.1f, 0.8f);
-    //        //matTemp.Diffuse.a = 0.5f;  // 透過度を設定（0.0fで完全透明、1.0fで不透明）
-    //        EscDevice->SetMaterial(&matTemp);
-    //    }
-    //    else
-    //    {
-    //        //マテリアルの設定
-    //        EscDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-    //    }
-
-    //    //テクスチャの設定
-    //    //EscDevice->SetTexture(0, NULL);//今回は設定しない
-    //    //テクスチャの設定
-
-    //    EscDevice->SetTexture(0, m_pTexture[nCntMat]);
-    //    //モデル(パーツ)の描画
-    //    m_pMesh->DrawSubset(nCntMat);
-
-    //}
-
-    ////保存してたマテリアルを戻す
-    //EscDevice->SetMaterial(&matDef);
-
-    ////テクスチャを戻す
-    //EscDevice->SetTexture(0, NULL);
 
 
 }

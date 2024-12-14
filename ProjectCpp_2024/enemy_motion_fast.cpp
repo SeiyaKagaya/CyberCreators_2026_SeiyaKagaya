@@ -16,6 +16,7 @@
 #include "Explosion3D.h"
 #include "newbullet.h"
 #include "movesmoke.h"
+#include "missile.h"
 
 //=============================
 // コンストラクタ
@@ -52,6 +53,9 @@ HRESULT CObjectMotionEnemyfast::Init()
 	m_nMoveCnt = 0;
 	fRotTurret = 0.0f;
 	m_BulletDelay = BULLETSHOTDELAY;
+
+	m_LockOnUI = CLockOnUI::Create();
+	m_LockOnUI_Main = CLockOnUIMain::Create();
 	return S_OK;
 }
 
@@ -60,6 +64,8 @@ HRESULT CObjectMotionEnemyfast::Init()
 //=============================
 void CObjectMotionEnemyfast::Uninit()
 {
+	m_LockOnUI->SetDeath(true);
+	m_LockOnUI_Main->SetDeath(true);
 	CObjectMotion::Uninit();
 }
 
@@ -76,6 +82,7 @@ void CObjectMotionEnemyfast::Update()
 	CRenderer* pRenderer = nullptr;
 
 	CManager* pManager = CManager::GetInstance();
+
 
 
 	CObjectMotion::Update();//----------------
@@ -240,120 +247,78 @@ void CObjectMotionEnemyfast::Update()
 
 
 
-	//被弾系
-	//----------------------------------------------------------------------------------
-	pObj = nullptr;
-	pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
+	////被弾系
+	////----------------------------------------------------------------------------------
+	//pObj = nullptr;
+	//pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
 
-	if (pObj != nullptr)
-	{
-		CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
-		
-		for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
-		{
-			CNewBullet* pBullet = pBulletMNG->GetBulletData(i);
-		
-			if (pBullet->GetbUse() == true)
-			{//弾が機能しているとき
-				if (pBullet->GetHitEscapeTime() <= 0)
-				{//自爆抑制以降の時
-
-					COBB pObb2 = pBullet->GetOBB();
-					COBB MyObb = GetOBB();
-
-					D3DXVECTOR3 HitPos;
-					bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
-
-					if (btest == true)
-					{
-						//pBullet->SetDeath(true);
-						pBullet->SetGoodby();
-
-						m_nLife -= 100;
-					}
-				}
-				else
-				{//抑制期間
-					if (pBullet->GetCaller() != this)
-					{//発射した親が自身じゃないとき
-						COBB pObb2 = pBullet->GetOBB();
-						COBB MyObb = GetOBB();
-
-						D3DXVECTOR3 HitPos;
-						bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
-
-						if (btest == true)
-						{
-							//pBullet->SetDeath(true);
-							pBullet->SetGoodby();
-
-							m_nLife -= 100;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	////-----------------------------------------被弾系
-	//for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
+	//if (pObj != nullptr)
 	//{
-	//	CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
-
-	//	CNewBullet* pBullet = pBulletAll->GetBulletData(i);
-
-	//	if (pBullet->GetbUse() == true)
+	//	CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
+	//	
+	//	for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
 	//	{
-	//		if (pBullet->GetHitEscapeTime() <= 0)
-	//		{//自爆抑制以降の時
+	//		CNewBullet* pBullet = pBulletMNG->GetBulletData(i);
+	//	
+	//		if (pBullet->GetbUse() == true)
+	//		{//弾が機能しているとき
 
-	//			COBB pObb2 = pBullet->GetOBB();
-	//			COBB MyObb = GetOBB();
+	//			void* Test = pBullet->GetpCaller();
 
-	//			D3DXVECTOR3 HitPos;
-	//			bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+	//			if (Test != this)
+	//			{//自身が発射した本人じゃない時
 
-	//			if (btest == true)
-	//			{
-	//				//pBullet->SetDeath(true);
-	//				pBullet->SetGoodby();
-
-	//				m_nLife -= 100;
-	//			}
-	//		}
-	//		else
-	//		{//抑制期間
-	//			if (pBullet->GetCaller()!=this)
-	//			{//発射した親が自身じゃないとき
-	//				COBB pObb2 = pBullet->GetOBB();
-	//				COBB MyObb = GetOBB();
-
-	//				D3DXVECTOR3 HitPos;
-	//				bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
-
-	//				if (btest == true)
+	//				if (pBullet->GetShotType() == CNewBulletALL::SHOTTYPE_PLAYER)
 	//				{
-	//					//pBullet->SetDeath(true);
-	//					pBullet->SetGoodby();
+	//					if (pBullet->GetHitEscapeTime() <= 0)
+	//					{//自爆抑制以降の時
 
-	//					m_nLife -= 100;
+	//						COBB pObb2 = pBullet->GetOBB();
+	//						COBB MyObb = GetOBB();
+
+	//						D3DXVECTOR3 HitPos;
+	//						bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+
+	//						if (btest == true)
+	//						{
+	//							//pBullet->SetDeath(true);
+	//							pBullet->SetGoodby();
+
+	//							m_nLife -= 100;
+	//						}
+	//					}
+	//					else
+	//					{//抑制期間
+	//						if (pBullet->GetCaller() != this)
+	//						{//発射した親が自身じゃないとき
+	//							COBB pObb2 = pBullet->GetOBB();
+	//							COBB MyObb = GetOBB();
+
+	//							D3DXVECTOR3 HitPos;
+	//							bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+
+	//							if (btest == true)
+	//							{
+	//								//pBullet->SetDeath(true);
+	//								pBullet->SetGoodby();
+
+	//								m_nLife -= 100;
+	//							}
+	//						}
+	//					}
 	//				}
 	//			}
-
 	//		}
 	//	}
 	//}
 
 
-
-
 	//敵射撃管制
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------
-	Attack();
+	//Attack();
 
 
-	//メインターゲットか
-	SetPriorityAttackTarget(true);
+	
 
 
 
@@ -367,6 +332,20 @@ void CObjectMotionEnemyfast::Update()
 
 	if (m_nLife <= 0)
 	{
+		CObject* pObj = nullptr;
+		pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
+		if (pObj != nullptr)
+		{
+			CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
+			if (pMissile != nullptr)
+			{ // 先頭がない==プライオリティまるっとない
+				pMissile->KillMissileTarget(this);
+			}
+		
+		}
+		
+
+
 
 		CScore::AddScore(CScore::TANK_SCORE1);
 
@@ -378,7 +357,40 @@ void CObjectMotionEnemyfast::Update()
 		}
 	}
 
+	if (pManager->GetbNow3DMode() == false)
+	{//2D
+	}
+	else
+	{
+	//	if (GetNormalLockOn())
+	//	{
+	////		m_LockOnUI->SetPos(D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 75.0f, classData.Pos.z));
+	//		//ロックオンされてたらこれを呼び出す
+	//	//	m_LockOnUI->SetDrawOk(true);
+	//	}
+	//	else
+	//	{
+	////		m_LockOnUI->SetDrawOk(false);
+	//	}
+		//if (GetBulletLockOn())
+		//{
+		//	m_LockOnUI_Main->SetPos(D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 75.0f, classData.Pos.z));
+		//	//ロックオンされてたらこれを呼び出す
+		//	m_LockOnUI_Main->SetDrawOk(true);
+		//	////メインターゲットか
+		//	//SetPriorityAttackTarget(true);
+		//}
+		//else
+		//{
+		//	//ロックオンされてたらこれを呼び出す
+		//	m_LockOnUI_Main->SetDrawOk(false);
+		//	////メインターゲットか
+		//	//SetPriorityAttackTarget(false);
+		//}
+	}
 
+
+	classData.move.x = 10.0f;
 
 	SetClassData(classData);
 }
@@ -543,7 +555,7 @@ void CObjectMotionEnemyfast::Attack()
 			if (pObj != nullptr)
 			{
 				CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
-				pBulletMNG->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.3f, 1.0f), this);
+				pBulletMNG->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.3f, 1.0f), this, CNewBulletALL::SHOTTYPE_ENEMY);
 			}
 
 
@@ -571,7 +583,7 @@ CObject::DATA CObjectMotionEnemyfast::phase1(D3DXVECTOR3 ShotPos)
 	D3DXVECTOR3 SetPos = ShotPos;
 
 	// 現在の砲塔位置からの発射時砲弾moveベクトル
-	D3DXVECTOR3 direction = SetPos - D3DXVECTOR3(classData.Pos.x, 0.0f, classData.Pos.z);
+	D3DXVECTOR3 direction = SetPos - D3DXVECTOR3(classData.Pos.x, 50.0f, classData.Pos.z);
 	D3DXVec3Normalize(&direction, &direction); // 方向ベクトルを正規化
 
 	// バレットの速さをかけてベクトルを修正

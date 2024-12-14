@@ -13,7 +13,7 @@
 //=============================
 // コンストラクタ
 //=============================
-CObjectBillBoard::CObjectBillBoard(int nPriority) :CObject(nPriority)
+CObjectBillBoard::CObjectBillBoard(int nPriority) :CObjectX(nPriority)
 {
     SetObjectType(CObject::OBJECT_BILLBOARD);
     m_pVtxBuff = nullptr;
@@ -187,9 +187,11 @@ void CObjectBillBoard::Draw()
 
     D3DXMATRIX mtxRot, mtxTrans, mtxBillboard, mtxView;
 
-    // ライトを無効にする
-    EscDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-
+    if (bSetLight == true)
+    {
+        // ライトを無効にする
+        EscDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+    }
     if (m_ZDethDrawMode)
     {
         //Zの比較方法変更
@@ -240,9 +242,11 @@ void CObjectBillBoard::Draw()
     // テクスチャの設定
     EscDevice->SetTexture(0, m_pTexture);
 
-    // ポリゴンの描画
-    EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-
+    for (int i = 0; i < nAddDrawCnt; i++)
+    {
+        // ポリゴンの描画
+        EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+    }
 
     if (m_AddDrawMode)
     {
@@ -252,8 +256,11 @@ void CObjectBillBoard::Draw()
         EscDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
     }
 
-    // ライトを有効にする
-    EscDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+    if (bSetLight == true)
+    {
+        // ライトを有効にする
+        EscDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+    }
 
     if (m_ZDethDrawMode)
     {

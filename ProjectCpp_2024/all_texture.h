@@ -39,7 +39,7 @@ public:
 //	static LPDIRECT3DTEXTURE9 GetTexture(CObject::OBJECTTYPE ObjectType, LPDIRECT3DDEVICE9 pDevice);//テクスチャ
 
 private:
-	static const int m_nMaxTexture = 100;//テクスチャ総数
+	static const int m_nMaxTexture = 150;//テクスチャ総数
 	LPDIRECT3DTEXTURE9 m_pTexture[m_nMaxTexture];//テクスチャ格納
 	char* m_pFilePass[m_nMaxTexture];	// ファイルパス
 	int m_nNumAll;//テクスチャ数

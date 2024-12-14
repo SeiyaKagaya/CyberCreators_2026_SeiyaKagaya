@@ -18,6 +18,8 @@
 //#include "object_motion.h"
 
 #include "enemy_motion_base.h"
+#include "LockOnUI.h"
+#include "LockOnUIMain.h"
 
 
 
@@ -54,17 +56,35 @@ public:
 	void TurretRotation(D3DXVECTOR3 ShotPos, D3DXVECTOR3 TargetPos, D3DXVECTOR3 BulletMove);
 	void ShotBullet(D3DXVECTOR3 ShotPos, D3DXVECTOR3 TargetPos, D3DXVECTOR3 BulletMove);//砲塔旋回と射撃を統括
 
+
+	//スクリーンポジションを取得
+	void SetSCREENPOS(D3DXVECTOR3 pos) { m_ScreenPosition = pos; };
+	D3DXVECTOR3 GetScreenPos() { return m_ScreenPosition; };
+
+	void SetDamage(int nDamage) { m_nLife -= nDamage; };
+
+	////LOCK ON関係
+	//void SetNormalLockOn(bool bSet) { m_bNormalLockOn = bSet; };
+	//bool GetNormalLockOn() { return m_bNormalLockOn; };
+
+	//void SetBulletLockOn(bool bSet) { m_bBulletLockOn = bSet; };
+	//bool GetBulletLockOn() { return m_bBulletLockOn; };
+
+	//void SetDiffTrue(bool bSet) { m_DiffTrue = bSet; };
+	//bool GetDiffTrue() { return m_DiffTrue; };
+
+
+	CLockOnUI* GetLockOnUI() { return m_LockOnUI; };
+	CLockOnUIMain* GetLockOnUIMain() { return m_LockOnUI_Main;};
+
 private:
 
 	CMathProc::CollisionData m_HitData;//当たり判定データ
 
-//	COBB m_Obb;
-
 	bool btest = false;
 
-	int m_nLife;
-	int m_BulletDelay;
-
+	int m_nLife = 0;
+	int m_BulletDelay = 0;
 
 	D3DXVECTOR3 m_TargetPos;//現在の目標地点
 	int m_OldTargetGRIDNum = -1;//相手の過去の位置番号
@@ -75,13 +95,20 @@ private:
 	//現在の移動先GRID
 	int NowMoveGRIDNum = -1;
 
-
-
 	bool bTurretRotationNow;//旋回中
 	float fRotTurret;//砲塔の角度
 
-//	int nTurretRotationCnt;//目標角までの分割フレーム数//ある一定の差分まで角度の差異が縮めば射撃開始
-	int m_nMoveCnt;
+	int m_nMoveCnt = 0;
+
+	//以下"基本は3D"のみ
+	CLockOnUI* m_LockOnUI;	       //--ロックオン
+	CLockOnUIMain* m_LockOnUI_Main;//---バレットロックオン
+
+	D3DXVECTOR3 m_ScreenPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+//	bool m_bNormalLockOn = false;//普通ロック
+//	bool m_bBulletLockOn = false;//射撃ロック
+	//bool m_DiffTrue = false;	 //ロック系計算有無
 };
 
 #endif

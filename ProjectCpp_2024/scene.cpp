@@ -33,6 +33,10 @@
 #include "3D-2DhitObject.h"
 #include "sky.h"
 #include "enemy_motion_fast.h"
+#include "sea.h"
+#include "3DParticle.h"
+#include "missile.h"
+#include "object_B2.h"
 
 // 静的メンバー変数の定義
 CScene::MODE CScene::m_NowState = CScene::MODE_TITLE; // 初期値をMODE_TITLEに設定
@@ -115,6 +119,9 @@ CScene* CScene::Create(MODE mode)
 	case MODE_TUTORIAL:
 		pScene = new CTutorial;
 		break;
+	case MODE_OP:
+		pScene = new COP;
+		break;
 	}
 
 	return pScene;
@@ -170,7 +177,22 @@ HRESULT CGame::Init()
 
 	Sky3D::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
-	CObject3D::Create();//現状床
+//	CObject3D::Create();//現状床
+
+	CObjectMotion::DATA SetData = CObject::DataInit();//初期化同時
+
+	SetData.Pos = D3DXVECTOR3(4950.0f, 10.0f, 4950.0f);
+	CSea::Create(SetData.Pos, SetData.rot, 0.7f);
+
+	SetData.Pos.y += 20.0f;
+	SetData.rot.y = D3DX_PI * 0.5f;
+	CSea::Create(SetData.Pos, SetData.rot, 0.2f);
+
+	SetData.Pos.y += 30.0f;
+	SetData.rot.y = -D3DX_PI * 0.5f;
+	CSea::Create(SetData.Pos, SetData.rot, 0.1f);
+
+	SetData = CObject::DataInit();//初期化同時
 
 	CObstacleSet::DataLoad("DATA\\\MAPS\\STAGE1\\model.txt");//ステージ配置物ロード
 
@@ -180,11 +202,13 @@ HRESULT CGame::Init()
 
 	CMathProc::LoadShotPoint("DATA\\MAPS\\STAGE1\\ShotPoint.txt");//射撃地点をロード
 
-	CObjectMotion::DATA SetData = CObject::DataInit();//初期化同時
 	
 	m_CTextWindow = CTextWindow::Create();
 
 	CNewBulletALL::Create();
+	CObject3DParticleAll::Create();
+	CMissileALL::Create();
+
 
 	//配置物
 	//-------------------------------------------------------------------------------------------------------------------
@@ -224,14 +248,16 @@ HRESULT CGame::Init()
 	SetData.Pos = D3DXVECTOR3(-(3300.0f*0.5f), (3300.0f * 0.5f), +(3300.0f * 0.8f));
 	CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
 
+
+
 	SetData.Pos = D3DXVECTOR3(-(3300.0f * 1.5f), (3300.0f * 0.5f), +(3300.0f * 0.8f));
 	CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
 
+
+
+
 	SetData.Pos = D3DXVECTOR3(-(3300.0f * 2.5f), (3300.0f * 0.5f), +(3300.0f * 0.8f));
 	CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
-
-	//SetData.Pos = D3DXVECTOR3(-(3300.0f * 0.5f), (3300.0f * 0.5f), +(3300.0f * 0.5f));
-	//CDebugwall::Create(SetData.Pos, D3DXVECTOR3(-1.57f, 0.0f, 0.0f));
 
 
 
@@ -250,39 +276,39 @@ HRESULT CGame::Init()
 
 	//一番右下段
 	SetData.Pos = D3DXVECTOR3(-750.0f,600.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(750.0f, 300.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-750.0f, -300.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(750.0f, 300.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-750.0f, -300.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//一番右中段
 	SetData.Pos = D3DXVECTOR3(-300.0f, 1950.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(300.0f, 450.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-300.0f, -450.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(300.0f, 450.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-300.0f, -450.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//一番上段右
 	SetData.Pos = D3DXVECTOR3(-1200.0f, 2850.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(1200.0f, 450.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-1200.0f,-450.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(1200.0f, 450.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-1200.0f,-450.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//一番上段左
 	SetData.Pos = D3DXVECTOR3(-3900.0f, 3000.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(1500.0f, 300.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-1500.0f, -300.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(1500.0f, 300.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-1500.0f, -300.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 	//右２番目上段
 	SetData.Pos = D3DXVECTOR3(-1500.0f, 2250.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(900.0f, 150.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-900.0f, -150.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(900.0f, 150.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-900.0f, -150.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//右２番目中上段
 	SetData.Pos = D3DXVECTOR3(-1650.0f, 1650.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(450.0f, 150.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-450.0f, -150.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(450.0f, 150.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-450.0f, -150.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	////右２番目中下段
@@ -305,44 +331,135 @@ HRESULT CGame::Init()
 
 	//右3番目中段
 	SetData.Pos = D3DXVECTOR3(-3000.0f, 1500.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(600.0f, 300.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-600.0f, -300.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(600.0f, 300.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-600.0f, -300.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 	//中央中段右
 	SetData.Pos = D3DXVECTOR3(-3750.0f, 1050.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(150.0f, 750.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-150.0f, -750.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(150.0f, 750.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-150.0f, -750.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//中央中段左
 	SetData.Pos = D3DXVECTOR3(-4350.0f, 1200.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(450.0f, 600.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-450.0f, -600.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(450.0f, 600.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-450.0f, -600.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 	//中央左上部
 	SetData.Pos = D3DXVECTOR3(-6000.0f, 2250.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(600.0f, 1050.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-600.0f, -1050.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(600.0f, 1050.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-600.0f, -1050.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//中央左中部
 	SetData.Pos = D3DXVECTOR3(-6300.0f, 1050.0f, ZPos);
-	SetData.MaxLength = D3DXVECTOR3(300.0f, 150.0, Zlong);
-	SetData.MinLength = D3DXVECTOR3(-300.0f, -150.0, -Zlong);
+	SetData.MaxLength = D3DXVECTOR3(300.0f, 150.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-300.0f, -150.0f, -Zlong);
 	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 
 
 
 	//最左部
-SetData.Pos = D3DXVECTOR3(-8550.0f, 1050.0f, ZPos);
-SetData.MaxLength = D3DXVECTOR3(1350.0f, 1050.0, Zlong);
-SetData.MinLength = D3DXVECTOR3(-1350.0f, -1050.0, -Zlong);
-CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+	SetData.Pos = D3DXVECTOR3(-8550.0f, 1050.0f, ZPos);
+	SetData.MaxLength = D3DXVECTOR3(1350.0f, 1050.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-1350.0f, -1050.0f, -Zlong);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+	//床下
+	SetData.Pos = D3DXVECTOR3(-4950.0f, -500.0f, ZPos);
+	SetData.MaxLength = D3DXVECTOR3(4950.0f, 500.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-4950.0f, -500.0f, -Zlong);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+	//屋根上
+	SetData.Pos = D3DXVECTOR3(-4950.0f, 3800.0f, ZPos);
+	SetData.MaxLength = D3DXVECTOR3(4950.0f, 500.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-4950.0f, -500.0f, -Zlong);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+	////後ろの壁
+	//SetData.Pos = D3DXVECTOR3(-4950.0f, 1650.0f, 5100.0f + ZPos);
+	//SetData.MaxLength = D3DXVECTOR3(4950.0f, 1650.0f, 5100.0f - Zlong);
+	//SetData.MinLength = D3DXVECTOR3(-4950.0f, -1650.0f, -(5100.0f - Zlong));
+	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+		//後ろの壁
+	SetData.Pos = D3DXVECTOR3(-250.0f, 1650.0f, 7000.0f + ZPos);
+	SetData.MaxLength = D3DXVECTOR3(500.0f, 1650.0f, 7000.0f - Zlong);
+	SetData.MinLength = D3DXVECTOR3(-500.0f, -1650.0f, -(7000.0f - Zlong));
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+	
+	
+	//後ろの壁-反対
+	SetData.Pos = D3DXVECTOR3(14000.0f + 250.0f, 1650.0f, 7000.0f);
+	SetData.MaxLength = D3DXVECTOR3(500.0f, 1650.0f, 7000.0f);
+	SetData.MinLength = D3DXVECTOR3(-500.0f, -1650.0f, -(7000.0f));
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+
+	////屋根上
+	//SetData.Pos = D3DXVECTOR3(-4950.0f, 3800.0f, 5100.0f + ZPos);
+	//SetData.MaxLength = D3DXVECTOR3(4950.0f, 500.0f, 5100.0f - Zlong);
+	//SetData.MinLength = D3DXVECTOR3(-4950.0f, -500.0f, -(5100.0f - Zlong));
+	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+
+		//屋根上
+	SetData.Pos = D3DXVECTOR3(-500.0f, 3800.0f, 7000.0f + ZPos);
+	SetData.MaxLength = D3DXVECTOR3(500.0f, 500.0f, 7000.0f - Zlong);
+	SetData.MinLength = D3DXVECTOR3(-500.0f, -500.0f, -(7000.0f - Zlong));
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+	//屋根上--反対
+	SetData.Pos = D3DXVECTOR3(14000.0f -500.0f, 3800.0f, 7000.0f);
+	SetData.MaxLength = D3DXVECTOR3(500.0f, 500.0f, 7000.0f);
+	SetData.MinLength = D3DXVECTOR3(-500.0f, -500.0f, -(7000.0f));
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+
+
+
+
+
+
+	//
+	SetData.Pos = D3DXVECTOR3(7000.0f, 2200.0f, -500.0f);
+	SetData.MaxLength = D3DXVECTOR3(7000.0f, 2200.0f, 500.0f);
+	SetData.MinLength = D3DXVECTOR3(-7000.0f, -2200.0f, -500.0f);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+
+	//
+	SetData.Pos = D3DXVECTOR3(7000.0f, 50.0f, 1000.0f);
+	SetData.MaxLength = D3DXVECTOR3(7000.0f, 50.0f, 1000.0f);
+	SetData.MinLength = D3DXVECTOR3(-7000.0f, -50.0f, -1000.0f);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_3DSTAGE);
+
+
+
+
+	//
+	SetData.Pos = D3DXVECTOR3(2000.0f, 50.0f, 7000.0f);
+	SetData.MaxLength = D3DXVECTOR3(2000.0f, 50.0f, 5000.0f);
+	SetData.MinLength = D3DXVECTOR3(-2000.0f, -50.0f, -5000.0f);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_3DSTAGE);
+
+	//
+	SetData.Pos = D3DXVECTOR3(14000.0f- 2000.0f, 50.0f, 7000.0f);
+	SetData.MaxLength = D3DXVECTOR3(2000.0f, 50.0f, 5000.0f);
+	SetData.MinLength = D3DXVECTOR3(-2000.0f, -50.0f, -5000.0f);
+	CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_3DSTAGE);
+
+
+
+
+	//TYPE_3DSTAGE
+
 
 
 
@@ -365,19 +482,34 @@ CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK)
 	SetData = CObject::DataInit();//初期化
 
 	SetData.Pos = D3DXVECTOR3(-7500.0f, 2100.0f, 0.0f);
-	SetData.rot = D3DXVECTOR3(0.0f,/* D3DX_PI * 0.5f*/0.0f , 0.0f);
+	SetData.rot = D3DXVECTOR3(0.0f,0.0f , 0.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
-	//CObjectMotionEnemyNomal::Create("DATA\\motion_Tank.txt", SetData);
+
+	SetData.Pos = D3DXVECTOR3(-6300.0f, 300.0f, 0.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+
+	SetData.Pos = D3DXVECTOR3(-4500.0f, 300.0f, 0.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
 
-	//SetData.Pos = D3DXVECTOR3(1000.0f, 0.0f, 2000.0f);
 
-	//CObjectMotionEnemyNomal::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(-4500.0f, 1800.0f, 0.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
+	SetData.Pos = D3DXVECTOR3(-3900.0f, 1800.0f, 0.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	//SetData.Pos = D3DXVECTOR3(2000.0f, 0.0f, 1200.0f);
+	SetData.Pos = D3DXVECTOR3(-2700.0f, 1800.0f, 0.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	//CObjectMotionEnemyNomal::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(-3300.0f, 300.0f, 0.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+
+	SetData.Pos = D3DXVECTOR3(-1200.0f, 900.0f, 0.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+
+	SetData.Pos = D3DXVECTOR3(5000.0f, 1200.0f, 3000.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
 
 	//-------------------------------------------------------------
@@ -398,8 +530,10 @@ CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK)
 	//m_bNow3DMode = true;
 
 	//
-	pManager->SetbNow3DMode(true);
 
+	pManager->SetbNow3DMode(false);
+	
+	
 	return S_OK;
 }
 //===================================
@@ -409,7 +543,7 @@ void CGame::Uninit()
 {
 	CManager* pManager = CManager::GetInstance();
 	CSound* pSound = pManager->GetSound();
-	pSound->StopSound(CSound::SOUND_LABEL_BGM001);
+//	pSound->StopSound(CSound::SOUND_LABEL_BGM001);
 
 }
 //===================================
@@ -487,6 +621,16 @@ void CGame::Update()
 
 					m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f-310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f),20, 3, "これは実験です。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),90);
 					m_bSetTextWindow = true;
+
+					//mode切り替え
+					if (pManager->GetbNow3DMode()==false)
+					{
+						pManager->SetbNow3DMode(true);
+					}
+					else
+					{
+						pManager->SetbNow3DMode(false);
+					}
 				}
 			}
 			else
@@ -494,11 +638,11 @@ void CGame::Update()
 				m_CGameUI->AllUiRestart();
 			}
 
-			//if (CObjectMotionEnemyBase::GetEnemyAllNum() <= 0)
-			//{//敵殲滅	
-			//	m_bNext = true;
-			//	m_bStay2BOOL = true;
-			//}
+			if (CObjectMotionEnemyBase::GetEnemyAllNum() <= 0)
+			{//敵殲滅	
+				m_bNext = false;//true
+				m_bStay2BOOL = true;
+			}
 
 			if (CTime::GetTime() <= 0)
 			{//制限時間切れ
@@ -1258,7 +1402,7 @@ void CTitle::Uninit()
 {
 	CManager* pManager = CManager::GetInstance();
 	CSound* pSound = pManager->GetSound();
-//	pSound->StopSound(CSound::SOUND_LABEL_BGM000);
+	pSound->StopSound(CSound::SOUND_LABEL_BGM000);
 }
 //===================================
 // 更新
@@ -1650,6 +1794,9 @@ void CResult::Draw()
 
 }
 
+//===================================
+// スコアロード
+//===================================
 void CResult::ScoreLoad()
 {
 	FILE* pFile = nullptr; // ファイルポインタを宣言
@@ -1667,6 +1814,9 @@ void CResult::ScoreLoad()
 	}
 
 }
+//===================================
+// スコア描画
+//===================================
 void CResult::ScoreWrite()
 {
 	FILE* pFile = nullptr; // ファイルポインタを宣言
@@ -1763,3 +1913,92 @@ void CTutorial::Draw()
 }
 
 
+///------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//===================================
+// コンストラクタ
+//===================================
+COP::COP()
+{
+}
+
+//===================================
+// デストラクタ
+//===================================
+COP::~COP()
+{
+}
+//===================================
+// 初期化
+//===================================
+HRESULT COP::Init()
+{
+	Sky3D::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+
+	CObjectMotion::DATA SetData = CObject::DataInit();//初期化同時
+
+	SetData.Pos = D3DXVECTOR3(14950.0f, 10.0f, 14950.0f);
+	CSea::Create(SetData.Pos, SetData.rot, 0.7f);
+
+	//playerが最初！
+//-------------------------------------------------------------
+	SetData = CObject::DataInit();//初期化
+//	SetData.Pos = D3DXVECTOR3(-4200.0f, 3200.0f, 0.0f);
+	SetData.Pos = D3DXVECTOR3(5000.0f, 5000.0f, 5000.0f);
+	CObjectMotionPlayer::Create("DATA\\motion_ARES-42.txt", SetData);
+	//-------------------------------------------------------------
+	CObjectMotionPlayer::SetPlayerNum(1);
+
+	SetData.Pos = D3DXVECTOR3(5000.0f, 5200.0f, 5000.0f);
+	CObjectB2::Create("DATA\\motion_B-2.txt", SetData);
+
+
+
+
+	return E_NOTIMPL;
+}
+//===================================
+// 終了
+//===================================
+void COP::Uninit()
+{
+
+
+}
+//===================================
+// 更新
+//===================================
+void COP::Update()
+{
+	CManager* pManager = CManager::GetInstance();
+
+	CInputKeyboard* keyboard = pManager->GetKeyboard();
+
+	CInputJoyPad* JoyPad = pManager->GetJoyPad();
+
+	XINPUT_STATE joykeystate;
+
+	//ショイパットの状態を取得
+	DWORD dwResult = XInputGetState(0, &joykeystate);
+
+	if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) == true)
+	{
+		//			CSound* pSound = pManager->GetSound();
+					//	pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
+
+		CFade* pFade = pManager->GetFade();
+		pFade->SetFade(CScene::MODE_GAME);
+	}
+
+	
+}
+//===================================
+// 描画
+//===================================
+void COP::Draw()
+{
+	CManager* pManager = CManager::GetInstance();
+
+
+
+}

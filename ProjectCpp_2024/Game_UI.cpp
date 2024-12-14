@@ -448,6 +448,50 @@ HRESULT CGameUI::Init()
                 pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 45.0f, 0.0f);
 
                 break;
+
+
+
+            case UI_HP_BACK:
+                //マップ背景
+                m_UiType[UI_HP_BACK] = UI_HP_BACK;
+
+                //テクスチャの読み込み
+            //    D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\yuka.jpg", &m_pTexture[nCnt]);//通常時
+
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT - 40.0f, 0.0f);
+
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 0.0f, m_Pos[nCnt].y - 13.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + (float)CObjectMotionPlayer::START_LIFE + 5.0f, m_Pos[nCnt].y - 13.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 0.0f, m_Pos[nCnt].y + 13.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + (float)CObjectMotionPlayer::START_LIFE + 5.0f, m_Pos[nCnt].y + 13.0f, 0.0f);
+                
+                break;
+
+
+
+
+
+
+
+            case UI_HP_MAIN:
+
+                //操作UI
+                m_UiType[UI_HP_MAIN] = UI_HP_MAIN;
+
+                //テクスチャの読み込み
+             //   D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\Tutorial2.png", &m_pTexture[nCnt]);//通常時
+
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.6f +2.5f, SCREEN_HEIGHT - 40.0f, 0.0f);
+
+
+                m_fLength[nCnt] = (float)CObjectMotionPlayer::START_LIFE;
+                
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x , m_Pos[nCnt].y - 10.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 10.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x , m_Pos[nCnt].y + 10.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 10.0f, 0.0f);
+
+                break;
             }
 
       
@@ -486,6 +530,21 @@ void CGameUI::Update()
 {
     for (int i = 0; i < UI_MAX; i++)
     {
+        if (i== (int)UI_HP_MAIN)
+        {
+            // プレイヤーの位置を取得
+            CObject* pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
+
+            if (pObj != nullptr)
+            {
+                CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
+                m_fLength[i] = (float)pPlayer->GetLife();
+                SetLifeBar(i);
+            }
+
+        }
+
+
         if (m_UiState[i]== UISTATE_ONLINE_TRIGGER)
         {//UIがOnlineになる最中
             OnlineTrigger(i);
@@ -494,7 +553,6 @@ void CGameUI::Update()
         {//UIがOfflineになる最中
             OfflineTrigger(i);
         }
-       
     }
     
         InputpVtx();//マップ描画Systemのみ
@@ -704,8 +762,16 @@ void CGameUI::OnlineTrigger(int nCnt)
 
 
 
-    if (nCnt == UI_WEPON1_BACK|| nCnt == UI_WEPON2_BACK || nCnt == UI_WEPON3_BACK || nCnt == UI_MAP_BACK || nCnt == UI_NOMAL || nCnt == UI_NOMAL2)
+    if (nCnt == UI_WEPON1_BACK|| nCnt == UI_WEPON2_BACK || nCnt == UI_WEPON3_BACK 
+        || nCnt == UI_MAP_BACK || nCnt == UI_NOMAL || nCnt == UI_NOMAL2 ||nCnt == UI_HP_BACK)
     {
+        if (nCnt == UI_HP_BACK)
+        {
+            DrawR = 155;
+            DrawG = 155;
+            DrawB = 155;
+        }
+
         m_nWeponUIDrawA[nCnt] = 0;
 
         divisionFrame = PHASE1RAME;
@@ -845,7 +911,7 @@ void CGameUI::OnlineTrigger(int nCnt)
         pVtx[3].pos.x = (m_Pos[nCnt].x - m_fLength[nCnt] + EscLength);
 
     }
-    else  if (nCnt == UI_TEXTWINDOW|| nCnt == UI_TEXTIMAGE)
+    else  if (nCnt == UI_TEXTWINDOW|| nCnt == UI_TEXTIMAGE ||nCnt== UI_HP_MAIN)
     {
         divisionFrame = PHASE4RAME;
 
@@ -860,6 +926,12 @@ void CGameUI::OnlineTrigger(int nCnt)
             DrawR = 255;
             DrawG = 255;
             DrawB = 255;
+        }
+        else if (nCnt == UI_HP_MAIN)
+        {
+            DrawR = 155;
+            DrawG = 0;
+            DrawB = 0;
         }
 
         
@@ -881,10 +953,21 @@ void CGameUI::OnlineTrigger(int nCnt)
         }
 
 
-        pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
-        pVtx[1].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
-        pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
-        pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
+        if (nCnt == UI_TEXTWINDOW || nCnt == UI_TEXTIMAGE)
+        {
+            pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[1].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
+            pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
+        }
+        else if (nCnt == UI_HP_MAIN)
+        {
+         //   pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[1].pos.x = (m_Pos[nCnt].x + EscLength);
+          //  pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength);
+        }
+    
 
     }
 
@@ -1018,7 +1101,18 @@ void CGameUI::OnlineTrigger(int nCnt)
                 break;
             case UI_TEXTIMAGE:
                 break;
-            }
+
+            case UI_HP_BACK:
+
+                m_UiState[UI_HP_MAIN] = UISTATE_ONLINE_TRIGGER;
+                break;
+
+            case UI_HP_MAIN:
+
+               // m_UiState[UI_HP_MAIN] = UISTATE_ONLINE_TRIGGER;
+                break;
+
+               }
         }
 
     }
@@ -1042,7 +1136,8 @@ void CGameUI::OfflineTrigger(int nCnt)
 
     m_nMotionCnt[nCnt]--;
 
-    if (nCnt == UI_WEPON1_BACK || nCnt == UI_WEPON2_BACK || nCnt == UI_WEPON3_BACK || nCnt == UI_MAP_BACK || nCnt == UI_NOMAL || nCnt == UI_NOMAL2)
+    if (nCnt == UI_WEPON1_BACK || nCnt == UI_WEPON2_BACK || nCnt == UI_WEPON3_BACK || nCnt == UI_MAP_BACK 
+        || nCnt == UI_NOMAL || nCnt == UI_NOMAL2 || nCnt== UI_HP_BACK)
     {
 
         divisionFrame = PHASE1RAME;
@@ -1100,7 +1195,7 @@ void CGameUI::OfflineTrigger(int nCnt)
         pVtx[3].pos.x = (m_Pos[nCnt].x - m_fLength[nCnt] + EscLength);
 
     }
-    else  if (nCnt == UI_TEXTWINDOW || nCnt == UI_TEXTIMAGE)
+    else  if (nCnt == UI_TEXTWINDOW || nCnt == UI_TEXTIMAGE || nCnt == UI_HP_MAIN)
     {
         divisionFrame = PHASE4RAME;
 
@@ -1117,16 +1212,32 @@ void CGameUI::OfflineTrigger(int nCnt)
             EscLength = m_fLength[nCnt];
         }
 
+        if (nCnt == UI_TEXTWINDOW || nCnt == UI_TEXTIMAGE)
+        {
+            pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[1].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
+            pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
 
-        pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
-        pVtx[1].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
-        pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
-        pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
-
+        }
+        else if ( nCnt == UI_HP_MAIN)
+        {
+            //   pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[1].pos.x = (m_Pos[nCnt].x + EscLength);
+            //  pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength);
+        }
+        
     }
 
     if (m_nMotionCnt[nCnt] < 0)
     {//モーションが最小値
+
+        pVtx[0].pos.x = 0.0f;
+        pVtx[1].pos.x = 0.0f;
+        pVtx[2].pos.x = 0.0f;
+        pVtx[3].pos.x = 0.0f;
+
         m_nMotionCnt[nCnt] = 0;
 
         m_UiState[nCnt] = UISTATE_OFFLINE_NOW;
@@ -1199,6 +1310,13 @@ void CGameUI::OfflineTrigger(int nCnt)
             break;
         case UI_TEXTIMAGE:
             m_UiState[UI_TEXTWINDOW] = UISTATE_OFFLINE_TRIGGER;
+            break;
+
+        case UI_HP_BACK:
+       //     UI_HP_MAIN
+            break;
+
+        case UI_HP_MAIN:
             break;
         }
     }
@@ -1304,7 +1422,13 @@ void CGameUI::AllUiRestart()
         UIDrawReset(CGameUI::UI_TEXTIMAGE);
         m_nMotionCnt[(int)CGameUI::UI_TEXTIMAGE] = 0;
 
+        UIDrawReset(CGameUI::UI_HP_BACK);
+        m_nMotionCnt[(int)CGameUI::UI_HP_BACK] = 0;
 
+        UIDrawReset(CGameUI::UI_HP_MAIN);
+        m_nMotionCnt[(int)CGameUI::UI_HP_MAIN] = 0;
+
+        
 
 
 
@@ -1322,6 +1446,8 @@ void CGameUI::AllUiRestart()
                 case 0:
                     SetStateChangeUi(true, CGameUI::UI_MAP_BACK);
                     SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+                    SetStateChangeUi(true, CGameUI::UI_HP_BACK);
+                    
                     break;
                 case 1:
                     SetStateChangeUi(true, CGameUI::UI_WEPON1_BACK);
@@ -1351,5 +1477,24 @@ void CGameUI::AllUiRestart()
 bool CGameUI::GetAllUiRestartNow()
 {
     return m_bNowRestart;
+}
+//=============================
+// 体力バー変動
+//=============================
+void CGameUI::SetLifeBar(int nCnt)
+{
+    // 初期設定
+    VERTEX_2D* pVtx;
+
+    m_pVtxBuff[nCnt]->Lock(0, 0, (void**)&pVtx, 0);
+
+    //   pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+    pVtx[1].pos.x = (m_Pos[nCnt].x + m_fLength[nCnt]);
+
+    //  pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+
+    pVtx[3].pos.x = (m_Pos[nCnt].x + m_fLength[nCnt]);
+
+    m_pVtxBuff[nCnt]->Unlock();
 }
 

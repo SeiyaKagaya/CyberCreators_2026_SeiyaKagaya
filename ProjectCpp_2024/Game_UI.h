@@ -43,6 +43,10 @@ public:
 
 		UI_TEXTWINDOW,
 		UI_TEXTIMAGE,
+
+		UI_HP_BACK,
+		UI_HP_MAIN,
+
 		UI_MAX,
 	}UITYPE;
 
@@ -93,6 +97,9 @@ public:
 
 	void AllUiRestart();//全UIRestart開始
 	bool GetAllUiRestartNow();//Restart中かどうか
+
+	//体力バー変動
+	void SetLifeBar(int nCnt);
 
 private:
 

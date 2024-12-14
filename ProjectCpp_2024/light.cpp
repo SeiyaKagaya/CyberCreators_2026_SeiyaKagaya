@@ -56,17 +56,27 @@ HRESULT CLight::Init(void)
 		if (nCntLIght == 0)
 		{
 			//ライトの方向を設定
-			m_VecDir[nCntLIght] = D3DXVECTOR3(0.2f, -0.8f, 0.4f);
+			m_VecDir[nCntLIght] = D3DXVECTOR3(1.0f, -0.8f, 0.4f);
 		}
 		else if (nCntLIght == 1)
 		{
 			//ライトの方向を設定
-			m_VecDir[nCntLIght] = D3DXVECTOR3(0.4f, 0.8f, 0.4f);
+			m_VecDir[nCntLIght] = D3DXVECTOR3(1.0f, 0.8f, 0.4f);
 		}
 		else if (nCntLIght == 2)
 		{
 			//ライトの方向を設定
-			m_VecDir[nCntLIght] = D3DXVECTOR3(-0.2f, -0.8f, -0.4f);
+			m_VecDir[nCntLIght] = D3DXVECTOR3(-0.9f, -0.8f, -0.4f);
+		}
+		else if (nCntLIght == 3)
+		{
+			//ライトの方向を設定
+			m_VecDir[nCntLIght] = D3DXVECTOR3(2.0f, 1.0f, 1.0f);
+		}
+		else if (nCntLIght == 3)
+		{
+			//ライトの方向を設定
+			m_VecDir[nCntLIght] = D3DXVECTOR3(2.0f, 1.0f, 1.0f);
 		}
 
 		D3DXVec3Normalize(&m_VecDir[nCntLIght], &m_VecDir[nCntLIght]);//ベクトルを正規化する

@@ -11,8 +11,9 @@
 #include "object.h"
 #include "d3dx9.h"//描写処理に使う
 #include "main.h"
-//
-class CObjectBillBoard : public CObject
+#include "objectX.h"
+
+class CObjectBillBoard : public CObjectX
 {
 public:
 
@@ -49,6 +50,10 @@ public:
 	//Zバッファ
 	void SetZDrawDeth(bool bDraw);
 
+	//描画重ね回数
+	void SetAddDrawCnt(int nCnt) { nAddDrawCnt = nCnt; };
+
+	void SetLight(bool bSet) { bSetLight = bSet; };
 
 private:
 	//protected:
@@ -65,8 +70,12 @@ private:
 
 	bool m_AddDrawMode;//加算合成モード
 	bool m_ZDethDrawMode;//Zバッファを無効に
+	int nAddDrawCnt = 1;
+
 
 	D3DXMATRIX m_mtxWorld;
+
+	bool bSetLight = false;
 };
 
 #endif

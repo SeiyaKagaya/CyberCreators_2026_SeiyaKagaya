@@ -1,38 +1,41 @@
 //=======================================================
 //
-// shotfireに関する処理[shotfire.cpp]
+// LockOnUIMainに関する処理[LockOnUIMain.cpp]
 // Auther seiya kagaya
 //
 //=======================================================
-#include "ShotFire.h"
+#include "LockOnUIMain.h"
 #include "renderer.h"
 #include "manager.h"
+#include "player_motion.h"
 
 //=============================
 // コンストラクタ
 //=============================
-CObjectShotFire::CObjectShotFire(int nPriority) :CObjectBillBoard(nPriority), m_nPatternAnim(1)
+CLockOnUIMain::CLockOnUIMain(int nPriority) :CObjectBillBoard(nPriority)
 {
-    SetObjectType(CObject::OBJECT_SHOTFIRE);
 
-    ChengeAddDrawMode(true);
 
-    // m_pVtxBuff = nullptr;
-    // m_pTexture = nullptr;
+    //  ChengeAddDrawMode(true);
+
+      // m_pVtxBuff = nullptr;
+      // m_pTexture = nullptr;
 
 }
 //=============================
 // デストラクタ
 //=============================
-CObjectShotFire::~CObjectShotFire()
+CLockOnUIMain::~CLockOnUIMain()
 {
     Uninit();
 }
 //=============================
 // 初期設定(頂点バッファ生成)
 //=============================
-HRESULT CObjectShotFire::Init()
+HRESULT CLockOnUIMain::Init()
 {
+ //   SetObjectType(CObject::OBJECT_LOCKONUI);
+
     CRenderer* pRenderer = nullptr;
 
     CManager* pManager = CManager::GetInstance();
@@ -63,51 +66,34 @@ HRESULT CObjectShotFire::Init()
     //テクスチャ取得
     CAllTexture* pTexture = pManager->GetTexture();
 
-    int texIndex = pTexture->Regist("DATA\\TEXTURE\\ShotFire2.png", EscDevice);//テクスチャ登録
+    int texIndex = pTexture->Regist("DATA\\TEXTURE\\LockOn003.png", EscDevice);//テクスチャ登録
 
     m_ESCpTexture = pTexture->GetAddress(texIndex);
 
     BindTexture(m_ESCpTexture);//設定
+    SetObjectType(CObject::OBJECT_LOCKONUIMAIN);
 
+    //   SetpVtx(pVtx);
 
- //   SetpVtx(pVtx);
+     //  InputpVtx();
 
-  //  InputpVtx();
-    m_nLife = 30;
-    m_nDelay = 0;
     return S_OK;
 }
 //=============================
 // 終了処理(頂点バッファ破棄)
 //=============================
-void CObjectShotFire::Uninit()
+void CLockOnUIMain::Uninit()
 {
     CObjectBillBoard::Uninit();
 }
 //=============================
 // 更新(頂点情報の更新)
 //=============================
-void CObjectShotFire::Update()
+void CLockOnUIMain::Update()
 {
+
+
     InputpVtx();
-
-    //  m_nLife--;
-
-    m_nDelay++;
-
-    if (m_nDelay >= 0)
-    {
-        m_nDelay = 0;
-        m_nPatternAnim++;
-    }
-
-
-
-
-    if (m_nLife <= 0 || m_nPatternAnim > DIVISION_NUMBER)
-    {
-        SetDeath(true);
-    }
 
 
 
@@ -116,18 +102,28 @@ void CObjectShotFire::Update()
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
-void CObjectShotFire::Draw()
+void CLockOnUIMain::Draw()
 {
- //   SetZDrawDeth(true);
+    //    ChengeAddDrawMode(true);
+    //SetZDrawDeth(true);
+    //for (int i = 0; i < 20; i++)
+    //{
 
-    CObjectBillBoard::Draw();
+    if (m_bDrawOk == true)
+    {
+        SetZDrawDeth(true);
+        SetLight(true);
+        CObjectBillBoard::Draw();
+        SetZDrawDeth(false);
+    }
 
-  //  SetZDrawDeth(false);
+    /*   }
+    SetZDrawDeth(false);*/
 }
 //=============================
 // 座標設定
 //=============================
-void CObjectShotFire::SetPos_Rot(D3DXVECTOR3 Pos)
+void CLockOnUIMain::SetPos(D3DXVECTOR3 Pos)
 {
     //取得
     DATA EscData = GetDATA();
@@ -140,7 +136,7 @@ void CObjectShotFire::SetPos_Rot(D3DXVECTOR3 Pos)
 //=============================
 // 頂点情報
 //=============================
-void CObjectShotFire::InputpVtx()
+void CLockOnUIMain::InputpVtx()
 {
     // 初期設定
     VERTEX_3D pVtx[BASE_INDEX];
@@ -155,10 +151,10 @@ void CObjectShotFire::InputpVtx()
     //pVtx[3].pos = D3DXVECTOR3((float)PRINTSIZE_X, 10.0f, (float)-PRINTSIZE_Z);
 
      //頂点座標の設定
-    pVtx[0].pos = D3DXVECTOR3(-PRINTSIZE_X, PRINTSIZE_Z, 0.0f);
-    pVtx[1].pos = D3DXVECTOR3(PRINTSIZE_X, PRINTSIZE_Z, 0.0f);
-    pVtx[2].pos = D3DXVECTOR3(-PRINTSIZE_X, -PRINTSIZE_Z, 0.0f);
-    pVtx[3].pos = D3DXVECTOR3(PRINTSIZE_X, -PRINTSIZE_Z, 0.0f);
+    pVtx[0].pos = D3DXVECTOR3(-PRINTSIZE, PRINTSIZE, 0.0f);
+    pVtx[1].pos = D3DXVECTOR3(PRINTSIZE, PRINTSIZE, 0.0f);
+    pVtx[2].pos = D3DXVECTOR3(-PRINTSIZE, -PRINTSIZE, 0.0f);
+    pVtx[3].pos = D3DXVECTOR3(PRINTSIZE, -PRINTSIZE, 0.0f);
 
 
     //法線ベクトルの設定
@@ -174,21 +170,20 @@ void CObjectShotFire::InputpVtx()
     //pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
     //頂点カラーの設定
-    pVtx[0].col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
-    pVtx[1].col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
-    pVtx[2].col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
-    pVtx[3].col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
+    pVtx[0].col = m_col;
+    pVtx[1].col = m_col;
+    pVtx[2].col = m_col;
+    pVtx[3].col = m_col;
 
     //テクスチャ座標を設定
-    //pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
-    //pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);//右上
-    //pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
-    //pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
-
-    pVtx[0].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim - (1.0f / DIVISION_NUMBER), 0.0f);//テクスチャ分割数分右側に座標がズレてる
-    pVtx[1].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim, 0.0f);
-    pVtx[2].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim - (1.0f / DIVISION_NUMBER), 1.0f);//テクスチャ分割数分右側に座標がズレてる
-    pVtx[3].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim, 1.0f);
+    pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
+    pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);//右上
+    pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
+    pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//
+    //pVtx[0].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim - (1.0f / DIVISION_NUMBER), 0.0f);//テクスチャ分割数分右側に座標がズレてる
+    //pVtx[1].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim, 0.0f);
+    //pVtx[2].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim - (1.0f / DIVISION_NUMBER), 1.0f);//テクスチャ分割数分右側に座標がズレてる
+    //pVtx[3].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim, 1.0f);
 
 
 
@@ -197,14 +192,16 @@ void CObjectShotFire::InputpVtx()
    //    BindVtxBuffer(ESCpVtxBuff);
 
     SetpVtx(pVtx);
+
 }
 //=============================
 // Object生成
 //=============================
-CObjectShotFire* CObjectShotFire::Create(D3DXVECTOR3 Pos)
+CLockOnUIMain* CLockOnUIMain::Create()
 {
-    CObjectShotFire* pObject3D = new CObjectShotFire;
-    pObject3D->SetPos_Rot(Pos);
+    CLockOnUIMain* pObject3D = new CLockOnUIMain;
+
     pObject3D->Init();
+    // pObject3D->SetPos(Pos);
     return pObject3D;
 }

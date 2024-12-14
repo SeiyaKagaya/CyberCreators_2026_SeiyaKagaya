@@ -18,7 +18,7 @@ public:
 	CLight();
 	~CLight();
 
-	static const int LIGHTNUM = 3;//ライトの数
+	static const int LIGHTNUM = 5;//ライトの数
 
 	HRESULT Init(void);
 	void Uninit(void);

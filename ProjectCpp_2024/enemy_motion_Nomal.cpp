@@ -15,6 +15,8 @@
 #include "score.h"
 #include "Explosion3D.h"
 #include "newbullet.h"
+#include "ShotFire.h"
+#include "missile.h"
 //#include "movesmoke.h"
 
 //=============================
@@ -52,6 +54,9 @@ HRESULT CObjectMotionEnemyNomal::Init()
 	m_nMoveCnt = 0;
 	fRotTurret = 0.0f;
 	m_BulletDelay = BULLETSHOTDELAY;
+
+	m_LockOnUI = CLockOnUI::Create();
+	m_LockOnUI_Main = CLockOnUIMain::Create();
 	return S_OK;
 }
 
@@ -60,6 +65,9 @@ HRESULT CObjectMotionEnemyNomal::Init()
 //=============================
 void CObjectMotionEnemyNomal::Uninit()
 {
+	m_LockOnUI->SetDeath(true);
+	m_LockOnUI_Main->SetDeath(true);
+
 	CObjectMotion::Uninit();
 }
 
@@ -236,106 +244,67 @@ void CObjectMotionEnemyNomal::Update()
 
 
 	
-	//被弾系
-	//----------------------------------------------------------------------------------
-	pObj = nullptr;
-	pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
+	////被弾系
+	////----------------------------------------------------------------------------------
+	//pObj = nullptr;
+	//pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
 
-	if (pObj != nullptr)
-	{
-		CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
-
-		for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
-		{
-			CNewBullet* pBullet = pBulletMNG->GetBulletData(i);
-
-			if (pBullet->GetbUse() == true)
-			{//弾が機能しているとき
-				if (pBullet->GetHitEscapeTime() <= 0)
-				{//自爆抑制以降の時
-
-					COBB pObb2 = pBullet->GetOBB();
-					COBB MyObb = GetOBB();
-
-					D3DXVECTOR3 HitPos;
-					bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
-
-					if (btest == true)
-					{
-						//pBullet->SetDeath(true);
-						pBullet->SetGoodby();
-
-						m_nLife -= 100;
-					}
-				}
-				else
-				{//抑制期間
-					if (pBullet->GetCaller() != this)
-					{//発射した親が自身じゃないとき
-						COBB pObb2 = pBullet->GetOBB();
-						COBB MyObb = GetOBB();
-
-						D3DXVECTOR3 HitPos;
-						bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
-
-						if (btest == true)
-						{
-							//pBullet->SetDeath(true);
-							pBullet->SetGoodby();
-
-							m_nLife -= 100;
-						}
-					}
-				}
-			}
-		}
-	}
-
-	////-----------------------------------------被弾系
-	//for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
+	//if (pObj != nullptr)
 	//{
-	//	CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
+	//	CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
 
-	//	CNewBullet* pBullet = pBulletAll->GetBulletData(i);
-
-	//	if (pBullet->GetbUse() == true)
+	//	for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
 	//	{
-	//		if (pBullet->GetHitEscapeTime() <= 0)
-	//		{//自爆抑制以降の時
+	//		CNewBullet* pBullet = pBulletMNG->GetBulletData(i);
 
-	//			COBB pObb2 = pBullet->GetOBB();
-	//			COBB MyObb = GetOBB();
+	//		if (pBullet->GetbUse() == true)
+	//		{//弾が機能しているとき
 
-	//			D3DXVECTOR3 HitPos;
-	//			bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+	//			void* Test = pBullet->GetpCaller();
 
-	//			if (btest == true)
-	//			{
-	//				//pBullet->SetDeath(true);
-	//				pBullet->SetGoodby();
+	//			if (Test != this)
+	//			{//自身が発射した本人じゃない時
 
-	//				m_nLife -= 100;
-	//			}
-	//		}
-	//		else
-	//		{//抑制期間
-	//			if (pBullet->GetCaller() != this)
-	//			{//発射した親が自身じゃないとき
-	//				COBB pObb2 = pBullet->GetOBB();
-	//				COBB MyObb = GetOBB();
-
-	//				D3DXVECTOR3 HitPos;
-	//				bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
-
-	//				if (btest == true)
+	//				if (pBullet->GetShotType() == CNewBulletALL::SHOTTYPE_PLAYER)
 	//				{
-	//					//pBullet->SetDeath(true);
-	//					pBullet->SetGoodby();
+	//					if (pBullet->GetHitEscapeTime() <= 0)
+	//					{//自爆抑制以降の時
 
-	//					m_nLife -= 100;
+	//						COBB pObb2 = pBullet->GetOBB();
+	//						COBB MyObb = GetOBB();
+
+	//						D3DXVECTOR3 HitPos;
+	//						bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+
+	//						if (btest == true)
+	//						{
+	//							//pBullet->SetDeath(true);
+	//							pBullet->SetGoodby();
+
+	//							m_nLife -= 100;
+	//						}
+	//					}
+	//					else
+	//					{//抑制期間
+	//						if (pBullet->GetCaller() != this)
+	//						{//発射した親が自身じゃないとき
+	//							COBB pObb2 = pBullet->GetOBB();
+	//							COBB MyObb = GetOBB();
+
+	//							D3DXVECTOR3 HitPos;
+	//							bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//当たり判定
+
+	//							if (btest == true)
+	//							{
+	//								//pBullet->SetDeath(true);
+	//								pBullet->SetGoodby();
+
+	//								m_nLife -= 100;
+	//							}
+	//						}
+	//					}
 	//				}
 	//			}
-
 	//		}
 	//	}
 	//}
@@ -346,7 +315,7 @@ void CObjectMotionEnemyNomal::Update()
 	//敵射撃管制
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------
 	
-	Attack();
+	//Attack();
 
 	
 
@@ -362,6 +331,17 @@ void CObjectMotionEnemyNomal::Update()
 
 	if (m_nLife <= 0)
 	{
+		CObject* pObj = nullptr;
+		pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
+		if (pObj != nullptr)
+		{
+			CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
+			if (pMissile != nullptr)
+			{ // 先頭がない==プライオリティまるっとない
+				pMissile->KillMissileTarget(this);
+			}
+
+		}
 
 		CScore::AddScore(CScore::TANK_SCORE1);
 
@@ -374,6 +354,36 @@ void CObjectMotionEnemyNomal::Update()
 		}
 	}
 
+	if (pManager->GetbNow3DMode() == false)
+	{//2D
+	}
+	else
+	{
+	//	if (GetNormalLockOn())
+	//	{
+	////		m_LockOnUI->SetPos(D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 75.0f, classData.Pos.z));
+	//		//ロックオンされてたらこれを呼び出す
+	//	//	m_LockOnUI->SetDrawOk(true);
+	//	}
+	//	else
+	//	{
+	//		//ロックオンされてたらこれを呼び出す
+	////		m_LockOnUI->SetDrawOk(false);
+	//	}
+		//if (GetBulletLockOn())
+		//{
+		//	m_LockOnUI_Main->SetPos(D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 75.0f, classData.Pos.z));
+		//	//ロックオンされてたらこれを呼び出す
+		//	m_LockOnUI_Main->SetDrawOk(true);
+		//	SetPriorityAttackTarget(true);
+		//}
+		//else
+		//{
+		//	//ロックオンされてたらこれを呼び出す
+		//	m_LockOnUI_Main->SetDrawOk(false);
+		//	SetPriorityAttackTarget(false);
+		//}
+	}
 
 
 	SetClassData(classData);
@@ -476,7 +486,7 @@ CObjectMotionEnemyNomal* CObjectMotionEnemyNomal::Create(const char* pfilePass, 
 //=============================
 void CObjectMotionEnemyNomal::Attack()
 {
-	DATA TargetData=DataInit();
+	DATA TargetData = DataInit();
 
 	//砲塔の位置に基づく砲弾発射口の位置----------------------------------------------+-----------------
 	//動くモデルのデータ
@@ -498,13 +508,10 @@ void CObjectMotionEnemyNomal::Attack()
 
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
-
 	//位置を反映
 	D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
 
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
-
-
 
 	//自分の親のマトリックス欠けてる
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &pMat);
@@ -512,266 +519,109 @@ void CObjectMotionEnemyNomal::Attack()
 	D3DXVECTOR3 SetPos = D3DXVECTOR3(EscMtxWorld._41, EscMtxWorld._42, EscMtxWorld._43);//砲弾射出口	
 	//-----------------------------------------------------------------------------------------------
 
+	//+エリアに対し跳弾予測射撃
 
+	//+精密予測照準射撃
 
-	//if (CObjectMotionPlayer::GetDawn() == false)
-	//{//playerがdawn中か
+	//----------------------------------------------------------------------------------
+	//playerの位置を取得
+	CObject* pObj = nullptr;
+	pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
 
+	D3DXVECTOR3 TargetPos = {};
 
+	CObject::DATA EscData;
 
+	if (pObj != nullptr)
+	{
+		CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
 
+		EscData = pPlayer->GetClassData();
+		EscData.Pos.y += 130.0f;
+	}
 
-		DATA classData = GetClassData();
+	//照準位置に基づき
+	TurretRotation(SetPos, EscData.Pos, TargetData.move);
+	//----------------------------------------------------------------------------------
 
-		D3DXVECTOR3 PlayerPos = {};
-		float MaxLength = 2200.0f;
+	if (m_BulletDelay <= 0)
+	{
+		DATA SETDATA = CObject::DataInit();
 
-		// 配置物プライオリティの先頭を取得
-		CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONPLAYER);
+		//ワールドマトリックスの初期化
+		D3DXMatrixIdentity(&EscMtxWorld);
 
-		if (pObject != nullptr)
-		{ // 先頭がない==プライオリティまるっとない
+		//向きを反映
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, fRotTurret, 0.0f, 0.0f);
 
-			if (pObject->GetObjectType() == CObject::OBJECT_MOTIONPLAYER)
-			{ // 対象のモデルのとき
+		D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
-				D3DXVECTOR3 TarGet_Collision_Min_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				D3DXVECTOR3 TarGet_Collision_Max_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		//位置を反映
+		D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -210.0f);
 
-				CObject::DATA EscData;
+		D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
-				// ここで使用分宣言
-				CObjectMotionPlayer* pMotionPlayer;
+		//自分の親のマトリックス欠けてる
+		D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &pMat);
 
-				pMotionPlayer = (CObjectMotionPlayer*)pObject;
+		D3DXVECTOR3 SetPos = D3DXVECTOR3(EscMtxWorld._41, EscMtxWorld._42, EscMtxWorld._43);//砲弾射出口	
 
+		SETDATA.Pos = SetPos;
+		SETDATA.rot.y = fRotTurret;
 
-				EscData = pMotionPlayer->GetClassData();
+		D3DXVECTOR3 BulletMim = D3DXVECTOR3(-30.0f, -30.0f, -30.0f);
+		D3DXVECTOR3 BulletMax = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
 
-				PlayerPos = EscData.Pos;
+		//食い込み防止
+		bool bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
 
-
-
-				// 各成分の差を計算
-				float dx = PlayerPos.x - classData.Pos.x;
-				float dy = PlayerPos.y - classData.Pos.y;
-				float dz = PlayerPos.z - classData.Pos.z;
-
-				// 距離を計算
-				MaxLength = (float)fabs(sqrtf(dx * dx + dy * dy + dz * dz)) + 2.0f;
-
-			}
-		}
-
-
-		//ここで壁に遮られてるか判断--------------------------------------
-		CMathProc::CollisionData HitData = CMathProc::AdjustMyPosToCollision_Partner(SetPos, classData.MinLength, classData.MaxLength, PlayerPos, MaxLength, CObject::OBJECT_OBSTACLE, CObject::LAYERINDEX_OBSTACLE);
-
-		if (HitData.bHit == false)
+		if (bNoShot == false)
 		{
-			HitData = CMathProc::AdjustMyPosToCollision_Partner(SetPos, classData.MinLength, classData.MaxLength, PlayerPos, MaxLength, CObject::OBJECT_HITBOX, CObject::LAYERINDEX_HITBOX);
+			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SETDATA.Pos, BulletMim, BulletMax, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE);
 		}
 
-		if (HitData.bHit == false)
+		if (bNoShot == false)
 		{
-			HitData = CMathProc::AdjustMyPosToCollision_Partner(SetPos, classData.MinLength, classData.MaxLength, PlayerPos, MaxLength, CObject::OBJECT_MOTIONENEMY_NOMAL, CObject::LAYERINDEX_MOTIONENEMY_NOMAL);
-		}
 
+			// 現在の砲塔位置からの発射時砲弾moveベクトル
+			D3DXVECTOR3 direction = D3DXVECTOR3(EscData.Pos.x, EscData.Pos.y, EscData.Pos.z) - SetPos;
+			D3DXVec3Normalize(&direction, &direction); // 方向ベクトルを正規化
 
+			// バレットの速さをかけてベクトルを修正
+			D3DXVECTOR3 BulletMoveIF = direction * BULLETMOVESPEED_NOMAL;
 
-		if (HitData.bHit == false)
-		{//射線通ってる
+			SETDATA.move = BulletMoveIF;
 
-#if _DEBUG
+			CRenderer* pRenderer = nullptr;
 
-			Cline::Create(SetPos, PlayerPos, D3DXCOLOR(1, 0, 0, 1));//相手までライン
-#else
-#endif
+			CManager* pManager = CManager::GetInstance();
 
-		//直接照準における砲弾命中地点予測
-			TargetData = phase1(SetPos);
+			//		CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
 
-		}
-		else
-		{//遮られてる時
+		//			pBulletAll->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.3f, 1.0f), this);
 
-#if _DEBUG
+			CObject* pObj = nullptr;
+			pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
 
-			Cline::Create(SetPos, HitData.ContactPoint, D3DXCOLOR(1, 0, 0, 1));//衝突地点までライン
-#else
-#endif
-
-
-
-
-
-
-
-			TargetData.Pos = CMathProc::GetShotPos(classData.Pos);
-
-			//ここで壁に遮られてるか判断--------------------------------------
-			CMathProc::CollisionData HitData = CMathProc::AdjustMyPosToCollision_Partner(SetPos, classData.MinLength, classData.MaxLength, TargetData.Pos, MaxLength, CObject::OBJECT_OBSTACLE, CObject::LAYERINDEX_OBSTACLE);
-
-			if (HitData.bHit == false)
+			if (pObj != nullptr)
 			{
-				HitData = CMathProc::AdjustMyPosToCollision_Partner(SetPos, classData.MinLength, classData.MaxLength, TargetData.Pos, MaxLength, CObject::OBJECT_HITBOX, CObject::LAYERINDEX_HITBOX);
+				CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
+				pBulletMNG->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.3f, 1.0f), this, CNewBulletALL::SHOTTYPE_ENEMY);
 			}
 
-			if (HitData.bHit == false)
-			{
-				HitData = CMathProc::AdjustMyPosToCollision_Partner(SetPos, classData.MinLength, classData.MaxLength, TargetData.Pos, MaxLength, CObject::OBJECT_MOTIONENEMY_NOMAL, CObject::LAYERINDEX_MOTIONENEMY_NOMAL);
-			}
 
-			if (HitData.bHit == false)
-			{//射線通ってる
-			}
-			else
-			{
-				// StatRot.yは角度（ラジアン）で与えられると仮定
-				// 回転角度に基づいて進行方向の単位ベクトルを計算
-				float dirX = cosf(classData.rot.y + 1.57f);
-				float dirZ = -sinf(classData.rot.y + 1.57f);
+			CObjectShotFire::Create(SETDATA.Pos);
+			CObjectShotFire::Create(SETDATA.Pos);
 
-				// 進行距離ベクトルを計算
-				D3DXVECTOR3 directionVectorESC = D3DXVECTOR3(dirX, 0.0f, dirZ) * 1500.0f;
-
-				// 新しい座標を計算
-				D3DXVECTOR3 destinationESC = SetPos + directionVectorESC;
-				TargetData.Pos = destinationESC;
-			}
+			m_BulletDelay = BULLETSHOTDELAY;
 		}
-
-
-
-
-
-		//+エリアに対し跳弾予測射撃
-
-		//+精密予測照準射撃
-
-
-		//照準位置に基づき
-		TurretRotation(SetPos, TargetData.Pos, TargetData.move);
-
-
-		if (m_BulletDelay <= 0)
-		{
-
-			if (HitData.bHit == false)//------------------------------------------------------------------------------//NOMALはここのみ
-			{//射線通ってる
-
-				DATA SETDATA = CObject::DataInit();
-
-				//ワールドマトリックスの初期化
-				D3DXMatrixIdentity(&EscMtxWorld);
-
-				//向きを反映
-				D3DXMatrixRotationYawPitchRoll(&mtxRot, fRotTurret, 0.0f, 0.0f);
-
-				D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
-
-
-				//位置を反映
-				D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
-
-				D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
-
-				//自分の親のマトリックス欠けてる
-				D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &pMat);
-
-				D3DXVECTOR3 SetPos = D3DXVECTOR3(EscMtxWorld._41, EscMtxWorld._42, EscMtxWorld._43);//砲弾射出口	
-
-				SETDATA.Pos = SetPos;
-				SETDATA.rot.y = fRotTurret;
-
-				D3DXVECTOR3 BulletMim = D3DXVECTOR3(-30.0f, -30.0f, -30.0f);
-				D3DXVECTOR3 BulletMax = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
-
-				//食い込み防止
-				bool bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
-
-				if (bNoShot == false)
-				{
-					bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SETDATA.Pos, BulletMim, BulletMax, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE);
-				}
-
-				if (bNoShot == false)
-				{
-
-
-					// 現在の砲塔位置からの発射時砲弾moveベクトル
-					D3DXVECTOR3 direction = SetPos - D3DXVECTOR3(classData.Pos.x, EscMtxWorld._42, classData.Pos.z);
-					D3DXVec3Normalize(&direction, &direction); // 方向ベクトルを正規化
-
-					// バレットの速さをかけてベクトルを修正
-					D3DXVECTOR3 BulletMoveIF = direction * BULLETMOVESPEED_NOMAL;
-
-					SETDATA.move = BulletMoveIF;
-
-
-					CRenderer* pRenderer = nullptr;
-
-					CManager* pManager = CManager::GetInstance();
-
-				//	CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
-
-				//	pBulletAll->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.3f, 1.0f), this);
-
-					//CBullet3D::Create(SETDATA, reflectNum, D3DXCOLOR(0.2f, 0.5f, 0.5f, 0.25f), this);
-
-					CObject* pObj = nullptr;
-					pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET_MNG, CObject::OBJECT_NEWBULLET_MNG);
-
-					if (pObj != nullptr)
-					{
-						CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
-						pBulletMNG->SetBullet(SETDATA, reflectNum, D3DXCOLOR(0.2f, 0.5f, 0.5f, 0.25f), this);
-					}
-
-		//			CObjectShotFire::Create(SETDATA.Pos);
-		//			CObjectShotFire::Create(SETDATA.Pos);
-
-					m_BulletDelay = BULLETSHOTDELAY;
-				}
-			}
-		}
-		else
-		{
-			m_BulletDelay--;
-		}
-
-//	}
-#if _DEBUG
-
-	//敵照準位置(目標)
-	//----------------------------------------------------------------------
-	Cline::Create(SetPos, TargetData.Pos, D3DXCOLOR(1, 1, 1, 1));
-	float TargetSin = 50.0f;
-	Cline::Create(D3DXVECTOR3(TargetData.Pos.x- TargetSin, TargetData.Pos.y, TargetData.Pos.z-TargetSin), D3DXVECTOR3(TargetData.Pos.x + TargetSin, TargetData.Pos.y, TargetData.Pos.z + TargetSin), D3DXCOLOR(1, 1, 1, 1));
-	Cline::Create(D3DXVECTOR3(TargetData.Pos.x - TargetSin, TargetData.Pos.y, TargetData.Pos.z + TargetSin), D3DXVECTOR3(TargetData.Pos.x + TargetSin, TargetData.Pos.y, TargetData.Pos.z - TargetSin), D3DXCOLOR(1, 1, 1, 1));
-	//----------------------------------------------------------------------
-
-
-	// StatRot.yは角度（ラジアン）で与えられると仮定
-   // 回転角度に基づいて進行方向の単位ベクトルを計算
-	float dirX = cosf(fRotTurret+1.57f);
-	float dirZ = -sinf(fRotTurret +1.57f);
-
-	// 進行距離ベクトルを計算
-	D3DXVECTOR3 directionVector = D3DXVECTOR3(dirX, 0.0f, dirZ) * 1500.0f;
-
-	// 新しい座標を計算
-	D3DXVECTOR3 destination = SetPos + directionVector;
-
-	Cline::Create(SetPos, destination, D3DXCOLOR(1, 0, 1, 1));
-	Cline::Create(SetPos, destination, D3DXCOLOR(1, 0, 1, 1));
-#else
-
-
-#endif // _DE
-
-
+	}
+	else
+	{
+		m_BulletDelay--;
+	}
 }
+
 //=============================
 // フェーズ１
 //=============================

@@ -365,7 +365,8 @@ void CTutorialUI::Update()
                 case 0://タイトルに戻る
 
                     pFade = pManager->GetFade();
-                    pFade->SetFade(CScene::MODE_GAME);
+                 //   pFade->SetFade(CScene::MODE_GAME);
+                    pFade->SetFade(CScene::MODE_OP);
 
                     break;
 
@@ -404,7 +405,8 @@ void CTutorialUI::Update()
                 case 0://タイトルに戻る
 
                     pFade = pManager->GetFade();
-                    pFade->SetFade(CScene::MODE_GAME);
+//                    pFade->SetFade(CScene::MODE_GAME);
+                    pFade->SetFade(CScene::MODE_OP);
 
                     break;
 

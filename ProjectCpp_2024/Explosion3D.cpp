@@ -39,13 +39,13 @@ Explosion3D::Explosion3D(int nPriority) :CObject(nPriority)
         }
     }
 #else
-    for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
+   /* for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
     {
         if (m_pTexture[nCnt] != nullptr)
         {
             m_pTexture[nCnt] = nullptr;
         }
-    }
+    }*/
 #endif
 
 
@@ -66,15 +66,15 @@ Explosion3D::~Explosion3D()
         }
     }
 #else
-    // テクスチャの破棄
-    for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
-    {
-        if (m_pTexture[nCnt] != nullptr)
-        {
-            m_pTexture[nCnt]->Release();
-            m_pTexture[nCnt] = nullptr; // 解放後に nullptr を設定
-        }
-    }
+    //// テクスチャの破棄
+    //for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
+    //{
+    //    if (m_pTexture[nCnt] != nullptr)
+    //    {
+    //        m_pTexture[nCnt]->Release();
+    //        m_pTexture[nCnt] = nullptr; // 解放後に nullptr を設定
+    //    }
+    //}
 #endif
     Uninit();
 }
@@ -191,15 +191,15 @@ void Explosion3D::Uninit()
     }
 
 #if 1
-    // テクスチャの破棄
-    for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
-    {
-        if (m_pTexture[nCnt] != nullptr)
-        {
-            m_pTexture[nCnt]->Release();
-            m_pTexture[nCnt] = nullptr; // 解放後に nullptr を設定
-        }
-    }
+    //// テクスチャの破棄
+    //for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
+    //{
+    //    if (m_pTexture[nCnt] != nullptr)
+    //    {
+    //  //      m_pTexture[nCnt]->Release();//texture
+    //        m_pTexture[nCnt] = nullptr; // 解放後に nullptr を設定
+    //    }
+    //}
 #endif
 }
 //=============================

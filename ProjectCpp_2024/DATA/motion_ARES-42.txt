@@ -74,7 +74,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0					# çò
 		PARENT = -1					# (êe)NULL
-		POS = 0.0 168 0.0
+		POS = 0.0 178 0.0
 		ROT = 0.0 0.0 0.0
 				MOTIONPARENT = 1
 	END_PARTSSET
