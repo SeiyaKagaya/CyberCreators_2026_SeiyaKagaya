@@ -100,7 +100,7 @@ void CTextWindow::Draw()
     {
    //     snprintf(m_pText, sizeof(m_pText), "SCORE:%d", m_score); // 数値を文字列に変換してCDataにコピー
 
-        CFont::DrawTextSet(m_DrawPos, 25, CFont::FONT_DIGITAL, m_col, m_DisplayText);
+        CFont::DrawTextSet(m_DrawPos, m_TextSize, CFont::FONT_DIGITAL, m_col, m_DisplayText);
 
 
         // 描画処理 (フォント描画クラスを使用)
@@ -122,7 +122,7 @@ CTextWindow* CTextWindow::Create()
 //=============================
 // テキスト設定
 //=============================
-void CTextWindow::SetText(D3DXVECTOR3 pos, int DrawStartDelay, int DelayFrame, const char* text,D3DCOLOR col, int nlife)
+void CTextWindow::SetText(D3DXVECTOR3 pos, int TextSize, int DrawStartDelay, int DelayFrame, const char* text,D3DCOLOR col, int nlife)
 {
     m_CloseWindowNow = false;
     m_DrawStartDelay = DrawStartDelay;
@@ -137,6 +137,7 @@ void CTextWindow::SetText(D3DXVECTOR3 pos, int DrawStartDelay, int DelayFrame, c
     m_DrawNow = true;
     m_nlife_ColseWimdow = 30;
     m_DelayStart = true;
+    m_TextSize = TextSize;
 }
 
 ////=============================

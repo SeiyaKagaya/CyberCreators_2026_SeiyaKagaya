@@ -619,7 +619,7 @@ void CGame::Update()
 					m_CGameUI->AllUiRestart();
 
 
-					m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f-310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f),20, 3, "これは実験です。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),90);
+					m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f-310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f),25,20, 3, "これは実験です。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f),90);
 					m_bSetTextWindow = true;
 
 					//mode切り替え
@@ -1944,7 +1944,7 @@ HRESULT COP::Init()
 //-------------------------------------------------------------
 	SetData = CObject::DataInit();//初期化
 //	SetData.Pos = D3DXVECTOR3(-4200.0f, 3200.0f, 0.0f);
-	SetData.Pos = D3DXVECTOR3(5000.0f, 5000.0f, 5000.0f);
+	SetData.Pos = D3DXVECTOR3(5000.0f, 5490.0f, 5100.0f);
 	CObjectMotionPlayer::Create("DATA\\motion_ARES-42.txt", SetData);
 	//-------------------------------------------------------------
 	CObjectMotionPlayer::SetPlayerNum(1);
@@ -1952,8 +1952,43 @@ HRESULT COP::Init()
 	SetData.Pos = D3DXVECTOR3(5000.0f, 5200.0f, 5000.0f);
 	CObjectB2::Create("DATA\\motion_B-2.txt", SetData);
 
+	m_CGameUI = CGameUI::Create();
+	m_CTextWindow = CTextWindow::Create();
 
 
+	CRenderer* pRenderer = nullptr;
+	CManager* pManager = CManager::GetInstance();
+	pRenderer = pManager->GetRenderer();
+
+	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
+
+
+	//D3DXCOLOR SetCol = (1.0f, 1.0f, 1.0f, 1.0f);
+
+//D3DFOG_LINEAR:範囲指定
+
+//D3DFOG_EXP : 密度指定
+
+	pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_EXP);
+//	pDevice->SetRenderState(D3DRS_FOGTABLEMODE, D3DFOG_LINEAR);
+
+	//フォグカラー設定
+	pDevice->SetRenderState(D3DRS_FOGCOLOR, D3DXCOLOR(1.0f, 1.0f, 1.0f,0.1f));
+
+
+	//D3DFOGLINEAR（範囲指定の場合のみ設定する）
+//	float m_fFogStartPos = 0000.0f;
+//	float m_fFogEndPos = 1000.0f;
+//	pDevice->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&m_fFogStartPos));
+//	pDevice->SetRenderState(D3DRS_FOGEND, *(DWORD*)(&m_fFogEndPos));
+
+	//D3DFOG_EXP(密度指定の場合のみ設定する)
+
+	float m_fFogDensity = 0.00005f;
+	pDevice->SetRenderState(D3DRS_FOGDENSITY, *(DWORD*)(&m_fFogDensity));
+
+	//フォグの有効設定
+	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
 
 	return E_NOTIMPL;
 }
@@ -1980,6 +2015,61 @@ void COP::Update()
 
 	//ショイパットの状態を取得
 	DWORD dwResult = XInputGetState(0, &joykeystate);
+
+	m_nCnt++;
+
+	if (m_nCnt == 100)
+	{
+		m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+	}
+
+	if (m_nCnt == 120)
+	{
+
+		m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f),25, 20, 3, "まもなく降下ポイント。\nコース問題なし。\n投下スタンバイ。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 140);
+
+		//m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f + 145.0f, 0.0f),45, 20, 3, "まもなく降下ポイント。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 140);
+	}
+
+	if (m_nCnt == 390)
+	{
+		m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 25, 20, 5, "3.........2.........1.........\n投下。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 140);
+
+		//m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f + 145.0f, 0.0f),45, 20, 3, "まもなく降下ポイント。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 140);
+	}
+
+	if (m_nCnt == 720)
+	{
+		m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+	}
+
+
+
+
+
+	if (m_nCnt == 840)
+	{
+		m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+	}
+
+	if (m_nCnt == 860)
+	{
+
+		m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 24, 20, 3, "スピリッド1、\nこれより作戦空域を離脱。\nプレイヤー。ご武運を。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 140);
+
+		//m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f + 145.0f, 0.0f),45, 20, 3, "まもなく降下ポイント。", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 140);
+	}
+
+	if (m_nCnt == 1220)
+	{
+		m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+	}
+
+
+
+
+
+
 
 	if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) == true)
 	{

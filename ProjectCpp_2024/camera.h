@@ -95,7 +95,7 @@ private:
 	
 
 	int m_nCntFrane = 0;
-	float DebuCameraLength = 700.0f;
+	float DebuCameraLength = 300.0f;
 };
 
 

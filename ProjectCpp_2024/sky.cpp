@@ -143,13 +143,12 @@ HRESULT Sky3D::Init()
 
      //  SetObjectType(CObject::OBJECT_BLOCK3D);
 
-    m_SetSize = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
+    m_SetSize = D3DXVECTOR3(15.0f, 15.0f, 15.0f);
     SetSizeMag(m_SetSize);//大きさ倍率
     //仮で大きくする
 
-    //仮
-    m_Data.MinLength = D3DXVECTOR3(-50.0f, 0.0f, -50.0f);
-    m_Data.MaxLength = D3DXVECTOR3(50.0f, 50.0f, 50.0f);
+    m_Data.MinLength = D3DXVECTOR3(-30.0f, 0.0f, -30.0f);
+    m_Data.MaxLength = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
 
     //テクスチャ取得
     CAllTexture* pTexture = pManager->GetTexture();

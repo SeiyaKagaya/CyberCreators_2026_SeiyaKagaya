@@ -398,48 +398,118 @@ void  CCamera::ActionUpdate3D()
 		}
 		else if (NowState == CScene::MODE_OP)
 		{
+			m_nCntFrane++;
+
+
 			//カメラ距離	
-
-			m_posR.x = EscData.Pos.x;
-			m_posR.y = EscData.Pos.y + 130.0f;
-			m_posR.z = EscData.Pos.z;
-
-
-			fLength = DebuCameraLength;
-
-			m_posV.x += m_Move.x;
-			m_posV.y += m_Move.y;
-			m_posV.z -= m_Move.z;
-
-			m_rot.x += m_rotMove.x;
-			m_rot.y += m_rotMove.y;
-			m_rot.z += m_rotMove.z;
-
-			if (m_rot.x > D3DX_PI * 0.25f)//旋回制限
+			if (m_nCntFrane <= 360)
 			{
-				m_rot.x = D3DX_PI * 0.24999f;
+
+				//m_posR.x = EscData.Pos.x;
+				//m_posR.y = EscData.Pos.y + 130.0f;
+				//m_posR.z = EscData.Pos.z;
+
+				m_posR.x = 5000.0f;
+				m_posR.y = 5420.0f;
+				m_posR.z = 4940.0f;
+
+
+				//			m_rot.x = -0.29f;
+				//			m_rot.y = 0.731f;
+				//			m_rot.x = 0;
+
+							//m_rot.x = -0.25f;
+							//m_rot.x = 0.65f;
+							//m_rot.x = 0.0f;
+
+
+				fLength = DebuCameraLength;
+
+				m_posV.x += m_Move.x;
+				m_posV.y += m_Move.y;
+				m_posV.z -= m_Move.z;
+
+				m_rot.x += m_rotMove.x;
+				m_rot.y += m_rotMove.y;
+				m_rot.z += m_rotMove.z;
+
+				if (m_rot.x > D3DX_PI * 0.25f)//旋回制限
+				{
+					m_rot.x = D3DX_PI * 0.24999f;
+				}
+				if (m_rot.x < -D3DX_PI * 0.35f)
+				{
+					m_rot.x = -D3DX_PI * 0.34999f;
+				}
+
+				if (m_rot.y < -3.14f)
+				{
+					m_rot.y = 3.14f;
+				}
+				else if (m_rot.y > 3.14f)
+				{
+					m_rot.y = -3.14f;
+				}
+
+
+				//こっから角度								//
+	//			m_posV.x = m_posR.x + fLength * cosf(m_rot.x) * sinf(m_rot.y);//1コサインシータを欠けた--コサインファイを欠けた
+	//			m_posV.y = m_posR.y - fLength * sinf(m_rot.x);						//2Yは普遍のためかくない
+	//			m_posV.z = m_posR.z - fLength * cosf(m_rot.x) * cosf(m_rot.y);//3//１と同じ感じ
+				//posRは			ここがPosV	ここは+に変更
+
+
+				m_posV = D3DXVECTOR3(5190.0f, 5480.0f, 4725.0f);
 			}
-			if (m_rot.x < -D3DX_PI * 0.35f)
+
+
+
+			//カメラ距離	
+			if (m_nCntFrane > 645 && m_nCntFrane<=5000)
 			{
-				m_rot.x = -D3DX_PI * 0.34999f;
+
+				m_posR.x = EscData.Pos.x;
+				m_posR.y = EscData.Pos.y - 100.0f;
+				m_posR.z = EscData.Pos.z; -300.0f;
+
+
+				fLength = 100.0f;
+				fLength = DebuCameraLength;
+
+				m_posV.x = EscData.Pos.x;
+				m_posV.y = EscData.Pos.y -920.0f;
+				m_posV.z = EscData.Pos.z -300.0f;
+
+				m_rot.x += m_rotMove.x;
+				m_rot.y += m_rotMove.y;
+				m_rot.z += m_rotMove.z;
+
+				//if (m_rot.x > D3DX_PI * 0.25f)//旋回制限
+				//{
+				//	m_rot.x = D3DX_PI * 0.24999f;
+				//}
+				//if (m_rot.x < -D3DX_PI * 0.35f)
+				//{
+				//	m_rot.x = -D3DX_PI * 0.34999f;
+				//}
+
+				if (m_rot.y < -3.14f)
+				{
+					m_rot.y = 3.14f;
+				}
+				else if (m_rot.y > 3.14f)
+				{
+					m_rot.y = -3.14f;
+				}
+
+
+			////	こっから角度								//
+			//	m_posV.x = m_posR.x + fLength * cosf(m_rot.x) * sinf(m_rot.y);//1コサインシータを欠けた--コサインファイを欠けた
+			//	m_posV.y = m_posR.y - fLength * sinf(m_rot.x);						//2Yは普遍のためかくない
+			//	m_posV.z = m_posR.z - fLength * cosf(m_rot.x) * cosf(m_rot.y);//3//１と同じ感じ
+			//	//posRは			ここがPosV//	ここは+に変更
+
 			}
-
-			if (m_rot.y < -3.14f)
-			{
-				m_rot.y = 3.14f;
-			}
-			else if (m_rot.y > 3.14f)
-			{
-				m_rot.y = -3.14f;
-			}
-
-
-			//こっから角度								//
-			m_posV.x = m_posR.x + fLength * cosf(m_rot.x) * sinf(m_rot.y);//1コサインシータを欠けた--コサインファイを欠けた
-			m_posV.y = m_posR.y - fLength * sinf(m_rot.x);						//2Yは普遍のためかくない
-			m_posV.z = m_posR.z - fLength * cosf(m_rot.x) * cosf(m_rot.y);//3//１と同じ感じ
-			//posRは			ここがPosV	ここは+に変更
-
 
 		}
 
@@ -590,7 +660,7 @@ void CCamera::SetCamera()
 		D3DXToRadian(45.0f),//視野角
 		(float)m_Screen_Width / (float)m_Screen_Height,//画面のアスペクト比
 		10.0f,//ｚ軸最小値
-		59000.0f);//z軸最大値
+		79000.0f);//z軸最大値
 
 	//プロジェクションマトリックスの設定
 	EscDevice->SetTransform(D3DTS_PROJECTION, &m_mtxProjection);
@@ -883,7 +953,7 @@ void CCamera::SetAllEnemyScreenPos()
 		D3DXToRadian(45.0f), // 視野角
 		(float)m_Screen_Width / (float)m_Screen_Height, // アスペクト比
 		10.0f, // Z軸最小値
-		59000.0f // Z軸最大値
+		79000.0f // Z軸最大値
 	);
 
 	// ビューポートの設定

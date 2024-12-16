@@ -146,7 +146,7 @@ void CObjectMotionPlayer::Update()
 			SetClassData(classData);
 			m_GameStart = true;
 		}
-		
+
 
 		if (m_bDown == false)
 		{
@@ -184,7 +184,7 @@ void CObjectMotionPlayer::Update()
 			{
 				m_ShotDelay--;
 			}
-	
+
 			DATA classData = GetClassData();
 
 			if (pManager->GetbNow3DMode() == false)
@@ -227,7 +227,7 @@ void CObjectMotionPlayer::Update()
 			{//3D
 				//	シールド周り
 			//----------------------------------------------------------------------------------
-		
+
 				D3DXVECTOR3 ESCDATA = D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 150.0f, classData.Pos.z);
 
 				m_pShield->SetPos(ESCDATA);
@@ -266,7 +266,7 @@ void CObjectMotionPlayer::Update()
 					ControllerInput3D();
 				}
 			}
-			
+
 			//GUARD描画するか
 			if (m_guard == true)
 			{
@@ -277,59 +277,59 @@ void CObjectMotionPlayer::Update()
 				m_pShield->setDrawOk(false);
 			}
 
-			 classData = GetClassData();
+			classData = GetClassData();
 
-				//--------------------------------------
-				//照準位置制限(自機より円形)
-			 if (pManager->GetbNow3DMode() == false)
-			 {//2D
-
-
-
-				 if (pManager->bGetInputState() == true)
-				 {//操作方法--trueでコントローラー
-					 D3DXVECTOR3 PlayerPos = GetClassData().Pos;
-					 float fRadius = TARGET_SET_ADDPOS * 2.0f;
-
-					 //m_TargetPosをこの円の中に収める
-					 PlayerPos.y += TARGET_SET_ADDPOS;
-
-					 //ベクトル計算
-					 D3DXVECTOR3 VEC = m_TargetPos - PlayerPos;
-
-					 //ベクトルの長さ
-					 float fDistance = D3DXVec3Length(&VEC);
-
-					 //長さが半径を超えた
-					 if (fDistance > fRadius)
-					 {
-						 // ベクトルを正規化
-						 D3DXVec3Normalize(&VEC, &VEC);
-
-						 // ベクトルの方向に半径切りまで動かす
-						 m_TargetPos = PlayerPos + VEC * fRadius;
-
-					 }
-				 }
+			//--------------------------------------
+			//照準位置制限(自機より円形)
+			if (pManager->GetbNow3DMode() == false)
+			{//2D
 
 
-				 //体向き変動(2D)
-				 if (m_TargetPos.x >= classData.Pos.x)
-				 {//右正面
-					 SetFrontMove(true);//右正面かboolをset
-					 classData.rot.y = -D3DX_PI * 0.5f;
-				 }
-				 else
-				 {//左正面
-					 SetFrontMove(false);
-					 classData.rot.y = D3DX_PI * 0.5f;
-				 }
 
-			 }
-			 else
-			 {//3D
+				if (pManager->bGetInputState() == true)
+				{//操作方法--trueでコントローラー
+					D3DXVECTOR3 PlayerPos = GetClassData().Pos;
+					float fRadius = TARGET_SET_ADDPOS * 2.0f;
 
-			 }
+					//m_TargetPosをこの円の中に収める
+					PlayerPos.y += TARGET_SET_ADDPOS;
+
+					//ベクトル計算
+					D3DXVECTOR3 VEC = m_TargetPos - PlayerPos;
+
+					//ベクトルの長さ
+					float fDistance = D3DXVec3Length(&VEC);
+
+					//長さが半径を超えた
+					if (fDistance > fRadius)
+					{
+						// ベクトルを正規化
+						D3DXVec3Normalize(&VEC, &VEC);
+
+						// ベクトルの方向に半径切りまで動かす
+						m_TargetPos = PlayerPos + VEC * fRadius;
+
+					}
+				}
+
+
+				//体向き変動(2D)
+				if (m_TargetPos.x >= classData.Pos.x)
+				{//右正面
+					SetFrontMove(true);//右正面かboolをset
+					classData.rot.y = -D3DX_PI * 0.5f;
+				}
+				else
+				{//左正面
+					SetFrontMove(false);
+					classData.rot.y = D3DX_PI * 0.5f;
+				}
+
+			}
+			else
+			{//3D
+
+			}
 
 			SetClassData(classData);
 			classData = GetClassData();
@@ -375,7 +375,7 @@ void CObjectMotionPlayer::Update()
 
 
 			bool bHit = false;//着地判定
-			
+
 			SetClassData(classData);
 
 
@@ -424,7 +424,7 @@ void CObjectMotionPlayer::Update()
 				bHit = true;
 				SetClassData(TestData);//テスト判定なので、結果を戻す
 			}
-			
+
 
 			if (bHit == false)
 			{//接触が生じてない時==設置状態継続してはいけない
@@ -460,7 +460,7 @@ void CObjectMotionPlayer::Update()
 			//当たり判定計算
 			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, classData.move, this);
 
-			if (m_HitData.HitAngle.y==1.0f)
+			if (m_HitData.HitAngle.y == 1.0f)
 			{
 				bHit = true;
 			}
@@ -471,7 +471,7 @@ void CObjectMotionPlayer::Update()
 			if (m_HitData.HitAngle.y == 1.0f)
 			{
 				bHit = true;
-			
+
 			}
 
 			//当たり判定計算
@@ -507,11 +507,11 @@ void CObjectMotionPlayer::Update()
 			// 位置変化による接地状態の解除
 			float POSY = std::floor(GetOldPosY());
 			float NOWPOSY = std::floor(classData.Pos.y);
-		
+
 			if (NOWPOSY != POSY)
 			{
 				m_RandingCutCnt++;
-				
+
 				if (m_RandingCutCnt >= RANDINGTRIGGER_FARAME)
 				{
 					// 接地状態の解除
@@ -529,7 +529,7 @@ void CObjectMotionPlayer::Update()
 			if (!GetIsOnGroundBool() && !GetIsLandingTriggerBool())
 			{//着地状態じゃないかつ着地瞬間じゃない
 
-			
+
 				if (/*GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_FRONT &&*/
 					GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_LEFT &&
 					GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_RIGHT &&
@@ -841,15 +841,15 @@ void CObjectMotionPlayer::Update()
 					CObjectMotion::Update();//------------------更新
 				}
 			}
-			
-			
+
+
 			//--------------------------------------------------------------------------------
 
 			classData = GetClassData();
 
 
 
-			
+
 		}
 		else
 		{//Restartまで
@@ -937,35 +937,51 @@ void CObjectMotionPlayer::Update()
 
 	}
 	else if (NowState == CScene::MODE_OP)
-	{//タイトル
+	{//
 
-	DATA classData = GetClassData();
+		DATA classData = GetClassData();
 
-	//ここではこれをmove進行フレームカウントとして利用
-	m_EscCntFootPrint++;
-	
-	if (m_EscCntFootPrint >= 5)
-	{
-		m_EscCntFootPrint = 0;
-	}
+		//ここではこれをmove進行フレームカウントとして利用
+		m_EscCntFootPrint++;
 
+		if (m_EscCntFootPrint >= 580 && m_EscCntFootPrint < 3000)
+		{
+			int nSet = (m_EscCntFootPrint - 579);
+			if (nSet < 15)
+			{
+				classData.Pos.y += -1.0f* nSet;
+				classData.rot.x += -0.005f * nSet;
+			}
+			else
+			{
+				classData.Pos.y += -30.0f;
 
-	classData.rot.x = -1.57f;
-
-	SetClassData(classData);
-
-	DATA Head;
-	Head = CObject::DataInit();
-	//Head.rot.x = 1.57f;
-
-	//基底クラスからパーツにデータを受け渡し
-	SetChangeDataInObjectMotion(Head);
-
-	CObjectMotion::Update();//------------------更新
+			
+			}
 
 
-	SetNowMotion_Parent(MOTIONTYPE_HIGH_MOVE_FRONT);//移動motion
-	SetNowMotion_Sub(MOTIONTYPE_HIGH_MOVE_FRONT);//移動motion
+		}
+		else
+		{
+			classData.rot.x = -1.57f;
+
+		}
+
+
+		SetClassData(classData);
+
+		DATA Head;
+		Head = CObject::DataInit();
+		//Head.rot.x = 1.57f;
+
+		//基底クラスからパーツにデータを受け渡し
+		SetChangeDataInObjectMotion(Head);
+
+		CObjectMotion::Update();//------------------更新
+
+
+		SetNowMotion_Parent(MOTIONTYPE_OP0);//移動motion
+		SetNowMotion_Sub(MOTIONTYPE_OP0);//移動motion
 
 
 	}

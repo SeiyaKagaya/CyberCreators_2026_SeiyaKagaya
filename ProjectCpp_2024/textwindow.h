@@ -18,7 +18,7 @@ public:
     void Draw() override;
     static CTextWindow* Create();
 
-    void SetText(D3DXVECTOR3 pos, int DrawStartDelay,int DelayFrame,  const char* text,D3DCOLOR col,int nlife); // 表示するテキストを設定
+    void SetText(D3DXVECTOR3 pos, int TextSize, int DrawStartDelay,int DelayFrame,  const char* text,D3DCOLOR col,int nlife); // 表示するテキストを設定
  //   bool IsComplete() const;       // セリフ送りが完了したか
     bool GetCloseWindowNow() { return m_CloseWindowNow; };
 
@@ -36,6 +36,7 @@ private:
     bool m_CloseWindowNow = false;     //描画状態
     int m_DrawStartDelay = 0;
     bool m_DelayStart = false;
+    int m_TextSize = 0;
 };
 
 #endif // _TEXTWINDOW_H_
