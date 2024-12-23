@@ -16,6 +16,7 @@
 #include "MathUtilities.h"
 #include <vector>
 #include "ModelParts.h"
+#include <string>
 
 class CObjectMotion : public CObjectX
 {
@@ -128,12 +129,12 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CObjectMotion* Create(const char* pfilePass,DATA SetData);//オブジェクト生成
+	static CObjectMotion* Create(std::string pfilePass,DATA SetData);//オブジェクト生成
 
 
 	 void DataLoad();//motion.txt読み込みとクリエイトを行う
 
-	void SetFilePass(const char* FilePass);//ファイルパス格納
+	void SetFilePass(std::string FilePass);//ファイルパス格納
 
 
 	//motion1系
@@ -209,7 +210,9 @@ private:
 
 	MODEL m_Model;//モデルと言う存在
 
-	const char* m_PartfilePass[MAX_PARTS];					//各modelごとのpass
+	//const char* m_PartfilePass[MAX_PARTS];					//各modelごとのpass
+	std::string m_PartfilePass[MAX_PARTS];
+
 
 	 LPD3DXMESH m_pMesh[MAX_PARTS];							//Meshポインタ
 	 LPD3DXBUFFER m_pBuffMat[MAX_PARTS*3];					//マテリアルへのポインタ
@@ -218,7 +221,7 @@ private:
 
 	 DATA m_CrassData;		//一個体としてのデータ
 
-	const char* m_FilePass;	//motionのパス
+	 std::string m_FilePass;	//motionのパス
 
 	D3DXMATRIX m_mtxWorld;	//マトリックス格納
 
@@ -248,13 +251,13 @@ private:
 
 
 	CModelParts* m_pModelParts[MAX_PARTS];
-	int m_ChangeDataModelIndex;//データ変更のあるモデルのインデックス
+	int m_ChangeDataModelIndex=0;//データ変更のあるモデルのインデックス
 
 	//OBBの当たり判定用
 	COBB m_Obb;
 
 	//
-	int m_NowGridNum;//現在の自分のいるGRIDの番号
+	int m_NowGridNum=0;//現在の自分のいるGRIDの番号
 	int m_RunCnt = 0;
 
 
@@ -262,7 +265,7 @@ private:
 	bool m_isLandingTriggered=false;//着地モーションが発動したかどうか
 	bool m_isOnGround=false;//地面に接触しているかどうか
 	// 接地状態を保持するための変数
-	int m_groundCounter; // 接地状態のカウンター
+	int m_groundCounter=0; // 接地状態のカウンター
 
 	float m_OldPosY = 0.0f;//古いY座標
 

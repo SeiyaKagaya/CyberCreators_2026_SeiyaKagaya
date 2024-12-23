@@ -43,7 +43,7 @@ public:
 	virtual void Update()override;
 	virtual void Draw()override;
 
-	static CObjectMotionEnemyBase* Create(const char* pfilePass, DATA SetData);//オブジェクト生成
+	static CObjectMotionEnemyBase* Create(std::string pfilePass, DATA SetData);//オブジェクト生成
 
 	static int GetEnemyAllNum();
 

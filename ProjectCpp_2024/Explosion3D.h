@@ -15,6 +15,7 @@
 class Explosion3D : public CObject
 {
 public:
+	static const int MAXMAT = 20;
 
 	static const int ANIMNUM = 60;
 	static const int MAX_TEXTURE_XFILE = 50;
@@ -66,20 +67,20 @@ private:
 
 
 	D3DXVECTOR3 m_SizeMag;//倍率格納(1.0が平均)
-	bool m_bMagChange;//倍率変動
+	bool m_bMagChange = false;;//倍率変動
 
 //	bool m_bModelParts;//モデルパーツか
 //	D3DXMATRIX m_ModelmtxWorld;//モデルパーツのときのマトリックス
 
-	bool m_ChangeColorBool;//色変えbool
+	bool m_ChangeColorBool = false;;//色変えbool
 	D3DXCOLOR m_ChangeCol;//変える色
 
 
-	D3DXCOLOR m_OriginalColor;
-	bool bFast = false;//最初の一回のみ
+	D3DXCOLOR m_OriginalColor[MAXMAT];
+	bool m_bFast[MAXMAT];//最初の一回のみ
 
 
-	int m_nLife;
+	int m_nLife=0;
 
 
 	//テクスチャ読み込み

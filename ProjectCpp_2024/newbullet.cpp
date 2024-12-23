@@ -12,6 +12,9 @@
 #include "enemy_motion_Nomal.h"
 #include "enemy_motion_fast.h"
 #include "player_motion.h"
+#include "ShotFire.h"
+#include "enemy_motion_boss.h"
+#include "enemy_motion_guard.h"
 //#include "ReflectEffect.h"
 
 // 静的メンバ変数の定義
@@ -160,16 +163,17 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
                             if (pEnemyFast->GetLockOnUIMain()->bGetDrawOk() == true)
                             {//バレットロックオンが描画状態
 
+                                D3DXVECTOR3 EscPos= D3DXVECTOR3(pEnemyFast->GetClassData().Pos.x, pEnemyFast->GetClassData().Pos.y + CObjectMotionEnemyfast::LOCKDIFF, pEnemyFast->GetClassData().Pos.z);
 
                                    // TargetPos から SetData.Pos への方向ベクトルを計算
-                                D3DXVECTOR3 direction2 = pEnemyFast->GetClassData().Pos - SetData.Pos;
+                                D3DXVECTOR3 direction2 = EscPos - SetData.Pos;
 
 
                                 float speed = (int)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
                                 SetData.move = direction2;//速度をかける
 
 
-                                ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, pEnemyFast->GetClassData().Pos, pEnemyFast->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
+                                ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, EscPos, pEnemyFast->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
 
                                 D3DXVECTOR3 POSPOS = pEnemyFast->GetClassData().Pos;
 
@@ -204,13 +208,15 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
                                 if (pEnemyNomal->GetLockOnUIMain()->bGetDrawOk() == true)
                                 {//バレットロックオンが描画状態
 
+                                    D3DXVECTOR3 EscPos = D3DXVECTOR3(pEnemyNomal->GetClassData().Pos.x, pEnemyNomal->GetClassData().Pos.y + CObjectMotionEnemyNomal::LOCKDIFF, pEnemyNomal->GetClassData().Pos.z);
+
                                     // TargetPos から SetData.Pos への方向ベクトルを計算
-                                    D3DXVECTOR3 direction2 = pEnemyNomal->GetClassData().Pos - SetData.Pos;
+                                    D3DXVECTOR3 direction2 = EscPos - SetData.Pos;
 
                                     float speed = (int)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
                                     SetData.move = direction2;//速度をかける
 
-                                    ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, pEnemyNomal->GetClassData().Pos, pEnemyNomal->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
+                                    ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, EscPos, pEnemyNomal->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
                                     bChange = true;
                                     break;
                                 }
@@ -227,6 +233,114 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
                     }
 
 
+
+
+
+
+                    if (bChange == false)
+                    {
+                        // 配置物プライオリティの先頭を取得
+                        pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_BOSS);
+
+                        if (pObject != nullptr)
+                        { // 先頭がない==プライオリティまるっとない
+
+                            CObjectMotionEnemyBoss* pEnemyBoss;
+                            pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+
+                            while (pObject != nullptr)
+                            {
+                                CObject::DATA EscEnemyData = pEnemyBoss->GetClassData();
+
+                                if (pEnemyBoss->GetLockOnUIMain()->bGetDrawOk() == true)
+                                {//バレットロックオンが描画状態
+
+                                    D3DXVECTOR3 EscPos = D3DXVECTOR3(pEnemyBoss->GetClassData().Pos.x, pEnemyBoss->GetClassData().Pos.y + CObjectMotionEnemyBoss::LOCKDIFF, pEnemyBoss->GetClassData().Pos.z);
+
+                                    // TargetPos から SetData.Pos への方向ベクトルを計算
+                                    D3DXVECTOR3 direction2 = EscPos - SetData.Pos;
+
+                                    float speed = (int)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
+                                    SetData.move = direction2;//速度をかける
+
+                                    ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, EscPos, pEnemyBoss->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
+                                    bChange = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    CObject* pNext = pObject->GetNext();
+                                    pObject = pNext;
+                                    pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+
+
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+                    if (bChange == false)
+                    {
+                        // 配置物プライオリティの先頭を取得
+                        pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+                        if (pObject != nullptr)
+                        { // 先頭がない==プライオリティまるっとない
+
+                            CObjectMotionEnemyGuard* pEnemyGuard;
+                            pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+
+                            while (pObject != nullptr)
+                            {
+                                CObject::DATA EscEnemyData = pEnemyGuard->GetClassData();
+
+                                if (pEnemyGuard->GetLockOnUIMain()->bGetDrawOk() == true)
+                                {//バレットロックオンが描画状態
+
+                                    D3DXVECTOR3 EscPos = D3DXVECTOR3(pEnemyGuard->GetClassData().Pos.x, pEnemyGuard->GetClassData().Pos.y + CObjectMotionEnemyGuard::LOCKDIFF, pEnemyGuard->GetClassData().Pos.z);
+
+                                    // TargetPos から SetData.Pos への方向ベクトルを計算
+                                    D3DXVECTOR3 direction2 = EscPos - SetData.Pos;
+
+                                    float speed = (int)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
+                                    SetData.move = direction2;//速度をかける
+
+                                    ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, EscPos, pEnemyGuard->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
+                                    bChange = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    CObject* pNext = pObject->GetNext();
+                                    pObject = pNext;
+                                    pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+
+
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     if (bChange == true)
                     {
                         // TargetPos から SetData.Pos への方向ベクトルを計算
@@ -234,16 +348,8 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
 
                         D3DXVec3Normalize(&direction, &direction);
 
-
                         float speed = (float)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
                         SetData.move = direction * speed;//速度をかける
-
-                //		CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, TargetPos,)
-
-                        // SetData.rot.y をターゲットの方向に合わせる
-                     //   SetData.rot.x = 0.0f;
-                      //  SetData.rot.y = (float)atan2(direction.x, direction.z) + D3DX_PI;
-                       // SetData.rot.z = 0.0f;
                     }
 
                 }
@@ -445,7 +551,7 @@ void CNewBullet::Update()
 
             SetDATA(EscData);//格納
 
-            HitCollision();
+
 
             m_nLife--;
 
@@ -466,6 +572,14 @@ void CNewBullet::Update()
 
  //               SetDeath(true);
                 m_bUse = false;
+
+                DATA EscData = GetDATA();//再取得
+
+                EscData.OldPos = D3DXVECTOR3(0.0f,-100000.0f,0.0f);
+                EscData.Pos = D3DXVECTOR3(0.0f, -100000.0f, 0.0f);
+
+                SetDATA(EscData);//格納
+
                 return;
             }
 
@@ -490,6 +604,11 @@ void CNewBullet::Update()
             SetDATA(EscData);//格納
 
             CObjectX::Update();
+
+
+
+            HitCollision();
+
 
 
             CScene::MODE NowState = CScene::GetNowScene();
@@ -582,6 +701,12 @@ void CNewBullet::HitCollision()
                 m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_NEWBULLET, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, EscData.move, this);
             }
 
+            if (m_HitData.bHit == true)
+            {
+                CObjectShotFire::Create(EscData.Pos);
+            }
+
+
             bool bHit = false;
 
             if (m_ShotType == CNewBulletALL::SHOTTYPE_PLAYER)
@@ -608,9 +733,11 @@ void CNewBullet::HitCollision()
 
                         if (bHit == true)
                         {
-                            pEnemyNomal->SetDamage(50);
-
+                            pEnemyNomal->SetDamage(25);
+                            CObjectShotFire::Create(EscData.Pos);
                             m_bUse = false;
+                            break;
+                          
                         }
                         else
                         {
@@ -620,7 +747,7 @@ void CNewBullet::HitCollision()
                         }
                     }
                 }
-
+                
                 if (bHit == false)
                 {//接触無し
 
@@ -644,9 +771,10 @@ void CNewBullet::HitCollision()
 
                             if (btest == true)
                             {
-                                pEnemyFast->SetDamage(50);
-
+                                pEnemyFast->SetDamage(25);
+                                CObjectShotFire::Create(EscData.Pos);
                                 m_bUse = false;
+                                break;
                             }
                             else
                             {
@@ -657,6 +785,93 @@ void CNewBullet::HitCollision()
                         }
                     }
                 }
+                
+                
+                if (bHit == false)
+                {//接触無し
+
+                    // 配置物プライオリティの先頭を取得
+                    CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS);
+
+                    if (pObject != nullptr)
+                    { // 先頭がない==プライオリティまるっとない
+
+                        int nIndex = 0;
+
+                        while (pObject != nullptr)
+                        {
+                            CObjectMotionEnemyBoss* pEnemyBoss = static_cast<CObjectMotionEnemyBoss*>(pObject);
+
+                            COBB pObb2 = pEnemyBoss->GetOBB();
+
+
+                            D3DXVECTOR3 HitPos;
+                            bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                            if (btest == true)
+                            {
+                                pEnemyBoss->SetDamage(25);
+                                CObjectShotFire::Create(EscData.Pos);
+                                m_bUse = false;
+                                break;
+                            }
+                            else
+                            {
+                                CObject* pNext = pObject->GetNext();
+                                pObject = pNext;
+                                nIndex++;
+                            }
+                        }
+                    }
+                }
+                
+                
+                if (bHit == false)
+                {//接触無し
+
+                    // 配置物プライオリティの先頭を取得
+                    CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+                    if (pObject != nullptr)
+                    { // 先頭がない==プライオリティまるっとない
+
+                        int nIndex = 0;
+
+                        while (pObject != nullptr)
+                        {
+                            CObjectMotionEnemyGuard* pEnemyBoss = static_cast<CObjectMotionEnemyGuard*>(pObject);
+
+                            COBB pObb2 = pEnemyBoss->GetOBB();
+
+
+                            D3DXVECTOR3 HitPos;
+                            bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                            if (btest == true)
+                            {
+                                pEnemyBoss->SetDamage(25);
+                                CObjectShotFire::Create(EscData.Pos);
+                                m_bUse = false;
+                                break;
+                            }
+                            else
+                            {
+                                CObject* pNext = pObject->GetNext();
+                                pObject = pNext;
+                                nIndex++;
+                            }
+                        }
+                    }
+                }
+
+
+
+
+
+
+
+
+
             }
             else if (m_ShotType == CNewBulletALL::SHOTTYPE_ENEMY)
             {//射手がenemy
@@ -680,9 +895,10 @@ void CNewBullet::HitCollision()
 
                         if (btest == true)
                         {
-                            pPlayer->SetDamage(10);
-
+                            pPlayer->SetDamage(5);
+                            CObjectShotFire::Create(EscData.Pos);
                             m_bUse = false;
+                            break;
                         }
                         else
                         {

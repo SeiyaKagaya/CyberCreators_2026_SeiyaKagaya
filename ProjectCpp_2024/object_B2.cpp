@@ -27,6 +27,9 @@
 
 int CObjectB2::m_nNumPlayerAll = START_PLAYER_NUM;//初期値３
 
+
+
+
 //=============================
 // コンストラクタ
 //=============================
@@ -163,7 +166,7 @@ void CObjectB2::Draw()
 //=============================
 // 生成
 //=============================
-CObjectB2* CObjectB2::Create(const char* pfilePass, DATA SetData)
+CObjectB2* CObjectB2::Create(std::string pfilePass, DATA SetData)
 {
 	CObjectB2* pObstacle = new CObjectB2;
 

@@ -158,7 +158,19 @@ HRESULT CObstacleSet::Init()
         pVtxBuff += sizeFVF;
     }
 
+
+    if (m_nType == 5)
+    {//stagemodel
+        EscData.MinLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        EscData.MaxLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    }
+
+
     SetDATA(EscData); // Ši”[
+
+
+
+   
 
 
 
@@ -247,7 +259,7 @@ void CObstacleSet::Update()
 //=============================
 void CObstacleSet::Draw()
 {
-    SizeMagChangebool(true);
+  //  SizeMagChangebool(true);
     CObjectX::Draw();
 }
 

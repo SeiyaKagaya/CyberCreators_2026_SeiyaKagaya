@@ -60,13 +60,7 @@ public:
 
 	bool IntersectRayAABB(const D3DXVECTOR3& rayStart, const D3DXVECTOR3& rayDir, const D3DXVECTOR3& boxMin, const D3DXVECTOR3& boxMax, float& tMin, float& tMax);
 
-	//障害物の妨害判定
-//	bool IsBlockedByObstacle(const D3DXVECTOR3& rayStart, const D3DXVECTOR3& rayDir, float rayLength, CObject* pObstacleTop);
-
-	//距離の平方値計算
-//	float CalculateDistanceSquared(const D3DXVECTOR3& screenPos, float screenWidth, float screenHeight);
-
-
+	static void ResetCount() { m_nCntFrame = 0;};
 
 private:
 	D3DXVECTOR3 m_posV;//視点
@@ -79,12 +73,14 @@ private:
 	D3DXVECTOR3 m_vecU;//上方向ベクトル
 	D3DXMATRIX m_mtxProjection;//プロジェクションマトリックス
 	D3DXMATRIX m_mtxView;		//ビューマトリックス
-	int m_nShakeFlame;
-	float m_fMag;
+	int m_nShakeFlame = 0;
+	float m_fMag = 0.0f;
 
-
+	bool m_bfast = false;
 	static float m_Screen_Width;
 	static float m_Screen_Height;
+	static int m_nCntFrame;
+
 	bool m_CameraType = false;
 
 	static D3DXVECTOR3 CameraPos;
@@ -94,7 +90,7 @@ private:
 	//CLockOnUIMain* m_LockOnUI_Main;//---バレットロックオン
 	
 
-	int m_nCntFrane = 0;
+
 	float DebuCameraLength = 300.0f;
 };
 

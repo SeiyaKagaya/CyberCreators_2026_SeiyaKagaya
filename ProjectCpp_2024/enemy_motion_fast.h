@@ -29,11 +29,12 @@ class CObjectMotionEnemyfast : public CObjectMotionEnemyBase
 {
 public:
 	const float MOVEROT = 0.065f;//旋回速度
-	static const int BULLETMOVESPEED_NOMAL = 15;//砲弾速度
+	static const int BULLETMOVESPEED_NOMAL = 25;//砲弾速度
 	static const int BULLETSHOTDELAY = 75;
 	const float MOVESPEED = 4.8f;
 	static const int  reflectNum = 0;
-
+	static const int DAMAGEFRAME = 3;
+	static const int LOCKDIFF = 40;
 
 	CObjectMotionEnemyfast(int nPriority = CObject::LAYERINDEX_MOTIONENEMY_FAST);//コンストラクタ
 
@@ -45,7 +46,7 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CObjectMotionEnemyfast* Create(const char* pfilePass, DATA SetData);//オブジェクト生成
+	static CObjectMotionEnemyfast* Create(std::string pfilePass, DATA SetData);//オブジェクト生成
 
 //	virtual void LoadRouteTable()override;
 
@@ -61,7 +62,7 @@ public:
 	void SetSCREENPOS(D3DXVECTOR3 pos) { m_ScreenPosition = pos; };
 	D3DXVECTOR3 GetScreenPos() { return m_ScreenPosition; };
 
-	void SetDamage(int nDamage) { m_nLife -= nDamage; };
+	void SetDamage(int nDamage) { m_nLife -= nDamage; m_bDamageRedNow = true; m_DamageFrameCnt = DAMAGEFRAME; };
 
 	////LOCK ON関係
 	//void SetNormalLockOn(bool bSet) { m_bNormalLockOn = bSet; };
@@ -109,6 +110,9 @@ private:
 //	bool m_bNormalLockOn = false;//普通ロック
 //	bool m_bBulletLockOn = false;//射撃ロック
 	//bool m_DiffTrue = false;	 //ロック系計算有無
+
+	bool m_bDamageRedNow = false;
+	int m_DamageFrameCnt = 0;
 };
 
 #endif

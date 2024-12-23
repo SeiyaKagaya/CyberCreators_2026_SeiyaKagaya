@@ -11,11 +11,24 @@
 #include "all_texture.h"
 #include <stdio.h>
 
+
+//あやしいcppのせんとうにこいつを
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#define new ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
+
 //=============================
 // コンストラクタ
 //=============================
 Explosion3D::Explosion3D(int nPriority) :CObject(nPriority)
 {
+    for (int i = 0; i < MAXMAT; i++)
+    {
+        m_bFast[i] = false;
+
+    }
+
     m_nLife = 60;
 
     m_pMesh = nullptr;
@@ -272,153 +285,102 @@ void Explosion3D::Update()
 //=============================
 void Explosion3D::Draw()
 {
-    CRenderer* pRenderer = nullptr;
+    // デバイスの取得
     CManager* pManager = CManager::GetInstance();
-    pRenderer = pManager->GetRenderer();
-    LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
+    CRenderer* pRenderer = pManager->GetRenderer();
+    LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 
-
-    D3DXMATRIX mtxRot, mtxTrans;
-
-    // テクスチャ変換行列
-    D3DXMATRIX matTexTransform;
-
-
-
-
-    // Zバッファを有効化
-//    EscDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-
-    // Zバッファへの書き込みを有効化
- //   EscDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-
-    // カリング（裏面の非表示）を設定（オプション）
-    EscDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
-
-
-
-
-
-
-
-
-    D3DXMatrixScaling(&matTexTransform, (1.0f/ (float)ANIMNUM), 1.0f, 1.0f);  // 0.5倍にスケーリング
-    matTexTransform._31 = m_texOffsetX; // X方向のオフセット設定
-    matTexTransform._32 = m_texOffsetY; // Y方向のオフセット設定
-                                    
-    // テクスチャ変換を有効にする
-    EscDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2); // 2D変換
-    EscDevice->SetTransform(D3DTS_TEXTURE0, &matTexTransform);  // テクスチャ行列を設定
-
-
-    // ワールドマトリックスの初期化
-    D3DXMatrixIdentity(&m_mtxWorld);
-
-
-    if (m_bMagChange == true)
-    {   
-        // モデルのサイズを変更
-    
-        D3DXMatrixScaling(&m_mtxWorld, m_SizeMag.x, m_SizeMag.y, m_SizeMag.z);
+    if (!pDevice || !m_pMesh)
+    {
+        return; // 無効な場合は描画をスキップ
     }
 
-    // 向きを反映
-    D3DXMatrixRotationYawPitchRoll(&mtxRot, m_Data.rot.y, m_Data.rot.x, m_Data.rot.z);
-    D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxRot);
+    // 現在のステートのバックアップ
+    IDirect3DBaseTexture9* pPrevTexture = nullptr; // 基底型ポインタを使用
+    pDevice->GetTexture(0, &pPrevTexture);
 
-        // 位置を反映
-    D3DXMatrixTranslation(&mtxTrans, m_Data.Pos.x, m_Data.Pos.y, m_Data.Pos.z);
-    D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &mtxTrans);
+    D3DMATERIAL9 prevMaterial;
+    pDevice->GetMaterial(&prevMaterial);
 
-    D3DMATERIAL9 matDef;
-    D3DXMATERIAL* pMat;
+    DWORD prevCullMode;
+    pDevice->GetRenderState(D3DRS_CULLMODE, &prevCullMode);
 
-    // ワールドマトリックスの設定
-    EscDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-    // 頂点フォーマットの設定
-    EscDevice->SetFVF(FVF_VERTEX_3D);
-    // 現在のマテリアルを取得
-    EscDevice->GetMaterial(&matDef);
+    D3DXMATRIX prevWorldMatrix;
+    pDevice->GetTransform(D3DTS_WORLD, &prevWorldMatrix);
 
-    // 通常のオブジェクトの描画
-    if (m_pBuffMat != nullptr)
+    D3DXMATRIX prevTexTransform;
+    pDevice->GetTransform(D3DTS_TEXTURE0, &prevTexTransform); // テクスチャ変換行列をバックアップ
+
+    DWORD prevTexTransformFlags;
+    pDevice->GetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, &prevTexTransformFlags); // テクスチャ変換フラグをバックアップ
+
+    // ワールド行列設定
+    D3DXMATRIX matScale, matRot, matTrans, matWorld;
+    D3DXMatrixScaling(&matScale, m_SetSize.x, m_SetSize.y, m_SetSize.z);
+    D3DXMatrixRotationYawPitchRoll(&matRot, m_Data.rot.y, m_Data.rot.x, m_Data.rot.z);
+    D3DXMatrixTranslation(&matTrans, m_Data.Pos.x, m_Data.Pos.y, m_Data.Pos.z);
+    matWorld = matScale * matRot * matTrans;
+    pDevice->SetTransform(D3DTS_WORLD, &matWorld);
+
+    // カリングモード無効化
+    pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+
+    // マテリアルとテクスチャの設定
+    D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
+    for (DWORD i = 0; i < m_dwNumMat; ++i)
     {
-        pMat = reinterpret_cast<D3DXMATERIAL*>(m_pBuffMat->GetBufferPointer());
-
-        for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
+        if (m_bFast[i] == false)
         {
-            // ワールド行列を元に戻す
-            EscDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
-
-            // マテリアルの設定
-            EscDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-
-
-            pMat[nCntMat].pTextureFilename = NULL;
-
-            EscDevice->SetTexture(0, m_ESCpTexture);
-
-            if (bFast == false)
-            {//始めの一回のみ
-                m_OriginalColor = pMat[nCntMat].MatD3D.Diffuse;
-                bFast = true;
-            }
-
-
-            // メッシュの描画
-            if (m_bMagChange == true)
-            {
-                D3DXCOLOR originalColor;
-
-                if (m_ChangeColorBool == true)
-                {
-                    originalColor = m_ChangeCol;
-                }
-                else
-                {
-                    originalColor = m_OriginalColor;
-                }
-
-                if (m_nCnt >= 40)
-                {//透過率
-                    originalColor.a = ((float)60 - m_nCnt) * 0.5f;
-                }
-
-                pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(
-                    originalColor.r * m_SizeMag.x,
-                    originalColor.g * m_SizeMag.y,
-                    originalColor.b * m_SizeMag.z,
-                    originalColor.a
-                );
-
-                EscDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-                pMat[nCntMat].MatD3D.Diffuse = originalColor;
-
-            }
-            else
-            {
-            }
-
-            m_pMesh->DrawSubset(nCntMat);
-
-            // 保存していたマテリアルを戻す
-            EscDevice->SetMaterial(&matDef);
+            m_bFast[i] = true;
+            m_OriginalColor[i] = pMat[i].MatD3D.Diffuse;
         }
 
+        pMat[i].MatD3D.Diffuse = D3DXCOLOR(
+            m_OriginalColor[i].r * m_SizeMag.x,
+            m_OriginalColor[i].g * m_SizeMag.y,
+            m_OriginalColor[i].b * m_SizeMag.z,
+            m_OriginalColor[i].a
+        );
+
+        pDevice->SetMaterial(&pMat[i].MatD3D);
+        pMat[i].MatD3D.Diffuse = m_OriginalColor[i];
+
+        // テクスチャ変換行列の設定
+        D3DXMATRIX matTexTransform;
+        D3DXMatrixScaling(&matTexTransform, (1.0f / (float)ANIMNUM), 1.0f, 1.0f);  // スケーリング
+        matTexTransform._31 = m_texOffsetX; // X方向のオフセット設定
+        matTexTransform._32 = m_texOffsetY; // Y方向のオフセット設定
+
+        // テクスチャ変換を有効にする
+        pDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2); // 2D変換
+        pDevice->SetTransform(D3DTS_TEXTURE0, &matTexTransform);  // テクスチャ行列を設定
+
+        if (m_ESCpTexture)
+        {
+            pDevice->SetTexture(0, m_ESCpTexture);
+        }
+        else
+        {
+            pDevice->SetTexture(0, nullptr);
+        }
+
+        m_pMesh->DrawSubset(i);
     }
 
-    EscDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE); // テクスチャ変換を無効にする
+    // ステートの復元
+    pDevice->SetTexture(0, pPrevTexture);
+    if (pPrevTexture)
+    {
+        pPrevTexture->Release();
+    }
 
+    pDevice->SetMaterial(&prevMaterial);
+    pDevice->SetRenderState(D3DRS_CULLMODE, prevCullMode);
+    pDevice->SetTransform(D3DTS_WORLD, &prevWorldMatrix);
 
-    // Zバッファを無効化
-  //  EscDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
-
-    // Zバッファへの書き込みを無効化
- //   EscDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-
-    // カリングを無効化（オプション）
-    EscDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+    // テクスチャ変換行列とフラグの復元
+    pDevice->SetTransform(D3DTS_TEXTURE0, &prevTexTransform);
+    pDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, prevTexTransformFlags);
 
 }
 //=============================

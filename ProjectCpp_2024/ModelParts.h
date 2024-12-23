@@ -30,10 +30,10 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CModelParts* Create(const char* FilePass,int PartsNum);//オブジェクト生成
+	static CModelParts* Create(std::string FilePass,int PartsNum);//オブジェクト生成
 
 	void SetPartsNum(int nNum) { m_nPartNum = nNum ;};
-	void SetFilePass(const char* FilePass);//ファイルパス格納
+	void SetFilePass(std::string FilePass);//ファイルパス格納
 	void SetParent(CModelParts* pParentParts);
 
 	void SetOffSetData(DATA offSetData);//Offset位置格納
@@ -82,6 +82,8 @@ public:
 
 	void ChengeRGBAbool(bool chenge, D3DXCOLOR col );
 
+	bool IsValid() const;
+
 private:
 //	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE_XFILE];//テクスチャ
 
@@ -99,20 +101,20 @@ private:
 //		int PEARENT;		//自分の親番号
 	CModelParts* m_pParentParts;//親モデルへのポインタ
 
-	const char* m_PartfilePass;					//各modelごとのpass
+	std::string m_PartfilePass;					//各modelごとのpass
 
 	D3DXVECTOR3 m_CorrectCorrectionPosMove;//モーションでの移動量pos
 	D3DXVECTOR3 m_CorrectCorrectionRotMove;//モーションでの移動量move
-	bool m_calculationExecution;//補正値計算したかbool
+	bool m_calculationExecution=false;//補正値計算したかbool
 
 	CObjectMotion* pMotion;//すべての親のポインタ
 
-	bool m_ChangeDatabool;//データ変更があるモデルか
-	int m_MotionParent;//motionがparent属か、1でそうなる
+	bool m_ChangeDatabool=false;//データ変更があるモデルか
+	int m_MotionParent=0;//motionがparent属か、1でそうなる
 
 	bool m_bDrawBool = true;
 
-	D3DXCOLOR m_ChengeCol;
+	D3DXCOLOR m_ChengeCol=D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 	bool m_bChengeCol = false;
 
 	int m_nPartNum = 0;

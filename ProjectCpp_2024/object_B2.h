@@ -47,7 +47,7 @@ public:
 	void Update()override;
 	void Draw()override;
 
-	static CObjectB2* Create(const char* pfilePass, DATA SetData);//オブジェクト生成
+	static CObjectB2* Create(std::string pfilePass, DATA SetData);//オブジェクト生成
 
 
 

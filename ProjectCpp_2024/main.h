@@ -9,16 +9,18 @@
 #define _MAIN_H//二重インクルード防止
 
 
-//#include "Pch.h"
-
 #include <Windows.h>
 #include "d3dx9.h"//描写処理に使う
 #include <cmath>
 #include <vector>
 #define DIRECTINPUT_VERSION (0x0800)//警告対策
+
 #include "dinput.h"//入力
 
 #include "xinput.h"
+#include <iostream>
+
+
 
 #pragma comment(lib,"xinput.lib")//ジョイパッド処理に必要
 
@@ -45,6 +47,9 @@
 
 //基本4頂点
 #define BASE_INDEX	(4)
+
+
+
 
 //頂点座標構造体の定義
 struct VERTEX_2D

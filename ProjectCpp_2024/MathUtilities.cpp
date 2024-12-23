@@ -311,24 +311,24 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 	//
 #if _DEBUG
 
-	Cline::Create(My_Collision_Max_Pos, D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(My_Collision_Max_Pos, D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(My_Collision_Max_Pos, D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	/*Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(My_Collision_Max_Pos, D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(My_Collision_Max_Pos, D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(My_Collision_Max_Pos, D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	///*Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
 
 
-	Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
 
-	Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));*/
+	//Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));*/
 
-	Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
-	Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Max_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Max_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Max_Pos.z), D3DXCOLOR(0, 0, 1, 1));
+	//Cline::Create(D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Max_Pos.y, My_Collision_Min_Pos.z), D3DXVECTOR3(My_Collision_Min_Pos.x, My_Collision_Min_Pos.y, My_Collision_Min_Pos.z), D3DXCOLOR(0, 0, 1, 1));
 
 #else
 
@@ -1199,18 +1199,18 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 
 
 #if _DEBUG
-	// OBBの頂点間にラインを引く
-	for (int i = 0; i < 4; ++i)
-	{
-		for (int j = 4; j < 8; ++j)
-		{
-			if (i != j)
-			{
-				Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
-				Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
-			}
-		}
-	}
+	//// OBBの頂点間にラインを引く
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	for (int j = 4; j < 8; ++j)
+	//	{
+	//		if (i != j)
+	//		{
+	//			Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
+	//			Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
+	//		}
+	//	}
+	//}
 
 	/*Cline::Create(obb1Vertices[0], obb1Vertices[1], D3DXCOLOR(1, 0, 0, 1));
 	Cline::Create(obb2Vertices[0], obb2Vertices[1], D3DXCOLOR(0, 1, 0, 1));
@@ -2008,6 +2008,14 @@ bool CMathProc::AvoidInternalSpawn_3D_BoxCollision(CObject::OBJECTTYPE MyType, D
 //=============================
 D3DXVECTOR3 CMathProc::SetPositionldPredictedImpactPoint(D3DXVECTOR3 BulletPos, D3DXVECTOR3 BulletMove, D3DXVECTOR3 TargetPos, D3DXVECTOR3 TargetMove, float BULLETSPEED)
 {
+	int random = ((rand() % 200) - 100);//(25~-25)までの乱数
+
+	float random2 = random * 1.0f;//
+
+	//誤差を入れる
+	D3DXVECTOR3 randomPosError = D3DXVECTOR3(random2, random2, random2);
+
+
 	// 初期化
 	D3DXVECTOR3 impactPoint(0, 0, 0);
 
@@ -2019,7 +2027,7 @@ D3DXVECTOR3 CMathProc::SetPositionldPredictedImpactPoint(D3DXVECTOR3 BulletPos, 
 	}
 
 	// ターゲットとの相対位置
-	D3DXVECTOR3 relativePos = TargetPos - BulletPos;
+	D3DXVECTOR3 relativePos = (TargetPos + randomPosError) - BulletPos;
 
 	// 弾の速度ベクトルを正規化（速度方向を抽出）
 	D3DXVec3Normalize(&BulletMove, &BulletMove);
@@ -2032,7 +2040,7 @@ D3DXVECTOR3 CMathProc::SetPositionldPredictedImpactPoint(D3DXVECTOR3 BulletPos, 
 	float relativeSpeedSquared = D3DXVec3Dot(&relativeVelocity, &relativeVelocity);
 	if (relativeSpeedSquared < 1e-6f)
 	{
-		return TargetPos; // 移動速度がない場合、現在のターゲット位置を返す
+		return  (TargetPos + randomPosError); // 移動速度がない場合、現在のターゲット位置を返す
 	}
 
 	// ターゲットへの相対位置と相対速度の内積
@@ -2041,11 +2049,11 @@ D3DXVECTOR3 CMathProc::SetPositionldPredictedImpactPoint(D3DXVECTOR3 BulletPos, 
 	// tが負の場合、ターゲットに到達する前に通過
 	if (t < 0.0f)
 	{
-		return TargetPos; // 現在のターゲット位置を返す
+		return  (TargetPos + randomPosError); // 現在のターゲット位置を返す
 	}
 
 	// 命中点を計算
-	impactPoint = TargetPos + TargetMove * t;
+	impactPoint = (TargetPos + randomPosError) + TargetMove * t;
 
 	return impactPoint;
 }

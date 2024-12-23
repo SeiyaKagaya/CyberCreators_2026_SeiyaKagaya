@@ -15,10 +15,14 @@
 
 
 
-
-
-
-
+//
+//
+//
+////あやしいcppのせんとうにこいつを
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
+//#define new ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
 
 
 
@@ -31,7 +35,7 @@ CAllTexture::CAllTexture()
 	for (int i = 0; i < m_nMaxTexture; i++)
 	{
 		m_pTexture[i] = nullptr;
-		m_pFilePass[i] = nullptr;
+	//	m_pFilePass[i] = nullptr;
 	}
 }
 //=============================
@@ -76,17 +80,17 @@ void CAllTexture::Unload()
 			m_pTexture[nCnt]->Release();//-------------------------こーれ大事
 			m_pTexture[nCnt] = nullptr;
 		}
-		if (m_pFilePass[nCnt] != nullptr)
-		{//メモリを確保しているため
-			delete[] m_pFilePass[nCnt];
-			m_pFilePass[nCnt] = nullptr;
-		}
+		//if (m_pFilePass[nCnt] != nullptr)
+		//{//メモリを確保しているため
+		//	delete[] m_pFilePass[nCnt];
+		//	m_pFilePass[nCnt] = nullptr;
+		//}
 	}
 }
 //=============================
 // テクスチャ登録処理
 //=============================
-int CAllTexture::Regist(const char* pTextureName, LPDIRECT3DDEVICE9 pDevice)
+int CAllTexture::Regist(std::string pTextureName, LPDIRECT3DDEVICE9 pDevice)
 {
 	int nIdx = 0;
 	for (int nCnt = 0; nCnt < m_nMaxTexture; nCnt++)
@@ -94,17 +98,19 @@ int CAllTexture::Regist(const char* pTextureName, LPDIRECT3DDEVICE9 pDevice)
 		if (m_pTexture[nCnt] == nullptr)
 		{
 			// テクスチャの読み込み
-			D3DXCreateTextureFromFile(pDevice, pTextureName, &m_pTexture[nCnt]); // 通常時
+			D3DXCreateTextureFromFile(pDevice, pTextureName.c_str(), &m_pTexture[nCnt]); // 通常時
 			nIdx = nCnt; // Id設定
 			m_nNumAll++;
 
 			// 文字列のメモリを確保してコピー
-			m_pFilePass[nCnt] = new char[strlen(pTextureName) + 1];
-			strcpy(m_pFilePass[nCnt], pTextureName);
+			//m_pFilePass[nCnt] = new char[strlen(pTextureName) + 1];
+			//strcpy(m_pFilePass[nCnt], pTextureName);
+
+			m_pFilePass[nCnt] = pTextureName;
 
 			break;
 		}
-		else if (strcmp(pTextureName, m_pFilePass[nCnt]) == 0)
+		else if (strcmp(pTextureName.c_str(), m_pFilePass[nCnt].c_str()) == 0)
 		{//すでにあるパスと一致
 			nIdx = nCnt;
 			break;

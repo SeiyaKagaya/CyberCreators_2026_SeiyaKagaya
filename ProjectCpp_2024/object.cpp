@@ -67,8 +67,14 @@ void CObject::ReleaseAll()
 			// 次のノードを先に保持しておく
 			CObject* pNext = pObj->m_pNext;
 
+			if (pObj->m_ObjectType != OBJECT_GAMEUI/*&& pObj->m_ObjectType != OBJECT_LOCKONUI && pObj->m_ObjectType != OBJECT_LOCKONUIMAIN*/)
+			{
+				int test = 0;
+			}
+
+
 			// オブジェクトタイプの確認(フェード/カメラ所有物を除く)
-			if (pObj->m_ObjectType != OBJECT_FADE&& pObj->m_ObjectType != OBJECT_LOCKONUI && pObj->m_ObjectType != OBJECT_LOCKONUIMAIN)
+			if (pObj->m_ObjectType != OBJECT_FADE/*&& pObj->m_ObjectType != OBJECT_LOCKONUI && pObj->m_ObjectType != OBJECT_LOCKONUIMAIN*/)
 			{
 				pObj->m_bDeath = true;  // フラグを立てる
 				pObj->Release();       // 開放

@@ -23,9 +23,13 @@
 #include "enemy_motion_Nomal.h"
 #include "enemy_motion_fast.h"
 #include "missile.h"
+#include "enemy_motion_boss.h"
+#include "enemy_motion_guard.h"
 //#include "movesmoke.h"
 
 int CObjectMotionPlayer::m_nNumPlayerAll = START_PLAYER_NUM;//初期値３
+
+
 
 //=============================
 // コンストラクタ
@@ -69,7 +73,7 @@ HRESULT CObjectMotionPlayer::Init()
 	SetClassData(classData);
 
 	m_nLife = START_LIFE;
-	//m_bDown = false;
+	m_bDown = false;
 	CRenderer* pRenderer = nullptr;
 
 	CManager* pManager = CManager::GetInstance();
@@ -128,579 +132,560 @@ void CObjectMotionPlayer::Update()
 {
 	CScene::MODE NowState = CScene::GetNowScene();
 
-
-	if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2)
-	{//ゲーム中
-
-		m_guard = false;//Reset
-
-		if (m_GameStart == false)
-		{
-
-			DATA classData = GetClassData();
-
-			classData.OldPos = m_RESTART_POS;
-			classData.Pos = m_RESTART_POS;
-			classData.rot.y = -D3DX_PI * 0.5f;
-
-			SetClassData(classData);
-			m_GameStart = true;
-		}
-
-
-		if (m_bDown == false)
-		{
-			CRenderer* pRenderer = nullptr;
-
-			CManager* pManager = CManager::GetInstance();
-
-			CInputKeyboard* keyboard = pManager->GetKeyboard();
-
-			CInputJoyPad* JoyPad = pManager->GetJoyPad();
-
-			XINPUT_STATE joykeystate;
-
-			//ショイパットの状態を取得
-			DWORD dwResult = XInputGetState(0, &joykeystate);
-
-			if (pManager->GetbNow3DMode() == false)
-			{//2D
-			}
-			else
-			{//3D
-
-				if (m_nMissileStock < MISSILEMAX)
-				{//ミサイル不足
-					m_nMissileRecoveryCnt++;
-					if (m_nMissileRecoveryCnt > RECOVERY_MISSILE)
-					{//ミサイル回復フレーム到達
-						m_nMissileRecoveryCnt = 0;//リセット
-						m_nMissileStock++;//ミサイル増加
-					}
-				}
-			}
-
-			if (m_ShotDelay > 0)
+	if (CScene::GetStayNextStage() == false)
+	{//待機状態か
+		if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3)
+		{//ゲーム中
+	
+			m_guard = false;//Reset
+	
+			if (m_GameStart == false)
 			{
-				m_ShotDelay--;
+	
+				DATA classData = GetClassData();
+	
+				classData.OldPos = m_RESTART_POS;
+				classData.Pos = m_RESTART_POS;
+				classData.rot.y = -D3DX_PI * 0.5f;
+	
+				SetClassData(classData);
+				m_GameStart = true;
 			}
-
-			DATA classData = GetClassData();
-
-			if (pManager->GetbNow3DMode() == false)
-			{//2D
-				m_TargetPos.x += classData.move.x;
-				m_TargetPos.y += classData.move.y;
-			}
-
-			if (pManager->GetbNow3DMode() == false)
-			{//2D
-
-			//	シールド周り
-			//----------------------------------------------------------------------------------
-			// 中心座標 DirectionPos を設定
-				D3DXVECTOR3 DirectionPos = classData.Pos;
-				DirectionPos.y += SHIELD_SET_ADDPOS;
-
-				// 方向ベクトルを計算
-				D3DXVECTOR3 direction = m_TargetPos - DirectionPos;
-
-				// XZ 平面での角度を計算 (上方向を基準とする円周角度)
-				float angleRadians = atan2f(direction.x, -direction.y); // -direction.x で基準を上方向に変更
-
-				// 回転データを設定 (X 軸回転として渡す場合)
-				D3DXVECTOR3 SetRot = D3DXVECTOR3(angleRadians + (-D3DX_PI * 0.5f), (-D3DX_PI * 0.5f), 0.0f);
-
-				// シールドの回転を設定
-				m_pShield->SetRot(SetRot);
-
-				D3DXVECTOR3 SETPOS = m_TargetPos;
-
-				D3DXVec3Normalize(&direction, &direction);
-
-				SETPOS -= direction * 180.0f;
-
-				m_pShield->SetPos(SETPOS);
-				//----------------------------------------------------------------------------------
-			}
-			else
-			{//3D
-				//	シールド周り
-			//----------------------------------------------------------------------------------
-
-				D3DXVECTOR3 ESCDATA = D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 150.0f, classData.Pos.z);
-
-				m_pShield->SetPos(ESCDATA);
-
-			}
-
-			if (pManager->GetbNow3DMode() == false)
-			{//2D
-
-				//線形補完地点
-				SetLinearInterpolation();
-			}
-			else
-			{//3D
-			}
-
-			if (dwResult != ERROR_SUCCESS)
-			{//パッド接続あり
-				pManager->bSetInputState(true);
-			}
-
-			if (pManager->GetbNow3DMode() == false)
-			{//2D
-				if (pManager->bGetInputState() == true)
-				{//操作方法--trueでコントローラー
-					//キーボード/コントローラー入力反映(移動)
-					ControllerInput2D();
-				}
-
-			}
-			else
-			{//3D
-				if (pManager->bGetInputState() == true)
-				{//操作方法--trueでコントローラー
-					//キーボード/コントローラー入力反映(移動)
-					ControllerInput3D();
-				}
-			}
-
-			//GUARD描画するか
-			if (m_guard == true)
+	
+	
+			if (m_bDown == false)
 			{
-				m_pShield->setDrawOk(true);
-			}
-			else
-			{
-				m_pShield->setDrawOk(false);
-			}
-
-			classData = GetClassData();
-
-			//--------------------------------------
-			//照準位置制限(自機より円形)
-			if (pManager->GetbNow3DMode() == false)
-			{//2D
-
-
-
-				if (pManager->bGetInputState() == true)
-				{//操作方法--trueでコントローラー
-					D3DXVECTOR3 PlayerPos = GetClassData().Pos;
-					float fRadius = TARGET_SET_ADDPOS * 2.0f;
-
-					//m_TargetPosをこの円の中に収める
-					PlayerPos.y += TARGET_SET_ADDPOS;
-
-					//ベクトル計算
-					D3DXVECTOR3 VEC = m_TargetPos - PlayerPos;
-
-					//ベクトルの長さ
-					float fDistance = D3DXVec3Length(&VEC);
-
-					//長さが半径を超えた
-					if (fDistance > fRadius)
-					{
-						// ベクトルを正規化
-						D3DXVec3Normalize(&VEC, &VEC);
-
-						// ベクトルの方向に半径切りまで動かす
-						m_TargetPos = PlayerPos + VEC * fRadius;
-
-					}
-				}
-
-
-				//体向き変動(2D)
-				if (m_TargetPos.x >= classData.Pos.x)
-				{//右正面
-					SetFrontMove(true);//右正面かboolをset
-					classData.rot.y = -D3DX_PI * 0.5f;
+				CRenderer* pRenderer = nullptr;
+	
+				CManager* pManager = CManager::GetInstance();
+	
+				CInputKeyboard* keyboard = pManager->GetKeyboard();
+	
+				CInputJoyPad* JoyPad = pManager->GetJoyPad();
+	
+				XINPUT_STATE joykeystate;
+	
+				//ショイパットの状態を取得
+				DWORD dwResult = XInputGetState(0, &joykeystate);
+	
+	
+	
+				
+	
+	
+	
+	
+				if (pManager->GetbNow3DMode() == false)
+				{//2D
 				}
 				else
-				{//左正面
-					SetFrontMove(false);
-					classData.rot.y = D3DX_PI * 0.5f;
-				}
-
-			}
-			else
-			{//3D
-
-			}
-
-			SetClassData(classData);
-			classData = GetClassData();
-
-			//体力--------------------------------------------------------
-			if (m_nLife <= 0)
-			{
-				m_bDown = true;
-
-				CScore::AddScore(-(CScore::DETH_PENALTY));
-
-				m_nLife = START_LIFE;
-
-				m_ResetCnt = 0;
-
-				m_nNumPlayerAll--;
-
-				for (int i = 0; i < GetMaxLoadPartsNum(); i++)
-				{//パーツもDEATH
-					GetModelParts(i)->DrawOkBool(false);
-
-					Explosion3D::Create(GetClassData().Pos);
-
-				}
-			}
-
-			//衝突相殺--敵と-------------------------------------------------------
-			CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_NOMAL, LAYERINDEX_MOTIONENEMY_NOMAL, this);
-
-			if (HitData.bHit == true)
-			{
-				classData.Pos += HitData.ResultDistance;
-				HitData.bHit = false;
-			}
-
-			HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_FAST, LAYERINDEX_MOTIONENEMY_FAST, this);
-
-			if (HitData.bHit == true)
-			{
-				classData.Pos += HitData.ResultDistance;
-			}
-			//------------------------------------------------------------------------
-
-
-			bool bHit = false;//着地判定
-
-			SetClassData(classData);
-
-
-			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-			//落下に転じたか検証部
-			float fTestGravity = -60.0f;
-
-			DATA TestData = GetClassData();
-
-			D3DXVECTOR3 TestPos = TestData.Pos;//位置保存
-			TestPos.y += fTestGravity;
-
-			//当たり判定計算
-			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, classData.move, this);
-
-			if (m_HitData.HitAngle.y == 1.0f)
-			{
-				bHit = true;
-				SetClassData(TestData);//テスト判定なので、結果を戻す
-			}
-
-			//当たり判定計算
-			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, classData.move, this);
-
-			if (m_HitData.HitAngle.y == 1.0f)
-			{
-				bHit = true;
-				SetClassData(TestData);//テスト判定なので、結果を戻す
-			}
-
-			D3DXVECTOR3 rayDirection = D3DXVECTOR3(0, -1, 0); // 下方向のレイ
-
-			m_HitData = CStageCollisionBox3D2D::bHitColision(TestPos, rayDirection, OBJECT_MOTIONPLAYER, this);
-
-			if (m_HitData.HitAngle.y == 1.0f)
-			{
-				bHit = true;
-				SetClassData(TestData);//テスト判定なので、結果を戻す
-			}
-
-			//当たり判定計算
-			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
-
-			if (m_HitData.HitAngle.y == 1.0f)
-			{
-				bHit = true;
-				SetClassData(TestData);//テスト判定なので、結果を戻す
-			}
-
-
-			if (bHit == false)
-			{//接触が生じてない時==設置状態継続してはいけない
-
-				if (classData.Pos.y > 0.0f)
-				{
-					SetIsOnGroundBool(false);//着地状態解除
-				}
-			}
-			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-			//重力--------------------------------------------------------
-			if (!GetIsOnGroundBool())
-			{//着地状態でない時
-
-				//重力
-				classData.move.y -= GRAVITY * 0.1f;
-			}
-			else
-			{//着地
-
-			}
-			SetClassData(classData);
-			//------------------------------------------------------------
-
-
-
-			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-			//当たり判定本体（着地系）
-
-			//当たり判定計算
-			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, classData.move, this);
-
-			if (m_HitData.HitAngle.y == 1.0f)
-			{
-				bHit = true;
-			}
-
-			//当たり判定計算
-			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, classData.move, this);
-
-			if (m_HitData.HitAngle.y == 1.0f)
-			{
-				bHit = true;
-
-			}
-
-			//当たり判定計算
-			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
-
-			if (m_HitData.HitAngle.y == 1.0f)
-			{
-				bHit = true;
-			}
-
-			classData = GetClassData();
-
-			if (!GetIsLandingTriggerBool())
-			{//着地している状態でない時
-				// 接地判定
-				if (bHit || classData.Pos.y <= 0.0f)
-				{//接触
-
-					if (classData.move.y <= 0.0f)
-					{
-						classData.move.y = 0.0f;
-					}
-
-					if (!GetIsOnGroundBool())
-					{// 現在接地している状態でない
-						SetIsLandingTriggerBool(true); // 着地トリガーを発動
-					}
-
-					SetIsOnGroundBool(true);  // 接地状態に設定
-				}
-			}
-
-			// 位置変化による接地状態の解除
-			float POSY = std::floor(GetOldPosY());
-			float NOWPOSY = std::floor(classData.Pos.y);
-
-			if (NOWPOSY != POSY)
-			{
-				m_RandingCutCnt++;
-
-				if (m_RandingCutCnt >= RANDINGTRIGGER_FARAME)
-				{
-					// 接地状態の解除
-					SetIsOnGroundBool(false);
-				}
-			}
-			else
-			{
-				m_RandingCutCnt = 0;
-			}
-
-
-			// モーション再生処理
-			// 空中モーションの処理
-			if (!GetIsOnGroundBool() && !GetIsLandingTriggerBool())
-			{//着地状態じゃないかつ着地瞬間じゃない
-
-
-				if (/*GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_FRONT &&*/
-					GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_LEFT &&
-					GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_RIGHT &&
-					GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_BACK)
-				{
-					SetNowMotion_Parent(MOTIONTYPE_JUMP); // 空中モーションの再生
-
-					// モーション変動
-					SetNowMotion_Parent(MOTIONTYPE_STANDBY); // 待機
-
-					m_OldInputMotionParent = MOTIONTYPE_STANDBY; // 移動系入力を保持
-				}
-			}
-
-			// 着地モーションのトリガー
-			if (GetIsLandingTriggerBool() && GetIsOnGroundBool())
-			{//着地状態かつ着地瞬間
-				SetNowMotion_Parent(MOTIONTYPE_RANDING); // 着地モーションの再生
-				SetIsLandingTriggerBool(false); // 着地トリガーをリセット
-			}
-
-			SetClassData(classData);
-
-			//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-			classData = GetClassData();
-
-			//ターゲットの方向に砲口を向ける(腰)
-			if (pManager->GetbNow3DMode() == false)
-			{//2D
-
-			  //ターゲットの方向に砲口を向ける(腰)2D
-			  //----------------------------------------------------------------------------------
-
-				DATA ChangeData = DataInit();
-
-				float minYAngle = -1.1f; // 下側の角度の限界
-				float maxYAngle = 1.1f;  // 上側の角度の限界
-
-				//方向
-				D3DXVECTOR3 enemyDirection = D3DXVECTOR3(m_TargetPos.x, m_TargetPos.y, m_TargetPos.z) - classData.Pos;
-
-				// XZ平面上の角度
-				float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
-
-				ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
-				ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
-				ChangeData.rot.z = 0.0f;
-
-				//		 Y軸の角度
-				float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
-
-				// Y軸角度をクランプ
-				if (angleY < minYAngle)
-				{
-					angleY = minYAngle;
-				}
-				else if (angleY > maxYAngle)
-				{
-					angleY = maxYAngle;
-				}
-
-				ChangeData.rot.x = angleY; // Y方向を向ける
-
-
-				//基底クラスからパーツにデータを受け渡し
-				SetChangeDataInObjectMotion(ChangeData);
-			}
-			else
-			{//3D
-				//ターゲットの方向に砲口を向ける(腰)3D
-			  //----------------------------------------------------------------------------------
-				bool bLockOn = false;
-
-				DATA ChangeData = DataInit();
-
-				// 配置物プライオリティの先頭を取得
-				CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_FAST);
-
-				if (pObject != nullptr)
-				{ // 先頭がない==プライオリティまるっとない
-
-					CObjectMotionEnemyfast* pEnemyFast;
-					pEnemyFast = (CObjectMotionEnemyfast*)pObject;
-
-					while (pObject != nullptr)
-					{
-						CObject::DATA EscEnemyData = pEnemyFast->GetClassData();
-
-						if (pEnemyFast->GetLockOnUIMain()->bGetDrawOk() == true)
-						{//バレットロックオンが描画状態
-							bLockOn = true;
-
-							float minYAngle = -1.1f; // 下側の角度の限界
-							float maxYAngle = 1.1f;  // 上側の角度の限界
-
-							//方向
-							D3DXVECTOR3 enemyDirection = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y, EscEnemyData.Pos.z) - classData.Pos;
-
-							// XZ平面上の角度
-							float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
-
-							ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
-							ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
-							ChangeData.rot.z = 0.0f;
-
-							//		 Y軸の角度
-							float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
-
-							// Y軸角度をクランプ
-							if (angleY < minYAngle)
-							{
-								angleY = minYAngle;
-							}
-							else if (angleY > maxYAngle)
-							{
-								angleY = maxYAngle;
-							}
-
-							ChangeData.rot.x = angleY; // Y方向を向ける
-
-
-
-						//	m_TargetPos = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y+60.0f, EscEnemyData.Pos.z);
-							break;
+				{//3D
+	
+					if (m_nMissileStock < MISSILEMAX)
+					{//ミサイル不足
+						m_nMissileRecoveryCnt++;
+						if (m_nMissileRecoveryCnt > RECOVERY_MISSILE)
+						{//ミサイル回復フレーム到達
+							m_nMissileRecoveryCnt = 0;//リセット
+							m_nMissileStock++;//ミサイル増加
 						}
-						else
+					}
+				}
+	
+				if (m_ShotDelay > 0)
+				{
+					m_ShotDelay--;
+				}
+	
+				DATA classData = GetClassData();
+	
+				if (pManager->GetbNow3DMode() == false)
+				{//2D
+					m_TargetPos.x += classData.move.x;
+					m_TargetPos.y += classData.move.y;
+				}
+	
+				if (pManager->GetbNow3DMode() == false)
+				{//2D
+	
+				//	シールド周り
+				//----------------------------------------------------------------------------------
+				// 中心座標 DirectionPos を設定
+					D3DXVECTOR3 DirectionPos = classData.Pos;
+					DirectionPos.y += SHIELD_SET_ADDPOS;
+	
+					// 方向ベクトルを計算
+					D3DXVECTOR3 direction = m_TargetPos - DirectionPos;
+	
+					// XZ 平面での角度を計算 (上方向を基準とする円周角度)
+					float angleRadians = atan2f(direction.x, -direction.y); // -direction.x で基準を上方向に変更
+	
+					// 回転データを設定 (X 軸回転として渡す場合)
+					D3DXVECTOR3 SetRot = D3DXVECTOR3(angleRadians + (-D3DX_PI * 0.5f), (-D3DX_PI * 0.5f), 0.0f);
+	
+					// シールドの回転を設定
+					m_pShield->SetRot(SetRot);
+	
+					D3DXVECTOR3 SETPOS = m_TargetPos;
+	
+					D3DXVec3Normalize(&direction, &direction);
+	
+					SETPOS -= direction * 180.0f;
+	
+					m_pShield->SetPos(SETPOS);
+					//----------------------------------------------------------------------------------
+				}
+				else
+				{//3D
+					//	シールド周り
+				//----------------------------------------------------------------------------------
+	
+					D3DXVECTOR3 ESCDATA = D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 150.0f, classData.Pos.z);
+	
+					m_pShield->SetPos(ESCDATA);
+	
+				}
+	
+				if (pManager->GetbNow3DMode() == false)
+				{//2D
+	
+					//線形補完地点
+					SetLinearInterpolation();
+				}
+				else
+				{//3D
+				}
+	
+				if (dwResult != ERROR_SUCCESS)
+				{//パッド接続あり
+					pManager->bSetInputState(true);
+				}
+	
+				if (pManager->GetbNow3DMode() == false)
+				{//2D
+					if (pManager->bGetInputState() == true)
+					{//操作方法--trueでコントローラー
+						//キーボード/コントローラー入力反映(移動)
+						ControllerInput2D();
+					}
+	
+				}
+				else
+				{//3D
+					if (pManager->bGetInputState() == true)
+					{//操作方法--trueでコントローラー
+						//キーボード/コントローラー入力反映(移動)
+						ControllerInput3D();
+					}
+				}
+	
+	
+				//-----------------------------逆走防止
+				//共通
+				//-------------------------
+				classData = GetClassData();
+				float HitMin = classData.Pos.x + classData.MinLength.x;
+				D3DXVECTOR3 My_Collision_Min_Pos = classData.Pos + classData.MinLength;
+				D3DXVECTOR3 My_Collision_Max_Pos = classData.Pos + classData.MaxLength;
+				D3DXVECTOR3 TargetPos = D3DXVECTOR3(-15000.0f, 7000.0f, 5000.0f);
+				D3DXVECTOR3 TarGet_Collision_Max_Pos = D3DXVECTOR3(TargetPos.x + 15000.0f, TargetPos.y + 7000.0f, TargetPos.z + 9000.0f);
+				D3DXVECTOR3 TarGet_Collision_Min_Pos = D3DXVECTOR3(TargetPos.x - 15000.0f, TargetPos.y - 7000.0f, TargetPos.z - 9000.0f);
+	
+	
+				if (My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
+					My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
+					My_Collision_Min_Pos.x - classData.Pos.x + classData.OldPos.x >= TarGet_Collision_Max_Pos.x &&
+					My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
+					My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
+					My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+				{
+	
+					classData.Pos.x = TarGet_Collision_Max_Pos.x + (My_Collision_Max_Pos.x - classData.Pos.x) + 0.1f; // 接触面押し返し
+					SetClassData(classData);
+				}
+	
+				//-------------------------
+	
+	
+	
+	
+	
+	
+	
+				//GUARD描画するか
+				if (m_guard == true)
+				{
+					m_pShield->setDrawOk(true);
+				}
+				else
+				{
+					m_pShield->setDrawOk(false);
+				}
+	
+				classData = GetClassData();
+	
+				//--------------------------------------
+				//照準位置制限(自機より円形)
+				if (pManager->GetbNow3DMode() == false)
+				{//2D
+	
+	
+	
+					if (pManager->bGetInputState() == true)
+					{//操作方法--trueでコントローラー
+						D3DXVECTOR3 PlayerPos = GetClassData().Pos;
+						float fRadius = TARGET_SET_ADDPOS * 2.0f;
+	
+						//m_TargetPosをこの円の中に収める
+						PlayerPos.y += TARGET_SET_ADDPOS;
+	
+						//ベクトル計算
+						D3DXVECTOR3 VEC = m_TargetPos - PlayerPos;
+	
+						//ベクトルの長さ
+						float fDistance = D3DXVec3Length(&VEC);
+	
+						//長さが半径を超えた
+						if (fDistance > fRadius)
 						{
-							CObject* pNext = pObject->GetNext();
-							pObject = pNext;
-							pEnemyFast = (CObjectMotionEnemyfast*)pObject;
+							// ベクトルを正規化
+							D3DXVec3Normalize(&VEC, &VEC);
+	
+							// ベクトルの方向に半径切りまで動かす
+							m_TargetPos = PlayerPos + VEC * fRadius;
+	
 						}
 					}
+	
+	
+					//体向き変動(2D)
+					if (m_TargetPos.x >= classData.Pos.x)
+					{//右正面
+						SetFrontMove(true);//右正面かboolをset
+						classData.rot.y = -D3DX_PI * 0.5f;
+					}
+					else
+					{//左正面
+						SetFrontMove(false);
+						classData.rot.y = D3DX_PI * 0.5f;
+					}
+	
 				}
-
-				if (bLockOn == false)
-				{//まだロックオンがない
-				// 配置物プライオリティの先頭を取得
-					CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_NOMAL);
-
+				else
+				{//3D
+	
+				}
+	
+				SetClassData(classData);
+				classData = GetClassData();
+	
+				//体力--------------------------------------------------------
+				if (m_nLife <= 0)
+				{
+					m_bDown = true;
+	
+					CScore::AddScore(-(CScore::DETH_PENALTY));
+	
+					m_nLife = START_LIFE;
+	
+					m_ResetCnt = 0;
+	
+					m_nNumPlayerAll--;
+	
+					for (int i = 0; i < GetMaxLoadPartsNum(); i++)
+					{//パーツもDEATH
+						GetModelParts(i)->DrawOkBool(false);
+	
+						Explosion3D::Create(GetClassData().Pos);
+	
+					}
+				}
+	
+				//衝突相殺--敵と-------------------------------------------------------
+				CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_NOMAL, LAYERINDEX_MOTIONENEMY_NOMAL, this);
+	
+				if (HitData.bHit == true)
+				{
+					classData.Pos += HitData.ResultDistance;
+					HitData.bHit = false;
+				}
+	
+				HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_FAST, LAYERINDEX_MOTIONENEMY_FAST, this);
+	
+				if (HitData.bHit == true)
+				{
+					classData.Pos += HitData.ResultDistance;
+				}
+				//------------------------------------------------------------------------
+	
+	
+				bool bHit = false;//着地判定
+	
+				SetClassData(classData);
+	
+	
+				//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+				//落下に転じたか検証部
+				float fTestGravity = -60.0f;
+	
+				DATA TestData = GetClassData();
+	
+				D3DXVECTOR3 TestPos = TestData.Pos;//位置保存
+				TestPos.y += fTestGravity;
+	
+				//当たり判定計算
+				m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, classData.move, this);
+	
+				if (m_HitData.HitAngle.y == 1.0f)
+				{
+					bHit = true;
+					SetClassData(TestData);//テスト判定なので、結果を戻す
+				}
+	
+				//当たり判定計算
+				m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, classData.move, this);
+	
+				if (m_HitData.HitAngle.y == 1.0f)
+				{
+					bHit = true;
+					SetClassData(TestData);//テスト判定なので、結果を戻す
+				}
+	
+				D3DXVECTOR3 rayDirection = D3DXVECTOR3(0, -1, 0); // 下方向のレイ
+	
+				m_HitData = CStageCollisionBox3D2D::bHitColision(TestPos, rayDirection, OBJECT_MOTIONPLAYER, this);
+	
+				if (m_HitData.HitAngle.y == 1.0f)
+				{
+					bHit = true;
+					SetClassData(TestData);//テスト判定なので、結果を戻す
+				}
+	
+				//当たり判定計算
+				m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, TestPos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
+	
+				if (m_HitData.HitAngle.y == 1.0f)
+				{
+					bHit = true;
+					SetClassData(TestData);//テスト判定なので、結果を戻す
+				}
+	
+	
+				if (bHit == false)
+				{//接触が生じてない時==設置状態継続してはいけない
+	
+					if (classData.Pos.y > 0.0f)
+					{
+						SetIsOnGroundBool(false);//着地状態解除
+					}
+				}
+				//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	
+				//重力--------------------------------------------------------
+				if (!GetIsOnGroundBool())
+				{//着地状態でない時
+	
+					//重力
+					classData.move.y -= GRAVITY * 0.1f;
+				}
+				else
+				{//着地
+	
+				}
+				SetClassData(classData);
+				//------------------------------------------------------------
+	
+	
+	
+				//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+				//当たり判定本体（着地系）
+	
+				//当たり判定計算
+				m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, classData.move, this);
+	
+				if (m_HitData.HitAngle.y == 1.0f)
+				{
+					bHit = true;
+				}
+	
+				//当たり判定計算
+				m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, classData.move, this);
+	
+				if (m_HitData.HitAngle.y == 1.0f)
+				{
+					bHit = true;
+	
+				}
+	
+				//当たり判定計算
+				m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONPLAYER, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
+	
+				if (m_HitData.HitAngle.y == 1.0f)
+				{
+					bHit = true;
+				}
+	
+				classData = GetClassData();
+	
+				if (!GetIsLandingTriggerBool())
+				{//着地している状態でない時
+					// 接地判定
+					if (bHit || classData.Pos.y <= 0.0f)
+					{//接触
+	
+						if (classData.move.y <= 0.0f)
+						{
+							classData.move.y = 0.0f;
+						}
+	
+						if (!GetIsOnGroundBool())
+						{// 現在接地している状態でない
+							SetIsLandingTriggerBool(true); // 着地トリガーを発動
+						}
+	
+						SetIsOnGroundBool(true);  // 接地状態に設定
+					}
+				}
+	
+				// 位置変化による接地状態の解除
+				float POSY = std::floor(GetOldPosY());
+				float NOWPOSY = std::floor(classData.Pos.y);
+	
+				if (NOWPOSY != POSY)
+				{
+					m_RandingCutCnt++;
+	
+					if (m_RandingCutCnt >= RANDINGTRIGGER_FARAME)
+					{
+						// 接地状態の解除
+						SetIsOnGroundBool(false);
+					}
+				}
+				else
+				{
+					m_RandingCutCnt = 0;
+				}
+	
+	
+				// モーション再生処理
+				// 空中モーションの処理
+				if (!GetIsOnGroundBool() && !GetIsLandingTriggerBool())
+				{//着地状態じゃないかつ着地瞬間じゃない
+	
+	
+					if (/*GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_FRONT &&*/
+						GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_LEFT &&
+						GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_RIGHT &&
+						GetNowMotionParent() != MOTIONTYPE_HIGH_MOVE_BACK)
+					{
+	
+						SetNowMotion_Parent(MOTIONTYPE_JUMP); // 空中モーションの再生
+	
+						// モーション変動
+					//	SetNowMotion_Parent(MOTIONTYPE_STANDBY); // 待機
+	
+					//	m_OldInputMotionParent = MOTIONTYPE_STANDBY; // 移動系入力を保持
+					}
+				}
+	
+				// 着地モーションのトリガー
+				if (GetIsLandingTriggerBool() && GetIsOnGroundBool())
+				{//着地状態かつ着地瞬間
+					SetNowMotion_Parent(MOTIONTYPE_RANDING); // 着地モーションの再生
+					SetIsLandingTriggerBool(false); // 着地トリガーをリセット
+				}
+	
+				SetClassData(classData);
+	
+				//-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	
+				classData = GetClassData();
+	
+				//ターゲットの方向に砲口を向ける(腰)
+				if (pManager->GetbNow3DMode() == false)
+				{//2D
+	
+				  //ターゲットの方向に砲口を向ける(腰)2D
+				  //----------------------------------------------------------------------------------
+	
+					DATA ChangeData = DataInit();
+	
+					float minYAngle = -1.1f; // 下側の角度の限界
+					float maxYAngle = 1.1f;  // 上側の角度の限界
+	
+					//方向
+					D3DXVECTOR3 enemyDirection = D3DXVECTOR3(m_TargetPos.x, m_TargetPos.y, m_TargetPos.z) - classData.Pos;
+	
+					// XZ平面上の角度
+					float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
+	
+					ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
+					ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
+					ChangeData.rot.z = 0.0f;
+	
+					//		 Y軸の角度
+					float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
+	
+					// Y軸角度をクランプ
+					if (angleY < minYAngle)
+					{
+						angleY = minYAngle;
+					}
+					else if (angleY > maxYAngle)
+					{
+						angleY = maxYAngle;
+					}
+	
+					ChangeData.rot.x = angleY; // Y方向を向ける
+	
+	
+					//基底クラスからパーツにデータを受け渡し
+					SetChangeDataInObjectMotion(ChangeData);
+				}
+				else
+				{//3D
+					//ターゲットの方向に砲口を向ける(腰)3D
+				  //----------------------------------------------------------------------------------
+					bool bLockOn = false;
+	
+					DATA ChangeData = DataInit();
+	
+					// 配置物プライオリティの先頭を取得
+					CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_FAST);
+	
 					if (pObject != nullptr)
 					{ // 先頭がない==プライオリティまるっとない
-
-						CObjectMotionEnemyNomal* pEnemyNomal;
-						pEnemyNomal = (CObjectMotionEnemyNomal*)pObject;
-
+	
+						CObjectMotionEnemyfast* pEnemyFast;
+						pEnemyFast = (CObjectMotionEnemyfast*)pObject;
+	
 						while (pObject != nullptr)
 						{
-							CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
-
-							if (pEnemyNomal->GetLockOnUIMain()->bGetDrawOk() == true)
+							CObject::DATA EscEnemyData = pEnemyFast->GetClassData();
+	
+							if (pEnemyFast->GetLockOnUIMain()->bGetDrawOk() == true)
 							{//バレットロックオンが描画状態
 								bLockOn = true;
-
+	
 								float minYAngle = -1.1f; // 下側の角度の限界
 								float maxYAngle = 1.1f;  // 上側の角度の限界
-
+	
 								//方向
-								D3DXVECTOR3 enemyDirection = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y, EscEnemyData.Pos.z) - classData.Pos;
-
+								D3DXVECTOR3 enemyDirection = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y + 600.0f, EscEnemyData.Pos.z) - classData.Pos;
+	
 								// XZ平面上の角度
 								float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
-
+	
 								ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
 								ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
 								ChangeData.rot.z = 0.0f;
-
+	
 								//		 Y軸の角度
 								float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
-
+	
 								// Y軸角度をクランプ
 								if (angleY < minYAngle)
 								{
@@ -710,282 +695,575 @@ void CObjectMotionPlayer::Update()
 								{
 									angleY = maxYAngle;
 								}
-
+	
 								ChangeData.rot.x = angleY; // Y方向を向ける
-
-
-								m_TargetPos = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y + 60.0f, EscEnemyData.Pos.z);
+	
+	
+	
+							//	m_TargetPos = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y+60.0f, EscEnemyData.Pos.z);
 								break;
 							}
 							else
 							{
 								CObject* pNext = pObject->GetNext();
 								pObject = pNext;
-								pEnemyNomal = (CObjectMotionEnemyNomal*)pObject;
+								pEnemyFast = (CObjectMotionEnemyfast*)pObject;
 							}
 						}
 					}
-				}
-
-
-				if (bLockOn == false)
-				{//まだロックオンがない
-				 //対象がいない
-					ChangeData.rot.y = classData.rot.y;
-				}
-
-
-				//基底クラスからパーツにデータを受け渡し(だれも対象じゃないときは初期値が入る)
-				SetChangeDataInObjectMotion(ChangeData);
-			}
-
-
-			//底抜け対策
-			if (classData.Pos.y <= 0)
-			{
-				classData.Pos.y = 0;
-			}
-
-
-			SetClassData(classData);
-
-
-			//慣性
-			//----------------------------------------------------------------------------
-
-			if (!GetIsOnGroundBool() && !GetIsLandingTriggerBool())
-			{//着地状態じゃないかつ着地瞬間じゃない
-				if (GetBoostNow() == true)
-				{
-					classData = GetClassData();
-
-					//移動量を更新(疑似慣性で減衰)
-					classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_BOOST_XZ);
-					classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_BOOST_Y);
-					classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_BOOST_XZ);
-
-					SetClassData(classData);
-
-					CObjectMotion::Update();//------------------更新
-				}
-				else
-				{
-					if (m_BoostRestCnt > 0)
-					{
-						m_BoostRestCnt--;
-
-						classData = GetClassData();
-
-						//移動量を更新(疑似慣性で減衰)
-						classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_BOOST_XZ * 0.5f);
-						classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_BOOST_Y * 0.5f);
-						classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_BOOST_XZ * 0.5f);
+	
+					if (bLockOn == false)
+					{//まだロックオンがない
+					// 配置物プライオリティの先頭を取得
+						CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_NOMAL);
+	
+						if (pObject != nullptr)
+						{ // 先頭がない==プライオリティまるっとない
+	
+							CObjectMotionEnemyNomal* pEnemyNomal;
+							pEnemyNomal = (CObjectMotionEnemyNomal*)pObject;
+	
+							while (pObject != nullptr)
+							{
+								CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
+	
+								if (pEnemyNomal->GetLockOnUIMain()->bGetDrawOk() == true)
+								{//バレットロックオンが描画状態
+									bLockOn = true;
+	
+									float minYAngle = -1.1f; // 下側の角度の限界
+									float maxYAngle = 1.1f;  // 上側の角度の限界
+	
+									//方向
+									D3DXVECTOR3 enemyDirection = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y + 600.0f, EscEnemyData.Pos.z) - classData.Pos;
+	
+									// XZ平面上の角度
+									float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
+	
+									ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
+									ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
+									ChangeData.rot.z = 0.0f;
+	
+									//		 Y軸の角度
+									float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
+	
+									// Y軸角度をクランプ
+									if (angleY < minYAngle)
+									{
+										angleY = minYAngle;
+									}
+									else if (angleY > maxYAngle)
+									{
+										angleY = maxYAngle;
+									}
+	
+									ChangeData.rot.x = angleY; // Y方向を向ける
+	
+	
+									m_TargetPos = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y + 60.0f, EscEnemyData.Pos.z);
+									break;
+								}
+								else
+								{
+									CObject* pNext = pObject->GetNext();
+									pObject = pNext;
+									pEnemyNomal = (CObjectMotionEnemyNomal*)pObject;
+								}
+							}
+						}
 					}
-					else
-					{
-						classData = GetClassData();
-
-						//移動量を更新(疑似慣性で減衰)
-						classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_LOAD_XZ * 0.5f);
-						classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_Y * 0.5f);
-						classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_LOAD_XZ * 0.5f);
+	
+	
+	
+					if (bLockOn == false)
+					{//まだロックオンがない
+					// 配置物プライオリティの先頭を取得
+						CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_BOSS);
+	
+						if (pObject != nullptr)
+						{ // 先頭がない==プライオリティまるっとない
+	
+							CObjectMotionEnemyBoss* pEnemyBoss;
+							pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+	
+							while (pObject != nullptr)
+							{
+								CObject::DATA EscEnemyData = pEnemyBoss->GetClassData();
+	
+								if (pEnemyBoss->GetLockOnUIMain()->bGetDrawOk() == true)
+								{//バレットロックオンが描画状態
+									bLockOn = true;
+	
+									float minYAngle = -1.1f; // 下側の角度の限界
+									float maxYAngle = 1.1f;  // 上側の角度の限界
+	
+									//方向
+									D3DXVECTOR3 enemyDirection = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y + 600.0f, EscEnemyData.Pos.z) - classData.Pos;
+	
+									// XZ平面上の角度
+									float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
+	
+									ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
+									ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
+									ChangeData.rot.z = 0.0f;
+	
+									//		 Y軸の角度
+									float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
+	
+									// Y軸角度をクランプ
+									if (angleY < minYAngle)
+									{
+										angleY = minYAngle;
+									}
+									else if (angleY > maxYAngle)
+									{
+										angleY = maxYAngle;
+									}
+	
+									ChangeData.rot.x = angleY; // Y方向を向ける
+	
+	
+									m_TargetPos = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y + 60.0f, EscEnemyData.Pos.z);
+									break;
+								}
+								else
+								{
+									CObject* pNext = pObject->GetNext();
+									pObject = pNext;
+									pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+								}
+							}
+						}
 					}
-
-
-					SetClassData(classData);
-
-					CObjectMotion::Update();//------------------更新
+	
+	
+	
+	
+	
+					if (bLockOn == false)
+					{//まだロックオンがない
+					// 配置物プライオリティの先頭を取得
+						CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+	
+						if (pObject != nullptr)
+						{ // 先頭がない==プライオリティまるっとない
+	
+							CObjectMotionEnemyGuard* pEnemyGuard;
+							pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+	
+							while (pObject != nullptr)
+							{
+								CObject::DATA EscEnemyData = pEnemyGuard->GetClassData();
+	
+								if (pEnemyGuard->GetLockOnUIMain()->bGetDrawOk() == true)
+								{//バレットロックオンが描画状態
+									bLockOn = true;
+	
+									float minYAngle = -1.1f; // 下側の角度の限界
+									float maxYAngle = 1.1f;  // 上側の角度の限界
+	
+									//方向
+									D3DXVECTOR3 enemyDirection = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y + 600.0f, EscEnemyData.Pos.z) - classData.Pos;
+	
+									// XZ平面上の角度
+									float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
+	
+									ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
+									ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
+									ChangeData.rot.z = 0.0f;
+	
+									//		 Y軸の角度
+									float angleY = (atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z)) - (D3DX_PI * 0.124f));
+	
+									// Y軸角度をクランプ
+									if (angleY < minYAngle)
+									{
+										angleY = minYAngle;
+									}
+									else if (angleY > maxYAngle)
+									{
+										angleY = maxYAngle;
+									}
+	
+									ChangeData.rot.x = angleY; // Y方向を向ける
+	
+	
+									m_TargetPos = D3DXVECTOR3(EscEnemyData.Pos.x, EscEnemyData.Pos.y + 60.0f, EscEnemyData.Pos.z);
+									break;
+								}
+								else
+								{
+									CObject* pNext = pObject->GetNext();
+									pObject = pNext;
+									pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+								}
+							}
+						}
+					}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+					if (bLockOn == false)
+					{//まだロックオンがない
+					 //対象がいない
+						ChangeData.rot.y = classData.rot.y;
+					}
+	
+	
+					//基底クラスからパーツにデータを受け渡し(だれも対象じゃないときは初期値が入る)
+					SetChangeDataInObjectMotion(ChangeData);
 				}
-			}
-			else
-			{//地上
-				if (GetBoostNow() == true)
+	
+	
+				//底抜け対策
+				if (classData.Pos.y <= 0)
 				{
-					classData = GetClassData();
-
-					//移動量を更新(疑似慣性で減衰)
-					classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_BOOST_XZ);
-					classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_BOOST_Y);
-					classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_BOOST_XZ);
-
-					SetClassData(classData);
-
-					CObjectMotion::Update();//------------------更新
+					classData.Pos.y = 0;
 				}
-				else
+	
+	
+				SetClassData(classData);
+	
+	
+				if (m_guard == true)
 				{
-					if (m_BoostRestCnt > 0)
+					SetNowMotion_Sub(MOTIONTYPE_GUARD);
+				}
+	
+	
+				//慣性
+				//----------------------------------------------------------------------------
+				if (!GetIsOnGroundBool() && !GetIsLandingTriggerBool())
+				{//着地状態じゃないかつ着地瞬間じゃない
+					if (GetBoostNow() == true)
 					{
-						m_BoostRestCnt--;
-
 						classData = GetClassData();
-
+	
 						//移動量を更新(疑似慣性で減衰)
 						classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_BOOST_XZ);
 						classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_BOOST_Y);
 						classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_BOOST_XZ);
+	
+						SetClassData(classData);
+	
+						CObjectMotion::Update();//------------------更新
 					}
 					else
 					{
-						classData = GetClassData();
-
-						//移動量を更新(疑似慣性で減衰)
-						classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_LOAD_XZ);
-						classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_Y);
-						classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_LOAD_XZ);
+						if (m_BoostRestCnt > 0)
+						{
+							m_BoostRestCnt--;
+	
+							classData = GetClassData();
+	
+							//移動量を更新(疑似慣性で減衰)
+							classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_BOOST_XZ * 0.5f);
+							classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_BOOST_Y * 0.5f);
+							classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_BOOST_XZ * 0.5f);
+						}
+						else
+						{
+							classData = GetClassData();
+	
+							//移動量を更新(疑似慣性で減衰)
+							classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_LOAD_XZ * 0.5f);
+							classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_Y * 0.5f);
+							classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_LOAD_XZ * 0.5f);
+						}
+	
+	
+						SetClassData(classData);
+	
+						CObjectMotion::Update();//------------------更新
 					}
-
-
-					SetClassData(classData);
-
-					CObjectMotion::Update();//------------------更新
+				}
+				else
+				{//地上
+					if (GetBoostNow() == true)
+					{
+						classData = GetClassData();
+	
+						//移動量を更新(疑似慣性で減衰)
+						classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_BOOST_XZ);
+						classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_BOOST_Y);
+						classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_BOOST_XZ);
+	
+						SetClassData(classData);
+	
+						CObjectMotion::Update();//------------------更新
+					}
+					else
+					{
+						if (m_BoostRestCnt > 0)
+						{
+							m_BoostRestCnt--;
+	
+							classData = GetClassData();
+	
+							//移動量を更新(疑似慣性で減衰)
+							classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_BOOST_XZ);
+							classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_BOOST_Y);
+							classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_BOOST_XZ);
+						}
+						else
+						{
+							classData = GetClassData();
+	
+							//移動量を更新(疑似慣性で減衰)
+							classData.move.x += (0.0f - classData.move.x) * (DAMPING_RATIO_LOAD_XZ);
+							classData.move.y += (0.0f - classData.move.y) * (DAMPING_RATIO_Y);
+							classData.move.z += (0.0f - classData.move.z) * (DAMPING_RATIO_LOAD_XZ);
+						}
+	
+	
+						SetClassData(classData);
+	
+						CObjectMotion::Update();//------------------更新
+					}
+				}
+	
+				if (!GetIsOnGroundBool() && !GetIsLandingTriggerBool())
+				{//着地状態じゃないかつ着地瞬間じゃない
+	
+	
+					if (m_nBoostLife < BOOST_LIFE)
+					{
+						m_nBoostRecoveryCnt++;
+						if (m_nBoostRecoveryCnt >= RECOVERY_Boost)
+						{
+							m_nBoostLife+=3;
+							m_nBoostRecoveryCnt = 0;
+						}
+					}
+				}
+				else
+				{//着地
+					if (m_nBoostLife < BOOST_LIFE)
+					{
+						m_nBoostRecoveryCnt++;
+						if (m_nBoostRecoveryCnt >= (RECOVERY_Boost-1))
+						{
+							m_nBoostLife+=3;
+							m_nBoostRecoveryCnt = 0;
+						}
+					}
+	
+				}
+	
+				
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+				//--------------------------------------------------------------------------------
+	
+				classData = GetClassData();
+	
+			}
+			else
+			{//Restartまで
+				m_ResetCnt++;
+	
+				if (m_ResetCnt >= RESET_CNT)
+				{
+					DATA SETDATA = GetClassData();
+	
+					SETDATA.Pos = m_RESTART_POS;//座標更新
+					SetClassData(SETDATA);
+	
+					m_ResetCnt = 0;
+					m_bDown = false;
+					for (int i = 0; i < GetMaxLoadPartsNum(); i++)
+					{//パーツもDEATH
+						GetModelParts(i)->DrawOkBool(true);
+	
+					}
 				}
 			}
-
-
-			//--------------------------------------------------------------------------------
-
-			classData = GetClassData();
-
-
-
-
+	
 		}
-		else
-		{//Restartまで
-			m_ResetCnt++;
-
-			if (m_ResetCnt >= RESET_CNT)
+		else if (NowState == CScene::MODE_TITLE)
+		{//タイトル
+			DATA classData = GetClassData();
+	
+			m_EscCntFootPrint++;
+			if (m_EscCntFootPrint >= 5)
 			{
-				DATA SETDATA = GetClassData();
-
-				SETDATA.Pos = m_RESTART_POS;//座標更新
-				SetClassData(SETDATA);
-
-				m_ResetCnt = 0;
-				m_bDown = false;
-				for (int i = 0; i < GetMaxLoadPartsNum(); i++)
-				{//パーツもDEATH
-					GetModelParts(i)->DrawOkBool(true);
-
-				}
+				m_EscCntFootPrint = 0;
+				//	CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z), classData.rot);
+				//	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z));
 			}
+	
+	
+			classData.rot.y = 1.57f;
+	
+			SetClassData(classData);
+	
+			DATA Head;
+			Head = CObject::DataInit();
+			Head.rot.y = 1.57f;
+	
+			//基底クラスからパーツにデータを受け渡し
+			SetChangeDataInObjectMotion(Head);
+	
+			CObjectMotion::Update();//------------------更新
+	
+	
+			SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT);//移動motion
+			SetNowMotion_Sub(MOTIONTYPE_MOVE_FRONT);//移動motion
+	
+	
 		}
-	}
-	else if (NowState == CScene::MODE_TITLE)
-	{//タイトル
-		DATA classData = GetClassData();
-
-		m_EscCntFootPrint++;
-		if (m_EscCntFootPrint >= 5)
-		{
-			m_EscCntFootPrint = 0;
-			//	CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z), classData.rot);
-			//	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z));
-		}
-
-
-		classData.rot.y = 1.57f;
-
-		SetClassData(classData);
-
-		DATA Head;
-		Head = CObject::DataInit();
-		Head.rot.y = 1.57f;
-
-		//基底クラスからパーツにデータを受け渡し
-		SetChangeDataInObjectMotion(Head);
-
-		CObjectMotion::Update();//------------------更新
-
-
-		SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT);//移動motion
-		SetNowMotion_Sub(MOTIONTYPE_MOVE_FRONT);//移動motion
-
-
-	}
-	else if (NowState == CScene::MODE_RESULT)
-	{//
-		DATA classData = GetClassData();
-
-		m_EscCntFootPrint++;
-		if (m_EscCntFootPrint >= 5)
-		{
-			m_EscCntFootPrint = 0;
-			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z), classData.rot);
-			//CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z));
-		}
-
-
-		classData.rot.y = -1.57f;
-
-		SetClassData(classData);
-
-		DATA Head;
-		Head = CObject::DataInit();
-		Head.rot.y = -1.57f;
-
-		//基底クラスからパーツにデータを受け渡し
-		SetChangeDataInObjectMotion(Head);
-
-		CObjectMotion::Update();//------------------更新
-
-
-		SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT);//移動motion
-		SetNowMotion_Sub(MOTIONTYPE_MOVE_FRONT);//移動motion
-
-
-	}
-	else if (NowState == CScene::MODE_OP)
-	{//
-
-		DATA classData = GetClassData();
-
-		//ここではこれをmove進行フレームカウントとして利用
-		m_EscCntFootPrint++;
-
-		if (m_EscCntFootPrint >= 580 && m_EscCntFootPrint < 3000)
-		{
-			int nSet = (m_EscCntFootPrint - 579);
-			if (nSet < 15)
+		else if (NowState == CScene::MODE_RESULT)
+		{//
+			DATA classData = GetClassData();
+	
+			m_EscCntFootPrint++;
+			if (m_EscCntFootPrint >= 5)
 			{
-				classData.Pos.y += -1.0f* nSet;
-				classData.rot.x += -0.005f * nSet;
+				m_EscCntFootPrint = 0;
+				//CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z), classData.rot);
+				//CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z));
+			}
+	
+	
+			classData.rot.y = -1.57f;
+	
+			SetClassData(classData);
+	
+			DATA Head;
+			Head = CObject::DataInit();
+			Head.rot.y = -1.57f;
+	
+			//基底クラスからパーツにデータを受け渡し
+			SetChangeDataInObjectMotion(Head);
+	
+			CObjectMotion::Update();//------------------更新
+	
+	
+			SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT);//移動motion
+			SetNowMotion_Sub(MOTIONTYPE_MOVE_FRONT);//移動motion
+	
+	
+		}
+		else if (NowState == CScene::MODE_OP)
+		{//
+	
+			DATA classData = GetClassData();
+	
+			//ここではこれをmove進行フレームカウントとして利用
+			m_EscCntFootPrint++;
+	
+			if (m_EscCntFootPrint >= 580 && m_EscCntFootPrint < 3000)
+			{
+				int nSet = (m_EscCntFootPrint - 579);
+				if (nSet < 15)
+				{
+					classData.Pos.y += -1.0f* nSet;
+					classData.rot.x += -0.005f * nSet;
+				}
+				else
+				{
+					classData.Pos.y += -30.0f;
+	
+				
+				}
+	
+	
 			}
 			else
 			{
-				classData.Pos.y += -30.0f;
-
-			
+				classData.rot.x = -1.57f;
+	
 			}
+	
+	
+			SetClassData(classData);
+	
+			DATA Head;
+			Head = CObject::DataInit();
+			//Head.rot.x = 1.57f;
+	
+			//基底クラスからパーツにデータを受け渡し
+			SetChangeDataInObjectMotion(Head);
+	
+			CObjectMotion::Update();//------------------更新
+	
+	
+			SetNowMotion_Parent(MOTIONTYPE_OP0);//移動motion
+			SetNowMotion_Sub(MOTIONTYPE_OP0);//移動motion
+	
+	
+		}
+		else if (NowState == CScene::MODE_MOVIE)
+		{//
+	
+			DATA classData = GetClassData();
+	
+			classData.rot.y = -1.57f;
 
+			DATA ChangeData = DataInit();
+			ChangeData.rot.y = classData.rot.y;
 
+			//基底クラスからパーツにデータを受け渡し(だれも対象じゃないときは初期値が入る)
+			SetChangeDataInObjectMotion(ChangeData);
+			
+			SetClassData(classData);
+	
+			CObjectMotion::Update();//------------------更新
+	
+	
+			SetNowMotion_Parent(MOTIONTYPE_STANDBY);
+			SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+		}
+	
+	
+	
+		if (m_DamageFrameCnt > 0)
+		{
+			m_DamageFrameCnt--;
+			for (int i = 0; i < GetMaxLoadPartsNum(); i++)
+			{//
+	
+				GetModelParts(i)->ChengeRGBAbool(true, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+			}
+	
 		}
 		else
 		{
-			classData.rot.x = -1.57f;
-
+			for (int i = 0; i < GetMaxLoadPartsNum(); i++)
+			{//
+				GetModelParts(i)->ChengeRGBAbool(false, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
+			}
 		}
-
-
-		SetClassData(classData);
-
-		DATA Head;
-		Head = CObject::DataInit();
-		//Head.rot.x = 1.57f;
-
-		//基底クラスからパーツにデータを受け渡し
-		SetChangeDataInObjectMotion(Head);
-
-		CObjectMotion::Update();//------------------更新
-
-
-		SetNowMotion_Parent(MOTIONTYPE_OP0);//移動motion
-		SetNowMotion_Sub(MOTIONTYPE_OP0);//移動motion
-
-
 	}
-
+	else
+	{//待機状態
+		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
+		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+		//CObjectMotion::Update();
+		Motion_Parent();
+		Motion_Sub();
+	}
 }
 
 //=============================
@@ -993,13 +1271,15 @@ void CObjectMotionPlayer::Update()
 //=============================
 void CObjectMotionPlayer::Draw()
 {
+
+
 		CObjectMotion::Draw();
 }
 
 //=============================
 // 生成
 //=============================
-CObjectMotionPlayer* CObjectMotionPlayer::Create(const char* pfilePass, DATA SetData)
+CObjectMotionPlayer* CObjectMotionPlayer::Create(std::string pfilePass, DATA SetData)
 {
 	CObjectMotionPlayer* pObstacle = new CObjectMotionPlayer;
 
@@ -1011,7 +1291,7 @@ CObjectMotionPlayer* CObjectMotionPlayer::Create(const char* pfilePass, DATA Set
 	DATA EscData = pObstacle->GetClassData();
 	SetData.Radius = 110.0f;
 	SetData.MaxLength = D3DXVECTOR3((float)AABB_BOX_PLAYER, (float)AABB_BOX_PLAYER*3.0f, (float)AABB_BOX_PLAYER);
-	SetData.MinLength = D3DXVECTOR3(-(float)AABB_BOX_PLAYER, +35.0f, -(float)AABB_BOX_PLAYER);
+	SetData.MinLength = D3DXVECTOR3(-(float)AABB_BOX_PLAYER, +53.0f, -(float)AABB_BOX_PLAYER);
 	pObstacle->SetClassData(SetData);
 
 
@@ -1181,7 +1461,7 @@ void CObjectMotionPlayer::ControllerInput2D()
 
 					m_ShotDelay = 4;
 
-					//CObjectShotFire::Create(SetData.Pos);
+					CObjectShotFire::Create(SetData.Pos);
 					bShot = true;
 				}
 			}
@@ -1193,11 +1473,15 @@ void CObjectMotionPlayer::ControllerInput2D()
 	
 	if (GetBoostNow() == false)
 	{
-		if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_X))
-		{//Boost
-			m_nBoostCnt = BOOST_FARAME;
-			m_BoostRestCnt = BOOST_RESTFARAME;
-			SetBoostNow(true);
+		if (m_nBoostLife >= BOOSTMOVE_USE)
+		{
+			if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_X))
+			{//Boost
+				m_nBoostCnt = BOOST_FARAME;
+				m_BoostRestCnt = BOOST_RESTFARAME;
+				SetBoostNow(true);
+				m_nBoostLife -= BOOSTMOVE_USE;
+			}
 		}
 	}
 	else
@@ -1381,17 +1665,17 @@ void CObjectMotionPlayer::ControllerInput2D()
 	//	Xdate = 1;
 		MoveNowCom2 = true;
 	}
-	else if (joykeystate.Gamepad.sThumbRX >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbRX >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 2000))
 	{//Dがおされた(右)
 	//	Xdate = -1;
 		MoveNowCom2 = true;
 	}
-	else if (joykeystate.Gamepad.sThumbRY >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbRY >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 2000))
 	{//Wがおされた(上)
 		//Zdate = -1.0f;
 		MoveNowCom2 = true;
 	}
-	else if (joykeystate.Gamepad.sThumbRY <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbRY <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 2000))
 	{//Sがおされた(下)
 		//Zdate = 1.0f;
 		MoveNowCom2 = true;
@@ -1470,10 +1754,14 @@ void CObjectMotionPlayer::ControllerInput2D()
 	}
 	//-------------------------------------------------------------------------------------------------------------------------
 
-	//飛翔
-	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A))
+	if (m_nBoostLife >= 1)
 	{
-		classData.move.y += 15.0f;
+		//飛翔
+		if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A))
+		{
+			classData.move.y += 15.0f;
+			m_nBoostLife-= BOOSTJUMP_USE;
+		}
 	}
 
 	SetClassData(classData);
@@ -1607,7 +1895,7 @@ void CObjectMotionPlayer::ControllerInput3D()
 							if (pObj != nullptr)
 							{
 								CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
-								pMissile->SetMissile(SetData, 0, D3DXCOLOR(0.1f, 0.1f, 1.0f, 1.0f), pEnemyFast, CMissileALL::SHOTTYPE_PLAYER);
+								pMissile->SetMissile(SetData, 0, D3DXCOLOR(1.0f, 0.1f, 1.0f, 1.0f), pEnemyFast, CMissileALL::SHOTTYPE_PLAYER);
 
 								m_nMissileStock--;
 								//CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
@@ -1621,9 +1909,7 @@ void CObjectMotionPlayer::ControllerInput3D()
 					}
 					else
 					{
-						CObject* pNext = pObject->GetNext();
-						pObject = pNext;
-						pEnemyFast = (CObjectMotionEnemyfast*)pObject;
+						break;
 					}
 				}
 			}
@@ -1650,7 +1936,7 @@ void CObjectMotionPlayer::ControllerInput3D()
 							if (pObj != nullptr)
 							{
 								CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
-								pMissile->SetMissile(SetData, 0, D3DXCOLOR(0.1f, 0.1f, 1.0f, 1.0f), pEnemyNomal, CMissileALL::SHOTTYPE_PLAYER);
+								pMissile->SetMissile(SetData, 0, D3DXCOLOR(1.0f, 0.1f, 1.0f, 1.0f), pEnemyNomal, CMissileALL::SHOTTYPE_PLAYER);
 								m_nMissileStock--;
 								/*CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
 								pBulletMNG->SetBullet(SetData, 0, D3DXCOLOR(0.1f, 0.1f, 1.0f, 1.0f), pEnemyNomal, CNewBulletALL::SHOTTYPE_PLAYER);*/
@@ -1671,8 +1957,121 @@ void CObjectMotionPlayer::ControllerInput3D()
 
 						}
 					}
+					else
+					{
+						break;
+					}
 				}
 			}
+
+
+
+
+			// 配置物プライオリティの先頭を取得
+			pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_BOSS);
+
+			if (pObject != nullptr)
+			{ // 先頭がない==プライオリティまるっとない
+
+				CObjectMotionEnemyBoss* pEnemyBoss;
+				pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+
+				while (pObject != nullptr)
+				{
+					if (m_nMissileStock > 0)
+					{
+						CObject::DATA EscEnemyData = pEnemyBoss->GetClassData();
+
+						if (pEnemyBoss->GetLockOnUI()->bGetDrawOk() == true)
+						{//バレットロックオンが描画状態
+							bLockOn = true;
+
+							if (pObj != nullptr)
+							{
+								CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
+								pMissile->SetMissile(SetData, 0, D3DXCOLOR(1.0f, 0.1f, 1.0f, 1.0f), pEnemyBoss, CMissileALL::SHOTTYPE_PLAYER);
+								m_nMissileStock--;
+								/*CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
+								pBulletMNG->SetBullet(SetData, 0, D3DXCOLOR(0.1f, 0.1f, 1.0f, 1.0f), pEnemyNomal, CNewBulletALL::SHOTTYPE_PLAYER);*/
+
+							}
+
+							//break;
+							CObject* pNext = pObject->GetNext();
+							pObject = pNext;
+							pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+						}
+						else
+						{
+							CObject* pNext = pObject->GetNext();
+							pObject = pNext;
+							pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+
+
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+
+
+
+
+			// 配置物プライオリティの先頭を取得
+			pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+			if (pObject != nullptr)
+			{ // 先頭がない==プライオリティまるっとない
+
+				CObjectMotionEnemyGuard* pEnemyGuard;
+				pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+
+				while (pObject != nullptr)
+				{
+					if (m_nMissileStock > 0)
+					{
+						CObject::DATA EscEnemyData = pEnemyGuard->GetClassData();
+
+						if (pEnemyGuard->GetLockOnUI()->bGetDrawOk() == true)
+						{//バレットロックオンが描画状態
+							bLockOn = true;
+
+							if (pObj != nullptr)
+							{
+								CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
+								pMissile->SetMissile(SetData, 0, D3DXCOLOR(1.0f, 0.1f, 0.0f, 0.8f), pEnemyGuard, CMissileALL::SHOTTYPE_PLAYER);
+								m_nMissileStock--;
+								/*CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
+								pBulletMNG->SetBullet(SetData, 0, D3DXCOLOR(0.1f, 0.1f, 1.0f, 1.0f), pEnemyNomal, CNewBulletALL::SHOTTYPE_PLAYER);*/
+
+							}
+
+							//break;
+							CObject* pNext = pObject->GetNext();
+							pObject = pNext;
+							pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+						}
+						else
+						{
+							CObject* pNext = pObject->GetNext();
+							pObject = pNext;
+							pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+
+
+						}
+					}
+					else 
+					{
+						break;
+					}
+				}
+			}
+
+
+
 		}
 		//------------------------------------------------------------------------------------------------------------------------
 
@@ -1781,7 +2180,7 @@ void CObjectMotionPlayer::ControllerInput3D()
 
 					m_ShotDelay = 4;
 
-					//CObjectShotFire::Create(SetData.Pos);
+					CObjectShotFire::Create(SetData.Pos);
 					bShot = true;
 				}
 			}
@@ -1793,11 +2192,15 @@ void CObjectMotionPlayer::ControllerInput3D()
 
 	if (GetBoostNow() == false)
 	{
-		if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_X))
-		{//Boost
-			m_nBoostCnt = BOOST_FARAME;
-			m_BoostRestCnt = BOOST_RESTFARAME;
-			SetBoostNow(true);
+		if (m_nBoostLife >= BOOSTMOVE_USE)
+		{
+			if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_X))
+			{//Boost
+				m_nBoostCnt = BOOST_FARAME;
+				m_BoostRestCnt = BOOST_RESTFARAME;
+				SetBoostNow(true);
+				m_nBoostLife -= BOOSTMOVE_USE;
+			}
 		}
 	}
 	else
@@ -1920,7 +2323,7 @@ void CObjectMotionPlayer::ControllerInput3D()
 		// スティックの方向を角度で計算
 		float angle = std::atan2(static_cast<float>(sThumbLY), static_cast<float>(sThumbLX)) - D3DX_PI * 0.5f;
 
-		// 角度を正規化 (-π ~ π)
+		// 角度を正規化 
 		if (angle < -D3DX_PI) angle += 2 * D3DX_PI;
 		if (angle > D3DX_PI) angle -= 2 * D3DX_PI;
 
@@ -2114,10 +2517,15 @@ void CObjectMotionPlayer::ControllerInput3D()
 	//}
 	//-------------------------------------------------------------------------------------------------------------------------
 
+
 	//飛翔
-	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A))
+	if (m_nBoostLife >= 1)
 	{
-		classData.move.y += 15.0f;
+		if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A))
+		{
+			classData.move.y += 10.0f;
+			m_nBoostLife-= BOOSTJUMP_USE;
+		}
 	}
 
 	SetClassData(classData);
@@ -2241,140 +2649,6 @@ void CObjectMotionPlayer::SetLinearInterpolation()
 //=============================
 void CObjectMotionPlayer::LockOnEnemy()
 {
-	//CRenderer* pRenderer = nullptr;
-
-	//CManager* pManager = CManager::GetInstance();
-
-
-
-	//CCamera* pCamera = pManager->GetCamera();
-	//pCamera->SetAllEnemyScreenPos();
-
-
-
-
-	//// 配置物プライオリティの先頭を取得
-	//CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_FAST);
-
-	//if (pObject != nullptr)
-	//{ // 先頭がない==プライオリティまるっとない
-
-	//	CObjectMotionEnemyfast* pEnemyFast;
-	//	pEnemyFast = (CObjectMotionEnemyfast*)pObject;
-
-	//	while (pObject != nullptr)
-	//	{
-	//		CObject::DATA EscEnemyData = pEnemyFast->GetClassData();
-
-
-
-	//		// スクリーン座標が画面内にあるかどうかの判定
-	//		if (IsInScreen(pEnemyFast->GetScreenPos()))
-	//		{//Screen中にいる
-
-	//			// カメラが対象の方を向いているかどうかの判定
-	//			if (IsFacingCamera(pEnemy[nCntEnemy].pos))
-	//			{
-	//				pEnemy[nCntEnemy].bBulletLockOn = true; // ロック状態
-
-	//				Diff = ShortestDistanceCalculation(nCntEnemy); // 差分計算--
-
-	//				//----------------------------------------------------------------対象との距離
-	//				// カメラと敵の距離の閾値を定義
-	//				//float maxLockOnDistance = LOCKSIZE; // 適切な値に変更してください
-
-	//				// カメラと敵の距離を計算
-	//				D3DXVECTOR3 cameraToEnemy = pEnemy[nCntEnemy].pos - pCamera->posV;
-
-	//				float distance = D3DXVec3Length(&cameraToEnemy);//対象との距離
-
-	//				if (distance < LOCKMISSILEDISTANCE)
-	//				{//ミサイル範囲
-
-	//					// 遠い場合の処理
-	//					if (distance < LOCKBULLETDISTANCE)
-	//					{//バレット範囲内
-
-	//						if (ShortestDiff > Diff)
-	//						{ // 差分の距離が短い時
-	//							ShortestDiff = Diff;
-	//							g_LockOnUI.EscapeIndex = nCntEnemy;
-	//							g_LockOnUI.DiffTrue = true;
-
-
-	//						}
-	//						else
-	//						{ // 最短でない
-	//							pEnemy[nCntEnemy].PriorityAttackTarget = false;
-	//						}
-	//					}
-	//					else
-	//					{//範囲外
-	//						// ロックオンできない場合の処理
-	//						pEnemy[nCntEnemy].PriorityAttackTarget = false;
-
-	//						//StopDrawBulletUI(pEnemy[nCntEnemy].BulletUiNum);
-	//					}
-	//				}
-	//				else
-	//				{
-	//					pEnemy[nCntEnemy].bBulletLockOn = false;
-	//					StopDrawBulletUI(pEnemy[nCntEnemy].BulletUiNum);
-	//				}
-	//			}
-	//		}
-	//		else
-	//		{ // 画面外
-	//			pEnemy[nCntEnemy].bBulletLockOn = false;
-	//			StopDrawBulletUI(pEnemy[nCntEnemy].BulletUiNum);
-	//		}
-
-
-
-
-
-
-
-
-
-
-	//		
-	//			CObject* pNext = pObject->GetNext();
-	//			pObject = pNext;
-	//		
-	//	}
-	//}
-
-
-
-
-
-	//// 配置物プライオリティの先頭を取得
-	//	pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_NOMAL);
-
-	//	if (pObject != nullptr)
-	//	{ // 先頭がない==プライオリティまるっとない
-
-	//		CObjectMotionEnemyNomal* pEnemyNomal;
-	//		pEnemyNomal = (CObjectMotionEnemyNomal*)pObject;
-
-	//		while (pObject != nullptr)
-	//		{
-	//			CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
-
-	//
-	//				CObject* pNext = pObject->GetNext();
-	//				pObject = pNext;
-	//		}
-	//	}
-	//
-
-
-
-
-
-
-
 }
 //=============================
 // スクリーン座標が画面内にあるかどうかを判定

@@ -28,11 +28,12 @@ class CObjectMotionEnemyNomal : public CObjectMotionEnemyBase
 {
 public:
 	 const float MOVEROT = 0.065f;//旋回速度
-	 static const int BULLETMOVESPEED_NOMAL = 12;//砲弾速度
+	 static const int BULLETMOVESPEED_NOMAL = 25;//砲弾速度
 	 static const int BULLETSHOTDELAY = 175;
 	 const float MOVESPEED = 3.2f;
 	 static const int  reflectNum = 0;
-
+	 static const int DAMAGEFRAME = 3;
+	 static const int LOCKDIFF = 40;
 
 	CObjectMotionEnemyNomal(int nPriority = CObject::LAYERINDEX_MOTIONENEMY_NOMAL);//コンストラクタ
 
@@ -44,7 +45,7 @@ public:
 	 void Update()override;
 	 void Draw()override;
 
-	static CObjectMotionEnemyNomal* Create(const char* pfilePass, DATA SetData);//オブジェクト生成
+	static CObjectMotionEnemyNomal* Create(std::string pfilePass, DATA SetData);//オブジェクト生成
 
 //	virtual void LoadRouteTable()override;
 
@@ -70,7 +71,7 @@ public:
 	CLockOnUI* GetLockOnUI() { return m_LockOnUI; };
 	CLockOnUIMain* GetLockOnUIMain() { return m_LockOnUI_Main; };
 
-	void SetDamage(int nDamage) { m_nLife -= nDamage; };
+	void SetDamage(int nDamage) { m_nLife -= nDamage; m_bDamageRedNow = true; m_DamageFrameCnt = DAMAGEFRAME; };
 
 private:
 
@@ -108,6 +109,9 @@ private:
 //	bool m_bNormalLockOn = false;//普通ロック
 //	bool m_bBulletLockOn = false;//射撃ロック
 	D3DXVECTOR3 m_ScreenPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	bool m_bDamageRedNow = false;
+	int m_DamageFrameCnt = 0;
 };
 
 #endif

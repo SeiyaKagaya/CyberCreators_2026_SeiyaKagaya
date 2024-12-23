@@ -147,6 +147,8 @@ void CObjectBillBoard::Uninit()
         //    m_pTexture->Release();//-----テクスチャcppでやること
         m_pTexture = nullptr;
     }
+
+  //  CObjectX::Uninit;
 }
 //=============================
 // 更新(頂点情報の更新)

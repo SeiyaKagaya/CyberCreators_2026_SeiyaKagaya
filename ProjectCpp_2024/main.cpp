@@ -5,29 +5,48 @@
 //
 //=======================================================
 #include"main.h"
-
 #include "manager.h"
-// メモリーリーク検出
-#define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
-#include <crtdbg.h>
-
-#ifdef _DEBUG
-#define FIND_MEM_LEAKS
-#endif // _DEBUG
-
-#ifdef FIND_MEM_LEAKS
-#define _NEW new (NORMALBLOCK, FILE, __LINE)
-#else
-#define _NEW new
-#endif // FIND_MEM_LEAKS
 
 
+//#include "manager.h"
+//// メモリーリーク検出
+//#define _CRTDBG_MAP_ALLOC
+//#include <cstdlib>
+//#include <crtdbg.h>
+//
+//#ifdef _DEBUG
+//#define FIND_MEM_LEAKS
+//#endif // _DEBUG
+//
+//#ifdef FIND_MEM_LEAKS
+//#define _NEW new (NORMALBLOCK, FILE, __LINE)
+//#else
+//#define _NEW new
+//#endif // FIND_MEM_LEAKS
+
+////------------------------------------
+//#include "crtdbg.h"
+//#include "manager.h"
+//#define _CRTDBG_MAP_ALLOC
+//#define new  new(_NORMAL_BLOCK, __FILE__, __LINE__)
+////------------------------------------
+
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
+//#define new ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
+//
 
 int g_nCountFPS = 0;
 
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffPolygon = nullptr;
 
+
+//あやしいcppのせんとうにこいつを
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#define new ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
 
 //===================================
 //メイン関数
@@ -37,12 +56,20 @@ int WINAPI WinMain(	_In_ HINSTANCE hInstance,
 					_In_ LPSTR lpCmdLine,
 					_In_ int nCmdShow)
 {
+
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 //	// メモリリーク検出を有効化
-_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-//#define _CRTDBG_MAP_ALLOC
-//#include <crtdbg.h>
+//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 //
-//	_CrtSetBreakAlloc(1384);
+//#define _CRTDBG_MAP_ALLOC
+//#include <stdlib.h>
+//#include <crtdbg.h>
+//	_CrtSetBreakAlloc(5190);
+
+
+
+
 
 
 	WNDCLASSEX wcex =
@@ -200,6 +227,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (result == true)
 			{
 				DestroyWindow(hWnd);
+
+				//_CrtDumpMemoryLeaks();
+				_CrtMemDumpAllObjectsSince(NULL);
 			}
 			break;
 		}

@@ -118,9 +118,6 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/">
       <UniqueIdentifier>{6144d29b-ebb9-4553-9567-2da0b31b4068}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION">
-      <UniqueIdentifier>{21c19b49-526e-463c-9ff8-b6ab33339731}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE">
       <UniqueIdentifier>{cbb59b0e-8aa4-4387-9119-2243cf9c3704}</UniqueIdentifier>
     </Filter>
@@ -192,6 +189,15 @@
     </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTION_B2">
       <UniqueIdentifier>{3cdce39f-949d-4257-aec3-ef6aa9e8d01b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS">
+      <UniqueIdentifier>{b6804e27-0a7d-4c40-9483-0411750159a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS_GUARD">
+      <UniqueIdentifier>{f75859d2-3d9b-4a8b-a310-87b8d3100087}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBSTACLE_SET/\PLAYER_MOTION">
+      <UniqueIdentifier>{21c19b49-526e-463c-9ff8-b6ab33339731}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -268,7 +274,7 @@
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/</Filter>
     </ClCompile>
     <ClCompile Include="player_motion.cpp">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION</Filter>
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBSTACLE_SET/\PLAYER_MOTION</Filter>
     </ClCompile>
     <ClCompile Include="ModelParts.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MODEL_PARTS</Filter>
@@ -359,6 +365,12 @@
     </ClCompile>
     <ClCompile Include="object_B2.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTION_B2</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_motion_boss.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_motion_guard.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS_GUARD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -498,7 +510,7 @@
       <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\LineUI</Filter>
     </ClInclude>
     <ClInclude Include="player_motion.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION</Filter>
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBSTACLE_SET/\PLAYER_MOTION</Filter>
     </ClInclude>
     <ClInclude Include="sky.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\SKY</Filter>
@@ -526,6 +538,12 @@
     </ClInclude>
     <ClInclude Include="object_B2.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTION_B2</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_motion_boss.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_motion_guard.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS_GUARD</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

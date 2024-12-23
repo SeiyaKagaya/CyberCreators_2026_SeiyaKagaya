@@ -11,6 +11,9 @@
 #include "object.h"
 #include "d3dx9.h"//ï`é èàóùÇ…égÇ§
 #include "main.h"
+
+#include "object.h"
+
 //
 class CGameUI : public CObject
 {
@@ -37,6 +40,7 @@ public:
 		UI_WEPON3,
 		UI_LOAD_GAUGE_BACK_WEPON3,
 		UI_LOAD_GAUGE_WEPON3,
+		UI_LOAD_GAUGE_WEPON3_2,
 
 		UI_ACTION,
 		UI_PLAYERPIN,
@@ -46,6 +50,9 @@ public:
 
 		UI_HP_BACK,
 		UI_HP_MAIN,
+
+		UI_BOOST_BACK,
+		UI_BOOST_MAIN,
 
 		UI_MAX,
 	}UITYPE;

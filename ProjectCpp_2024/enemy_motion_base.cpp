@@ -99,7 +99,7 @@ void CObjectMotionEnemyBase::Update()
 	if (m_nLife <= 0)
 	{
 		SetDeath(true);
-		Explosion3D::Create(GetClassData().Pos);
+		//Explosion3D::Create(GetClassData().Pos);
 		for (int i = 0; i < GetMaxLoadPartsNum(); i++)
 		{//パーツもDEATH
 			GetModelParts(i)->SetDeath(true);
@@ -119,7 +119,7 @@ void CObjectMotionEnemyBase::Draw()
 //=============================
 // 生成
 //=============================
-CObjectMotionEnemyBase* CObjectMotionEnemyBase::Create(const char* pfilePass, DATA SetData)
+CObjectMotionEnemyBase* CObjectMotionEnemyBase::Create(std::string pfilePass, DATA SetData)
 {
 	CObjectMotionEnemyBase* pObstacle = new CObjectMotionEnemyBase;
 

@@ -13,6 +13,13 @@
 #include "player_motion.h"
 
 
+
+//あやしいcppのせんとうにこいつを
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#define new ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
+
 //=============================
 // コンストラクタ
 //=============================
@@ -26,11 +33,11 @@ CGameUI::CGameUI(int nPriority) :CObject(nPriority)
         m_pVtxBuff[nCnt] = nullptr;
         m_pTexture[nCnt] = nullptr;
 
-        m_pVtxBuff[nCnt] = nullptr;//頂点バッファ
+        //m_pVtxBuff[nCnt] = nullptr;//頂点バッファ
 
         m_nTexIdx[nCnt] = 0;
 
-        m_pTexture[nCnt] = nullptr;
+        //m_pTexture[nCnt] = nullptr;
 
        
         //タイプ格納
@@ -136,9 +143,6 @@ HRESULT CGameUI::Init()
                 //時間
                 m_UiType[UI_NOMAL] = UI_NOMAL;
 
-                //テクスチャの読み込み
-                //   D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\Tutorial2.png", &m_pTexture[nCnt]);//通常時
-
                 m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 270.0f, SCREEN_HEIGHT * 0.5f - 340.0f, 0.0f);
 
                 pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 115.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
@@ -152,9 +156,6 @@ HRESULT CGameUI::Init()
 
                 //score
                 m_UiType[UI_NOMAL2] = UI_NOMAL2;
-
-                //テクスチャの読み込み
-             //   D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\Tutorial2.png", &m_pTexture[nCnt]);//通常時
 
                 m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 525.0f, SCREEN_HEIGHT * 0.5f - 340.0f, 0.0f);
 
@@ -185,9 +186,6 @@ HRESULT CGameUI::Init()
                 //マップ背景
                 m_UiType[UI_MAP_BACK] = UI_MAP_BACK;
 
-                //テクスチャの読み込み
-            //    D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\yuka.jpg", &m_pTexture[nCnt]);//通常時
-
                 m_Pos[nCnt] = D3DXVECTOR3(110.0f, 110.0f, 0.0f);
 
                 pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 105.0f, m_Pos[nCnt].y - 105.0f, 0.0f);
@@ -201,26 +199,29 @@ HRESULT CGameUI::Init()
 
                 m_UiType[UI_WEPON1_BACK] = UI_WEPON1_BACK;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f - 50.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f - 55.0f, 0.0f);
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 60.0f, m_Pos[nCnt].y - 40.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y - 40.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 60.0f, m_Pos[nCnt].y + 40.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y + 40.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 70.0f, m_Pos[nCnt].y - 50.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 70.0f, m_Pos[nCnt].y - 50.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 70.0f, m_Pos[nCnt].y + 50.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 70.0f, m_Pos[nCnt].y + 50.0f, 0.0f);
 
                 break;
 
             case UI_WEPON1:
                 //武器UI本体
 
+                  //テクスチャの読み込み
+                D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\SHIELD.png", &m_pTexture[nCnt]);//通常時
+
                 m_UiType[UI_WEPON1] = UI_WEPON1;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f - 50.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 540.0f, SCREEN_HEIGHT * 0.5f - 55.0f, 0.0f);
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 55.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 55.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 55.0f, m_Pos[nCnt].y + 35.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 55.0f, m_Pos[nCnt].y + 35.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 45.0f, m_Pos[nCnt].y - 45.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 45.0f, m_Pos[nCnt].y - 45.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 45.0f, m_Pos[nCnt].y + 45.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 45.0f, m_Pos[nCnt].y + 45.0f, 0.0f);
 
                 break;
 
@@ -230,20 +231,20 @@ HRESULT CGameUI::Init()
 
                 m_UiType[UI_LOAD_GAUGE_BACK_WEPON] = UI_LOAD_GAUGE_BACK_WEPON;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f - 50.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f - 55.0f, 0.0f);
 
                 pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 50.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 50.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
                 pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 50.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 50.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
 
                 break;
             case UI_LOAD_GAUGE_WEPON:
                 //武器UI
-
+              
                 m_UiType[UI_LOAD_GAUGE_WEPON] = UI_LOAD_GAUGE_WEPON;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f - 50.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f - 55.0f, 0.0f);
 
                 m_fLength[nCnt] = 49.5f;
 
@@ -254,48 +255,48 @@ HRESULT CGameUI::Init()
 
                 break;
 
-
-
             case UI_WEPON2_BACK://---------------------------------------------------------------------------------
                 //武器UI
 
                 m_UiType[nCnt] = UI_WEPON2_BACK;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 35.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 55.0f, 0.0f);
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 60.0f, m_Pos[nCnt].y - 40.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y - 40.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 60.0f, m_Pos[nCnt].y + 40.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y + 40.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 70.0f, m_Pos[nCnt].y - 50.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 70.0f, m_Pos[nCnt].y - 50.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 70.0f, m_Pos[nCnt].y + 50.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 70.0f, m_Pos[nCnt].y + 50.0f, 0.0f);
 
                 break;
 
             case UI_WEPON2:
                 //武器UI本体
+               
+                //テクスチャの読み込み
+                D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\bullet.png", &m_pTexture[nCnt]);//通常時
 
                 m_UiType[nCnt] = UI_WEPON2;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 35.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 520.0f, SCREEN_HEIGHT * 0.5f + 55.0f, 0.0f);
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 55.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 55.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 55.0f, m_Pos[nCnt].y + 35.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 55.0f, m_Pos[nCnt].y + 35.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 15.0f, m_Pos[nCnt].y - 45.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 15.0f, m_Pos[nCnt].y - 45.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 15.0f, m_Pos[nCnt].y + 45.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 15.0f, m_Pos[nCnt].y + 45.0f, 0.0f);
 
                 break;
-
 
             case UI_LOAD_GAUGE_BACK_WEPON2:
                 //武器UI
 
                 m_UiType[nCnt] = UI_LOAD_GAUGE_BACK_WEPON2;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 35.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 55.0f, 0.0f);
 
                 pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 50.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 50.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
                 pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 50.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 50.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
 
                 break;
             case UI_LOAD_GAUGE_WEPON2:
@@ -303,7 +304,7 @@ HRESULT CGameUI::Init()
 
                 m_UiType[nCnt] = UI_LOAD_GAUGE_WEPON2;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 35.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 55.0f, 0.0f);
 
                 m_fLength[nCnt] = 49.5f;
 
@@ -319,26 +320,29 @@ HRESULT CGameUI::Init()
 
                 m_UiType[nCnt] = UI_WEPON3_BACK;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 120.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f,  SCREEN_HEIGHT * 0.5f + 165.0f, 0.0f);
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 60.0f, m_Pos[nCnt].y - 40.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y - 40.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 60.0f, m_Pos[nCnt].y + 40.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y + 40.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 70.0f, m_Pos[nCnt].y - 50.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 70.0f, m_Pos[nCnt].y - 50.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 70.0f, m_Pos[nCnt].y + 50.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 70.0f, m_Pos[nCnt].y + 50.0f, 0.0f);
 
                 break;
 
             case UI_WEPON3:
                 //武器UI本体
 
+                  //テクスチャの読み込み
+                D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\missile.png", &m_pTexture[nCnt]);//通常時
+
                 m_UiType[nCnt] = UI_WEPON3;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 120.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 520.0f,  SCREEN_HEIGHT * 0.5f + 175.0f, 0.0f);
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 55.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 55.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 55.0f, m_Pos[nCnt].y + 35.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 55.0f, m_Pos[nCnt].y + 35.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 7.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 7.0f, m_Pos[nCnt].y - 35.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 7.0f, m_Pos[nCnt].y + 35.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 7.0f, m_Pos[nCnt].y + 35.0f, 0.0f);
 
                 break;
 
@@ -348,12 +352,12 @@ HRESULT CGameUI::Init()
 
                 m_UiType[nCnt] = UI_LOAD_GAUGE_BACK_WEPON3;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 120.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f,  SCREEN_HEIGHT * 0.5f + 165.0f, 0.0f);
 
                 pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 50.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 50.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y - 5.0f, 0.0f);
                 pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 50.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 50.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 60.0f, m_Pos[nCnt].y + 5.0f, 0.0f);
 
                 break;
             case UI_LOAD_GAUGE_WEPON3:
@@ -361,7 +365,7 @@ HRESULT CGameUI::Init()
 
                 m_UiType[nCnt] = UI_LOAD_GAUGE_WEPON3;
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f, SCREEN_HEIGHT * 0.5f + 120.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 570.0f,  SCREEN_HEIGHT * 0.5f + 165.0f, 0.0f);
 
                 m_fLength[nCnt] = 49.5f;
 
@@ -372,33 +376,39 @@ HRESULT CGameUI::Init()
 
                 break;
 
+            case UI_LOAD_GAUGE_WEPON3_2:
+                //武器UI
+
+                m_UiType[nCnt] = UI_LOAD_GAUGE_WEPON3_2;
+
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 620.0f, SCREEN_HEIGHT * 0.5f + 170.0f, 0.0f);
+
+                m_fLength[nCnt] = CObjectMotionPlayer::RECOVERY_MISSILE * 2;
+
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x, m_Pos[nCnt].y - 4.5f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 4.5f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x, m_Pos[nCnt].y + 4.5f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 4.5f, 0.0f);
+
+                break;
 
             case UI_ACTION:
 
                 //操作UI
                 m_UiType[UI_ACTION] = UI_ACTION;
 
-                //テクスチャの読み込み
-             //   D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\Tutorial2.png", &m_pTexture[nCnt]);//通常時
-
                 m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 580.0f, SCREEN_HEIGHT * 0.5f - 100.0f, 0.0f);
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 55.0f, m_Pos[nCnt].y - 175.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 55.0f, m_Pos[nCnt].y - 175.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 55.0f, m_Pos[nCnt].y + 175.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 55.0f, m_Pos[nCnt].y + 175.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 65.0f, m_Pos[nCnt].y - 175.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 65.0f, m_Pos[nCnt].y - 175.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 65.0f, m_Pos[nCnt].y + 175.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 65.0f, m_Pos[nCnt].y + 175.0f, 0.0f);
 
                 break;
 
-
-
             case UI_PLAYERPIN:
-                // m_MapNum = nCnt;
                  //マップplayer
                 m_UiType[UI_PLAYERPIN] = UI_PLAYERPIN;
-
-                //テクスチャの読み込み
-            //    D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\MAP1.png", &m_pTexture[nCnt]);//通常時
 
                 m_Pos[nCnt] = D3DXVECTOR3(110.0f, 101.0f, 0.0f);
 
@@ -409,24 +419,19 @@ HRESULT CGameUI::Init()
 
                 break;
 
-
-
             case UI_TEXTWINDOW:
 
                 //操作UI
                 m_UiType[UI_TEXTWINDOW] = UI_TEXTWINDOW;
 
-                //テクスチャの読み込み
-             //   D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\Tutorial2.png", &m_pTexture[nCnt]);//通常時
-
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 250.0f, SCREEN_HEIGHT * 0.5f - 305.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 260.0f, SCREEN_HEIGHT * 0.5f - 305.0f, 0.0f);
 
                 m_fLength[nCnt] = 320.0f;
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - m_fLength[nCnt], m_Pos[nCnt].y - 50.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 50.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - m_fLength[nCnt], m_Pos[nCnt].y + 50.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 50.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - m_fLength[nCnt], m_Pos[nCnt].y - 60.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 60.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - m_fLength[nCnt], m_Pos[nCnt].y + 60.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 60.0f, 0.0f);
 
                 break;
 
@@ -438,25 +443,20 @@ HRESULT CGameUI::Init()
                 //テクスチャの読み込み
                 D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\soundonly.png", &m_pTexture[nCnt]);//通常時
 
-                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 365.0f, SCREEN_HEIGHT * 0.5f - 305.0f, 0.0f);
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 375.0f, SCREEN_HEIGHT * 0.5f - 310.0f, 0.0f);
 
-                m_fLength[nCnt] = 75.0f;
+                m_fLength[nCnt] = 70.0f;
 
-                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - m_fLength[nCnt], m_Pos[nCnt].y - 45.0f, 0.0f);
-                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 45.0f, 0.0f);
-                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - m_fLength[nCnt], m_Pos[nCnt].y + 45.0f, 0.0f);
-                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 45.0f, 0.0f);
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - m_fLength[nCnt], m_Pos[nCnt].y - 40.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 40.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - m_fLength[nCnt], m_Pos[nCnt].y + 40.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 40.0f, 0.0f);
 
                 break;
-
-
 
             case UI_HP_BACK:
                 //マップ背景
                 m_UiType[UI_HP_BACK] = UI_HP_BACK;
-
-                //テクスチャの読み込み
-            //    D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\yuka.jpg", &m_pTexture[nCnt]);//通常時
 
                 m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.6f, SCREEN_HEIGHT - 40.0f, 0.0f);
 
@@ -467,28 +467,48 @@ HRESULT CGameUI::Init()
                 
                 break;
 
-
-
-
-
-
-
             case UI_HP_MAIN:
 
                 //操作UI
                 m_UiType[UI_HP_MAIN] = UI_HP_MAIN;
 
-                //テクスチャの読み込み
-             //   D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\Tutorial2.png", &m_pTexture[nCnt]);//通常時
-
                 m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.6f +2.5f, SCREEN_HEIGHT - 40.0f, 0.0f);
-
 
                 m_fLength[nCnt] = (float)CObjectMotionPlayer::START_LIFE;
                 
                 pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x , m_Pos[nCnt].y - 10.0f, 0.0f);
                 pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 10.0f, 0.0f);
                 pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x , m_Pos[nCnt].y + 10.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 10.0f, 0.0f);
+
+                break;
+
+
+            case UI_BOOST_BACK:
+                //マップ背景
+                m_UiType[UI_BOOST_BACK] = UI_BOOST_BACK;
+
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.05f, SCREEN_HEIGHT - 40.0f, 0.0f);
+
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 0.0f, m_Pos[nCnt].y - 13.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + (float)CObjectMotionPlayer::BOOST_LIFE * 2.0f + 5.0f, m_Pos[nCnt].y - 13.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 0.0f, m_Pos[nCnt].y + 13.0f, 0.0f);
+                pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + (float)CObjectMotionPlayer::BOOST_LIFE * 2.0f + 5.0f, m_Pos[nCnt].y + 13.0f, 0.0f);
+
+                break;
+
+            case UI_BOOST_MAIN:
+
+                //操作UI
+                m_UiType[UI_BOOST_MAIN] = UI_BOOST_MAIN;
+
+                m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.05f + 2.5f, SCREEN_HEIGHT - 40.0f, 0.0f);
+
+                m_fLength[nCnt] = (float)CObjectMotionPlayer::BOOST_LIFE * 2.0f;
+
+                pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x, m_Pos[nCnt].y - 10.0f, 0.0f);
+                pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 10.0f, 0.0f);
+                pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x, m_Pos[nCnt].y + 10.0f, 0.0f);
                 pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y + 10.0f, 0.0f);
 
                 break;
@@ -522,6 +542,9 @@ void CGameUI::Uninit()
             m_pTexture[nCnt] = nullptr;
         }
     }
+
+
+  //  delete this;
 }
 //=============================
 // 更新(頂点情報の更新)
@@ -541,8 +564,32 @@ void CGameUI::Update()
                 m_fLength[i] = (float)pPlayer->GetLife();
                 SetLifeBar(i);
             }
-
         }
+        else if (i == (int)UI_BOOST_MAIN)
+        {
+            // プレイヤーの位置を取得
+            CObject* pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
+
+            if (pObj != nullptr)
+            {
+                CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
+                m_fLength[i] = (float)pPlayer->GetNowBoostLife()*2;
+                SetLifeBar(i);
+            }
+        }
+        else if (i == (int)UI_LOAD_GAUGE_WEPON3_2)
+        {
+            // プレイヤーの位置を取得
+            CObject* pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
+
+            if (pObj != nullptr)
+            {
+                CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
+                m_fLength[i] = (float)pPlayer->GetNowRecoveryMissileNum()*2;
+                SetLifeBar(i);
+            }
+        }
+
 
 
         if (m_UiState[i]== UISTATE_ONLINE_TRIGGER)
@@ -613,27 +660,103 @@ void CGameUI::Draw()
 
         const char* aData = "移動";
         
-        aData = "武器1";
-        CFont::DrawTextSet(D3DXVECTOR3(20.0f, SCREEN_HEIGHT / 2.0f - 50.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON1]), aData);
-       
-        aData = "武器2";
-        CFont::DrawTextSet(D3DXVECTOR3(20.0f, SCREEN_HEIGHT / 2.0f + 35.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON2]), aData);
+        aData = "シールド\n耐久:∞";
+        CFont::DrawTextSet(D3DXVECTOR3(7.0f, SCREEN_HEIGHT / 2.0f - 95.0f, 0.0f), 25, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON1]), aData);
 
-        aData = "武器3";
-        CFont::DrawTextSet(D3DXVECTOR3(20.0f, SCREEN_HEIGHT / 2.0f + 120.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON3]), aData);
-
-        //aData = "武器\n操作UI\nここ";
-        //CFont::DrawTextSet(D3DXVECTOR3(20.0f, SCREEN_HEIGHT / 2.0f - 50.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), aData);
+        aData = "LBボタン";
+        CFont::DrawTextSet(D3DXVECTOR3(7.0f, SCREEN_HEIGHT / 2.0f - 25.0f, 0.0f), 25, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON1]), aData);
 
 
 
 
+        aData = "機関砲\n残弾:∞";
+        CFont::DrawTextSet(D3DXVECTOR3(7.0f, SCREEN_HEIGHT / 2.0f + 15.0f, 0.0f), 25, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON2]), aData);
 
-        aData = "テストマップ";
-        CFont::DrawTextSet(D3DXVECTOR3(10.0f, SCREEN_HEIGHT / 2.0f - 280.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f), aData);
+        aData = "RTボタン";
+        CFont::DrawTextSet(D3DXVECTOR3(7.0f, SCREEN_HEIGHT / 2.0f + 80.0f, 0.0f), 25, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON2]), aData);
+
+
+
+        char cData2[100] = {};
+        snprintf(cData2, sizeof(cData2), "残機：%d                           HP", CObjectMotionPlayer::GetPlayerNum()); // 数値を文字列に変換してCDataにコピー
+        // mousePos.x と mousePos.y がマウスの位置
+        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH-500.0f, SCREEN_HEIGHT - 80.0f, 0.0f), 30, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.0f, 0.0f, (float)m_nWeponUIDrawA[UI_WEPON1]), cData2);
+
+
+        snprintf(cData2, sizeof(cData2), "ENERGY"); // 数値を文字列に変換してCDataにコピー
+       // mousePos.x と mousePos.y がマウスの位置
+        CFont::DrawTextSet(D3DXVECTOR3(70.0f, SCREEN_HEIGHT - 80.0f, 0.0f), 30, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON1]), cData2);
+
+
+
+        // 配置物プライオリティの先頭を取得
+        CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONPLAYER);
+
+        CObject::DATA EscData = CObject::DataInit();
+
+        int nMissileCnt = 0;
+        int nMissileRecoveryCnt = 0;
+
+        if (pObject != nullptr)
+        { // 先頭がない==プライオリティまるっとない
+
+            int nIndex = 0;
+
+            while (pObject != nullptr)
+            {
+
+                if (pObject->GetObjectType() == CObject::OBJECT_MOTIONPLAYER)
+                { // 対象のモデルのとき
+
+                    // ここで使用分宣言
+                    CObjectMotionPlayer* pMotionPlayer;
+
+                    pMotionPlayer = (CObjectMotionPlayer*)pObject;
+
+                    EscData = pMotionPlayer->GetClassData();
+                    nMissileCnt = pMotionPlayer->GetNowMissileNum();
+                    nMissileRecoveryCnt = pMotionPlayer->GetNowRecoveryMissileNum();
+                    break;
+                }
+            }
+        }
+
+
+
+        if (pManager->GetbNow3DMode() == false)
+        {//2D
+            char SetWord[1000] = {};
+            snprintf(SetWord, sizeof(SetWord), "ミサイル\n残弾：%d/%d", nMissileCnt, (int)CObjectMotionPlayer::MISSILEMAX); // 数値を文字列に変換してCDataにコピー
+
+            CFont::DrawTextSet(D3DXVECTOR3(7.0f, SCREEN_HEIGHT / 2.0f + 120.0f, 0.0f), 25, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON3]), SetWord);
+
+            aData = "使用不可";
+            CFont::DrawTextSet(D3DXVECTOR3(7.0f, SCREEN_HEIGHT / 2.0f + 185.0f, 0.0f), 25, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON3]), aData);
+
+        }
+        else
+        {//3D
+            char SetWord[1000] = {};
+            snprintf(SetWord, sizeof(SetWord), "ミサイル\n残弾：%d/%d", nMissileCnt, (int)CObjectMotionPlayer::MISSILEMAX); // 数値を文字列に変換してCDataにコピー
+
+            CFont::DrawTextSet(D3DXVECTOR3(7.0f, SCREEN_HEIGHT / 2.0f + 120.0f, 0.0f), 25, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON3]), SetWord);
+
+            aData = "RBボタン";
+            CFont::DrawTextSet(D3DXVECTOR3(7.0f, SCREEN_HEIGHT / 2.0f + 185.0f, 0.0f), 25, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.0f, 1.0f, (float)m_nWeponUIDrawA[UI_WEPON3]), aData);
+
+        }
+
+
+
+
+
+
+
+        //aData = "テストマップ";
+        //CFont::DrawTextSet(D3DXVECTOR3(10.0f, SCREEN_HEIGHT / 2.0f - 280.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f), aData);
 
         aData = "基本\n操作UI\nここ";
-        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH-110.0f, SCREEN_HEIGHT / 2.0f - 150.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), aData);
+        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH-110.0f, SCREEN_HEIGHT / 2.0f - 160.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), aData);
     }
 
 }
@@ -763,7 +886,7 @@ void CGameUI::OnlineTrigger(int nCnt)
 
 
     if (nCnt == UI_WEPON1_BACK|| nCnt == UI_WEPON2_BACK || nCnt == UI_WEPON3_BACK 
-        || nCnt == UI_MAP_BACK || nCnt == UI_NOMAL || nCnt == UI_NOMAL2 ||nCnt == UI_HP_BACK)
+        || nCnt == UI_MAP_BACK || nCnt == UI_NOMAL || nCnt == UI_NOMAL2 ||nCnt == UI_HP_BACK|| nCnt == UI_BOOST_BACK)
     {
         if (nCnt == UI_HP_BACK)
         {
@@ -771,6 +894,7 @@ void CGameUI::OnlineTrigger(int nCnt)
             DrawG = 155;
             DrawB = 155;
         }
+
 
         m_nWeponUIDrawA[nCnt] = 0;
 
@@ -804,9 +928,9 @@ void CGameUI::OnlineTrigger(int nCnt)
 
         if (nCnt == UI_WEPON1 || nCnt == UI_WEPON2 || nCnt == UI_WEPON3)
         {
-            DrawR = 15;
-            DrawG = 15;
-            DrawB = 55;
+            DrawR = 140;
+            DrawG = 180;
+            DrawB = 180;
             divisionFrame = PHASE1RAME;
         }
         else if ( nCnt == UI_MAP)
@@ -911,7 +1035,7 @@ void CGameUI::OnlineTrigger(int nCnt)
         pVtx[3].pos.x = (m_Pos[nCnt].x - m_fLength[nCnt] + EscLength);
 
     }
-    else  if (nCnt == UI_TEXTWINDOW|| nCnt == UI_TEXTIMAGE ||nCnt== UI_HP_MAIN)
+    else  if (nCnt == UI_TEXTWINDOW|| nCnt == UI_TEXTIMAGE || nCnt== UI_HP_MAIN || nCnt == UI_LOAD_GAUGE_WEPON3_2 || nCnt == UI_BOOST_MAIN)
     {
         divisionFrame = PHASE4RAME;
 
@@ -927,19 +1051,24 @@ void CGameUI::OnlineTrigger(int nCnt)
             DrawG = 255;
             DrawB = 255;
         }
-        else if (nCnt == UI_HP_MAIN)
+        else if (nCnt == UI_HP_MAIN || nCnt == UI_LOAD_GAUGE_WEPON3_2)
         {
             DrawR = 155;
             DrawG = 0;
             DrawB = 0;
         }
-
+        else if (nCnt == UI_BOOST_MAIN)
+        {
+            DrawR = 255;
+            DrawG = 0;
+            DrawB = 255;
+        }
         
 
-        nDrawA[0] = BACKGROUND_A;
-        nDrawA[1] = BACKGROUND_A;
-        nDrawA[2] = BACKGROUND_A;
-        nDrawA[3] = BACKGROUND_A;
+        nDrawA[0] =230;
+        nDrawA[1] =230;
+        nDrawA[2] =230;
+        nDrawA[3] =230;
 
 
 
@@ -960,14 +1089,22 @@ void CGameUI::OnlineTrigger(int nCnt)
             pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
             pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength * 0.5f);
         }
-        else if (nCnt == UI_HP_MAIN)
+        else if (nCnt == UI_HP_MAIN || nCnt == UI_BOOST_MAIN || nCnt == UI_LOAD_GAUGE_WEPON3_2)
         {
          //   pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
             pVtx[1].pos.x = (m_Pos[nCnt].x + EscLength);
           //  pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
             pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength);
         }
-    
+
+        else if (nCnt == UI_LOAD_GAUGE_WEPON3_2)
+        {
+            //   pVtx[0].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[1].pos.x = (m_Pos[nCnt].x + EscLength);
+            //  pVtx[2].pos.x = (m_Pos[nCnt].x - EscLength * 0.5f);
+            pVtx[3].pos.x = (m_Pos[nCnt].x + EscLength);
+        }
+        
 
     }
 
@@ -1086,6 +1223,7 @@ void CGameUI::OnlineTrigger(int nCnt)
 
                 //ゲージバックon
                 m_UiState[UI_WEPON3] = UISTATE_ONLINE_TRIGGER;
+                m_UiState[UI_LOAD_GAUGE_WEPON3_2] = UISTATE_ONLINE_TRIGGER;
 
                 UIDrawReset(CGameUI::UI_LOAD_GAUGE_BACK_WEPON3);
                 UIDrawReset(CGameUI::UI_LOAD_GAUGE_WEPON3);
@@ -1110,6 +1248,15 @@ void CGameUI::OnlineTrigger(int nCnt)
             case UI_HP_MAIN:
 
                // m_UiState[UI_HP_MAIN] = UISTATE_ONLINE_TRIGGER;
+                break;
+
+            case UI_BOOST_BACK:
+
+                m_UiState[UI_BOOST_MAIN] = UISTATE_ONLINE_TRIGGER;
+                break;
+            case UI_BOOST_MAIN:
+
+                //m_UiState[UI_BOOST_MAIN] = UISTATE_ONLINE_TRIGGER;
                 break;
 
                }
@@ -1137,7 +1284,7 @@ void CGameUI::OfflineTrigger(int nCnt)
     m_nMotionCnt[nCnt]--;
 
     if (nCnt == UI_WEPON1_BACK || nCnt == UI_WEPON2_BACK || nCnt == UI_WEPON3_BACK || nCnt == UI_MAP_BACK 
-        || nCnt == UI_NOMAL || nCnt == UI_NOMAL2 || nCnt== UI_HP_BACK)
+        || nCnt == UI_NOMAL || nCnt == UI_NOMAL2 || nCnt== UI_HP_BACK|| nCnt == UI_BOOST_BACK)
     {
 
         divisionFrame = PHASE1RAME;
@@ -1428,10 +1575,15 @@ void CGameUI::AllUiRestart()
         UIDrawReset(CGameUI::UI_HP_MAIN);
         m_nMotionCnt[(int)CGameUI::UI_HP_MAIN] = 0;
 
-        
+        UIDrawReset(CGameUI::UI_LOAD_GAUGE_WEPON3_2);
+        m_nMotionCnt[(int)CGameUI::UI_LOAD_GAUGE_WEPON3_2] = 0;
 
 
+        UIDrawReset(CGameUI::UI_BOOST_BACK);
+        m_nMotionCnt[(int)CGameUI::UI_BOOST_BACK] = 0;
 
+
+       
     }
     else
     {//起動済み
@@ -1445,8 +1597,10 @@ void CGameUI::AllUiRestart()
             {
                 case 0:
                     SetStateChangeUi(true, CGameUI::UI_MAP_BACK);
-                    SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+                   // SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
                     SetStateChangeUi(true, CGameUI::UI_HP_BACK);
+                    SetStateChangeUi(true, CGameUI::UI_BOOST_BACK);
+                  
                     
                     break;
                 case 1:

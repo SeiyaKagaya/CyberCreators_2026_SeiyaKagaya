@@ -37,9 +37,12 @@ public:
 		MODE_TITLE = 0,
 		MODE_GAME,
 		MODE_GAME2,
+		MODE_GAME3,
 		MODE_RESULT,
 		MODE_TUTORIAL,
 		MODE_OP,
+		MODE_MOVIE,
+		MODE_MOVIE2,
 		MODE_MAX,
 	}MODE;
 
@@ -61,10 +64,13 @@ public:
 	static bool GetStageClear();
 
 
+	static void SetStayNextStage(bool bSet) { m_bNextStageStay = bSet; };
+	static bool GetStayNextStage() {return m_bNextStageStay;};
 
 private:
 	static  MODE m_NowState;
 	static bool m_bStageClear;
+	static bool m_bNextStageStay;
 	//static bool m_bNow3DMode;//現在3Dモードか
 
 
@@ -80,6 +86,7 @@ protected:
 	CGameUI* m_CGameUI;
 
 	CTextWindow* m_CTextWindow;
+	CTextWindow* m_CTextWindowSub;
 
 	int m_StayTime = STAYFRAME;//ゲーム終了後UIでるまで待機
 
@@ -95,57 +102,14 @@ protected:
 	int m_nbuttonCnt=0;
 	bool m_bButtonBool = false;
 
-	bool m_bSetTextWindow=false;//テキストウィンドウが描画されていたか
+	//bool m_bSetTextWindow=false;//テキストウィンドウが描画されていたか
+
+	int m_nCnt = 0;
 };
 
 
-class CGame:public CScene
-{
-public:
-	CGame();
-	~CGame() override; 
 
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
-};
 
-class CGame2 :public CScene
-{
-public:
-	CGame2();
-	~CGame2() override;
-
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
-};
-//
-//class CGame3 :public CScene
-//{
-//public:
-//	CGame3();
-//	~CGame3() override;
-//
-//	HRESULT Init()override;
-//	void Uninit()override;
-//	void Update()override;
-//	void Draw()override;
-//};
-//
-//class CGame4 :public CScene
-//{
-//public:
-//	CGame4();
-//	~CGame4() override;
-//
-//	HRESULT Init()override;
-//	void Uninit()override;
-//	void Update()override;
-//	void Draw()override;
-//};
 
 
 
@@ -165,6 +129,129 @@ public:
 	void Update()override;
 	void Draw()override;
 };
+
+class CTutorial :public CScene
+{
+
+public:
+	CTutorial();
+	~CTutorial() override;
+
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+
+private:
+
+	CTutorialUI* m_TutorialUI;
+
+};
+
+
+class COP :public CScene
+{
+
+public:
+	COP();
+	~COP() override;
+
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+
+
+};
+
+
+class CGame:public CScene
+{
+public:
+	CGame();
+	~CGame() override; 
+
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+
+private:
+//	bool m_bNextStay = false;
+	int m_nCnt = 0;
+
+};
+
+class CMovie :public CScene
+{
+
+public:
+	CMovie();
+	~CMovie() override;
+
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+
+};
+
+
+class CGame2 :public CScene
+{
+public:
+	CGame2();
+	~CGame2() override;
+
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+};
+
+
+class CMovie2 :public CScene
+{
+
+public:
+	CMovie2();
+	~CMovie2() override;
+
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+
+};
+
+//
+class CGame3 :public CScene
+{
+public:
+	CGame3();
+	~CGame3() override;
+
+	HRESULT Init()override;
+	void Uninit()override;
+	void Update()override;
+	void Draw()override;
+};
+//
+//class CGame4 :public CScene
+//{
+//public:
+//	CGame4();
+//	~CGame4() override;
+//
+//	HRESULT Init()override;
+//	void Uninit()override;
+//	void Update()override;
+//	void Draw()override;
+//};
+
+
+
+
 
 
 class CResult :public CScene
@@ -187,42 +274,7 @@ private:
 
 };
 
-class CTutorial :public CScene
-{
-
-public:
-	CTutorial();
-	~CTutorial() override;
-
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
 
 
 
-private:
-
-	CTutorialUI * m_TutorialUI;
-
-};
-
-
-class COP :public CScene
-{
-
-public:
-	COP();
-	~COP() override;
-
-	HRESULT Init()override;
-	void Uninit()override;
-	void Update()override;
-	void Draw()override;
-
-private:
-	int m_nCnt = 0;
-
-
-};
 #endif

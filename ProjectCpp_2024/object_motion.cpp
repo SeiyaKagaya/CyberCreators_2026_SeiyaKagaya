@@ -8,6 +8,12 @@
 #include "renderer.h"
 #include "manager.h"
 
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#define new ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
+
 //=============================
 // コンストラクタ
 //=============================
@@ -104,12 +110,22 @@ HRESULT CObjectMotion::Init()
 //=============================
 void CObjectMotion::Uninit()
 {
-	for (int nCnt = 0; nCnt < MAX_PARTS; nCnt++)
-	{
-		delete m_PartfilePass[nCnt];
-	}
+	//for (int nCnt = 0; nCnt < MAX_PARTS; nCnt++)
+	//{
+	//	if (m_PartfilePass[nCnt]!=nullptr)
+	//	{
+	//		delete[] m_PartfilePass[nCnt];
+	//		m_PartfilePass[nCnt] = nullptr;
+	//	}
+	//}
 
-	delete m_FilePass;
+	//if (m_FilePass)
+	//{
+	//	delete[] m_FilePass;
+	//	m_FilePass = nullptr;
+	//}
+
+
 
     CObjectX::Uninit();
 }
@@ -329,7 +345,7 @@ void CObjectMotion::Draw()
 //=============================
 // 生成
 //=============================
-CObjectMotion* CObjectMotion::Create(const char* pfilePass, DATA SetData)
+CObjectMotion* CObjectMotion::Create(std::string pfilePass, DATA SetData)
 {
     CObjectMotion* pObstacle = new CObjectMotion;
    
@@ -382,7 +398,7 @@ void CObjectMotion::DataLoad()
 
 	int SetMotionCheck = 1;
 
-	pFile = fopen(m_FilePass, "r");
+	pFile = fopen(m_FilePass.c_str(), "r");
 	
 	if (pFile != NULL)
 	{//ファイルが開いたら
@@ -407,10 +423,13 @@ void CObjectMotion::DataLoad()
 				fscanf(pFile, "%s", &aString[0]);//ファイルパス
 
 
-				char* filePass = new char[strlen(aString) + 1];//長さ分確保
-				strcpy(filePass, aString);//コピー
+				//char* filePass = new char[strlen(aString) + 1];//長さ分確保
+				//strcpy(filePass, aString);//コピー
 
-				m_PartfilePass[nEscapeCntModel] = filePass;
+				//m_PartfilePass[nEscapeCntModel] = filePass;
+
+				std::string filePass = aString;                // std::stringを使用してコピー
+				m_PartfilePass[nEscapeCntModel] = filePass;    // そのまま格納
 
 				nEscapeCntModel++;//モデル格納後インクリ
 			}
@@ -451,8 +470,18 @@ void CObjectMotion::DataLoad()
 							{//Parts数エンドが来たら
 								//クリエイト
 								m_pModelParts[nfirstEscapePartsCnt] = CModelParts::Create(m_PartfilePass[nfirstEscapePartsCnt],nfirstEscapePartsCnt);
-								//親設定
-								m_pModelParts[nfirstEscapePartsCnt]->SetParent(m_pModelParts[EscapeParentIndex]);
+								
+								if (EscapeParentIndex == -1)
+								{
+									//親設定
+									m_pModelParts[nfirstEscapePartsCnt]->SetParent(nullptr);
+								}
+								else
+								{
+									//親設定
+									m_pModelParts[nfirstEscapePartsCnt]->SetParent(m_pModelParts[EscapeParentIndex]);
+								}
+								
 								//オフセット格納
 								m_pModelParts[nfirstEscapePartsCnt]->SetOffSetData(EscOffSetData);
 								//現行データ格納 
@@ -640,12 +669,17 @@ void CObjectMotion::DataLoad()
 //=============================
 // pass格納
 //=============================
-void CObjectMotion::SetFilePass(const char* FilePass)
+void CObjectMotion::SetFilePass(std::string FilePass)
 {
-    char* filePass = new char[strlen(FilePass) + 1];//長さ分確保
-    strcpy(filePass, FilePass);//コピー
+    //char* filePass = new char[strlen(FilePass) + 1];//長さ分確保
+    //strcpy(filePass, FilePass);//コピー
 
-    m_FilePass = filePass;
+    //m_FilePass = filePass;
+
+
+
+	std::string filePass = FilePass;                // std::stringを使用してコピー
+	m_FilePass = filePass;    // そのまま格納
 }
 //=============================
 // MOTION！！！！
@@ -1268,70 +1302,9 @@ void CObjectMotion::HitCollisionToStageBlock()
 	//取得
 	DATA EscData = GetClassData();
 	
-	////当たり判定計算
-	//m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONMODEL, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, EscData.move);
-
-
-	//if (m_HitData.bHit == true)
-	//{//接触
-	//	
-	//	if (m_HitData.HitAngle.x == 1)
-	//	{//+x
-	//		EscData.Pos.x += m_HitData.ResultDistance.x;
-
-	//		EscData.move.x = 0.0f;
-	//	}
-	//	else if (m_HitData.HitAngle.x == -1)
-	//	{//-x
-
-	//		EscData.Pos.x -= m_HitData.ResultDistance.x;
-	//		EscData.move.x = 0.0f;
-	//	}
-	//	else if (m_HitData.HitAngle.y == 1)
-	//	{//+y
-	//		EscData.Pos.y += m_HitData.ResultDistance.y;
-
-	//		EscData.move.y = 0.0f;
-	//	}
-	//	else if (m_HitData.HitAngle.y == -1)
-	//	{//-y
-	//		EscData.Pos.y -= m_HitData.ResultDistance.y;
-	//		EscData.move.y = 0.0f;
-	//	}
-	//	else if (m_HitData.HitAngle.z == 1)
-	//	{//+z
-	//		EscData.Pos.z += m_HitData.ResultDistance.z;
-
-	//		EscData.move.z = 0.0f;
-	//	}
-	//	else if (m_HitData.HitAngle.z == -1)
-	//	{//-z
-	//		EscData.Pos.z -= m_HitData.ResultDistance.z;
-	//		EscData.move.z = 0.0f;
-	//	}
-	//}
-
 
 	SetClassData(EscData);//格納
 }
 
-
-
-////=============================
-////
-////=============================
-//
-//int CObjectMotion::GetGroundFrame()
-//{
-//	return m_groundCounter;
-//}
-////=============================
-//
-////=============================
-//
-//void CObjectMotion::SetGroundFrame(int cnt)
-//{
-//	m_groundCounter += cnt;
-//}
 
 

@@ -161,7 +161,9 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="debugwall.cpp" />
     <ClCompile Include="enemy_motion_base.cpp" />
+    <ClCompile Include="enemy_motion_boss.cpp" />
     <ClCompile Include="enemy_motion_fast.cpp" />
+    <ClCompile Include="enemy_motion_guard.cpp" />
     <ClCompile Include="enemy_motion_Nomal.cpp" />
     <ClCompile Include="explosion.cpp" />
     <ClCompile Include="Explosion3D.cpp" />
@@ -228,6 +230,7 @@
     <ClInclude Include="debugwall.h" />
     <ClInclude Include="enemy_motion_base.h" />
     <ClInclude Include="enemy_motion_fast.h" />
+    <ClInclude Include="enemy_motion_guard.h" />
     <ClInclude Include="enemy_motion_Nomal.h" />
     <ClInclude Include="explosion.h" />
     <ClInclude Include="Explosion3D.h" />
@@ -247,6 +250,7 @@
     <ClInclude Include="missile.h" />
     <ClInclude Include="ModelParts.h" />
     <ClInclude Include="movesmoke.h" />
+    <ClInclude Include="enemy_motion_boss.h" />
     <ClInclude Include="newbullet.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="object2D.h" />

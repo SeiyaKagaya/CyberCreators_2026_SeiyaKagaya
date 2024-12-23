@@ -28,6 +28,12 @@
 //
 //CAllTexture* CManager::m_allTexture = nullptr;
 
+
+
+
+
+
+
 CScene* CManager::m_pScene = nullptr;
 
 CAllTexture* CManager::m_allTexture = nullptr;

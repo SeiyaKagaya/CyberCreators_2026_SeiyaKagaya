@@ -22,11 +22,14 @@
 #undef min//干渉防止
 #undef max
 #include <algorithm>
+#include "enemy_motion_boss.h"
+#include "enemy_motion_guard.h"
 
 D3DXVECTOR3 CCamera::CameraPos = D3DXVECTOR3(0.0f,0.0f,0.0f);
 
 float CCamera::m_Screen_Width = (float)SCREEN_WIDTH;//スクリーン横幅
 float CCamera::m_Screen_Height = (float)SCREEN_HEIGHT;//スクリーン縦幅
+int CCamera::m_nCntFrame = 0;
 
 //=============================
 //コンストラクタ
@@ -56,6 +59,7 @@ HRESULT CCamera::Init()
 	m_nShakeFlame = 0;
 	m_fMag = 0.0f;
 
+	m_nCntFrame = 0;
 
 	//for (int i = 0; i < 8; i++)
 	//{
@@ -69,7 +73,7 @@ HRESULT CCamera::Init()
 	return S_OK;
 }
 //=============================
-//終了
+//終了w
 //=============================
 void CCamera::Uninit()
 {
@@ -96,9 +100,22 @@ void CCamera::Update()
 	CScene::MODE NowState = CScene::GetNowScene();
 
 
-	if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_TITLE || NowState == CScene::MODE_TUTORIAL)
+	if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3 || NowState == CScene::MODE_TITLE || NowState == CScene::MODE_TUTORIAL)
 	{//ゲーム/OP/tutorial
-
+		
+		if (m_bfast == false)
+		{
+			if (NowState == CScene::MODE_GAME2)
+			{
+				m_nCntFrame++;
+				if (m_nCntFrame == 1)
+				{
+					m_bfast = true;
+					m_rot = D3DXVECTOR3(-0.105f, -1.57f, 0.0f);
+				}
+			}
+		}
+	
 		CManager* pManager = CManager::GetInstance();
 
 		if (pManager->GetbNow3DMode() == false)
@@ -178,11 +195,21 @@ void CCamera::Update()
 
 		ActionUpdate3D();
 	}
+	else if (NowState == CScene::MODE_MOVIE)
+	{
+		m_nCntFrame++;
 
+		m_posR = D3DXVECTOR3(1200.0f, 1114.0f, 0.0f);
+		m_posV = D3DXVECTOR3(4.0f, 1193.51f, -2.5f);
+		m_rot = D3DXVECTOR3(-0.105f, -1.50413f, 0.0f);
 
-
-
-
+		if (m_nCntFrame < 430)
+		{
+			m_posR = D3DXVECTOR3(1692.0f, 7140.0f, 14062.0f);
+			m_posV = D3DXVECTOR3(1312.0f, 7367.0f, 14604.0f);
+			m_rot = D3DXVECTOR3(-0.3293f, -2.53f, 0.0f);
+		}
+	}
 }
 //=============================
 //更新--2D
@@ -279,7 +306,9 @@ void  CCamera::ActionUpdate2D()
 		m_rot.y = 0.0f;
 		m_rot.z = 0.0f;
 	}
-
+	else if (NowState == CScene::MODE_MOVIE)
+	{//
+	}
 
 
 
@@ -398,11 +427,11 @@ void  CCamera::ActionUpdate3D()
 		}
 		else if (NowState == CScene::MODE_OP)
 		{
-			m_nCntFrane++;
+			m_nCntFrame++;
 
 
 			//カメラ距離	
-			if (m_nCntFrane <= 360)
+			if (m_nCntFrame <= 360)
 			{
 
 				//m_posR.x = EscData.Pos.x;
@@ -424,6 +453,7 @@ void  CCamera::ActionUpdate3D()
 
 
 				fLength = DebuCameraLength;
+				fLength = 270.0f;
 
 				m_posV.x += m_Move.x;
 				m_posV.y += m_Move.y;
@@ -465,7 +495,7 @@ void  CCamera::ActionUpdate3D()
 
 
 			//カメラ距離	
-			if (m_nCntFrane > 645 && m_nCntFrane<=5000)
+			if (m_nCntFrame > 645 && m_nCntFrame<=5000)
 			{
 
 				m_posR.x = EscData.Pos.x;
@@ -562,14 +592,14 @@ void CCamera::Input3DCamera()
 	//-------------------------------------------------------------------------------------------------------------------------
 	//右スティック
 
-	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_UP))
-	{
-		DebuCameraLength+=2;
-	}
-	else if (JoyPad->GetPress(CInputJoyPad::JOYKEY_DOWN))
-	{
-		DebuCameraLength-=2;
-	}
+	//if (JoyPad->GetPress(CInputJoyPad::JOYKEY_UP))
+	//{
+	//	DebuCameraLength+=2;
+	//}
+	//else if (JoyPad->GetPress(CInputJoyPad::JOYKEY_DOWN))
+	//{
+	//	DebuCameraLength-=2;
+	//}
 
 	bool MoveNowCom2 = false;//入力の有無(コントローラ)
 
@@ -624,7 +654,7 @@ void CCamera::Input3DCamera()
 
 	if (MoveNowCom2 == false)
 	{
-	
+
 	}
 	else
 	{//デッドゾーン超えた
@@ -778,7 +808,7 @@ void CCamera::LockOnEnemy()
 		{
 			CObjectMotionEnemyfast* pEnemyFast = (CObjectMotionEnemyfast*)pObjectFast;
 			CObject::DATA EscEnemyData = pEnemyFast->GetClassData();
-			EscEnemyData.Pos.y += 50.0f;
+			EscEnemyData.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
 			//リセット
 			pEnemyFast->GetLockOnUI()->SetDrawOk(false);
 			pEnemyFast->GetLockOnUIMain()->SetDrawOk(false);
@@ -818,7 +848,7 @@ void CCamera::LockOnEnemy()
 		{
 			CObjectMotionEnemyNomal* pEnemyNomal = (CObjectMotionEnemyNomal*)pObjectNormal;
 			CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
-			EscEnemyData.Pos.y += 50.0f;
+			EscEnemyData.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
 
 			//リセット
 			pEnemyNomal->GetLockOnUI()->SetDrawOk(false);
@@ -853,6 +883,116 @@ void CCamera::LockOnEnemy()
 		}
 	}
 
+
+
+
+
+	// 通常タイプ敵を処理
+	CObject* pObjectBoss = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS);
+
+	if (pObjectBoss != nullptr)
+	{
+		while (pObjectBoss != nullptr)
+		{
+			CObjectMotionEnemyBoss* pEnemyBoss = (CObjectMotionEnemyBoss*)pObjectBoss;
+			CObject::DATA EscEnemyData = pEnemyBoss->GetClassData();
+			EscEnemyData.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
+
+			//リセット
+			pEnemyBoss->GetLockOnUI()->SetDrawOk(false);
+			pEnemyBoss->GetLockOnUIMain()->SetDrawOk(false);
+
+
+			if (IsInScreen(pEnemyBoss->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
+			{
+				// カメラと敵の距離を計算
+				D3DXVECTOR3 cameraToEnemy = pEnemyBoss->GetClassData().Pos - m_posV;
+				float distance = D3DXVec3Length(&cameraToEnemy);//対象との距離
+
+				if (distance < LOCKMISSLEDDISTANCE)
+				{//ミサイル範囲
+
+					// 2D距離計算
+					double dx = (double)(SCREEN_WIDTH / 2.0f) - (double)pEnemyBoss->GetScreenPos().x;
+					double dy = (double)(SCREEN_HEIGHT / 2.0f) - (double)pEnemyBoss->GetScreenPos().y;
+					double distance2D = dx * dx + dy * dy;
+
+					LockOnTarget target{ pEnemyBoss, static_cast<float>(distance2D), 2 };
+					potentialTargets.push_back(target);
+
+				}
+				else
+				{
+
+				}
+			}
+
+			pObjectBoss = pObjectBoss->GetNext();
+		}
+	}
+
+
+
+
+	// 通常タイプ敵を処理
+	CObject* pObjectGuard = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+	if (pObjectGuard != nullptr)
+	{
+		while (pObjectGuard != nullptr)
+		{
+			CObjectMotionEnemyGuard* pEnemyBossGuard = (CObjectMotionEnemyGuard*)pObjectGuard;
+			CObject::DATA EscEnemyData = pEnemyBossGuard->GetClassData();
+			EscEnemyData.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
+
+			//リセット
+			pEnemyBossGuard->GetLockOnUI()->SetDrawOk(false);
+			pEnemyBossGuard->GetLockOnUIMain()->SetDrawOk(false);
+
+
+			if (IsInScreen(pEnemyBossGuard->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
+			{
+				// カメラと敵の距離を計算
+				D3DXVECTOR3 cameraToEnemy = pEnemyBossGuard->GetClassData().Pos - m_posV;
+				float distance = D3DXVec3Length(&cameraToEnemy);//対象との距離
+
+				if (distance < LOCKMISSLEDDISTANCE)
+				{//ミサイル範囲
+
+					// 2D距離計算
+					double dx = (double)(SCREEN_WIDTH / 2.0f) - (double)pEnemyBossGuard->GetScreenPos().x;
+					double dy = (double)(SCREEN_HEIGHT / 2.0f) - (double)pEnemyBossGuard->GetScreenPos().y;
+					double distance2D = dx * dx + dy * dy;
+
+					LockOnTarget target{ pEnemyBossGuard, static_cast<float>(distance2D), 3 };
+					potentialTargets.push_back(target);
+
+				}
+				else
+				{
+
+				}
+			}
+
+			pObjectGuard = pObjectGuard->GetNext();
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// 距離順にソート
 	std::sort(potentialTargets.begin(), potentialTargets.end(), [](const LockOnTarget& a, const LockOnTarget& b) {
 		return a.distanceSquared < b.distanceSquared;
@@ -873,7 +1013,7 @@ void CCamera::LockOnEnemy()
 
 				CObject::DATA SETDATA = CObject::DataInit();
 				SETDATA.Pos = pEnemyFast->GetClassData().Pos;
-				SETDATA.Pos.y += 40.0f;
+				SETDATA.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
 				pEnemyFast->GetLockOnUI()->SetDATA(SETDATA);
 			}
 		}
@@ -887,8 +1027,40 @@ void CCamera::LockOnEnemy()
 
 				CObject::DATA SETDATA = CObject::DataInit();
 				SETDATA.Pos = pEnemyNomal->GetClassData().Pos;
-				SETDATA.Pos.y += 40.0f;
+				SETDATA.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
 				pEnemyNomal->GetLockOnUI()->SetDATA(SETDATA);
+
+			}
+		}
+
+
+		else if (potentialTargets[i].enemyType == 2)
+		{
+			auto* pEnemyBoss = static_cast<CObjectMotionEnemyBoss*>(pEnemy);
+			if (pEnemyBoss)
+			{
+				//ミサイルロック
+				pEnemyBoss->GetLockOnUI()->SetDrawOk(true);
+
+				CObject::DATA SETDATA = CObject::DataInit();
+				SETDATA.Pos = pEnemyBoss->GetClassData().Pos;
+				SETDATA.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
+				pEnemyBoss->GetLockOnUI()->SetDATA(SETDATA);
+
+			}
+		}
+		else if (potentialTargets[i].enemyType == 3)
+		{
+			auto* pEnemyEnemyGuard = static_cast<CObjectMotionEnemyGuard*>(pEnemy);
+			if (pEnemyEnemyGuard)
+			{
+				//ミサイルロック
+				pEnemyEnemyGuard->GetLockOnUI()->SetDrawOk(true);
+
+				CObject::DATA SETDATA = CObject::DataInit();
+				SETDATA.Pos = pEnemyEnemyGuard->GetClassData().Pos;
+				SETDATA.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
+				pEnemyEnemyGuard->GetLockOnUI()->SetDATA(SETDATA);
 
 			}
 		}
@@ -906,7 +1078,7 @@ void CCamera::LockOnEnemy()
 
 			CObject::DATA SETDATA = CObject::DataInit();
 			SETDATA.Pos = pClosestEnemyFast->GetClassData().Pos;
-			SETDATA.Pos.y += 40.0f;
+			SETDATA.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
 			pClosestEnemyFast->GetLockOnUIMain()->SetDATA(SETDATA);
 
 		}
@@ -918,8 +1090,34 @@ void CCamera::LockOnEnemy()
 
 			CObject::DATA SETDATA = CObject::DataInit();
 			SETDATA.Pos = pClosestEnemyNomal->GetClassData().Pos;
-			SETDATA.Pos.y += 40.0f;
+			SETDATA.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
 			pClosestEnemyNomal->GetLockOnUIMain()->SetDATA(SETDATA);
+
+		}
+
+
+		else if (potentialTargets[0].enemyType == 2)
+		{
+			auto* pClosestEnemyBoss = static_cast<CObjectMotionEnemyBoss*>(pEnemy);
+			//ミサイルロック
+			pClosestEnemyBoss->GetLockOnUIMain()->SetDrawOk(true);
+
+			CObject::DATA SETDATA = CObject::DataInit();
+			SETDATA.Pos = pClosestEnemyBoss->GetClassData().Pos;
+			SETDATA.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
+			pClosestEnemyBoss->GetLockOnUIMain()->SetDATA(SETDATA);
+
+		}
+		else if (potentialTargets[0].enemyType == 3)
+		{
+			auto* pClosestEnemyGuard = static_cast<CObjectMotionEnemyGuard*>(pEnemy);
+			//ミサイルロック
+			pClosestEnemyGuard->GetLockOnUIMain()->SetDrawOk(true);
+
+			CObject::DATA SETDATA = CObject::DataInit();
+			SETDATA.Pos = pClosestEnemyGuard->GetClassData().Pos;
+			SETDATA.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
+			pClosestEnemyGuard->GetLockOnUIMain()->SetDATA(SETDATA);
 
 		}
 	}
@@ -974,6 +1172,8 @@ void CCamera::SetAllEnemyScreenPos()
 		CObject::DATA EscEnemyData = pEnemyFast->GetClassData();
 
 		D3DXVECTOR3 worldPos = EscEnemyData.Pos;
+		worldPos.y += CObjectMotionEnemyfast::LOCKDIFF;
+
 		D3DXVECTOR3 screenPos;
 
 		// ワールド座標からスクリーン座標への変換
@@ -993,6 +1193,7 @@ void CCamera::SetAllEnemyScreenPos()
 		CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
 
 		D3DXVECTOR3 worldPos = EscEnemyData.Pos;
+		worldPos.y += CObjectMotionEnemyNomal::LOCKDIFF;
 		D3DXVECTOR3 screenPos;
 
 		// ワールド座標からスクリーン座標への変換
@@ -1002,6 +1203,52 @@ void CCamera::SetAllEnemyScreenPos()
 
 		pObject = pObject->GetNext();
 	}
+
+
+	// 通常敵のスクリーン座標変換
+	pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS);
+
+	while (pObject != nullptr)
+	{
+		CObjectMotionEnemyBoss* pEnemyNomal = (CObjectMotionEnemyBoss*)pObject;
+		CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
+
+		D3DXVECTOR3 worldPos = EscEnemyData.Pos;
+		worldPos.y += CObjectMotionEnemyBoss::LOCKDIFF;
+		D3DXVECTOR3 screenPos;
+
+		// ワールド座標からスクリーン座標への変換
+		D3DXVec3Project(&screenPos, &worldPos, &viewport, &projectionMatrix, &viewMatrix, nullptr);
+
+		pEnemyNomal->SetSCREENPOS(screenPos);
+
+		pObject = pObject->GetNext();
+	}
+
+
+	// 通常敵のスクリーン座標変換
+	pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+	while (pObject != nullptr)
+	{
+		CObjectMotionEnemyGuard* pEnemyNomal = (CObjectMotionEnemyGuard*)pObject;
+		CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
+
+		D3DXVECTOR3 worldPos = EscEnemyData.Pos;
+		worldPos.y += CObjectMotionEnemyGuard::LOCKDIFF;
+		D3DXVECTOR3 screenPos;
+
+		// ワールド座標からスクリーン座標への変換
+		D3DXVec3Project(&screenPos, &worldPos, &viewport, &projectionMatrix, &viewMatrix, nullptr);
+
+		pEnemyNomal->SetSCREENPOS(screenPos);
+
+		pObject = pObject->GetNext();
+	}
+
+
+
+
 }
 
 //=============================

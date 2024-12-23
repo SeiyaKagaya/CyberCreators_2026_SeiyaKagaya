@@ -35,13 +35,14 @@ public:
 	static CTime* Create();//オブジェクト生成
 
 	static int GetTime();
+	static void ChangeTime(int time) { m_LimitTime = time; };
 private:
-	char m_cData[MAXWORD_TIME];
+	char m_cData[MAXWORD_TIME] = {};
 
 	DATA m_Data;
 	static int m_LimitTime;
 	static int m_flame;
-	int m_StartLimitTime;//後に使用
+	int m_StartLimitTime=0;//後に使用
 };
 
 #endif

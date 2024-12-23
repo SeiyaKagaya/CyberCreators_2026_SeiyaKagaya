@@ -32,7 +32,7 @@ public:
 	void Uninit();
 
 	void Unload();//テクスチャ破棄
-	int Regist(const char* pTextureName, LPDIRECT3DDEVICE9 pDevice);//テクスチャ登録
+	int Regist(std::string pTextureName, LPDIRECT3DDEVICE9 pDevice);//テクスチャ登録
 
 	LPDIRECT3DTEXTURE9 GetAddress(int nIdx);//テクスチャ
 
@@ -41,7 +41,7 @@ public:
 private:
 	static const int m_nMaxTexture = 150;//テクスチャ総数
 	LPDIRECT3DTEXTURE9 m_pTexture[m_nMaxTexture];//テクスチャ格納
-	char* m_pFilePass[m_nMaxTexture];	// ファイルパス
+	std::string m_pFilePass[m_nMaxTexture];	// ファイルパス
 	int m_nNumAll;//テクスチャ数
 
 	//パス管理構造体

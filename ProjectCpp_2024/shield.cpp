@@ -95,7 +95,7 @@ HRESULT CShield::Init()
         }
 
 
-        SetXfireData(m_pMesh[0], m_pBuffMat[0], m_dwNumMat[0]); // データ格納
+ //       SetXfireData(m_pMesh[0], m_pBuffMat[0], m_dwNumMat[0]); // データ格納
     }
 
 
@@ -117,27 +117,31 @@ HRESULT CShield::Init()
 //=============================
 void CShield::Uninit()
 {
-    //for (int i = 0; i < 2; i++)
-    //{
-    //    if (m_pMesh[i] != nullptr)
-    //    {
-    //        delete m_pMesh[i];
-    //        m_pMesh[i] = nullptr; // Meshポインタ
-    //    }
- 
-    //    if (m_pBuffMat[i] != nullptr)
-    //    {
-    //        delete m_pBuffMat[i];
-    //        m_pBuffMat[i] = nullptr; // Meshポインタ
-    //    }
-    //    if (m_ESCpTexture[i] != nullptr)
-    //    {
-    //        delete m_ESCpTexture[i];
-    //        m_ESCpTexture[i] = nullptr; // Meshポインタ
-    //    }
-    //}
+    for (int i = 0; i < 2; i++)
+    {
+        if (m_pMesh[i] != nullptr)
+        {
+            m_pMesh[i]->Release(); // メッシュ解放
+            m_pMesh[i] = nullptr;
+        }
 
-    CObjectX::Uninit();
+        if (m_pBuffMat[i] != nullptr)
+        {
+            m_pBuffMat[i]->Release(); // マテリアルバッファ解放
+            m_pBuffMat[i] = nullptr;
+        }
+
+        // テクスチャの解放はCAllTextureクラスの管理方法に従う必要がある
+        if (m_ESCpTexture[i] != nullptr)
+        {
+            // ここでdeleteではなく、CAllTextureの管理クラスで解放するように実装
+            // CManager::GetInstance()->GetTexture()->ReleaseTexture(m_ESCpTexture[i]);
+            m_ESCpTexture[i] = nullptr;
+        }
+    }
+
+
+  //  CObjectX::Uninit();
 }
 
 //=============================
@@ -487,45 +491,4 @@ CShield* CShield::Create(DATA SetData, CObjectMotionPlayer* pMotion)
 //=============================
 void CShield::HitCollision()
 {
-    //// 取得
-    //DATA EscData = GetDATA();
-
-    //// 当たり判定計算
-    //m_HitData = CMathProc::CheckBoxCollision_3D(EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_BLOCK3D,LAYERINDEX_BLOCK3D,EscData.move);
-
-    //if (m_HitData.bHit == true)
-    //{
-    //    if (m_HitData.HitAngle.x == 1)
-    //    {
-    //        EscData.Pos.x += m_HitData.ResultDistance.x;
-    //        EscData.move.x = 0.0f;
-    //    }
-    //    else if (m_HitData.HitAngle.x == -1)
-    //    {
-    //        EscData.Pos.x -= m_HitData.ResultDistance.x;
-    //        EscData.move.x = 0.0f;
-    //    }
-    //    else if (m_HitData.HitAngle.y == 1)
-    //    {
-    //        EscData.Pos.y += m_HitData.ResultDistance.y;
-    //        EscData.move.y = 0.0f;
-    //    }
-    //    else if (m_HitData.HitAngle.y == -1)
-    //    {
-    //        EscData.Pos.y -= m_HitData.ResultDistance.y;
-    //        EscData.move.y = 0.0f;
-    //    }
-    //    else if (m_HitData.HitAngle.z == 1)
-    //    {
-    //        EscData.Pos.z += m_HitData.ResultDistance.z;
-    //        EscData.move.z = 0.0f;
-    //    }
-    //    else if (m_HitData.HitAngle.z == -1)
-    //    {
-    //        EscData.Pos.z -= m_HitData.ResultDistance.z;
-    //        EscData.move.z = 0.0f;
-    //    }
-    //}
-
-    //SetDATA(EscData); // 格納
 }

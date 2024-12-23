@@ -254,10 +254,10 @@ void CObject3DParticle::Draw()
 {
     if (m_bUse == true)
     {
-        SetZDrawDeth(true);
+    //    SetZDrawDeth(true);
         SetLight(true);
         CObjectBillBoard::Draw();
-        SetZDrawDeth(false);
+     //   SetZDrawDeth(false);
     }
 }
 //=============================

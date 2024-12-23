@@ -15,7 +15,7 @@
 class CObjectX : public CObject
 {
 public:
-
+	static const int MAX_MAT = 60;
 	static const int MAX_TEXTURE_XFILE = 50;
 
 	CObjectX(int nPriority = CObject::LAYERINDEX_OBJECTX);//コンストラクタ
@@ -77,14 +77,15 @@ private:
 	D3DXCOLOR m_ChangeCol;//変える色
 
 
-	D3DXCOLOR m_OriginalColor;
-	bool bFast = false;//最初の一回のみ
+	D3DXCOLOR m_OriginalColor[MAX_MAT];
+	bool m_bFast[MAX_MAT];//最初の一回のみ
 
 	bool m_bStageTexChange = false;
 
 
 	bool m_NotRight = false;//ライト無視
 
+	//bool bFast[30] = false;
 };
 
 #endif

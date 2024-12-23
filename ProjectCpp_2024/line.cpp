@@ -21,7 +21,7 @@ Cline::Cline(int nPriority) :CObject3D(nPriority), m_pVtxBuff(nullptr)
 
 	 m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_col= D3DXCOLOR(0.0f,0.0f,0.0f,0.0f);
-	m_Life = 0;//ここを２にすると線が見える
+	m_Life = 3;//ここを２にすると線が見える
 }
 //=============================
 //デストラクタ

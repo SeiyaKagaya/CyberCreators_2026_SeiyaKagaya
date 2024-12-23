@@ -140,6 +140,8 @@ private:
 	int m_nID = 0;
 	CMissileALL::SHOTTYPE m_ShotType = CMissileALL::SHOTTYPE_MAX;
 
+	int m_DelayCnt = 0;
+
 };
 
 

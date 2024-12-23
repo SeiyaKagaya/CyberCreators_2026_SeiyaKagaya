@@ -11,11 +11,19 @@
 #include "3DParticle.h"
 #include "player_motion.h"
 
+
+
+
+
 //=============================
 // コンストラクタ
 //=============================
-CModelParts::CModelParts(int nPriority) :CObjectX(nPriority), m_ChangeDatabool(false)
+CModelParts::CModelParts(int nPriority) :CObjectX(nPriority), m_ChangeDatabool(false), m_pParentParts(nullptr), pMotion(nullptr), m_calculationExecution(false)
 {
+    
+    m_MotionParent = {};
+
+
     m_ChangeDATA = {};
 
     m_CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);//モーションでの移動量pos
@@ -24,19 +32,14 @@ CModelParts::CModelParts(int nPriority) :CObjectX(nPriority), m_ChangeDatabool(f
 
      D3DXMatrixIdentity(&m_mtxWorld);
 
-   /*  for (int nCnt = 0; nCnt < MAX_TEXTURE_XFILE; nCnt++)
-     {
-         if (m_pTexture[nCnt] != nullptr)
-         {
-             m_pTexture[nCnt] = nullptr;
-         }
-     }*/
 }
 //=============================
 //デストラクタ
 //=============================
 CModelParts::~CModelParts()
 {
+    m_pParentParts = nullptr;
+    pMotion = nullptr;
 }
 //=============================
 //初期化
@@ -58,7 +61,7 @@ HRESULT CModelParts::Init()
 
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
     //ファイルの読み込み
-    D3DXLoadMeshFromX(m_PartfilePass,
+    D3DXLoadMeshFromX(m_PartfilePass.c_str(),
         D3DXMESH_SYSTEMMEM,
         EscDevice,
         NULL,
@@ -104,11 +107,13 @@ HRESULT CModelParts::Init()
 //=============================
 void CModelParts::Uninit()
 {
-    if (m_PartfilePass != nullptr)
-    {
-        delete m_PartfilePass;
-        m_PartfilePass = nullptr;
-    }
+    //if (m_PartfilePass != nullptr)
+    //{
+    //    delete m_PartfilePass;
+    //    m_PartfilePass = nullptr;
+    //}
+
+
 
     CObjectX::Uninit();
 }
@@ -119,6 +124,8 @@ void CModelParts::Update()
 {
     if (typeid(*pMotion) == typeid(CObjectMotionPlayer))
     {
+
+
 
 
         if (m_nPartNum == 9 || m_nPartNum == 10 || m_nPartNum == 17 || m_nPartNum == 18)
@@ -207,25 +214,25 @@ void CModelParts::Update()
 
             switch (m_nPartNum)
             {
-            //case 9://足部
-            //    //左
-            //    BOOSTPos[0] = D3DXVECTOR3(30.0f, 0.0f, 19.0f);	//位置
-            //    BOOSTPos[1] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+            case 9://足部
+                //左
+                BOOSTPos[0] = D3DXVECTOR3(30.0f, 0.0f, 19.0f);	//位置
+                BOOSTPos[1] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
 
 
-            //    BOOSTPos[2] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
-            //    BOOSTPos[3] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                BOOSTPos[2] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                BOOSTPos[3] = D3DXVECTOR3(5.0f, -10.0f * BoostMag, 2.0f);	//位置
 
-            //    break;
+                break;
 
-            //case 10://足部
-            //    BOOSTPos[0] = D3DXVECTOR3(-30.0f, 0.0f, 19.0f);	//位置
-            //    BOOSTPos[1] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+            case 10://足部
+                BOOSTPos[0] = D3DXVECTOR3(-30.0f, 0.0f, 19.0f);	//位置
+                BOOSTPos[1] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
 
 
-            //    BOOSTPos[2] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
-            //    BOOSTPos[3] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
-            //    break;
+                BOOSTPos[2] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                BOOSTPos[3] = D3DXVECTOR3(-5.0f, -10.0f * BoostMag, 2.0f);	//位置
+                break;
 
             case 17://肩部
                 BOOSTPos[0] = D3DXVECTOR3(10.0f, 0.0f, 19.0f);	//位置
@@ -324,6 +331,21 @@ void CModelParts::Update()
                     }
 
 
+                    if (pMotion->GetNowMotionParent() == CObjectMotionPlayer::MOTIONTYPE_JUMP ||
+                        pMotion->GetNowMotionParent() == CObjectMotionPlayer::MOTIONTYPE_HIGH_MOVE_FRONT ||
+                        pMotion->GetNowMotionParent() == CObjectMotionPlayer::MOTIONTYPE_HIGH_MOVE_BACK ||
+                        pMotion->GetNowMotionParent() == CObjectMotionPlayer::MOTIONTYPE_HIGH_MOVE_LEFT ||
+                        pMotion->GetNowMotionParent() == CObjectMotionPlayer::MOTIONTYPE_HIGH_MOVE_RIGHT)
+                    {
+                        CObject* pObj = nullptr;
+                        pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_3DPARTICLE_MNG, CObject::OBJECT_3DPARTICLE_MNG);
+
+                        if (pObj != nullptr)
+                        {
+                            CObject3DParticleAll* pParticleMNG = static_cast<CObject3DParticleAll*>(pObj);
+                            pParticleMNG->SetParticle(SETPOS, setcol, 12, 40.0f);
+                        }
+                    }
                 }
             }
 
@@ -336,6 +358,8 @@ void CModelParts::Update()
 //=============================
 void CModelParts::Draw()
 {
+
+    
     CRenderer* pRenderer = nullptr;
 
     CManager* pManager = CManager::GetInstance();
@@ -399,10 +423,24 @@ void CModelParts::Draw()
     else
     {
         D3DXMATRIX m_mtxWorldParent = m_pParentParts->GetMtxWorld();
-
-        //自分の親のマトリックス欠けてる
+        // 自分の親のマトリックス欠けてる
         D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxWorldParent);
+
+
+        //if (m_pParentParts->IsValid()) 
+        //{
+        //    D3DXMATRIX m_mtxWorldParent = m_pParentParts->GetMtxWorld();
+        //    D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxWorldParent);
+        //}
+        //else 
+        //{
+        //    // 親が無効な場合の処理（必要であれば）
+        //    D3DXMatrixIdentity(&m_mtxWorld);
+        //}
     }
+
+
+
 
     ChangeModelPartsbool(true);//パーツ描画じマトリックス変更
     SetModelMtxWorld(m_mtxWorld);//マトリックス格納
@@ -425,17 +463,24 @@ void CModelParts::Draw()
             CObjectX::SetColorChangeBool(true);
             CObjectX::SetChangeColor(m_ChengeCol);
         }
-
+        else
+        {
+            CObjectX::SetColorChangeBool(false);
+//            CObjectX::SetChangeColor(m_ChengeCol);
+        }
 
         CObjectX::Draw();
     }
-
-
+    else
+    {
+        int test = 0;
+    }
+  //  CObjectX::Draw();
 }
 //=============================
 //生成
 //=============================
-CModelParts* CModelParts::Create(const char* FilePass, int PartsNum)
+CModelParts* CModelParts::Create(std::string FilePass, int PartsNum)
 {
     CModelParts* pModelParts = new CModelParts;
 
@@ -447,12 +492,15 @@ CModelParts* CModelParts::Create(const char* FilePass, int PartsNum)
 //=============================
 // パス格納//init前にやる
 //=============================
-void CModelParts::SetFilePass(const char* FilePass)
+void CModelParts::SetFilePass(std::string FilePass)
 {
-    char* filePass = new char[strlen(FilePass) + 1];//長さ分確保
-    strcpy(filePass, FilePass);//コピー
+   // char* filePass = new char[strlen(FilePass) + 1];//長さ分確保
+   // strcpy(filePass, FilePass);//コピー
+    
+    std::string filePass = FilePass;                // std::stringを使用してコピー
+    m_PartfilePass = filePass;    // そのまま格納
 
-    m_PartfilePass = filePass;
+  //  m_PartfilePass = filePass;
 }
 //=============================
 // 親を格納
@@ -609,4 +657,9 @@ void CModelParts::ChengeRGBAbool(bool chenge, D3DXCOLOR col)
 {
     m_bChengeCol = chenge;
     m_ChengeCol = col;
+}
+bool CModelParts::IsValid() const 
+{
+    // 条件: ポインタが有効であり、関連するリソースも正しい状態
+    return m_pParentParts == nullptr || m_pParentParts->pMotion != nullptr;
 }
