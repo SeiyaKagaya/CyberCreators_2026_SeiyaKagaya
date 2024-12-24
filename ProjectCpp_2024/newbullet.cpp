@@ -370,7 +370,7 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
 
 
             CSound* pSound = pManager->GetSound();
-            //   pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
+               pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
 
             break;
         }
@@ -612,7 +612,7 @@ void CNewBullet::Update()
 
 
             CScene::MODE NowState = CScene::GetNowScene();
-            if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 )
+            if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME2)
             {//ÉQÅ[ÉÄíÜ
 
                 D3DXCOLOR SetCol = D3DXCOLOR(m_col.r, m_col.g, m_col.b, 0.2f);

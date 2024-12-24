@@ -13,6 +13,7 @@
 
 
 class CShield;//前方宣言
+class CBulletLine;
 
 class CObjectMotionPlayer : public CObjectMotion
 {
@@ -121,6 +122,7 @@ private:
 	bool m_guard = false;
 	
 	CShield* m_pShield;//シールドを格納
+	CBulletLine* m_pBulletLine;
 
 	bool m_bBuletLockOn = false;//
 

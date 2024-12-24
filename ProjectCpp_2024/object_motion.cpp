@@ -189,7 +189,7 @@ void CObjectMotion::Update()
 				{
 					CManager* pManager = CManager::GetInstance();
 					CSound* pSound = pManager->GetSound();
-					//pSound->PlaySound(CSound::SOUND_LABEL_SE_RUN);
+					pSound->PlaySound(CSound::SOUND_LABEL_SE_RUN);
 					m_RunCnt = 15;
 				}
 				else

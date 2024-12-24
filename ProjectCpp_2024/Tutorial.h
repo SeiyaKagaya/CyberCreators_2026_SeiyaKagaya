@@ -45,7 +45,7 @@ private:
 
 	int m_SelectNum = 0;
 
-	bool m_bPhase2 = false;
+	//bool m_bPhase2 = false;
 };
 
 #endif

@@ -131,7 +131,7 @@ void CMissileALL::SetMissile(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR co
             CManager* pManager = CManager::GetInstance();
 
             CSound* pSound = pManager->GetSound();
-            //   pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
+               pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
 
             break;
         }
@@ -490,7 +490,7 @@ void CMissile::Update()
 
 
             CScene::MODE NowState = CScene::GetNowScene();
-            if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2)
+            if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3)
             {//ゲーム中
 
                 D3DXCOLOR SetCol = D3DXCOLOR(m_col.r, m_col.g, m_col.b, 0.4f);
@@ -609,7 +609,7 @@ void CMissile::HitCollision()
 
                         if (bHit == true)
                         {
-                            pEnemyNomal->SetDamage(25);
+                            pEnemyNomal->SetDamage(100);
                             CObjectShotFire::Create(EscData.Pos);
                             m_bUse = false;
                             break;
@@ -647,7 +647,7 @@ void CMissile::HitCollision()
 
                             if (btest == true)
                             {
-                                pEnemyFast->SetDamage(25);
+                                pEnemyFast->SetDamage(100);
                                 CObjectShotFire::Create(EscData.Pos);
                                 m_bUse = false;
                                 break;
@@ -686,7 +686,7 @@ void CMissile::HitCollision()
 
                             if (btest == true)
                             {
-                                pEnemyBoss->SetDamage(25);
+                                pEnemyBoss->SetDamage(35);
                                 CObjectShotFire::Create(EscData.Pos);
                                 m_bUse = false;
                                 break;
@@ -725,7 +725,7 @@ void CMissile::HitCollision()
 
                             if (btest == true)
                             {
-                                pEnemyBoss->SetDamage(25);
+                                pEnemyBoss->SetDamage(35);
                                 CObjectShotFire::Create(EscData.Pos);
                                 m_bUse = false;
                                 break;
@@ -771,7 +771,7 @@ void CMissile::HitCollision()
 
                         if (btest == true)
                         {
-                            pPlayer->SetDamage(5);
+                            pPlayer->SetDamage(85);
                             CObjectShotFire::Create(EscData.Pos);
                             m_bUse = false;
                             break;
@@ -937,10 +937,7 @@ void CMissile::SetID(int nID)
 //===========================
 void CMissile::Homing()
 {
-    if (m_pCaller == nullptr)
-    {
-        return;
-    }
+
 
     if (m_ShotType == CMissileALL::SHOTTYPE_PLAYER)
     {//プレイヤー弾
@@ -973,13 +970,29 @@ void CMissile::Homing()
     else  if (m_ShotType == CMissileALL::SHOTTYPE_ENEMY)
     {//敵弾
 
-        CObjectMotionPlayer* pObj = static_cast<CObjectMotionPlayer*>(m_pCaller);
+            //playerの位置を取得
+        CObject* pObj = nullptr;
+        pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
+
+        D3DXVECTOR3 TargetPos = {};
+
+        CObject::DATA EscData;
+
+        if (pObj != nullptr)
+        {
+            CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
+
+            EscData = pPlayer->GetClassData();
+            EscData.Pos.y += 130.0f;
+        }
+
+        ///CObjectMotionPlayer* pObj = static_cast<CObjectMotionPlayer*>(m_pCaller);
 
  //       D3DXVECTOR3 targetDirection = pObj->GetDATA().Pos - GetDATA().Pos;
 //        D3DXVec3Normalize(&targetDirection, &targetDirection);
 
          // 目標への方向ベクトル
-        D3DXVECTOR3 targetDirection = D3DXVECTOR3(pObj->GetClassData().Pos.x, pObj->GetClassData().Pos.y + 50.0f, pObj->GetClassData().Pos.z) - GetDATA().Pos;
+        D3DXVECTOR3 targetDirection = EscData.Pos - GetDATA().Pos;
 
         D3DXVec3Normalize(&targetDirection, &targetDirection);//正規化
 

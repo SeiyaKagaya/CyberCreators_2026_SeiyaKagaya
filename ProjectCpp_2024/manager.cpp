@@ -282,7 +282,7 @@ void CManager::Update()
 		{//操作方法--trueでコントローラー
 			if (m_pjoyPad->GetTrigger(CInputJoyPad::JOYKEY_START) == true || m_pKeyboard->GetTrigger(DIK_SPACE))
 			{
-			//	m_Sound->PlaySound(CSound::SOUND_LABEL_SE_ENTER2);
+				m_Sound->PlaySound(CSound::SOUND_LABEL_SE_ENTER2);
 
 				SetPauseState(true);
 			}

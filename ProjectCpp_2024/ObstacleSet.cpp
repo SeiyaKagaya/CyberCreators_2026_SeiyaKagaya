@@ -247,9 +247,11 @@ void CObstacleSet::Update()
     CManager* pManager = CManager::GetInstance();
     CInputKeyboard* keyboard = pManager->GetKeyboard();
        
+    m_nType;
+
     if (m_StageBlock == true)
     {
-
+        
     }
 
 }

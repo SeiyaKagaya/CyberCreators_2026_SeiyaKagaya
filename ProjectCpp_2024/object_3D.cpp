@@ -155,8 +155,8 @@ HRESULT CObject3D::Init()
     //テクスチャ取得
     CAllTexture* pTexture = pManager->GetTexture();
 
-//    int texIndex = pTexture->Regist("DATA\\TEXTURE\\TestField.png", EscDevice);//テクスチャ登録
-    int texIndex = pTexture->Regist("DATA\\TEXTURE\\umi1.jpg", EscDevice);//テクスチャ登録
+   int texIndex = pTexture->Regist("DATA\\TEXTURE\\koke.png", EscDevice);//テクスチャ登録
+ //   int texIndex = pTexture->Regist("DATA\\TEXTURE\\umi1.jpg", EscDevice);//テクスチャ登録
 
 
     

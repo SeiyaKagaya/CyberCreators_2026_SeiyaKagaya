@@ -66,11 +66,16 @@ public:
 
 	static void SetStayNextStage(bool bSet) { m_bNextStageStay = bSet; };
 	static bool GetStayNextStage() {return m_bNextStageStay;};
+	static void AddClearNum(int nNum) { m_ClearNum += nNum; };
+	static void ResetClearNum() { m_ClearNum = 0; };
+	static int GetClearNum() { return m_ClearNum; };
 
 private:
 	static  MODE m_NowState;
 	static bool m_bStageClear;
 	static bool m_bNextStageStay;
+
+	static int m_ClearNum;
 	//static bool m_bNow3DMode;//åªç›3DÉÇÅ[ÉhÇ©
 
 
@@ -235,6 +240,11 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
+
+private:
+	//void* m_EnemyBoss[3];
+
+
 };
 //
 //class CGame4 :public CScene

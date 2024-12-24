@@ -210,6 +210,21 @@ void CCamera::Update()
 			m_rot = D3DXVECTOR3(-0.3293f, -2.53f, 0.0f);
 		}
 	}
+	else if (NowState == CScene::MODE_MOVIE2)
+	{
+		m_nCntFrame++;
+
+		m_posR = D3DXVECTOR3(13176.0391f, 5065.87012f, 1104.94104f);
+		m_posV = D3DXVECTOR3(12809.5928f, 5382.64258f, 599.597595f);
+		m_rot = D3DXVECTOR3(-0.469602913f, -0.627402484f, 0.00000000f);
+
+		if (m_nCntFrame < 430)
+		{
+//			m_posR = D3DXVECTOR3(1692.0f, 7140.0f, 14062.0f);
+//			m_posV = D3DXVECTOR3(1312.0f, 7367.0f, 14604.0f);
+//			m_rot = D3DXVECTOR3(-0.3293f, -2.53f, 0.0f);
+		}
+	}
 }
 //=============================
 //更新--2D
@@ -361,7 +376,7 @@ void  CCamera::ActionUpdate3D()
 //		m_posR = EscData.Pos;//注視点
 
 
-		if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2)
+		if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3)
 		{//ゲーム中
 		//カメラ距離	
 

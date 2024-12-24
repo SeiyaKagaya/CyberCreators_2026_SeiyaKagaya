@@ -88,12 +88,12 @@ void CSea::Update()
     CScene::MODE NowState = CScene::GetNowScene();
 
 
-    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2|| NowState == CScene::MODE_MOVIE)
+    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3 || NowState == CScene::MODE_MOVIE || NowState == CScene::MODE_MOVIE2)
     {//ゲーム中
 
      // テクスチャオフセットの更新 (アニメーション速度)
-        m_texOffsetX += 0.0002f;  // X方向に少しずつ移動
-        m_texOffsetY += 0.0001f;  // X方向に少しずつ移動
+        m_texOffsetX += 0.00002f;  // X方向に少しずつ移動
+        m_texOffsetY += 0.00001f;  // X方向に少しずつ移動
 
     }
     else if (NowState == CScene::MODE_OP)
@@ -179,8 +179,8 @@ void CSea::InputpVtx()
     //取得
     DATA EscData = GetDATA();
 
-    float fTest = 9900.0f * 3.6f;
-    float fTest2 = 9900.0f * 3.6f;
+    float fTest = 9900.0f * 5.6f;
+    float fTest2 = 9900.0f * 5.6f;
 
     //頂点座標の設定
     pVtx[0].pos = D3DXVECTOR3(-fTest2, 0.0f, fTest);

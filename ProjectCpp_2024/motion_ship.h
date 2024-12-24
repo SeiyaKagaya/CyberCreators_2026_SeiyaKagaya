@@ -4,9 +4,9 @@
 // Author seiya kagaya
 //
 //=========================================================
-#ifndef _OBJECT_B2_H
+#ifndef _OBJECT_SHIP_H
 
-#define _OBJECT_B2_H//二重インクルード防止
+#define _OBJECT_SHIP_H//二重インクルード防止
 
 #include "object_motion.h"
 #include "newbullet.h"
@@ -14,7 +14,7 @@
 
 //class CShield;//前方宣言
 
-class CObjectB2 : public CObjectMotion
+class CObjectShip : public CObjectMotion
 {
 public:
 	//static const int START_LIFE = 500;
@@ -40,14 +40,14 @@ public:
 
 
 
-	CObjectB2(int nPriority = CObject::LAYERINDEX_MOTIONB2);//コンストラクタ
-	~CObjectB2() override;//デストラクタ
+	CObjectShip(int nPriority = CObject::LAYERINDEX_MOTIONB2);//コンストラクタ
+	~CObjectShip() override;//デストラクタ
 	HRESULT Init()override;
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
 
-	static CObjectB2* Create(std::string pfilePass, DATA SetData);//オブジェクト生成
+	static CObjectShip* Create(std::string pfilePass, DATA SetData);//オブジェクト生成
 
 
 

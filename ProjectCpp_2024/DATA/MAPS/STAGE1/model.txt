@@ -9,7 +9,7 @@ SCRIPT			# この行は絶対消さないこと！
 #------------------------------------------------------------------------------
 # モデル数
 #------------------------------------------------------------------------------
-NUM_MODEL = 6
+NUM_MODEL = 8
 
 #------------------------------------------------------------------------------
 # モデルファイル名
@@ -20,6 +20,8 @@ MODEL_FILENAME = DATA/MODEL/House.x				# [2]
 MODEL_FILENAME = DATA/MODEL/oden2.x			# [3]
 MODEL_FILENAME = DATA/MODEL/StageBlock.x			# [4]
 MODEL_FILENAME = DATA/MODEL/stage1.x			# [5]
+MODEL_FILENAME = DATA/MODEL/bill1.x				#[6]
+MODEL_FILENAME = DATA/MODEL/bill2.x				#[7]
 
 #------------------------------------------------------------------------------
   # モデル配置情報
@@ -31,6 +33,88 @@ ROT = 0.00 0.00 0.00
 END_MODELSET
 
 
+MODELSET
+TYPE = 6
+POS = 29487.7 109.0 5021.6
+ROT = 0.00 0.00 0.00
+END_MODELSET
 
+MODELSET
+TYPE = 6
+POS = 29457.2 109.0 6943.1
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 6
+POS = 29415.1 109.0 9589.4
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 7
+POS = 29361.1 109.0 12979.4
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 6
+POS = 29252.7 109.0 16554.1
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 6
+POS = 25521.6 123.3 3155.8
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 6
+POS = 22772.7 123.3 3332.7
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 7
+POS = 19652.5 123.3 1004.4
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 6
+POS = 16657.9 123.3 3206.2
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 7
+POS = 14928.6 123.3 5451.4
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 6
+POS = 14521.1 123.3 7648.2
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 7
+POS = 14890.2 123.3 9688.7
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 6
+POS = 14208.9 123.3 11915.5
+ROT = 0.00 0.00 0.00
+END_MODELSET
+
+MODELSET
+TYPE = 7
+POS = 15146.5 123.3 15122.1
+ROT = 0.00 0.00 0.00
+END_MODELSET
 
 END_SCRIPT		# この行は絶対消さないこと！

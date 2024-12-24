@@ -65,6 +65,8 @@ HRESULT CObjectMotionEnemyGuard::Init()
 //=============================
 void CObjectMotionEnemyGuard::Uninit()
 {
+	CScene::AddClearNum(1);
+
 	m_LockOnUI->SetDeath(true);
 	m_LockOnUI_Main->SetDeath(true);
 
@@ -100,7 +102,7 @@ void CObjectMotionEnemyGuard::Update()
 
 			DATA classData = GetClassData();
 
-
+	
 			//相手、自分のGRID番号がかわったか
 			bool bChange = false;
 
@@ -206,7 +208,7 @@ void CObjectMotionEnemyGuard::Update()
 
 			classData.move.x = 0.0f;
 			classData.move.y = 0.0f;
-			classData.move.z = 0.0f;
+			classData.move.z = 2.0f;
 
 
 			classData = GetClassData();
@@ -232,26 +234,46 @@ void CObjectMotionEnemyGuard::Update()
 
 			if (m_nLife <= 0)
 			{
-				CObject* pObj = nullptr;
-				pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
-				if (pObj != nullptr)
+			//	CScene::AddClearNum(1);
+
+				SetNowMotion_Parent(MOTIONTYPE_STANDBY);
+				SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+				//CObjectMotion::Update();
+				//Motion_Parent();
+				//Motion_Sub();
+				classData = GetClassData();
+
+				classData.move.y = -1;
+				SetClassData(classData);
+
+				m_EscCnt--;
+
+				if (m_EscCnt < 0)
 				{
-					CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
-					if (pMissile != nullptr)
-					{ // 先頭がない==プライオリティまるっとない
-						pMissile->KillMissileTarget(this);
+					CScore::AddScore(CScore::TANK_SCORE1*3);
+					
+					CObject* pObj = nullptr;
+					pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
+					if (pObj != nullptr)
+					{
+						CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
+						if (pMissile != nullptr)
+						{ // 先頭がない==プライオリティまるっとない
+							pMissile->KillMissileTarget(this);
+						}
+
 					}
 
-				}
+					CScore::AddScore(CScore::TANK_SCORE1);
 
-				CScore::AddScore(CScore::TANK_SCORE1);
+					SetDeath(true);
 
-				SetDeath(true);
-
-				Explosion3D::Create(GetClassData().Pos);
-				for (int i = 0; i < GetMaxLoadPartsNum(); i++)
-				{//パーツもDEATH
-					GetModelParts(i)->SetDeath(true);
+					Explosion3D::Create(GetClassData().Pos);
+					for (int i = 0; i < GetMaxLoadPartsNum(); i++)
+					{//パーツもDEATH
+						GetModelParts(i)->SetDeath(true);
+					}
+				
 				}
 			}
 
@@ -283,6 +305,65 @@ void CObjectMotionEnemyGuard::Update()
 
 		//SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 		//SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+		}
+		else if (NowState == CScene::MODE_MOVIE2)
+		{
+			m_nCntFrame++;
+
+			DATA classData = GetClassData();
+			//classData.rot.x = -1.57f;
+			//classData.move.z = -7.0f;
+
+			if (m_nCntFrame >= 300 && m_nCntFrame < 450)
+			{
+				//  SetNowMotion_Parent(MOTIONTYPE_OP1);
+				//	SetNowMotion_Sub();
+			}
+
+			if (m_nCntFrame == 450)
+			{
+				//			m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 320.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 25, 20, 3, "....!!\n12時よりアクティブソナー！\n魚雷接近！回避！", D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240);
+			}
+
+			if (m_nCntFrame == 650)
+			{//爆発
+				//Explosion3D::Create(D3DXVECTOR3(classData.Pos.x, classData.Pos.y, classData.Pos.z));
+			}
+
+			if (m_nCntFrame > 650)
+			{//
+
+			}
+
+			if (m_nCntFrame >= 800 && m_nCntFrame < 1260)
+			{
+				//			m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 320.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 25, 40, 2, "クソッ............総員退艦！\n.........................\n...............", D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240);
+
+				classData.move.y = +0.5f;
+				classData.move.z = 1.2f;
+
+			}
+
+			if (m_nCntFrame > 1260)
+			{
+				classData.move.y = 0.0f;
+				classData.move.z = 0.0f;
+			}
+			
+
+			SetClassData(classData);
+
+
+			//DATA Head;
+			//Head = CObject::DataInit();
+			////Head.rot.x = 1.57f;
+
+			////基底クラスからパーツにデータを受け渡し
+			//SetChangeDataInObjectMotion(Head);
+
+
+
+			CObjectMotion::Update();//------------------更新
 		}
 
 	}
@@ -397,6 +478,27 @@ void CObjectMotionEnemyGuard::Attack()
 	TurretRotation(SetPos, EscData.Pos, TargetData.move);
 	//----------------------------------------------------------------------------------
 
+	if (m_MissileDelay <= 0)
+	{
+		CObject* pObj = nullptr;
+		pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
+
+		CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
+		DATA Setdata = DataInit();
+
+		Setdata.Pos = GetClassData().Pos;
+
+		pMissile->SetMissile(Setdata, 0, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), nullptr, CMissileALL::SHOTTYPE_ENEMY);
+
+		m_MissileDelay = MISSILESHOTDELAY;
+	}
+	else
+	{
+		m_MissileDelay--;
+	}
+
+
+
 	if (m_BulletDelay <= 0)
 	{
 		DATA SETDATA = CObject::DataInit();
@@ -438,17 +540,6 @@ void CObjectMotionEnemyGuard::Attack()
 		{
 			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_NOMAL, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D);
 		}
-
-
-
-
-
-
-
-
-
-
-
 
 		if (bNoShot == false)
 		{

@@ -239,11 +239,11 @@ void CRenderer::Draw()
 			pManager->GetFade()->Draw();
 		}
 
-//#if _DEBUG
+#if _DEBUG
 
 		DrawFPS();
-//#else
-//#endif // _DEBUG
+#else
+#endif // _DEBUG
 
 		//----------------------------------------------------------------------------------------------------------------------------------
 

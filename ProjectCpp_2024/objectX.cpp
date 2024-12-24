@@ -16,6 +16,15 @@
 //=============================
 CObjectX::CObjectX(int nPriority) :CObject(nPriority)
 {
+    m_Data.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_Data.OldPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_Data.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_Data.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_Data.MinLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_Data.MaxLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+    m_Data.Radius = 0.0f;
+
+
     for (int i = 0; i < MAX_MAT; i++)
     {
         m_bFast[i] = false;
@@ -88,13 +97,7 @@ CObjectX::~CObjectX()
 //=============================
 HRESULT CObjectX::Init()
 {
-    m_Data.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.OldPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.MinLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.MaxLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.Radius = 0.0f;
+
 
 
     SetObjectType(CObject::OBJECT_OBJECT3D);
@@ -263,7 +266,9 @@ void CObjectX::Draw()
             // テクスチャの設定
             if (pMat[nCntMat].pTextureFilename != nullptr)
             {
+           
                 EscDevice->SetTexture(0, m_pTexture[nCntMat]);
+//                EscDevice->SetTexture(0, nullptr);
             }
             else
             {

@@ -650,12 +650,57 @@ void CGameUI::Draw()
             DWORD dwResult = XInputGetState(0, &joykeystate);
 
 
-             hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
             
- 
+            
 
-            EscDevice->SetTexture(0, nullptr);
 
+
+
+
+
+
+
+             if (nCnt == UI_MAP)
+             {
+                 // 配置物プライオリティの先頭を取得
+                 CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONPLAYER);
+
+                 if (pObject != nullptr)
+                 { // 先頭がない==プライオリティまるっとない
+
+                     if (pObject->GetObjectType() == CObject::OBJECT_MOTIONPLAYER)
+                     { // 対象のモデルのとき
+                         CObject::DATA EscData;
+
+                         // ここで使用分宣言
+                         CObjectMotionPlayer* pMotionPlayer;
+
+                         pMotionPlayer = (CObjectMotionPlayer*)pObject;
+
+                         D3DXVECTOR3 PlayerPos = pMotionPlayer->GetClassData().Pos;
+
+                         D3DXVECTOR3 GateMin = D3DXVECTOR3(-9900.0f, 0.0f, 0.0f);
+                         D3DXVECTOR3 GateMax = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+                         if (GateMin.x <= PlayerPos.x && GateMax.x >= PlayerPos.x)
+                         {
+                             hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+                         }
+                         else
+                         {
+                             const char* aDataEsc = "-NoSignal-";
+
+     
+                             CFont::DrawTextSet(D3DXVECTOR3(50.0f, 110.0f, 0.0f), 25, CFont::FONT_DIGITAL, D3DXCOLOR(0.0f, 1.0f, 0.0f, m_nWeponUIDrawA[UI_MAP]), aDataEsc);
+
+                         }
+                     }
+                 }
+             }
+             else
+             {
+                 hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+             }
         }
 
         const char* aData = "移動";
@@ -755,8 +800,8 @@ void CGameUI::Draw()
         //aData = "テストマップ";
         //CFont::DrawTextSet(D3DXVECTOR3(10.0f, SCREEN_HEIGHT / 2.0f - 280.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f), aData);
 
-        aData = "基本\n操作UI\nここ";
-        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH-110.0f, SCREEN_HEIGHT / 2.0f - 160.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), aData);
+      //  aData = "基本\n操作UI\nここ";
+     //   CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH-110.0f, SCREEN_HEIGHT / 2.0f - 160.0f, 0.0f), 35, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f), aData);
     }
 
 }
@@ -816,10 +861,13 @@ void CGameUI::InputpVtx()
 
     D3DXVECTOR3 MapPlayerPos2 = D3DXVECTOR3(MapPlayerPos.x / 9900.0f, -MapPlayerPos.y / 3300.0f, MapPlayerPos.z);
 
-    pVtx[0].tex = D3DXVECTOR2(MapPlayerPos2.x - 0.11f, MapPlayerPos2.y - 0.33f);
-    pVtx[1].tex = D3DXVECTOR2(MapPlayerPos2.x + 0.11f, MapPlayerPos2.y - 0.33f);
-    pVtx[2].tex = D3DXVECTOR2(MapPlayerPos2.x - 0.11f, MapPlayerPos2.y + 0.33f);
-    pVtx[3].tex = D3DXVECTOR2(MapPlayerPos2.x + 0.11f, MapPlayerPos2.y + 0.33f);
+    float Diff = 0.11f;
+    float Diff2 = 0.33f;
+
+    pVtx[0].tex = D3DXVECTOR2(MapPlayerPos2.x - Diff, MapPlayerPos2.y - Diff2);
+    pVtx[1].tex = D3DXVECTOR2(MapPlayerPos2.x + Diff, MapPlayerPos2.y - Diff2);
+    pVtx[2].tex = D3DXVECTOR2(MapPlayerPos2.x - Diff, MapPlayerPos2.y + Diff2);
+    pVtx[3].tex = D3DXVECTOR2(MapPlayerPos2.x + Diff, MapPlayerPos2.y + Diff2);
 
     m_pVtxBuff[m_MapNum]->Unlock();     
 }

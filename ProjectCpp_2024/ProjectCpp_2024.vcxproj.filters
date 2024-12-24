@@ -121,9 +121,6 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE">
       <UniqueIdentifier>{cbb59b0e-8aa4-4387-9119-2243cf9c3704}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_NOMAL">
-      <UniqueIdentifier>{b59a4c03-4f61-42e9-8c4d-3a2af899ce2c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MODEL_PARTS">
       <UniqueIdentifier>{9b8680a7-737a-4f9d-8509-209d3ad05d94}</UniqueIdentifier>
     </Filter>
@@ -196,8 +193,17 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS_GUARD">
       <UniqueIdentifier>{f75859d2-3d9b-4a8b-a310-87b8d3100087}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBSTACLE_SET/\PLAYER_MOTION">
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_NOMAL">
+      <UniqueIdentifier>{b59a4c03-4f61-42e9-8c4d-3a2af899ce2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION">
       <UniqueIdentifier>{21c19b49-526e-463c-9ff8-b6ab33339731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTIOM_SHIP">
+      <UniqueIdentifier>{30881b3f-0b62-4754-b52b-8c14b7c31130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\BulletLine">
+      <UniqueIdentifier>{22933a59-cef0-4283-8686-d2c905dad6be}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -274,7 +280,7 @@
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/</Filter>
     </ClCompile>
     <ClCompile Include="player_motion.cpp">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBSTACLE_SET/\PLAYER_MOTION</Filter>
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION</Filter>
     </ClCompile>
     <ClCompile Include="ModelParts.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MODEL_PARTS</Filter>
@@ -371,6 +377,12 @@
     </ClCompile>
     <ClCompile Include="enemy_motion_guard.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS_GUARD</Filter>
+    </ClCompile>
+    <ClCompile Include="motion_ship.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTIOM_SHIP</Filter>
+    </ClCompile>
+    <ClCompile Include="CBulletLine.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\BulletLine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -510,7 +522,7 @@
       <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\LineUI</Filter>
     </ClInclude>
     <ClInclude Include="player_motion.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBSTACLE_SET/\PLAYER_MOTION</Filter>
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION</Filter>
     </ClInclude>
     <ClInclude Include="sky.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\SKY</Filter>
@@ -544,6 +556,12 @@
     </ClInclude>
     <ClInclude Include="enemy_motion_guard.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_BOSS_GUARD</Filter>
+    </ClInclude>
+    <ClInclude Include="motion_ship.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTIOM_SHIP</Filter>
+    </ClInclude>
+    <ClInclude Include="CBulletLine.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\BulletLine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

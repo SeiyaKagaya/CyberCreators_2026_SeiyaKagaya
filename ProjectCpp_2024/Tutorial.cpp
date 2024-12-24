@@ -115,12 +115,12 @@ HRESULT CTutorialUI::Init()
 
             m_pVtxBuff[nCnt]->Lock(0, 0, (void**)&pVtx, 0);
 
-            m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 200.0f, SCREEN_HEIGHT * 0.5f + 90.0f , 0.0f);
+            m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 000.0f, SCREEN_HEIGHT * 0.5f - 90.0f , 0.0f);
 
-            pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 400.0f, m_Pos[nCnt].y - 230.0f, 0.0f);
-            pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 400.0f, m_Pos[nCnt].y - 230.0f, 0.0f);
-            pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 400.0f, m_Pos[nCnt].y + 230.0f, 0.0f);
-            pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 400.0f, m_Pos[nCnt].y + 230.0f, 0.0f);
+            pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 600.0f, m_Pos[nCnt].y - 130.0f, 0.0f);
+            pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 600.0f, m_Pos[nCnt].y - 130.0f, 0.0f);
+            pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 600.0f, m_Pos[nCnt].y + 130.0f, 0.0f);
+            pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 600.0f, m_Pos[nCnt].y + 130.0f, 0.0f);
 
             pVtx[0].rhw = 1.0f;
             pVtx[1].rhw = 1.0f;
@@ -146,12 +146,12 @@ HRESULT CTutorialUI::Init()
 
             m_pVtxBuff[nCnt]->Lock(0, 0, (void**)&pVtx, 0);
 
-            m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 200.0f, SCREEN_HEIGHT * 0.5f + 90.0f, 0.0f);
+            m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.5f + 280.0f, SCREEN_HEIGHT * 0.5f +180.0f, 0.0f);
             
-            pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 400.0f, m_Pos[nCnt].y - 230.0f, 0.0f);
-            pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 400.0f, m_Pos[nCnt].y - 230.0f, 0.0f);
-            pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 400.0f, m_Pos[nCnt].y + 230.0f, 0.0f);
-            pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 400.0f, m_Pos[nCnt].y + 230.0f, 0.0f);
+            pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x - 300.0f, m_Pos[nCnt].y - 130.0f, 0.0f);
+            pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + 300.0f, m_Pos[nCnt].y - 130.0f, 0.0f);
+            pVtx[2].pos = D3DXVECTOR3(m_Pos[nCnt].x - 300.0f, m_Pos[nCnt].y + 130.0f, 0.0f);
+            pVtx[3].pos = D3DXVECTOR3(m_Pos[nCnt].x + 300.0f, m_Pos[nCnt].y + 130.0f, 0.0f);
 
             pVtx[0].rhw = 1.0f;
             pVtx[1].rhw = 1.0f;
@@ -222,9 +222,6 @@ void CTutorialUI::Update()
     DWORD dwResult = XInputGetState(0, &joykeystate);
 
 
-    if (m_bPhase2 == false)
-    {//第一画面
-
         if (dwResult == ERROR_SUCCESS)
         {//キーボード/コントローラー入力反映(移動)
 
@@ -233,7 +230,7 @@ void CTutorialUI::Update()
             if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_UP))
             {
                 CSound* pSound = pManager->GetSound();
-             //   pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
 
                 AddSelectNum(-1);
                 //        m_bSetStick = true;
@@ -241,7 +238,7 @@ void CTutorialUI::Update()
             else if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_DOWN))
             {
                 CSound* pSound = pManager->GetSound();
-             //   pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
 
 
                 AddSelectNum(+1);
@@ -355,7 +352,7 @@ void CTutorialUI::Update()
             if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left))
             {
                 CSound* pSound = pManager->GetSound();
-         //       pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
 
 
                 CFade* pFade = {};
@@ -370,18 +367,19 @@ void CTutorialUI::Update()
 
                     break;
 
-                case 1://操作方式変更
-
-                    m_bPhase2 = true;
-
-                    break;
-
-                case 2://次に進む
-
-                 //   m_bStopNow = false;
+                case 1:
 
                     pFade = pManager->GetFade();
                     pFade->SetFade(CScene::MODE_TITLE);
+
+                    break;
+
+                case 2:
+
+                 //   m_bStopNow = false;
+
+                    /*pFade = pManager->GetFade();
+                    pFade->SetFade(CScene::MODE_TITLE);*/
 
 
                     break;
@@ -392,215 +390,43 @@ void CTutorialUI::Update()
         }
         else
         {//キーボード入力反映(移動)
-
-            if (keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left))
-            {
-                CSound* pSound = pManager->GetSound();
-             //   pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
-
-                CFade* pFade;
-
-                switch (GetSelectNum())
-                {
-                case 0://タイトルに戻る
-
-                    pFade = pManager->GetFade();
-//                    pFade->SetFade(CScene::MODE_GAME);
-                    pFade->SetFade(CScene::MODE_OP);
-
-                    break;
-
-                case 1://操作方式変更
-
-                    m_bPhase2 = true;
-
-                    break;
-
-                case 2://次に進む
-
-                 //   m_bStopNow = false;
-
-                    pFade = pManager->GetFade();
-                    pFade->SetFade(CScene::MODE_TITLE);
-
-
-                    break;
-                }
-            }
+//
+//            if (keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left))
+//            {
+//                CSound* pSound = pManager->GetSound();
+//           
+//
+//                CFade* pFade;
+//
+//                switch (GetSelectNum())
+//                {
+//                case 0://タイトルに戻る
+//
+//                    pFade = pManager->GetFade();
+////                    pFade->SetFade(CScene::MODE_GAME);
+//                    pFade->SetFade(CScene::MODE_OP);
+//
+//                    break;
+//
+//                case 1://操作方式変更
+//
+//             
+//
+//                    break;
+//
+//                case 2://次に進む
+//
+//                 //   m_bStopNow = false;
+//
+//                    pFade = pManager->GetFade();
+//                    pFade->SetFade(CScene::MODE_TITLE);
+//
+//
+//                    break;
+//                }
+//            }
         }
-    }
-    else
-    {//画面2番目（操作方法変更）
-
-
-        if (dwResult == ERROR_SUCCESS)
-        {//キーボード/コントローラー入力反映(移動)
-
-            if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_LEFT))
-            {
-                CSound* pSound = pManager->GetSound();
-             //   pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
-
-                
-
-                if (pManager->bGetInputState() == true)
-                {//操作方法--trueでコントローラー
-                    pManager->bSetInputState(false);
-                }
-                else
-                {
-
-                    pManager->bSetInputState(true);
-                }
-
-            }
-            else if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_RIGHT))
-            {
-                CSound* pSound = pManager->GetSound();
-               // pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
-
-
-                if (pManager->bGetInputState() == true)
-                {//操作方法--trueでコントローラー
-                    pManager->bSetInputState(false);
-                }
-                else
-                {
-
-                    pManager->bSetInputState(true);
-                }
-            }
-
-
-
-
-        }
-        else
-        {//キーボード入力反映(移動)
-
-            //if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_LEFT))
-            //{
-            //    if (pManager->bGetInputState() == true)
-            //    {//操作方法--trueでコントローラー
-            //        pManager->bSetInputState(false);
-            //    }
-            //    else
-            //    {
-
-            //        pManager->bSetInputState(true);
-            //    }
-            //}
-            //else if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_RIGHT))
-            //{
-            //    if (pManager->bGetInputState() == true)
-            //    {//操作方法--trueでコントローラー
-            //        pManager->bSetInputState(false);
-            //    }
-            //    else
-            //    {
-            //        pManager->bSetInputState(true);
-            //    }
-            //}
-
-
-
-        }
-
-        // ここで、マウスの位置を取得して表示する処理を行う
-        POINT mousePos = keyboard->GetMousePosition();
-
-        D3DXVECTOR3 POS = D3DXVECTOR3(0.0f, 0.0f, 0.0f);// keyboard->GetMouseRayIntersection(*pManager->GetCamera());//マウス位置
-     //   POINT point= keyboard->GetMousePosition();
-
-        POS.x = (float)mousePos.x;
-        POS.y = (float)mousePos.y;
-
-
-        float MinX[2];
-        MinX[0] = 560.0f;
-        MinX[1] = 915.0f;
-
-        float MaxX[2];
-        MaxX[0] = 870.0f;
-        MaxX[1] = 1180.0f;
-
-        float MinY[2];
-        MinY[0] = 180.0f;
-        MinY[1] = 180.0f;
-
-        float MaxY[2];
-        MaxY[0] = 235.0f;
-        MaxY[1] = 235.0f;
-
-        bool bHit = false;
-
-        for (int nCnt = 0; nCnt < 2; nCnt++)
-        {
-            if ((POS.y) >= MinY[nCnt] &&
-                (POS.y) <= MaxY[nCnt])
-            {//上下
-                if ((POS.x) >= MinX[nCnt] &&
-                    (POS.x) <= MaxX[nCnt])
-                {//左右
-                    bHit = true;
-                }
-            }
-
-            if ((POS.x) >= MinX[nCnt] &&
-                (POS.x) <= MaxX[nCnt])
-            {//左右
-                if ((POS.y) >= MinY[nCnt] &&
-                    (POS.y) <= MaxY[nCnt])
-                {//上下
-                    bHit = true;
-                }
-            }
-
-            if (bHit == true)
-            {
-                if (nCnt == 0)
-                {
-                    pManager->bSetInputState(false);
-                }
-                else
-                {
-                    if (dwResult == ERROR_SUCCESS)
-                    {//キーボード/コントローラー入力反映(移動)
-                        pManager->bSetInputState(true);
-                    }
-                }
-
-                break;
-            }
-        }
-
-
-
-
-        if (dwResult == ERROR_SUCCESS)
-        {//キーボード/コントローラー入力反映(移動)
-
-            if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || JoyPad->GetTrigger(CInputJoyPad::JOYKEY_B) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left))
-            {
-                CSound* pSound = pManager->GetSound();
-             //   pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
-
-                m_bPhase2 = false;
-            }
-        }
-        else
-        {
-            if (keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left))
-            {
-                CSound* pSound = pManager->GetSound();
-              //  pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
-
-                m_bPhase2 = false;
-            }
-        }
-
-    }
-
+    
 
 
 
@@ -651,35 +477,36 @@ void CTutorialUI::Draw()
         //ショイパットの状態を取得
         DWORD dwResult = XInputGetState(0, &joykeystate);
 
+        EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 
-        switch (nCnt)
-        {
-        case 0://背景
-            hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-            break;
+        //switch (nCnt)
+        //{
+        //case 0://背景
+        //    hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+        //    break;
 
-        case 1://キーマウ
+        //case 1://キーマウ
 
-            if (pManager->bGetInputState() == false)
-            {//操作方法--trueでコントローラー
-                hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-            }
-            else
-            {//マウス
+        //    if (pManager->bGetInputState() == false)
+        //    {//操作方法--trueでコントローラー
+        //        hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+        //    }
+        //    else
+        //    {//マウス
 
-            }
-            
-            break;
+        //    }
 
-        case 2://コントローラー
+        //    break;
 
-            if (pManager->bGetInputState() == true)
-            {//操作方法--trueでコントローラー
-                hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-            }
+        //case 2://コントローラー
 
-            break;
-        }
+        //    if (pManager->bGetInputState() == true)
+        //    {//操作方法--trueでコントローラー
+        //        hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+        //    }
+
+        //    break;
+        //}
 
 
 
@@ -693,11 +520,19 @@ void CTutorialUI::Draw()
 
 
     const char* aData = "-TUTORIAL-";
-    CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f -600.0f, SCREEN_HEIGHT / 2.0f - 350.0f, 0.0f), 103, CFont::FONT_GENKAI, D3DXCOLOR(0.1f,0.1f,0.1f, 1.0f), aData);
- 
- 
+   // CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 600.0f, SCREEN_HEIGHT / 2.0f - 340.0f, 0.0f), 80, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f), aData);
 
 
+
+    aData = "今回の任務は、-新型揚陸艦-の捕縛作戦の陽動である。単独潜入後、制限時間以内に\n地上部隊を撃破しつつ敵基地入口にて待機。揚陸艦の捕縛が完遂したら作戦成功である。\n捕縛自体は海軍のみで行うので簡単な任務になるだろう。";
+    CFont::DrawTextSet(D3DXVECTOR3(100.0f, 28.0f, 0.0f), 30, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f), aData);
+
+    aData = "陽動作戦 図解";
+    CFont::DrawTextSet(D3DXVECTOR3(100.0f, 150.0f, 0.0f), 30, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f), aData);
+
+
+    aData = "操作方法      Aで選択";
+    CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH - 400.0f, SCREEN_HEIGHT - 45.0f, 0.0f), 40, CFont::FONT_SOUKOUMINCHO, D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.0f), aData);
 
 
     XINPUT_STATE joykeystate;
@@ -708,13 +543,11 @@ void CTutorialUI::Draw()
     {
     case 0:
         aData = "ゲームに進む";
-        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f - 128.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData);
+        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f + 128.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData);
 
 
 
-        aData = "操作方法変更";
-        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f + 40.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.8f), aData);
-
+     
 
 
         aData = "タイトルに戻る";
@@ -727,180 +560,21 @@ void CTutorialUI::Draw()
 
         aData = "ゲームに進む";
 
-        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f - 128.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.8f), aData);
-
-        if (m_bPhase2 == true)
-        {//第二フェーズ
-            aData = "操作方法変更";
-            CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f + 40.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 1.0f, 1.0f), aData);
-        }
-        else
-        {
-            aData = "操作方法変更";
-            CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f + 40.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData);
-        }
-
-        
-        aData = "タイトルに戻る";
-        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f + 208.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.8f), aData);
-
-
-        break;
-
-    case 2:
-        aData = "ゲームに進む";
-        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f - 128.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.8f), aData);
+        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f + 128.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.8f), aData);
 
 
 
-        aData = "操作方法変更";
-        CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f + 40.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.8f), aData);
-
-
-
+ 
 
         aData = "タイトルに戻る";
         CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 527.0f, SCREEN_HEIGHT / 2.0f + 208.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData);
 
-      
+
         break;
 
+   
     }
 
-    aData = "+現在の操作方法+";
-    CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 25.0f, SCREEN_HEIGHT / 2.0f - 230.0f, 0.0f), 53, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.9f), aData);
-
-
-
-    if (m_bPhase2 == true)
-    {//クリック後
-
-        XINPUT_STATE joykeystate;
-        //ショイパットの状態を取得
-        DWORD dwResult = XInputGetState(0, &joykeystate);
-
-        if (dwResult == ERROR_SUCCESS)
-        {//パッド接続あり
-
-            if (pManager->bGetInputState() == false)
-            {//操作方法--trueでコントローラー
-                aData = "キーボード・マウス操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 80.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), aData);
-
-                aData = "コントローラー操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.8f), aData);
-
-            }
-            else
-            {
-                aData = "キーボード・マウス操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 80.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.8f), aData);
-
-                aData = "コントローラー操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.1f, 0.1f, 1.0f), aData);
-
-            }
-
-    
-        }
-        else
-        {
-            if (pManager->bGetInputState() == false)
-            {//操作方法--trueでコントローラー
-                aData = "キーボード・マウス操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 80.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData);
-
-                aData = "コントローラー操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.8f), aData);
-                aData = "===============";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), aData);
-
-                aData = "※未接続";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 400.0f, SCREEN_HEIGHT / 2.0f - 200.0f, 0.0f), 28, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 0.95f), aData);
-
-            }
-            else
-            {
-                aData = "キーボード・マウス操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 80.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.8f), aData);
-
-                aData = "コントローラー操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData);
-                aData = "===============";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData);
-
-                aData = "※未接続";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 400.0f, SCREEN_HEIGHT / 2.0f - 200.0f, 0.0f), 28, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 0.95f), aData);
-
-            }
-
-
-        }
-    }
-    else
-    {
-        XINPUT_STATE joykeystate;
-        //ショイパットの状態を取得
-        DWORD dwResult = XInputGetState(0, &joykeystate);
-
-        if (dwResult == ERROR_SUCCESS)
-        {//パッド接続あり
-
-            if (pManager->bGetInputState() == false)
-            {//操作方法--trueでコントローラー
-                aData = "キーボード・マウス操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 80.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), aData);
-
-                aData = "コントローラー操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.5f), aData);
-
-            }
-            else
-            {
-                aData = "キーボード・マウス操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 80.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.5f), aData);
-
-                aData = "コントローラー操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), aData);
-
-            }
-
-           }
-        else
-        {
-            if (pManager->bGetInputState() == false)
-            {//操作方法--trueでコントローラー
-                aData = "キーボード・マウス操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 80.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), aData);
-
-                aData = "コントローラー操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.5f), aData);
-                aData = "===============";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), aData);
-
-                aData = "※未接続";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 400.0f, SCREEN_HEIGHT / 2.0f - 200.0f, 0.0f), 28, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 0.95f), aData);
-
-
-            }
-            else
-            {
-                aData = "キーボード・マウス操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 80.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 0.5f), aData);
-
-                aData = "コントローラー操作";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), aData);
-
-                aData = "===============";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 280.0f, SCREEN_HEIGHT / 2.0f - 175.0f, 0.0f), 33, CFont::FONT_GENKAI, D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.0f), aData);
-
-                aData = "※未接続";
-                CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f + 400.0f, SCREEN_HEIGHT / 2.0f - 200.0f, 0.0f), 28, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 0.95f), aData);
-            }
-
-    
-        }
-    }
 
 
 }
@@ -921,9 +595,9 @@ void CTutorialUI::AddSelectNum(int addnum)
 
     if (m_SelectNum < 0)
     {
-        m_SelectNum = 2;
+        m_SelectNum = 1;
     }
-    else if (m_SelectNum > 2)
+    else if (m_SelectNum > 1)
     {
         m_SelectNum = 0;
     }
@@ -935,9 +609,9 @@ void CTutorialUI::DirectSetNum(int Num)
 
     if (m_SelectNum < 0)
     {
-        m_SelectNum = 2;
+        m_SelectNum = 1;
     }
-    else if (m_SelectNum > 2)
+    else if (m_SelectNum > 1)
     {
         m_SelectNum = 0;
     }

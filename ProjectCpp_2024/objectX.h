@@ -15,8 +15,8 @@
 class CObjectX : public CObject
 {
 public:
-	static const int MAX_MAT = 60;
-	static const int MAX_TEXTURE_XFILE = 50;
+	static const int MAX_MAT = 200;
+	static const int MAX_TEXTURE_XFILE = 200;
 
 	CObjectX(int nPriority = CObject::LAYERINDEX_OBJECTX);//コンストラクタ
 	~CObjectX() override;//デストラクタ

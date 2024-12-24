@@ -29,7 +29,8 @@ class CObjectMotionEnemyGuard : public CObjectMotionEnemyBase
 public:
 	const float MOVEROT = 0.065f;//旋回速度
 	static const int BULLETMOVESPEED_NOMAL = 25;//砲弾速度
-	static const int BULLETSHOTDELAY = 175;
+	static const int BULLETSHOTDELAY = 42;
+	static const int MISSILESHOTDELAY = 110;
 	const float MOVESPEED = 3.2f;
 	static const int  reflectNum = 0;
 	static const int DAMAGEFRAME = 3;
@@ -70,8 +71,9 @@ private:
 
 	bool btest = false;
 
-	int m_nLife;
-	int m_BulletDelay;
+	int m_nLife=0;
+	int m_BulletDelay=0;
+	int m_MissileDelay = 0;
 
 	D3DXVECTOR3 m_TargetPos;//現在の目標地点
 	int m_OldTargetGRIDNum = -1;//相手の過去の位置番号
@@ -96,6 +98,10 @@ private:
 
 	bool m_bDamageRedNow = false;
 	int m_DamageFrameCnt = 0;
+
+	int m_nCntFrame = 0;
+
+	int m_EscCnt = 60;
 };
 
 #endif

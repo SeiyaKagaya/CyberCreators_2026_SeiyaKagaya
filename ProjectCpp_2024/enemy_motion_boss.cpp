@@ -65,6 +65,8 @@ HRESULT CObjectMotionEnemyBoss::Init()
 //=============================
 void CObjectMotionEnemyBoss::Uninit()
 {
+	CScene::AddClearNum(1);
+
 	m_LockOnUI->SetDeath(true);
 	m_LockOnUI_Main->SetDeath(true);
 
@@ -99,36 +101,56 @@ void CObjectMotionEnemyBoss::Update()
 
 			DATA classData = GetClassData();
 
+			classData.move.x = 0.0f;
+			classData.move.y = 0.0f;
+			classData.move.z = 2.0f;
 
 
 
 
 			//------------------------------------------------------------------------------------------------------------------------------------------------------
-			Attack();
+			//Attack();
 
 
 			if (m_nLife <= 0)
 			{
-				CObject* pObj = nullptr;
-				pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
-				if (pObj != nullptr)
+				SetNowMotion_Parent(MOTIONTYPE_OP0);
+				SetNowMotion_Sub(MOTIONTYPE_OP0);
+				//CObjectMotion::Update();
+				//Motion_Parent();
+				//Motion_Sub();
+				classData = GetClassData();
+
+				classData.move.y = -1;
+				SetClassData(classData);
+
+
+				m_EscCnt--;
+				if (m_EscCnt < 0)
 				{
-					CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
-					if (pMissile != nullptr)
-					{ // 先頭がない==プライオリティまるっとない
-						pMissile->KillMissileTarget(this);
+					CScore::AddScore(CScore::TANK_SCORE1*4);
+
+					CObject* pObj = nullptr;
+					pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
+					if (pObj != nullptr)
+					{
+						CMissileALL* pMissile = static_cast<CMissileALL*>(pObj);
+						if (pMissile != nullptr)
+						{ // 先頭がない==プライオリティまるっとない
+							pMissile->KillMissileTarget(this);
+						}
+
 					}
 
-				}
+					CScore::AddScore(CScore::TANK_SCORE1);
 
-				CScore::AddScore(CScore::TANK_SCORE1);
+					SetDeath(true);
 
-				SetDeath(true);
-
-				Explosion3D::Create(GetClassData().Pos);
-				for (int i = 0; i < GetMaxLoadPartsNum(); i++)
-				{//パーツもDEATH
-					GetModelParts(i)->SetDeath(true);
+					Explosion3D::Create(GetClassData().Pos);
+					for (int i = 0; i < GetMaxLoadPartsNum(); i++)
+					{//パーツもDEATH
+						GetModelParts(i)->SetDeath(true);
+					}
 				}
 			}
 

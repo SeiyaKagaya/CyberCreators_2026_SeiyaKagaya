@@ -392,7 +392,7 @@ void CPause::Update()
             if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_UP))
             {
                 CSound* pSound = pManager->GetSound();
-                //pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
 
                 AddSelectNum(-1);
                 //        m_bSetStick = true;
@@ -400,7 +400,7 @@ void CPause::Update()
             else if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_DOWN) )
             {
                 CSound* pSound = pManager->GetSound();
-                //pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
 
 
                 AddSelectNum(+1);
@@ -516,7 +516,7 @@ void CPause::Update()
             if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || JoyPad->GetTrigger(CInputJoyPad::JOYKEY_START) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left)|| keyboard->GetTrigger(DIK_SPACE))
             {
                 CSound* pSound = pManager->GetSound();
-             //   //pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
 
                 StopCnt++;
 
@@ -555,7 +555,7 @@ void CPause::Update()
             if (keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) || keyboard->GetTrigger(DIK_SPACE))
             {
                 CSound* pSound = pManager->GetSound();
-            //    //pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
 
                 StopCnt++;
 
@@ -600,21 +600,21 @@ void CPause::Update()
             if (keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left))
             {
                 CSound* pSound = pManager->GetSound();
-              //  //pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
 
                 m_bPhase2 = false;
             }
             else if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || JoyPad->GetTrigger(CInputJoyPad::JOYKEY_START) || JoyPad->GetTrigger(CInputJoyPad::JOYKEY_B) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) || keyboard->GetTrigger(DIK_SPACE))
             {
                 CSound* pSound = pManager->GetSound();
-               // //pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
+               pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
 
                 m_bPhase2 = false;
             }
             else if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_LEFT))
             {
                 CSound* pSound = pManager->GetSound();
-                //pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
 
   
                 if (pManager->bGetInputState() == true)
@@ -631,7 +631,7 @@ void CPause::Update()
             else if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_RIGHT))
             {
                 CSound* pSound = pManager->GetSound();
-                //pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_CURSOR);
 
                 if (pManager->bGetInputState() == true)
                 {//操作方法--trueでコントローラー
@@ -654,7 +654,7 @@ void CPause::Update()
             if (keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) || keyboard->GetTrigger(DIK_SPACE))
             {
                 CSound* pSound = pManager->GetSound();
-             //   //pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
+                pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
 
                 m_bPhase2 = false;
             }

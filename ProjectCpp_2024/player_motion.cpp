@@ -25,6 +25,7 @@
 #include "missile.h"
 #include "enemy_motion_boss.h"
 #include "enemy_motion_guard.h"
+#include"CBulletLine.h"
 //#include "movesmoke.h"
 
 int CObjectMotionPlayer::m_nNumPlayerAll = START_PLAYER_NUM;//初期値３
@@ -113,6 +114,9 @@ HRESULT CObjectMotionPlayer::Init()
 
 	m_pShield = CShield::Create(SetDATA, this);
 	m_pShield->SetParent(GetModelParts(2));
+
+	m_pBulletLine = CBulletLine::Create(SetDATA,this);
+	m_pBulletLine->SetParent(GetModelParts(2));
 
 	return S_OK;
 }
@@ -225,7 +229,8 @@ void CObjectMotionPlayer::Update()
 	
 					// シールドの回転を設定
 					m_pShield->SetRot(SetRot);
-	
+					m_pBulletLine->SetRot(SetRot);
+
 					D3DXVECTOR3 SETPOS = m_TargetPos;
 	
 					D3DXVec3Normalize(&direction, &direction);
@@ -233,6 +238,7 @@ void CObjectMotionPlayer::Update()
 					SETPOS -= direction * 180.0f;
 	
 					m_pShield->SetPos(SETPOS);
+					m_pBulletLine->SetPos(SETPOS);
 					//----------------------------------------------------------------------------------
 				}
 				else
@@ -281,31 +287,55 @@ void CObjectMotionPlayer::Update()
 	
 	
 				//-----------------------------逆走防止
-				//共通
-				//-------------------------
-				classData = GetClassData();
-				float HitMin = classData.Pos.x + classData.MinLength.x;
-				D3DXVECTOR3 My_Collision_Min_Pos = classData.Pos + classData.MinLength;
-				D3DXVECTOR3 My_Collision_Max_Pos = classData.Pos + classData.MaxLength;
-				D3DXVECTOR3 TargetPos = D3DXVECTOR3(-15000.0f, 7000.0f, 5000.0f);
-				D3DXVECTOR3 TarGet_Collision_Max_Pos = D3DXVECTOR3(TargetPos.x + 15000.0f, TargetPos.y + 7000.0f, TargetPos.z + 9000.0f);
-				D3DXVECTOR3 TarGet_Collision_Min_Pos = D3DXVECTOR3(TargetPos.x - 15000.0f, TargetPos.y - 7000.0f, TargetPos.z - 9000.0f);
-	
-	
-				if (My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
-					My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
-					My_Collision_Min_Pos.x - classData.Pos.x + classData.OldPos.x >= TarGet_Collision_Max_Pos.x &&
-					My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
-					My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
-					My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
-				{
-	
-					classData.Pos.x = TarGet_Collision_Max_Pos.x + (My_Collision_Max_Pos.x - classData.Pos.x) + 0.1f; // 接触面押し返し
-					SetClassData(classData);
+				
+				if (NowState == CScene::MODE_GAME2 )
+				{//ゲーム中
+					classData = GetClassData();
+					float HitMin = classData.Pos.x + classData.MinLength.x;
+					D3DXVECTOR3 My_Collision_Min_Pos = classData.Pos + classData.MinLength;
+					D3DXVECTOR3 My_Collision_Max_Pos = classData.Pos + classData.MaxLength;
+					
+					D3DXVECTOR3 TargetPos = D3DXVECTOR3(-15000.0f, 7000.0f, 5000.0f);
+					D3DXVECTOR3 TarGet_Collision_Max_Pos = D3DXVECTOR3(TargetPos.x + 15000.0f, TargetPos.y + 7000.0f, TargetPos.z + 9000.0f);
+					D3DXVECTOR3 TarGet_Collision_Min_Pos = D3DXVECTOR3(TargetPos.x - 15000.0f, TargetPos.y - 7000.0f, TargetPos.z - 9000.0f);
+
+
+					if (My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
+						My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
+						My_Collision_Min_Pos.x - classData.Pos.x + classData.OldPos.x >= TarGet_Collision_Max_Pos.x &&
+						My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
+						My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
+						My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+					{
+
+						classData.Pos.x = TarGet_Collision_Max_Pos.x + (My_Collision_Max_Pos.x - classData.Pos.x) + 0.1f; // 接触面押し返し
+						SetClassData(classData);
+					}
 				}
-	
-				//-------------------------
-	
+				else if (NowState == CScene::MODE_GAME3)
+				{//ゲーム中
+					classData = GetClassData();
+					float HitMin = classData.Pos.x + classData.MinLength.x;
+					D3DXVECTOR3 My_Collision_Min_Pos = classData.Pos + classData.MinLength;
+					D3DXVECTOR3 My_Collision_Max_Pos = classData.Pos + classData.MaxLength;
+
+					D3DXVECTOR3 TargetPos = D3DXVECTOR3(12500 - 15000.0f, 10000.0f, 5000.0f);
+					D3DXVECTOR3 TarGet_Collision_Max_Pos = D3DXVECTOR3(TargetPos.x + 15000.0f, TargetPos.y + 10000.0f, TargetPos.z + 9000.0f);
+					D3DXVECTOR3 TarGet_Collision_Min_Pos = D3DXVECTOR3(TargetPos.x - 15000.0f, TargetPos.y - 10000.0f, TargetPos.z - 9000.0f);
+
+					if (My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&
+						My_Collision_Max_Pos.z > TarGet_Collision_Min_Pos.z &&
+						My_Collision_Min_Pos.x - classData.Pos.x + classData.OldPos.x >= TarGet_Collision_Max_Pos.x &&
+						My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
+						My_Collision_Min_Pos.y < TarGet_Collision_Max_Pos.y &&
+						My_Collision_Max_Pos.y > TarGet_Collision_Min_Pos.y)
+					{
+
+						classData.Pos.x = TarGet_Collision_Max_Pos.x + (My_Collision_Max_Pos.x - classData.Pos.x) + 0.1f; // 接触面押し返し
+						SetClassData(classData);
+					}
+					//-------------------------
+				}
 	
 	
 	
@@ -316,10 +346,18 @@ void CObjectMotionPlayer::Update()
 				if (m_guard == true)
 				{
 					m_pShield->setDrawOk(true);
+					if (pManager->GetbNow3DMode() == false)
+					{//2D
+						m_pBulletLine->setDrawOk(false);
+					}
 				}
 				else
 				{
 					m_pShield->setDrawOk(false);
+					if (pManager->GetbNow3DMode() == false)
+					{//2D
+						m_pBulletLine->setDrawOk(true);
+					}
 				}
 	
 				classData = GetClassData();
@@ -640,10 +678,64 @@ void CObjectMotionPlayer::Update()
 					}
 	
 					ChangeData.rot.x = angleY; // Y方向を向ける
-	
-	
+		
 					//基底クラスからパーツにデータを受け渡し
 					SetChangeDataInObjectMotion(ChangeData);
+
+
+					//	シールド周り
+					//----------------------------------------------------------------------------------
+					// 中心座標 DirectionPos を設定
+					D3DXVECTOR3 DirectionPos = classData.Pos;
+					DirectionPos.y += SHIELD_SET_ADDPOS;
+
+					// 方向ベクトルを計算
+					D3DXVECTOR3 direction = m_TargetPos - DirectionPos;
+
+					// XZ 平面での角度を計算 (上方向を基準とする円周角度)
+					float angleRadians = atan2f(direction.x, -direction.y); // -direction.x で基準を上方向に変更
+
+					// 回転データを設定 (X 軸回転として渡す場合)
+					D3DXVECTOR3 SetRot = D3DXVECTOR3(angleY + (-D3DX_PI * 0.5f), (-D3DX_PI * 0.5f), 0.0f);
+
+					float Diff = -0.065f;
+
+					//体向き変動(2D)
+					if (m_TargetPos.x >= classData.Pos.x)
+					{//右正面
+						SetRot = D3DXVECTOR3(angleY + Diff, (-D3DX_PI * 0.5f), 0.0f);
+					}
+					else
+					{//左正面
+						SetRot = D3DXVECTOR3(-angleY - Diff, (-D3DX_PI * 0.5f), 0.0f);
+					}
+
+					m_pBulletLine->SetRot(SetRot);
+
+					D3DXVECTOR3 SETPOS = m_TargetPos;
+
+					D3DXVec3Normalize(&direction, &direction);
+
+
+					//体向き変動(2D)
+					if (m_TargetPos.x >= classData.Pos.x)
+					{//右正面
+						SETPOS.y += 120.0f;
+						SETPOS.x += 80.0f;
+
+						SETPOS -= direction * 180.0f;
+					}
+					else
+					{//左正面
+						SETPOS.y += 90.0f;
+						SETPOS.x -= 80.0f;
+
+						SETPOS += direction * 180.0f;
+					}
+
+					//					m_pShield->SetPos(SETPOS);
+					m_pBulletLine->SetPos(SETPOS);
+					//----------------------------------------------------------------------------------
 				}
 				else
 				{//3D
@@ -1235,7 +1327,27 @@ void CObjectMotionPlayer::Update()
 			SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 			SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		}
-	
+		else if (NowState == CScene::MODE_MOVIE2)
+		{//
+
+		DATA classData = GetClassData();
+
+		classData.rot.y = -2.5824623f;
+
+		DATA ChangeData = DataInit();
+		ChangeData.rot.y = classData.rot.y;
+
+		//基底クラスからパーツにデータを受け渡し(だれも対象じゃないときは初期値が入る)
+		SetChangeDataInObjectMotion(ChangeData);
+
+		SetClassData(classData);
+
+		CObjectMotion::Update();//------------------更新
+
+
+		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
+		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+		}
 	
 	
 		if (m_DamageFrameCnt > 0)

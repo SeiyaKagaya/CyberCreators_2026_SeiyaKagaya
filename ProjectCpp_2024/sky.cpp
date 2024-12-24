@@ -166,9 +166,6 @@ HRESULT Sky3D::Init()
     m_Data.rot.y = D3DX_PI*0.2f;
 
 
-    CSound* pSound = pManager->GetSound();
-    //  pSound->PlaySound(CSound::SOUND_LABEL_SE_EXPLOSION);
-
 
     return S_OK;
 }

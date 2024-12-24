@@ -159,6 +159,7 @@
     <ClCompile Include="background.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="CBulletLine.cpp" />
     <ClCompile Include="debugwall.cpp" />
     <ClCompile Include="enemy_motion_base.cpp" />
     <ClCompile Include="enemy_motion_boss.cpp" />
@@ -182,6 +183,7 @@
     <ClCompile Include="MathUtilities.cpp" />
     <ClCompile Include="missile.cpp" />
     <ClCompile Include="ModelParts.cpp" />
+    <ClCompile Include="motion_ship.cpp" />
     <ClCompile Include="movesmoke.cpp" />
     <ClCompile Include="newbullet.cpp" />
     <ClCompile Include="object.cpp" />
@@ -227,6 +229,7 @@
     <ClInclude Include="background.h" />
     <ClInclude Include="block.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="CBulletLine.h" />
     <ClInclude Include="debugwall.h" />
     <ClInclude Include="enemy_motion_base.h" />
     <ClInclude Include="enemy_motion_fast.h" />
@@ -249,6 +252,7 @@
     <ClInclude Include="MathUtilities.h" />
     <ClInclude Include="missile.h" />
     <ClInclude Include="ModelParts.h" />
+    <ClInclude Include="motion_ship.h" />
     <ClInclude Include="movesmoke.h" />
     <ClInclude Include="enemy_motion_boss.h" />
     <ClInclude Include="newbullet.h" />

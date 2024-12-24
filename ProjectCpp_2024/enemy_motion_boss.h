@@ -96,6 +96,8 @@ private:
 
 	bool m_bDamageRedNow = false;
 	int m_DamageFrameCnt = 0;
+
+	int m_EscCnt = 60;
 };
 
 #endif

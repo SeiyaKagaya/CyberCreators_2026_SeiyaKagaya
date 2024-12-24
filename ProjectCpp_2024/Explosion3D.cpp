@@ -180,7 +180,7 @@ HRESULT Explosion3D::Init()
     m_Data.rot.x = 4.5f;
 
     CSound* pSound = pManager->GetSound();
-  //  pSound->PlaySound(CSound::SOUND_LABEL_SE_EXPLOSION);
+    pSound->PlaySound(CSound::SOUND_LABEL_SE_EXPLOSION);
 
 
     return S_OK;

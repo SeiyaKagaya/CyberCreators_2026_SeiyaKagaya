@@ -14,10 +14,10 @@ NUM_MODEL = 3
 #------------------------------------------------------------------------------
 # モデルファイル名
 #------------------------------------------------------------------------------
-MODEL_FILENAME = data/MODEL/BossShip/point.x			# 
-MODEL_FILENAME = data/MODEL/BossShip/00_front.x			# [0]体
-MODEL_FILENAME = data/MODEL/BossShip/01_back.x			# [1]頭
-
+MODEL_FILENAME = data/MODEL/friendship/point.x			# 
+MODEL_FILENAME = DATA/MODEL/friendship/00_front.x			# [0]体
+MODEL_FILENAME = DATA/MODEL/friendship/01_back.x			# [1]頭
+MODEL_FILENAM
 #------------------------------------------------------------------------------
 # キャラクター情報
 #------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0					# 体
 		PARENT = -1					# (親)NULL
-		POS = 0.0 100.0 0.0
+		POS = 0.0 150.0 0.0
 		ROT = 0.0 0.0 0.0
 		MOTIONPARENT = 1
 	END_PARTSSET
@@ -39,19 +39,18 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 1					# 頭
 		PARENT = 0					# (親)体
-		POS = 0.0 0.0 0.0
+		POS = 0.0 000.0 0.0
 		ROT = 0.0 0.0 0.0
 		MOTIONPARENT = 0
 	END_PARTSSET
 	
 	PARTSSET
-		INDEX = 2					# おしり
+		INDEX = 2					# 頭
 		PARENT = 0					# (親)体
-		POS = 0.0 0.0 0.0
+		POS = 0.0 000.0 0.0
 		ROT = 0.0 0.0 0.0
 		MOTIONPARENT = 0
 	END_PARTSSET
-
 
 END_CHARACTERSET
 
@@ -140,6 +139,7 @@ MOTIONSET
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
+
 
 
 #----------------------------------------------------------------------------------------------
@@ -443,12 +443,12 @@ MOTIONSET
 
 		KEY	# ----- [ 1 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.31 0.00 0.00
+			ROT = 0.47 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 2 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.35 0.00 0.00
+			ROT = -0.44 0.00 0.00
 		END_KEY
 	END_KEYSET
 
@@ -461,12 +461,12 @@ MOTIONSET
 
 		KEY	# ----- [ 1 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.31 0.00 0.00
+			ROT = 0.47 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 2 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.35 0.00 0.00
+			ROT = -0.44 0.00 0.00
 		END_KEY
 	END_KEYSET
 
@@ -479,12 +479,12 @@ MOTIONSET
 
 		KEY	# ----- [ 1 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.31 0.00 0.00
+			ROT = 0.47 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 2 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.35 0.00 0.00
+			ROT = -0.44 0.00 0.00
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
@@ -524,12 +524,12 @@ MOTIONSET
 
 		KEY	# ----- [ 1 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.31 0.00 0.00
+			ROT = 0.47 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 2 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.35 0.00 0.00
+			ROT = -0.44 0.00 0.00
 		END_KEY
 	END_KEYSET
 
@@ -542,12 +542,12 @@ MOTIONSET
 
 		KEY	# ----- [ 1 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.31 0.00 0.00
+			ROT = 0.47 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 2 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.35 0.00 0.00
+			ROT = -0.44 0.00 0.00
 		END_KEY
 	END_KEYSET
 
@@ -560,12 +560,12 @@ MOTIONSET
 
 		KEY	# ----- [ 1 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = -0.31 0.00 0.00
+			ROT = 0.47 0.00 0.00
 		END_KEY
 
 		KEY	# ----- [ 2 ] -----
 			POS = 0.00 0.00 0.00
-			ROT = 0.35 0.00 0.00
+			ROT = -0.44 0.00 0.00
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
