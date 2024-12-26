@@ -37,7 +37,7 @@
 
 //マクロ定義
 #define CLASS_NAME		("WindowsClass")
-#define WINDOW_NAME		("Mini-Tank!")
+#define WINDOW_NAME		("装甲騎兵ARES")
 #define SCREEN_WIDTH	(1280)
 #define SCREEN_HEIGHT	(720)
 #define FVF_VERTEX_2D	(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)//頂点情報を設定
