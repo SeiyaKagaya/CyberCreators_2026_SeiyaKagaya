@@ -62,7 +62,7 @@ public:
 	CLockOnUI* GetLockOnUI() { return m_LockOnUI; };
 	CLockOnUIMain* GetLockOnUIMain() { return m_LockOnUI_Main; };
 
-	void SetDamage(int nDamage) { m_nLife -= nDamage; m_bDamageRedNow = true; m_DamageFrameCnt = DAMAGEFRAME; };
+	void SetDamage(int nDamage) { m_nLife -= nDamage; m_bDamageRedNow = true; m_nDamageFrameCnt = DAMAGEFRAME; };
 
 private:
 
@@ -70,23 +70,23 @@ private:
 
 	bool btest = false;
 
-	int m_nLife;
-	int m_BulletDelay;
+	int m_nLife=0;
+	int m_nBulletDelay=0;
 
 	D3DXVECTOR3 m_TargetPos;//現在の目標地点
-	int m_OldTargetGRIDNum = -1;//相手の過去の位置番号
-	int m_OldMyGRIDNum = -1;//自分の過去のいち番号
+	int m_nOldTargetGRIDNum = -1;//相手の過去の位置番号
+	int m_nOldMyGRIDNum = -1;//自分の過去のいち番号
 
 	D3DXVECTOR3 m_TargetMove;
 
 	//現在の移動先GRID
-	int NowMoveGRIDNum = -1;
+	int nNowMoveGRIDNum = -1;
 
 
-	bool bTurretRotationNow;//旋回中
-	float fRotTurret;//砲塔の角度
+	bool bTurretRotationNow=false;//旋回中
+	float fRotTurret=0.0f;//砲塔の角度
 
-	int m_nMoveCnt;
+	int m_nMoveCnt=0;
 
 	//以下"基本は3D"のみ
 	CLockOnUI* m_LockOnUI;
@@ -95,9 +95,9 @@ private:
 	D3DXVECTOR3 m_ScreenPosition = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	bool m_bDamageRedNow = false;
-	int m_DamageFrameCnt = 0;
+	int m_nDamageFrameCnt = 0;
 
-	int m_EscCnt = 60;
+	int m_nEscCnt = 60;
 };
 
 #endif

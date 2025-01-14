@@ -1164,7 +1164,9 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	D3DXVECTOR3 NBe2 = obb2.GetDirect(1), Be2 = NBe2 * obb2.GetLen(1);
 	D3DXVECTOR3 NBe3 = obb2.GetDirect(2), Be3 = NBe3 * obb2.GetLen(2);
 
-//	D3DXVECTOR3 EscPos = obb1.GetPos();
+	D3DXVECTOR3 EscPos = obb1.GetPos();
+	D3DXVECTOR3 EscPos2 = obb2.GetPos();
+
 	obb1.SetPos(D3DXVECTOR3(obb1.GetPos().x, obb1.GetPos().y + obb1.GetLen(1), obb1.GetPos().z));
 	obb2.SetPos(D3DXVECTOR3(obb2.GetPos().x, obb2.GetPos().y + obb2.GetLen(1), obb2.GetPos().z));
 
@@ -1197,36 +1199,37 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	obb2Vertices[6] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] + obb2.m_Direct[2] * obb2.m_fLength[2];
 	obb2Vertices[7] = obb2.m_Pos - obb2.m_Direct[0] * obb2.m_fLength[0] - obb2.m_Direct[1] * obb2.m_fLength[1] - obb2.m_Direct[2] * obb2.m_fLength[2];
 
+	obb1.SetPos(EscPos);
+	obb2.SetPos(EscPos2);
+
 
 #if _DEBUG
-	//// OBBの頂点間にラインを引く
-	//for (int i = 0; i < 4; ++i)
-	//{
-	//	for (int j = 4; j < 8; ++j)
-	//	{
-	//		if (i != j)
-	//		{
-	//			Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
-	//			Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
-	//		}
-	//	}
-	//}
-
-	/*Cline::Create(obb1Vertices[0], obb1Vertices[1], D3DXCOLOR(1, 0, 0, 1));
-	Cline::Create(obb2Vertices[0], obb2Vertices[1], D3DXCOLOR(0, 1, 0, 1));
-
-	Cline::Create(obb1Vertices[0], obb1Vertices[4], D3DXCOLOR(1, 0, 0, 1));
-	Cline::Create(obb2Vertices[0], obb2Vertices[4], D3DXCOLOR(0, 1, 0, 1));
-
-	Cline::Create(obb1Vertices[1], obb1Vertices[5], D3DXCOLOR(1, 0, 0, 1));
-	Cline::Create(obb2Vertices[1], obb2Vertices[5], D3DXCOLOR(0, 1, 0, 1));
-
-	Cline::Create(obb1Vertices[5], obb1Vertices[4], D3DXCOLOR(1, 0, 0, 1));
-	Cline::Create(obb2Vertices[5], obb2Vertices[4], D3DXCOLOR(0, 1, 0, 1));*/
-
+	 
+	//OBBの頂点間にラインを引く
 	
+	for (int i = 0; i < 4; ++i)
+	{
+		for (int j = 4; j < 8; ++j)
+		{
+			if (i != j)
+			{
+				Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
+				Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
+			}
+		}
+	}
 
+	//Cline::Create(obb1Vertices[0], obb1Vertices[1], D3DXCOLOR(1, 0, 0, 1));
+	//Cline::Create(obb2Vertices[0], obb2Vertices[1], D3DXCOLOR(0, 1, 0, 1));
 
+	//Cline::Create(obb1Vertices[0], obb1Vertices[4], D3DXCOLOR(1, 0, 0, 1));
+	//Cline::Create(obb2Vertices[0], obb2Vertices[4], D3DXCOLOR(0, 1, 0, 1));
+
+	//Cline::Create(obb1Vertices[1], obb1Vertices[5], D3DXCOLOR(1, 0, 0, 1));
+	//Cline::Create(obb2Vertices[1], obb2Vertices[5], D3DXCOLOR(0, 1, 0, 1));
+
+	//Cline::Create(obb1Vertices[5], obb1Vertices[4], D3DXCOLOR(1, 0, 0, 1));
+	//Cline::Create(obb2Vertices[5], obb2Vertices[4], D3DXCOLOR(0, 1, 0, 1));
 
 	//--------------------------------------------------------------------------------
 #else

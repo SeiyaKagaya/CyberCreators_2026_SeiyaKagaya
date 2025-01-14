@@ -135,6 +135,192 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
 
             if (pManager->GetbNow3DMode() == false)
             {//2D
+
+                if (ShotType == CNewBulletALL::SHOTTYPE_PLAYER)
+                {//射手がplayer
+                    CNewBullet* pBullet = GetBulletData(i);
+
+                    bool bChange = false;
+
+                    // 配置物プライオリティの先頭を取得
+                    CObject* pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_FAST);
+
+                    if (pObject != nullptr)
+                    { // 先頭がない==プライオリティまるっとない
+
+                        CObjectMotionEnemyfast* pEnemyFast;
+                        pEnemyFast = (CObjectMotionEnemyfast*)pObject;
+
+                        while (pObject != nullptr)
+                        {
+                            CObject::DATA EscEnemyData = pEnemyFast->GetClassData();
+
+                            if (pEnemyFast->GetLockOnUIMain()->bGetDrawOk() == true)
+                            {//バレットロックオンが描画状態
+
+                                D3DXVECTOR3 EscPos = D3DXVECTOR3(pEnemyFast->GetClassData().Pos.x, pEnemyFast->GetClassData().Pos.y + CObjectMotionEnemyfast::LOCKDIFF, pEnemyFast->GetClassData().Pos.z);
+
+                                // TargetPos から SetData.Pos への方向ベクトルを計算
+                                D3DXVECTOR3 direction2 = EscPos - SetData.Pos;
+
+
+                                float speed = (int)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
+                                SetData.move = direction2;//速度をかける
+
+
+                                ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, EscPos, pEnemyFast->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
+
+                                D3DXVECTOR3 POSPOS = pEnemyFast->GetClassData().Pos;
+
+                                bChange = true;
+                                break;
+                            }
+                            else
+                            {
+                                CObject* pNext = pObject->GetNext();
+                                pObject = pNext;
+                                pEnemyFast = (CObjectMotionEnemyfast*)pObject;
+                            }
+                        }
+                    }
+
+
+                    if (bChange == false)
+                    {
+                        // 配置物プライオリティの先頭を取得
+                        pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_NOMAL);
+
+                        if (pObject != nullptr)
+                        { // 先頭がない==プライオリティまるっとない
+
+                            CObjectMotionEnemyNomal* pEnemyNomal;
+                            pEnemyNomal = (CObjectMotionEnemyNomal*)pObject;
+
+                            while (pObject != nullptr)
+                            {
+                                CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
+
+                                if (pEnemyNomal->GetLockOnUIMain()->bGetDrawOk() == true)
+                                {//バレットロックオンが描画状態
+
+                                    D3DXVECTOR3 EscPos = D3DXVECTOR3(pEnemyNomal->GetClassData().Pos.x, pEnemyNomal->GetClassData().Pos.y + CObjectMotionEnemyNomal::LOCKDIFF, pEnemyNomal->GetClassData().Pos.z);
+
+                                    // TargetPos から SetData.Pos への方向ベクトルを計算
+                                    D3DXVECTOR3 direction2 = EscPos - SetData.Pos;
+
+                                    float speed = (int)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
+                                    SetData.move = direction2;//速度をかける
+
+                                    ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, EscPos, pEnemyNomal->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
+                                    bChange = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    CObject* pNext = pObject->GetNext();
+                                    pObject = pNext;
+                                    pEnemyNomal = (CObjectMotionEnemyNomal*)pObject;
+
+
+                                }
+                            }
+                        }
+                    }
+
+                    if (bChange == false)
+                    {
+                        // 配置物プライオリティの先頭を取得
+                        pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_BOSS);
+
+                        if (pObject != nullptr)
+                        { // 先頭がない==プライオリティまるっとない
+
+                            CObjectMotionEnemyBoss* pEnemyBoss;
+                            pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+
+                            while (pObject != nullptr)
+                            {
+                                CObject::DATA EscEnemyData = pEnemyBoss->GetClassData();
+
+                                if (pEnemyBoss->GetLockOnUIMain()->bGetDrawOk() == true)
+                                {//バレットロックオンが描画状態
+
+                                    D3DXVECTOR3 EscPos = D3DXVECTOR3(pEnemyBoss->GetClassData().Pos.x, pEnemyBoss->GetClassData().Pos.y + CObjectMotionEnemyBoss::LOCKDIFF, pEnemyBoss->GetClassData().Pos.z);
+
+                                    // TargetPos から SetData.Pos への方向ベクトルを計算
+                                    D3DXVECTOR3 direction2 = EscPos - SetData.Pos;
+
+                                    float speed = (int)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
+                                    SetData.move = direction2;//速度をかける
+
+                                    ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, EscPos, pEnemyBoss->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
+                                    bChange = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    CObject* pNext = pObject->GetNext();
+                                    pObject = pNext;
+                                    pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
+
+                                }
+                            }
+                        }
+                    }
+
+                    if (bChange == false)
+                    {
+                        // 配置物プライオリティの先頭を取得
+                        pObject = CObject::GetpTop(LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+                        if (pObject != nullptr)
+                        { // 先頭がない==プライオリティまるっとない
+
+                            CObjectMotionEnemyGuard* pEnemyGuard;
+                            pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+
+                            while (pObject != nullptr)
+                            {
+                                CObject::DATA EscEnemyData = pEnemyGuard->GetClassData();
+
+                                if (pEnemyGuard->GetLockOnUIMain()->bGetDrawOk() == true)
+                                {//バレットロックオンが描画状態
+
+                                    D3DXVECTOR3 EscPos = D3DXVECTOR3(pEnemyGuard->GetClassData().Pos.x, pEnemyGuard->GetClassData().Pos.y + CObjectMotionEnemyGuard::LOCKDIFF, pEnemyGuard->GetClassData().Pos.z);
+
+                                    // TargetPos から SetData.Pos への方向ベクトルを計算
+                                    D3DXVECTOR3 direction2 = EscPos - SetData.Pos;
+
+                                    float speed = (int)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
+                                    SetData.move = direction2;//速度をかける
+
+                                    ESCTargetPos = CMathProc::SetPositionldPredictedImpactPoint(SetData.Pos, SetData.move, EscPos, pEnemyGuard->GetClassData().move, (float)CObjectMotionPlayer::BULLETSPEED);
+                                    bChange = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    CObject* pNext = pObject->GetNext();
+                                    pObject = pNext;
+                                    pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
+                                }
+                            }
+                        }
+                    }
+
+                    if (bChange == true)
+                    {
+                        // TargetPos から SetData.Pos への方向ベクトルを計算
+                        D3DXVECTOR3 direction = ESCTargetPos - SetData.Pos;
+
+                        D3DXVec3Normalize(&direction, &direction);
+
+                        float speed = (float)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
+                        SetData.move = direction * speed;//速度をかける
+                    }
+                }
+
+
             }
             else
             {//3D
@@ -142,8 +328,6 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
                 if (ShotType == CNewBulletALL::SHOTTYPE_PLAYER)
                 {//射手がplayer
                     CNewBullet* pBullet = GetBulletData(i);
-
-
 
                     bool bChange = false;
 
@@ -232,11 +416,6 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
                         }
                     }
 
-
-
-
-
-
                     if (bChange == false)
                     {
                         // 配置物プライオリティの先頭を取得
@@ -273,14 +452,10 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
                                     pObject = pNext;
                                     pEnemyBoss = (CObjectMotionEnemyBoss*)pObject;
 
-
                                 }
                             }
                         }
                     }
-
-
-
 
                     if (bChange == false)
                     {
@@ -317,29 +492,10 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
                                     CObject* pNext = pObject->GetNext();
                                     pObject = pNext;
                                     pEnemyGuard = (CObjectMotionEnemyGuard*)pObject;
-
-
                                 }
                             }
                         }
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                     if (bChange == true)
                     {
@@ -351,26 +507,10 @@ void CNewBulletALL::SetBullet(CObject::DATA SetData, int ReflectCnt, D3DXCOLOR c
                         float speed = (float)CObjectMotionPlayer::BULLETSPEED;//速度(後々変更)
                         SetData.move = direction * speed;//速度をかける
                     }
-
                 }
             }
 
-
-
-
-
-
-
-
-
-
-
-
             m_NewBullet[i]->SetBulletData(SetData, ReflectCnt, col, pCaller, ShotType);
-
-
-            CSound* pSound = pManager->GetSound();
-               pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
 
             break;
         }
@@ -612,7 +752,7 @@ void CNewBullet::Update()
 
 
             CScene::MODE NowState = CScene::GetNowScene();
-            if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME2)
+            if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3)
             {//ゲーム中
 
                 D3DXCOLOR SetCol = D3DXCOLOR(m_col.r, m_col.g, m_col.b, 0.2f);
@@ -733,7 +873,7 @@ void CNewBullet::HitCollision()
 
                         if (bHit == true)
                         {
-                            pEnemyNomal->SetDamage(25);
+                            pEnemyNomal->SetDamage(15);
                             CObjectShotFire::Create(EscData.Pos);
                             m_bUse = false;
                             break;
@@ -767,11 +907,11 @@ void CNewBullet::HitCollision()
 
 
                             D3DXVECTOR3 HitPos;
-                            bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
 
-                            if (btest == true)
+                            if (bHit == true)
                             {
-                                pEnemyFast->SetDamage(25);
+                                pEnemyFast->SetDamage(15);
                                 CObjectShotFire::Create(EscData.Pos);
                                 m_bUse = false;
                                 break;
@@ -806,11 +946,11 @@ void CNewBullet::HitCollision()
 
 
                             D3DXVECTOR3 HitPos;
-                            bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
 
-                            if (btest == true)
+                            if (bHit == true)
                             {
-                                pEnemyBoss->SetDamage(25);
+                                pEnemyBoss->SetDamage(15);
                                 CObjectShotFire::Create(EscData.Pos);
                                 m_bUse = false;
                                 break;
@@ -845,11 +985,11 @@ void CNewBullet::HitCollision()
 
 
                             D3DXVECTOR3 HitPos;
-                            bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
 
-                            if (btest == true)
+                            if (bHit == true)
                             {
-                                pEnemyBoss->SetDamage(25);
+                                pEnemyBoss->SetDamage(15);
                                 CObjectShotFire::Create(EscData.Pos);
                                 m_bUse = false;
                                 break;
@@ -891,9 +1031,9 @@ void CNewBullet::HitCollision()
 
 
                         D3DXVECTOR3 HitPos;
-                        bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+                        bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
 
-                        if (btest == true)
+                        if (bHit == true)
                         {
                             pPlayer->SetDamage(5);
                             CObjectShotFire::Create(EscData.Pos);

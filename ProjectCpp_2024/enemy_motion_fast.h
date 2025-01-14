@@ -62,7 +62,7 @@ public:
 	void SetSCREENPOS(D3DXVECTOR3 pos) { m_ScreenPosition = pos; };
 	D3DXVECTOR3 GetScreenPos() { return m_ScreenPosition; };
 
-	void SetDamage(int nDamage) { m_nLife -= nDamage; m_bDamageRedNow = true; m_DamageFrameCnt = DAMAGEFRAME; };
+	void SetDamage(int nDamage) { m_nLife -= nDamage; m_bDamageRedNow = true; m_nDamageFrameCnt = DAMAGEFRAME; };
 
 	////LOCK ON関係
 	//void SetNormalLockOn(bool bSet) { m_bNormalLockOn = bSet; };
@@ -82,22 +82,22 @@ private:
 
 	CMathProc::CollisionData m_HitData;//当たり判定データ
 
-	bool btest = false;
+	//bool btest = false;
 
 	int m_nLife = 0;
 	int m_BulletDelay = 0;
 
 	D3DXVECTOR3 m_TargetPos;//現在の目標地点
-	int m_OldTargetGRIDNum = -1;//相手の過去の位置番号
-	int m_OldMyGRIDNum = -1;//自分の過去のいち番号
+	int m_nOldTargetGRIDNum = -1;//相手の過去の位置番号
+	int m_nOldMyGRIDNum = -1;//自分の過去のいち番号
 
 	D3DXVECTOR3 m_TargetMove;
 
 	//現在の移動先GRID
-	int NowMoveGRIDNum = -1;
+	int m_nNowMoveGRIDNum = -1;
 
-	bool bTurretRotationNow;//旋回中
-	float fRotTurret;//砲塔の角度
+	bool m_bTurretRotationNow=false;//旋回中
+	float m_fRotTurret=false;//砲塔の角度
 
 	int m_nMoveCnt = 0;
 
@@ -112,7 +112,7 @@ private:
 	//bool m_DiffTrue = false;	 //ロック系計算有無
 
 	bool m_bDamageRedNow = false;
-	int m_DamageFrameCnt = 0;
+	int m_nDamageFrameCnt = 0;
 };
 
 #endif

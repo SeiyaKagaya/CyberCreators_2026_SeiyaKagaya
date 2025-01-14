@@ -643,9 +643,9 @@ void CMissile::HitCollision()
 
 
                             D3DXVECTOR3 HitPos;
-                            bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//“–‚½‚è”»’è
+                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//“–‚½‚è”»’è
 
-                            if (btest == true)
+                            if (bHit == true)
                             {
                                 pEnemyFast->SetDamage(100);
                                 CObjectShotFire::Create(EscData.Pos);
@@ -682,9 +682,9 @@ void CMissile::HitCollision()
 
 
                             D3DXVECTOR3 HitPos;
-                            bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//“–‚½‚è”»’è
+                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//“–‚½‚è”»’è
 
-                            if (btest == true)
+                            if (bHit == true)
                             {
                                 pEnemyBoss->SetDamage(35);
                                 CObjectShotFire::Create(EscData.Pos);
@@ -721,9 +721,9 @@ void CMissile::HitCollision()
 
 
                             D3DXVECTOR3 HitPos;
-                            bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//“–‚½‚è”»’è
+                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//“–‚½‚è”»’è
 
-                            if (btest == true)
+                            if (bHit == true)
                             {
                                 pEnemyBoss->SetDamage(35);
                                 CObjectShotFire::Create(EscData.Pos);
@@ -767,9 +767,9 @@ void CMissile::HitCollision()
 
 
                         D3DXVECTOR3 HitPos;
-                        bool btest = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//“–‚½‚è”»’è
+                        bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//“–‚½‚è”»’è
 
-                        if (btest == true)
+                        if (bHit == true)
                         {
                             pPlayer->SetDamage(85);
                             CObjectShotFire::Create(EscData.Pos);

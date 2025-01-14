@@ -5,6 +5,10 @@
 //
 //=========================================================
 #include"CBulletLine.h"
+#include "enemy_motion_Nomal.h"
+#include "enemy_motion_fast.h"
+#include "enemy_motion_boss.h"
+#include "enemy_motion_guard.h"
 
 
 
@@ -87,9 +91,9 @@ HRESULT CBulletLine::Init()
 
     SetObjectType(CObject::OBJECT_BULLETLINE);
 
-    m_Obb.m_fLength[0] = 160.0f;
-    m_Obb.m_fLength[1] = 160.0f;
-    m_Obb.m_fLength[2] = 50.0f;
+    m_OBB.m_fLength[0] = 80.0f;
+    m_OBB.m_fLength[1] = 160.0f;
+    m_OBB.m_fLength[2] = 660.0f;
 
     return S_OK;
 }
@@ -130,7 +134,53 @@ void CBulletLine::Uninit()
 //=============================
 void CBulletLine::Update()
 {
+    CRenderer* pRenderer = nullptr;
 
+    CManager* pManager = CManager::GetInstance();
+
+
+    if (pManager->GetbNow3DMode() == false)
+    {//2D
+      // OBBまわり
+        m_OBB.m_Pos = GetDATA().Pos;
+
+        D3DXMATRIX matRot, EscMtx, mtxTrans;
+
+        // ワールドマトリックスの初期化
+        D3DXMatrixIdentity(&EscMtx);
+
+        // 方向ベクトル取得（回転行列の生成）
+        D3DXMatrixRotationYawPitchRoll(&matRot, GetDATA().rot.y, GetDATA().rot.x, GetDATA().rot.z);
+
+        // オフセット定義 (ローカル空間)
+        D3DXVECTOR3 localOffset(0.0f, -150.0f, -550.0f); // x方向に+500
+
+        // オフセットを回転行列で変換（ローカル→ワールド）
+        D3DXVECTOR3 rotatedOffset;
+        D3DXVec3TransformCoord(&rotatedOffset, &localOffset, &matRot);
+
+        // 回転をEscMtxに反映
+        D3DXMatrixMultiply(&EscMtx, &EscMtx, &matRot);
+
+        // オフセットを反映した位置を計算
+        D3DXVECTOR3 finalPos = GetDATA().Pos + rotatedOffset;
+        D3DXMatrixTranslation(&mtxTrans, finalPos.x, finalPos.y, finalPos.z);
+
+        // 最終行列を作成
+        D3DXMatrixMultiply(&EscMtx, &EscMtx, &mtxTrans);
+
+        // OBBの方向と位置を設定
+        m_OBB.m_Direct[0] = D3DXVECTOR3(EscMtx._11, EscMtx._12, EscMtx._13);
+        m_OBB.m_Direct[1] = D3DXVECTOR3(EscMtx._21, EscMtx._22, EscMtx._23);
+        m_OBB.m_Direct[2] = D3DXVECTOR3(EscMtx._31, EscMtx._32, EscMtx._33);
+        m_OBB.m_Pos = D3DXVECTOR3(EscMtx._41, EscMtx._42, EscMtx._43);
+
+        HitCollision();
+    }
+    else
+    {//3D
+
+    }
 }
 
 
@@ -309,4 +359,179 @@ CBulletLine* CBulletLine::Create(DATA SetData, CObjectMotionPlayer* pMotion)
 //=============================
 void CBulletLine::HitCollision()
 {
+    m_bHit = false;
+
+    //取得
+    DATA EscData = GetDATA();
+
+
+
+    bool bHit = false;
+
+    // 配置物プライオリティの先頭を取得
+    CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_NOMAL);
+
+    if (pObject != nullptr)
+    { // 先頭がない==プライオリティまるっとない
+
+        int nIndex = 0;
+
+        while (pObject != nullptr)
+        {
+            CObjectMotionEnemyNomal* pEnemyNomal = static_cast<CObjectMotionEnemyNomal*>(pObject);
+
+            COBB pObb2 = pEnemyNomal->GetOBB();
+
+            D3DXVECTOR3 HitPos;
+            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                        //リセット
+            pEnemyNomal->GetLockOnUI()->SetDrawOk(false);
+            pEnemyNomal->GetLockOnUIMain()->SetDrawOk(false);
+
+            if (bHit == true)
+            {
+                //ここでバレットロック
+                pEnemyNomal->GetLockOnUIMain()->SetDrawOk(true);
+                break;
+
+            }
+            else
+            {
+                CObject* pNext = pObject->GetNext();
+                pObject = pNext;
+                nIndex++;
+            }
+        }
+    }
+
+    if (bHit == false)
+    {//接触無し
+
+        // 配置物プライオリティの先頭を取得
+        CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_FAST);
+
+        if (pObject != nullptr)
+        { // 先頭がない==プライオリティまるっとない
+
+            int nIndex = 0;
+
+            while (pObject != nullptr)
+            {
+                CObjectMotionEnemyfast* pEnemyFast = static_cast<CObjectMotionEnemyfast*>(pObject);
+
+                COBB pObb2 = pEnemyFast->GetOBB();
+
+
+                D3DXVECTOR3 HitPos;
+                bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                            //リセット
+                pEnemyFast->GetLockOnUI()->SetDrawOk(false);
+                pEnemyFast->GetLockOnUIMain()->SetDrawOk(false);
+
+                if (bHit == true)
+                {
+                    //ここでバレットロック
+                    pEnemyFast->GetLockOnUIMain()->SetDrawOk(true);
+                    break;
+                }
+                else
+                {
+                    CObject* pNext = pObject->GetNext();
+                    pObject = pNext;
+                    nIndex++;
+                }
+            }
+        }
+    }
+
+
+    if (bHit == false)
+    {//接触無し
+
+        // 配置物プライオリティの先頭を取得
+        CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS);
+
+        if (pObject != nullptr)
+        { // 先頭がない==プライオリティまるっとない
+
+            int nIndex = 0;
+
+            while (pObject != nullptr)
+            {
+                CObjectMotionEnemyBoss* pEnemyBoss = static_cast<CObjectMotionEnemyBoss*>(pObject);
+
+                COBB pObb2 = pEnemyBoss->GetOBB();
+
+
+                D3DXVECTOR3 HitPos;
+                bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                            //リセット
+                pEnemyBoss->GetLockOnUI()->SetDrawOk(false);
+                pEnemyBoss->GetLockOnUIMain()->SetDrawOk(false);
+
+                if (bHit == true)
+                {
+                    //ここでバレットロック
+                    pEnemyBoss->GetLockOnUIMain()->SetDrawOk(true);
+                    break;
+                }
+                else
+                {
+                    CObject* pNext = pObject->GetNext();
+                    pObject = pNext;
+                    nIndex++;
+                }
+            }
+        }
+    }
+
+
+    if (bHit == false)
+    {//接触無し
+
+        // 配置物プライオリティの先頭を取得
+        CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+        if (pObject != nullptr)
+        { // 先頭がない==プライオリティまるっとない
+
+            int nIndex = 0;
+
+            while (pObject != nullptr)
+            {
+                CObjectMotionEnemyGuard* pEnemyBoss = static_cast<CObjectMotionEnemyGuard*>(pObject);
+
+                COBB pObb2 = pEnemyBoss->GetOBB();
+
+
+                D3DXVECTOR3 HitPos;
+                bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                            //リセット
+                pEnemyBoss->GetLockOnUI()->SetDrawOk(false);
+                pEnemyBoss->GetLockOnUIMain()->SetDrawOk(false);
+
+                if (bHit == true)
+                {
+                    //ここでバレットロック
+                    pEnemyBoss->GetLockOnUIMain()->SetDrawOk(true);
+                    break;
+                }
+                else
+                {
+                    CObject* pNext = pObject->GetNext();
+                    pObject = pNext;
+                    nIndex++;
+                }
+            }
+        }
+    }
+
+    if (bHit == true)
+    {
+        m_bHit = true;
+    }
 }

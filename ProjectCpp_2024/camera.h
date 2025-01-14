@@ -51,6 +51,7 @@ public:
 	void LockOnEnemy();//ロックオン敵処理
 	void SetAllEnemyScreenPos();//スクリーン座標変換セット
 
+	void LockOnEnemy2D();//2D用ロックオン
 
 	// スクリーン座標が画面内にあるかどうかを判定
 	bool IsInScreen(D3DXVECTOR3 screenPosition);

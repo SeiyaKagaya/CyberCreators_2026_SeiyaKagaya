@@ -48,21 +48,26 @@ public:
 	static int GetEnemyAllNum();
 
 	//MainTarget‚©
-	void SetPriorityAttackTarget(bool bSet) { m_PriorityAttackTarget = bSet; };
-	bool GetPriorityAttackTarget() { return m_PriorityAttackTarget; };
+	void SetPriorityAttackTarget(bool bSet) { m_bPriorityAttackTarget = bSet; };
+	bool GetPriorityAttackTarget() { return m_bPriorityAttackTarget; };
+
+	//‰æ–Ê“à‚É‚¢‚é‚©
+	void SetInScreenTarget(bool bSet) { m_bIsInScreen = bSet; };
+	bool GetInScreenTarget() { return m_bIsInScreen; };
 
 private:
 
 	CMathProc::CollisionData m_HitData;//“–‚½‚è”»’èƒf[ƒ^
 
-	bool btest = false;
+//	bool btest = false;
 
-	int m_nLife;
+	int m_nLife=0;
 
 	static int m_nNumENemyAll;//“G‘”
 
+	bool m_bPriorityAttackTarget = false;//mainTarget
 
-	bool m_PriorityAttackTarget = false;//mainTarget
+	bool m_bIsInScreen = false;//‰æ–Ê“à‚É‚¤‚Â‚Á‚Ä‚¢‚é‚©
 };
 
 #endif

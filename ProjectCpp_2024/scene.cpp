@@ -1130,7 +1130,10 @@ void CGame::Uninit()
 {
 	CManager* pManager = CManager::GetInstance();
 	CSound* pSound = pManager->GetSound();
-	pSound->StopSound(CSound::SOUND_LABEL_BGM001);
+	if (pSound != nullptr)
+	{
+		pSound->StopSound(CSound::SOUND_LABEL_BGM001);
+	}
 	//m_CGameUI->Uninit();
 //	m_CGameUI->SetDeath(true);
 	//m_CTextWindow->Uninit();

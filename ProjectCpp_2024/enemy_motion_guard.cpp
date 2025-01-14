@@ -52,8 +52,8 @@ HRESULT CObjectMotionEnemyGuard::Init()
 	SetOBBLength(fLength);//OBBí∑Ç≥äiî[
 
 	m_nMoveCnt = 0;
-	fRotTurret = 0.0f;
-	m_BulletDelay = BULLETSHOTDELAY;
+	m_fRotTurret = 0.0f;
+	m_nBulletDelay = BULLETSHOTDELAY;
 
 	m_LockOnUI = CLockOnUI::Create();
 	m_LockOnUI_Main = CLockOnUIMain::Create();
@@ -124,10 +124,10 @@ void CObjectMotionEnemyGuard::Update()
 
 				TargetPos = EscData.Pos;//íçéãì_
 
-				if (m_OldTargetGRIDNum != pPlayer->GetNowGRIDNum())
+				if (m_nOldTargetGRIDNum != pPlayer->GetNowGRIDNum())
 				{//âﬂãéÇÃëäéËà íuî‘çÜÇ∆Ç¢Ç‹ÇÃëäéËà íuî‘çÜÇ™àÍèèÇ∂Ç·Ç»Ç¢éû
 					//äiî[
-					m_OldTargetGRIDNum = pPlayer->GetNowGRIDNum();
+					m_nOldTargetGRIDNum = pPlayer->GetNowGRIDNum();
 					bChange = true;
 				}
 			}
@@ -221,7 +221,12 @@ void CObjectMotionEnemyGuard::Update()
 			Attack();
 
 
+			DATA SetData = DataInit();
+			SetData.Pos = GetClassData().Pos;
+			SetData.Pos.y += LOCKDIFF;
 
+			m_LockOnUI_Main->SetDATA(SetData);
+			m_LockOnUI->SetDATA(SetData);
 
 
 
@@ -246,9 +251,9 @@ void CObjectMotionEnemyGuard::Update()
 				classData.move.y = -1;
 				SetClassData(classData);
 
-				m_EscCnt--;
+				m_nEscCnt--;
 
-				if (m_EscCnt < 0)
+				if (m_nEscCnt < 0)
 				{
 					CScore::AddScore(CScore::TANK_SCORE1*3);
 					
@@ -280,9 +285,9 @@ void CObjectMotionEnemyGuard::Update()
 
 			SetClassData(classData);
 
-			if (m_DamageFrameCnt > 0)
+			if (m_nDamageFrameCnt > 0)
 			{
-				m_DamageFrameCnt--;
+				m_nDamageFrameCnt--;
 				for (int i = 0; i < GetMaxLoadPartsNum(); i++)
 				{//
 
@@ -438,7 +443,7 @@ void CObjectMotionEnemyGuard::Attack()
 	D3DXMatrixIdentity(&EscMtxWorld);
 
 	//å¸Ç´ÇîΩâf
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, fRotTurret, 0.0f, 0.0f);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_fRotTurret, 0.0f, 0.0f);
 
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
@@ -478,7 +483,7 @@ void CObjectMotionEnemyGuard::Attack()
 	TurretRotation(SetPos, EscData.Pos, TargetData.move);
 	//----------------------------------------------------------------------------------
 
-	if (m_MissileDelay <= 0)
+	if (m_nMissileDelay <= 0)
 	{
 		CObject* pObj = nullptr;
 		pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
@@ -490,16 +495,16 @@ void CObjectMotionEnemyGuard::Attack()
 
 		pMissile->SetMissile(Setdata, 0, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), nullptr, CMissileALL::SHOTTYPE_ENEMY);
 
-		m_MissileDelay = MISSILESHOTDELAY;
+		m_nMissileDelay = MISSILESHOTDELAY;
 	}
 	else
 	{
-		m_MissileDelay--;
+		m_nMissileDelay--;
 	}
 
 
 
-	if (m_BulletDelay <= 0)
+	if (m_nBulletDelay <= 0)
 	{
 		DATA SETDATA = CObject::DataInit();
 
@@ -507,7 +512,7 @@ void CObjectMotionEnemyGuard::Attack()
 		D3DXMatrixIdentity(&EscMtxWorld);
 
 		//å¸Ç´ÇîΩâf
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, fRotTurret, 0.0f, 0.0f);
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_fRotTurret, 0.0f, 0.0f);
 
 		D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
@@ -522,7 +527,7 @@ void CObjectMotionEnemyGuard::Attack()
 		D3DXVECTOR3 SetPos = D3DXVECTOR3(EscMtxWorld._41, EscMtxWorld._42, EscMtxWorld._43);//ñCíeéÀèoå˚	
 
 		SETDATA.Pos = SetPos;
-		SETDATA.rot.y = fRotTurret;
+		SETDATA.rot.y = m_fRotTurret;
 
 		D3DXVECTOR3 BulletMim = D3DXVECTOR3(-30.0f, -30.0f, -30.0f);
 		D3DXVECTOR3 BulletMax = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
@@ -568,18 +573,24 @@ void CObjectMotionEnemyGuard::Attack()
 			{
 				CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
 				pBulletMNG->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.7f, 0.8f), this, CNewBulletALL::SHOTTYPE_ENEMY);
+
+				if (GetInScreenTarget() == true)
+				{
+					CSound* pSound = pManager->GetSound();
+					pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
+				}
 			}
 
 
 			CObjectShotFire::Create(SETDATA.Pos);
 			CObjectShotFire::Create(SETDATA.Pos);
 
-			m_BulletDelay = BULLETSHOTDELAY;
+			m_nBulletDelay = BULLETSHOTDELAY;
 		}
 	}
 	else
 	{
-		m_BulletDelay--;
+		m_nBulletDelay--;
 	}
 }
 
@@ -600,7 +611,7 @@ void CObjectMotionEnemyGuard::TurretRotation(D3DXVECTOR3 ShotPos, D3DXVECTOR3 Ta
 	float targetAngleXZ = atan2f(enemyDirection.z, -enemyDirection.x) + (D3DX_PI * 0.5f);
 
 	// åªç›ÇÃñCìÉÇÃXZïΩñ è„ÇÃäpìx
-	float currentAngleXZ = fRotTurret;
+	float currentAngleXZ = m_fRotTurret;
 
 
 	// äpìxÇîÕàÕì‡Ç…é˚ÇﬂÇÈ
@@ -629,7 +640,7 @@ void CObjectMotionEnemyGuard::TurretRotation(D3DXVECTOR3 ShotPos, D3DXVECTOR3 Ta
 
 	ChangeData.rot.y = currentAngleXZ;
 
-	fRotTurret = currentAngleXZ;
+	m_fRotTurret = currentAngleXZ;
 
 
 	// ïœçXÉfÅ[É^ÇîΩâf

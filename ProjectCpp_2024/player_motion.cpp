@@ -229,7 +229,7 @@ void CObjectMotionPlayer::Update()
 	
 					// シールドの回転を設定
 					m_pShield->SetRot(SetRot);
-					m_pBulletLine->SetRot(SetRot);
+					//m_pBulletLine->SetRot(SetRot);
 
 					D3DXVECTOR3 SETPOS = m_TargetPos;
 	
@@ -238,7 +238,7 @@ void CObjectMotionPlayer::Update()
 					SETPOS -= direction * 180.0f;
 	
 					m_pShield->SetPos(SETPOS);
-					m_pBulletLine->SetPos(SETPOS);
+					//m_pBulletLine->SetPos(SETPOS);
 					//----------------------------------------------------------------------------------
 				}
 				else
@@ -696,7 +696,7 @@ void CObjectMotionPlayer::Update()
 					float angleRadians = atan2f(direction.x, -direction.y); // -direction.x で基準を上方向に変更
 
 					// 回転データを設定 (X 軸回転として渡す場合)
-					D3DXVECTOR3 SetRot = D3DXVECTOR3(angleY + (-D3DX_PI * 0.5f), (-D3DX_PI * 0.5f), 0.0f);
+					D3DXVECTOR3 SetRot /*= D3DXVECTOR3(angleY + (-D3DX_PI * 0.5f), (-D3DX_PI * 0.5f), 0.0f)*/;
 
 					float Diff = -0.065f;
 
@@ -707,7 +707,7 @@ void CObjectMotionPlayer::Update()
 					}
 					else
 					{//左正面
-						SetRot = D3DXVECTOR3(-angleY - Diff, (-D3DX_PI * 0.5f), 0.0f);
+						SetRot = D3DXVECTOR3(angleY + Diff, (D3DX_PI * 0.5f), 0.0f);
 					}
 
 					m_pBulletLine->SetRot(SetRot);
@@ -720,18 +720,14 @@ void CObjectMotionPlayer::Update()
 					//体向き変動(2D)
 					if (m_TargetPos.x >= classData.Pos.x)
 					{//右正面
-						SETPOS.y += 120.0f;
-						SETPOS.x += 80.0f;
-
 						SETPOS -= direction * 180.0f;
 					}
 					else
 					{//左正面
-						SETPOS.y += 90.0f;
-						SETPOS.x -= 80.0f;
-
-						SETPOS += direction * 180.0f;
+						SETPOS -= direction * 180.0f;
 					}
+					SETPOS.y += 100.0f;
+
 
 					//					m_pShield->SetPos(SETPOS);
 					m_pBulletLine->SetPos(SETPOS);
@@ -1516,8 +1512,14 @@ void CObjectMotionPlayer::ControllerInput2D()
 				//Mouseで画面に指してる3D空間座標取得
 				D3DXVECTOR3 TargetPos = D3DXVECTOR3(EscMtxWorld2._41, EscMtxWorld2._42, 0.0f);
 
+				float fX = (float)((rand() % 40) - 20);
+				float fY = (float)((rand() % 40) - 20);
 
-					// TargetPos から SetData.Pos への方向ベクトルを計算
+				TargetPos += D3DXVECTOR3(fX, fY, 0.0f);
+
+
+
+				// TargetPos から SetData.Pos への方向ベクトルを計算
 				D3DXVECTOR3 direction = TargetPos - DirectionPos;
 
 				// 方向ベクトルを正規化（単位ベクトルにする）

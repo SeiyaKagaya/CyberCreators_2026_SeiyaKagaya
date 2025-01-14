@@ -46,14 +46,14 @@ HRESULT CObjectMotionEnemyNomal::Init()
 
 	float fLength[3];
 	fLength[0] = 110.0f;
-	fLength[1] = 110.0f;
+	fLength[1] = 70.0f;
 	fLength[2] = 110.0f;
 
 	SetOBBLength(fLength);//OBB長さ格納
 
 	m_nMoveCnt = 0;
-	fRotTurret = 0.0f;
-	m_BulletDelay = BULLETSHOTDELAY;
+	m_fRotTurret = 1.57f;
+	m_nBulletDelay = BULLETSHOTDELAY;
 
 	m_LockOnUI = CLockOnUI::Create();
 	m_LockOnUI_Main = CLockOnUIMain::Create();
@@ -121,10 +121,10 @@ void CObjectMotionEnemyNomal::Update()
 
 				TargetPos = EscData.Pos;//注視点
 
-				if (m_OldTargetGRIDNum != pPlayer->GetNowGRIDNum())
+				if (m_nOldTargetGRIDNum != pPlayer->GetNowGRIDNum())
 				{//過去の相手位置番号といまの相手位置番号が一緒じゃない時
 					//格納
-					m_OldTargetGRIDNum = pPlayer->GetNowGRIDNum();
+					m_nOldTargetGRIDNum = pPlayer->GetNowGRIDNum();
 					bChange = true;
 				}
 			}
@@ -132,10 +132,10 @@ void CObjectMotionEnemyNomal::Update()
 			//移動先制定
 			//---------------------------------------------------------------------------------------------------------------------------------
 
-			if (m_OldMyGRIDNum != GetNowGRIDNum())
+			if (m_nOldMyGRIDNum != GetNowGRIDNum())
 			{//自分の過去の位置番号と現在の位置番号が違うとき
 				//格納
-				m_OldMyGRIDNum = GetNowGRIDNum();
+				m_nOldMyGRIDNum = GetNowGRIDNum();
 				bChange = true;
 			}
 
@@ -143,16 +143,16 @@ void CObjectMotionEnemyNomal::Update()
 			{//両者どちらかの位置番号に変更があった時
 				CMathProc::Point pPoint;
 
-				int NextMoveGridNum = CMathProc::GetNextMoveGridNum(m_OldTargetGRIDNum, m_OldMyGRIDNum);//次の経由地
+				int NextMoveGridNum = CMathProc::GetNextMoveGridNum(m_nOldTargetGRIDNum, m_nOldMyGRIDNum);//次の経由地
 
-				NowMoveGRIDNum = NextMoveGridNum;
+				m_nNowMoveGRIDNum = NextMoveGridNum;
 
 
 				//移動先制定の補佐------
 
 				pPoint = CMathProc::GetPointfromObjectNum(NextMoveGridNum);
 
-				if (pPoint.x == CMathProc::GetPointfromObjectNum(m_OldTargetGRIDNum).x && pPoint.y == CMathProc::GetPointfromObjectNum(m_OldTargetGRIDNum).y)
+				if (pPoint.x == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).x && pPoint.y == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).y)
 				{//ゴールが目前
 					classData.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 				}
@@ -324,7 +324,12 @@ void CObjectMotionEnemyNomal::Update()
 
 			Attack();
 
+			DATA SetData = DataInit();
+			SetData.Pos = GetClassData().Pos;
+			SetData.Pos.y += LOCKDIFF;
 
+			m_LockOnUI_Main->SetDATA(SetData);
+			m_LockOnUI->SetDATA(SetData);
 
 
 
@@ -395,9 +400,9 @@ void CObjectMotionEnemyNomal::Update()
 
 			SetClassData(classData);
 
-			if (m_DamageFrameCnt > 0)
+			if (m_nDamageFrameCnt > 0)
 			{
-				m_DamageFrameCnt--;
+				m_nDamageFrameCnt--;
 				for (int i = 0; i < GetMaxLoadPartsNum(); i++)
 				{//
 
@@ -555,7 +560,7 @@ void CObjectMotionEnemyNomal::Attack()
 	D3DXMatrixIdentity(&EscMtxWorld);
 
 	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, fRotTurret, 0.0f, 0.0f);
+	D3DXMatrixRotationYawPitchRoll(&mtxRot, m_fRotTurret, 0.0f, 0.0f);
 
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
@@ -595,7 +600,7 @@ void CObjectMotionEnemyNomal::Attack()
 	TurretRotation(SetPos, EscData.Pos, TargetData.move);
 	//----------------------------------------------------------------------------------
 
-	if (m_BulletDelay <= 0)
+	if (m_nBulletDelay <= 0)
 	{
 		DATA SETDATA = CObject::DataInit();
 
@@ -603,7 +608,7 @@ void CObjectMotionEnemyNomal::Attack()
 		D3DXMatrixIdentity(&EscMtxWorld);
 
 		//向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, fRotTurret, 0.0f, 0.0f);
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, m_fRotTurret, 0.0f, 0.0f);
 
 		D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
@@ -618,7 +623,7 @@ void CObjectMotionEnemyNomal::Attack()
 		D3DXVECTOR3 SetPos = D3DXVECTOR3(EscMtxWorld._41, EscMtxWorld._42, EscMtxWorld._43);//砲弾射出口	
 
 		SETDATA.Pos = SetPos;
-		SETDATA.rot.y = fRotTurret;
+		SETDATA.rot.y = m_fRotTurret;
 
 		D3DXVECTOR3 BulletMim = D3DXVECTOR3(-30.0f, -30.0f, -30.0f);
 		D3DXVECTOR3 BulletMax = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
@@ -675,18 +680,24 @@ void CObjectMotionEnemyNomal::Attack()
 			{
 				CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
 				pBulletMNG->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.7f, 0.8f), this, CNewBulletALL::SHOTTYPE_ENEMY);
+
+				if (GetInScreenTarget() == true)
+				{
+					CSound* pSound = pManager->GetSound();
+					pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
+				}
 			}
 
 
 			CObjectShotFire::Create(SETDATA.Pos);
 			CObjectShotFire::Create(SETDATA.Pos);
 
-			m_BulletDelay = BULLETSHOTDELAY;
+			m_nBulletDelay = BULLETSHOTDELAY;
 		}
 	}
 	else
 	{
-		m_BulletDelay--;
+		m_nBulletDelay--;
 	}
 
 }
@@ -1023,7 +1034,7 @@ void CObjectMotionEnemyNomal::TurretRotation(D3DXVECTOR3 ShotPos, D3DXVECTOR3 Ta
 	float targetAngleXZ = atan2f(enemyDirection.z, -enemyDirection.x) + (D3DX_PI*0.5f);
 
 	// 現在の砲塔のXZ平面上の角度
-	float currentAngleXZ = fRotTurret;
+	float currentAngleXZ = m_fRotTurret;
 
 
 	// 角度を範囲内に収める
@@ -1052,7 +1063,7 @@ void CObjectMotionEnemyNomal::TurretRotation(D3DXVECTOR3 ShotPos, D3DXVECTOR3 Ta
 
 	ChangeData.rot.y = currentAngleXZ;
 
-	fRotTurret = currentAngleXZ;
+	m_fRotTurret = currentAngleXZ;
 
 
 	// 変更データを反映

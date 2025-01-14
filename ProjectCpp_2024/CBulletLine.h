@@ -51,6 +51,10 @@ private:
 	LPDIRECT3DTEXTURE9	m_ESCpTexture;
 
 	bool m_bFast;
+
+	//OBBの当たり判定用
+	COBB m_OBB = {};
+
 	D3DXCOLOR m_OriginalColor;
 
 
@@ -63,11 +67,11 @@ private:
 	CModelParts* m_pParentParts;//親モデルへのポインタ
 
 
-		//OBBの当たり判定用
-	COBB m_Obb;
 
-	int m_nLife = 300;
 
+
+//	int m_nLife = 300;
+	bool m_bHit = false;
 
 };
 

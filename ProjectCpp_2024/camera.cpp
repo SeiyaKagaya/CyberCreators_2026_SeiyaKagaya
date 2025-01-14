@@ -336,6 +336,8 @@ void  CCamera::ActionUpdate2D()
 
 //	m_posR.z += 150.0f;
 	CameraPos = m_posV;
+
+	LockOnEnemy2D();
 }
 //=============================
 //更新--3D
@@ -794,7 +796,7 @@ void CCamera::LockOnEnemy()
 	struct LockOnTarget
 	{
 		CObject* pEnemy;
-		float distanceSquared; // 2D距離^2
+		float distanceSquared; // 2D距離
 		int enemyType;
 	};
 
@@ -827,10 +829,12 @@ void CCamera::LockOnEnemy()
 			//リセット
 			pEnemyFast->GetLockOnUI()->SetDrawOk(false);
 			pEnemyFast->GetLockOnUIMain()->SetDrawOk(false);
-
+			pEnemyFast->SetInScreenTarget(false);
 
 			if (IsInScreen(pEnemyFast->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
 			{
+				pEnemyFast->SetInScreenTarget(true);
+
 				// カメラと敵の距離を計算
 				D3DXVECTOR3 cameraToEnemy = pEnemyFast->GetClassData().Pos - m_posV;
 				float distance = D3DXVec3Length(&cameraToEnemy);//対象との距離
@@ -868,10 +872,12 @@ void CCamera::LockOnEnemy()
 			//リセット
 			pEnemyNomal->GetLockOnUI()->SetDrawOk(false);
 			pEnemyNomal->GetLockOnUIMain()->SetDrawOk(false);
-
+			pEnemyNomal->SetInScreenTarget(false);
 
 			if (IsInScreen(pEnemyNomal->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
 			{
+				pEnemyNomal->SetInScreenTarget(true);
+
 				// カメラと敵の距離を計算
 				D3DXVECTOR3 cameraToEnemy = pEnemyNomal->GetClassData().Pos - m_posV;
 				float distance = D3DXVec3Length(&cameraToEnemy);//対象との距離
@@ -916,10 +922,12 @@ void CCamera::LockOnEnemy()
 			//リセット
 			pEnemyBoss->GetLockOnUI()->SetDrawOk(false);
 			pEnemyBoss->GetLockOnUIMain()->SetDrawOk(false);
-
+			pEnemyBoss->SetInScreenTarget(false);
 
 			if (IsInScreen(pEnemyBoss->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
 			{
+				pEnemyBoss->SetInScreenTarget(true);
+
 				// カメラと敵の距離を計算
 				D3DXVECTOR3 cameraToEnemy = pEnemyBoss->GetClassData().Pos - m_posV;
 				float distance = D3DXVec3Length(&cameraToEnemy);//対象との距離
@@ -963,10 +971,12 @@ void CCamera::LockOnEnemy()
 			//リセット
 			pEnemyBossGuard->GetLockOnUI()->SetDrawOk(false);
 			pEnemyBossGuard->GetLockOnUIMain()->SetDrawOk(false);
-
+			pEnemyBossGuard->SetInScreenTarget(false);
 
 			if (IsInScreen(pEnemyBossGuard->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
 			{
+				pEnemyBossGuard->SetInScreenTarget(true);
+
 				// カメラと敵の距離を計算
 				D3DXVECTOR3 cameraToEnemy = pEnemyBossGuard->GetClassData().Pos - m_posV;
 				float distance = D3DXVec3Length(&cameraToEnemy);//対象との距離
@@ -1026,10 +1036,10 @@ void CCamera::LockOnEnemy()
 				//ミサイルロック
 				pEnemyFast->GetLockOnUI()->SetDrawOk(true);
 
-				CObject::DATA SETDATA = CObject::DataInit();
-				SETDATA.Pos = pEnemyFast->GetClassData().Pos;
-				SETDATA.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
-				pEnemyFast->GetLockOnUI()->SetDATA(SETDATA);
+				//CObject::DATA SETDATA = CObject::DataInit();
+				//SETDATA.Pos = pEnemyFast->GetClassData().Pos;
+				//SETDATA.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
+				//pEnemyFast->GetLockOnUI()->SetDATA(SETDATA);
 			}
 		}
 		else if (potentialTargets[i].enemyType == 1)
@@ -1040,10 +1050,10 @@ void CCamera::LockOnEnemy()
 				//ミサイルロック
 				pEnemyNomal->GetLockOnUI()->SetDrawOk(true);
 
-				CObject::DATA SETDATA = CObject::DataInit();
-				SETDATA.Pos = pEnemyNomal->GetClassData().Pos;
-				SETDATA.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
-				pEnemyNomal->GetLockOnUI()->SetDATA(SETDATA);
+				//CObject::DATA SETDATA = CObject::DataInit();
+				//SETDATA.Pos = pEnemyNomal->GetClassData().Pos;
+				//SETDATA.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
+				//pEnemyNomal->GetLockOnUI()->SetDATA(SETDATA);
 
 			}
 		}
@@ -1057,10 +1067,10 @@ void CCamera::LockOnEnemy()
 				//ミサイルロック
 				pEnemyBoss->GetLockOnUI()->SetDrawOk(true);
 
-				CObject::DATA SETDATA = CObject::DataInit();
-				SETDATA.Pos = pEnemyBoss->GetClassData().Pos;
-				SETDATA.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
-				pEnemyBoss->GetLockOnUI()->SetDATA(SETDATA);
+				//CObject::DATA SETDATA = CObject::DataInit();
+				//SETDATA.Pos = pEnemyBoss->GetClassData().Pos;
+				//SETDATA.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
+				//pEnemyBoss->GetLockOnUI()->SetDATA(SETDATA);
 
 			}
 		}
@@ -1072,10 +1082,10 @@ void CCamera::LockOnEnemy()
 				//ミサイルロック
 				pEnemyEnemyGuard->GetLockOnUI()->SetDrawOk(true);
 
-				CObject::DATA SETDATA = CObject::DataInit();
-				SETDATA.Pos = pEnemyEnemyGuard->GetClassData().Pos;
-				SETDATA.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
-				pEnemyEnemyGuard->GetLockOnUI()->SetDATA(SETDATA);
+				//CObject::DATA SETDATA = CObject::DataInit();
+				//SETDATA.Pos = pEnemyEnemyGuard->GetClassData().Pos;
+				//SETDATA.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
+				//pEnemyEnemyGuard->GetLockOnUI()->SetDATA(SETDATA);
 
 			}
 		}
@@ -1091,10 +1101,10 @@ void CCamera::LockOnEnemy()
 			//ミサイルロック
 			pClosestEnemyFast->GetLockOnUIMain()->SetDrawOk(true);
 
-			CObject::DATA SETDATA = CObject::DataInit();
+	/*		CObject::DATA SETDATA = CObject::DataInit();
 			SETDATA.Pos = pClosestEnemyFast->GetClassData().Pos;
 			SETDATA.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
-			pClosestEnemyFast->GetLockOnUIMain()->SetDATA(SETDATA);
+			pClosestEnemyFast->GetLockOnUIMain()->SetDATA(SETDATA);*/
 
 		}
 		else if (potentialTargets[0].enemyType == 1)
@@ -1103,10 +1113,10 @@ void CCamera::LockOnEnemy()
 			//ミサイルロック
 			pClosestEnemyNomal->GetLockOnUIMain()->SetDrawOk(true);
 
-			CObject::DATA SETDATA = CObject::DataInit();
+		/*	CObject::DATA SETDATA = CObject::DataInit();
 			SETDATA.Pos = pClosestEnemyNomal->GetClassData().Pos;
 			SETDATA.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
-			pClosestEnemyNomal->GetLockOnUIMain()->SetDATA(SETDATA);
+			pClosestEnemyNomal->GetLockOnUIMain()->SetDATA(SETDATA);*/
 
 		}
 
@@ -1117,10 +1127,10 @@ void CCamera::LockOnEnemy()
 			//ミサイルロック
 			pClosestEnemyBoss->GetLockOnUIMain()->SetDrawOk(true);
 
-			CObject::DATA SETDATA = CObject::DataInit();
+			/*CObject::DATA SETDATA = CObject::DataInit();
 			SETDATA.Pos = pClosestEnemyBoss->GetClassData().Pos;
 			SETDATA.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
-			pClosestEnemyBoss->GetLockOnUIMain()->SetDATA(SETDATA);
+			pClosestEnemyBoss->GetLockOnUIMain()->SetDATA(SETDATA);*/
 
 		}
 		else if (potentialTargets[0].enemyType == 3)
@@ -1129,10 +1139,10 @@ void CCamera::LockOnEnemy()
 			//ミサイルロック
 			pClosestEnemyGuard->GetLockOnUIMain()->SetDrawOk(true);
 
-			CObject::DATA SETDATA = CObject::DataInit();
+	/*		CObject::DATA SETDATA = CObject::DataInit();
 			SETDATA.Pos = pClosestEnemyGuard->GetClassData().Pos;
 			SETDATA.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
-			pClosestEnemyGuard->GetLockOnUIMain()->SetDATA(SETDATA);
+			pClosestEnemyGuard->GetLockOnUIMain()->SetDATA(SETDATA);*/
 
 		}
 	}
@@ -1264,6 +1274,150 @@ void CCamera::SetAllEnemyScreenPos()
 
 
 
+}
+//=============================
+// 2Dロックオン処理
+//=============================
+void CCamera::LockOnEnemy2D()
+{
+	CRenderer* pRenderer = nullptr;
+	CManager* pManager = CManager::GetInstance();
+	pRenderer = pManager->GetRenderer();
+
+	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
+
+	struct LockOnTarget
+	{
+		CObject* pEnemy;
+		float distanceSquared; // 2D距離
+		int enemyType;
+	};
+
+	std::vector<LockOnTarget> potentialTargets;
+
+	// プレイヤーの位置を取得
+	CObject* pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
+	CObject::DATA PlayerEscData;
+
+	if (pObj != nullptr)
+	{
+		CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
+		PlayerEscData = pPlayer->GetClassData();
+		PlayerEscData.Pos.y += 130.0f;
+	}
+
+	// 敵のスクリーン座標を更新
+	SetAllEnemyScreenPos();
+
+	// 高速タイプ敵を処理
+	CObject* pObjectFast = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_FAST);
+
+	if (pObjectFast != nullptr)
+	{
+		while (pObjectFast != nullptr)
+		{
+			CObjectMotionEnemyfast* pEnemyFast = (CObjectMotionEnemyfast*)pObjectFast;
+			CObject::DATA EscEnemyData = pEnemyFast->GetClassData();
+			EscEnemyData.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
+			//リセット
+			pEnemyFast->GetLockOnUI()->SetDrawOk(false);
+			pEnemyFast->GetLockOnUIMain()->SetDrawOk(false);
+			pEnemyFast->SetInScreenTarget(false);
+
+			if (IsInScreen(pEnemyFast->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
+			{
+				pEnemyFast->SetInScreenTarget(true);
+			}
+
+			pObjectFast = pObjectFast->GetNext();
+		}
+	}
+
+	// 通常タイプ敵を処理
+	CObject* pObjectNormal = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_NOMAL);
+
+	if (pObjectNormal != nullptr)
+	{
+		while (pObjectNormal != nullptr)
+		{
+			CObjectMotionEnemyNomal* pEnemyNomal = (CObjectMotionEnemyNomal*)pObjectNormal;
+			CObject::DATA EscEnemyData = pEnemyNomal->GetClassData();
+			EscEnemyData.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
+
+			//リセット
+			pEnemyNomal->GetLockOnUI()->SetDrawOk(false);
+			pEnemyNomal->GetLockOnUIMain()->SetDrawOk(false);
+			pEnemyNomal->SetInScreenTarget(false);
+
+			if (IsInScreen(pEnemyNomal->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
+			{
+				pEnemyNomal->SetInScreenTarget(true);
+			}
+
+			pObjectNormal = pObjectNormal->GetNext();
+		}
+	}
+
+
+
+
+
+	// 通常タイプ敵を処理
+	CObject* pObjectBoss = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS);
+
+	if (pObjectBoss != nullptr)
+	{
+		while (pObjectBoss != nullptr)
+		{
+			CObjectMotionEnemyBoss* pEnemyBoss = (CObjectMotionEnemyBoss*)pObjectBoss;
+			CObject::DATA EscEnemyData = pEnemyBoss->GetClassData();
+			EscEnemyData.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
+
+			//リセット
+			pEnemyBoss->GetLockOnUI()->SetDrawOk(false);
+			pEnemyBoss->GetLockOnUIMain()->SetDrawOk(false);
+			pEnemyBoss->SetInScreenTarget(false);
+
+			if (IsInScreen(pEnemyBoss->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
+			{
+				pEnemyBoss->SetInScreenTarget(true);
+			}
+
+			pObjectBoss = pObjectBoss->GetNext();
+		}
+	}
+
+
+
+
+	// 通常タイプ敵を処理
+	CObject* pObjectGuard = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+	if (pObjectGuard != nullptr)
+	{
+		while (pObjectGuard != nullptr)
+		{
+			CObjectMotionEnemyGuard* pEnemyBossGuard = (CObjectMotionEnemyGuard*)pObjectGuard;
+			CObject::DATA EscEnemyData = pEnemyBossGuard->GetClassData();
+			EscEnemyData.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
+
+			//リセット
+			pEnemyBossGuard->GetLockOnUI()->SetDrawOk(false);
+			pEnemyBossGuard->GetLockOnUIMain()->SetDrawOk(false);
+			pEnemyBossGuard->SetInScreenTarget(false);
+
+			if (IsInScreen(pEnemyBossGuard->GetScreenPos()) && IsFacingCamera(EscEnemyData.Pos))
+			{
+				pEnemyBossGuard->SetInScreenTarget(true);
+
+			}
+
+			pObjectGuard = pObjectGuard->GetNext();
+		}
+	}
+
+
+	
 }
 
 //=============================

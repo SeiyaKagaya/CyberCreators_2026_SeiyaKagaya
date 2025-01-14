@@ -53,7 +53,7 @@ HRESULT CObjectMotionEnemyBoss::Init()
 
 	m_nMoveCnt = 0;
 	fRotTurret = 0.0f;
-	m_BulletDelay = BULLETSHOTDELAY;
+	m_nBulletDelay = BULLETSHOTDELAY;
 
 	m_LockOnUI = CLockOnUI::Create();
 	m_LockOnUI_Main = CLockOnUIMain::Create();
@@ -111,6 +111,13 @@ void CObjectMotionEnemyBoss::Update()
 			//------------------------------------------------------------------------------------------------------------------------------------------------------
 			//Attack();
 
+			DATA SetData = DataInit();
+			SetData.Pos = GetClassData().Pos;
+			SetData.Pos.y += LOCKDIFF;
+
+			m_LockOnUI_Main->SetDATA(SetData);
+			m_LockOnUI->SetDATA(SetData);
+
 
 			if (m_nLife <= 0)
 			{
@@ -125,8 +132,8 @@ void CObjectMotionEnemyBoss::Update()
 				SetClassData(classData);
 
 
-				m_EscCnt--;
-				if (m_EscCnt < 0)
+				m_nEscCnt--;
+				if (m_nEscCnt < 0)
 				{
 					CScore::AddScore(CScore::TANK_SCORE1*4);
 
@@ -159,9 +166,9 @@ void CObjectMotionEnemyBoss::Update()
 
 			SetClassData(classData);
 
-			if (m_DamageFrameCnt > 0)
+			if (m_nDamageFrameCnt > 0)
 			{
-				m_DamageFrameCnt--;
+				m_nDamageFrameCnt--;
 				for (int i = 0; i < GetMaxLoadPartsNum(); i++)
 				{//
 
@@ -294,7 +301,7 @@ void CObjectMotionEnemyBoss::Attack()
 	TurretRotation(SetPos, EscData.Pos, TargetData.move);
 	//----------------------------------------------------------------------------------
 
-	if (m_BulletDelay <= 0)
+	if (m_nBulletDelay <= 0)
 	{
 		DATA SETDATA = CObject::DataInit();
 
@@ -349,18 +356,23 @@ void CObjectMotionEnemyBoss::Attack()
 		{
 			CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
 			pBulletMNG->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.7f, 0.8f), this, CNewBulletALL::SHOTTYPE_ENEMY);
+			if (GetInScreenTarget() == true)
+			{
+				CSound* pSound = pManager->GetSound();
+				pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
+			}
 		}
 
 
 		CObjectShotFire::Create(SETDATA.Pos);
 		CObjectShotFire::Create(SETDATA.Pos);
 
-		m_BulletDelay = BULLETSHOTDELAY;
+		m_nBulletDelay = BULLETSHOTDELAY;
 
 	}
 	else
 	{
-		m_BulletDelay--;
+		m_nBulletDelay--;
 	}
 }
 
