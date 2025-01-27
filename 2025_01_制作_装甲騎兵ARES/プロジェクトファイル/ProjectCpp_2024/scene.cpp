@@ -227,6 +227,12 @@ HRESULT CTitle::Init()
 
 //	CManager* pManager = CManager::GetInstance();
 	CSound* pSound = pManager->GetSound();
+
+	if (pSound != nullptr)
+	{
+		pSound->StopSound();
+	}
+
 	pSound->PlaySound(CSound::SOUND_LABEL_BGM000);
 
 	return S_OK;
@@ -639,7 +645,7 @@ HRESULT CGame::Init()
 
 
 	CTime::Create();
-	CTime::ChangeTime(340);
+	CTime::ChangeTime(150);
 
 	Sky3D::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
@@ -3677,11 +3683,11 @@ void CGame3::Update()
 					m_CGameUI->AllUiRestart();
 				}
 
-				if (CObjectMotionEnemyBoss::GetEnemyAllNum() <= 0)
-				{//“GŸr–Å	
-					m_bNext = false;//true
-					m_bStay2BOOL = true;
-				}
+				//if (CObjectMotionEnemyBoss::GetEnemyAllNum() <= 0)
+				//{//“GŸr–Å	
+				//	m_bNext = false;//true
+				//	m_bStay2BOOL = true;
+				//}
 
 				if (CObjectMotionEnemyBoss::GetEnemyAllNum() <= 0)
 				{//“GŸr–Å	
@@ -3838,28 +3844,28 @@ void CGame3::Update()
 	}
 	else
 	{//ŽŸ‚ÌƒXƒe[ƒW‚É‘JˆÚ
-		m_nCnt++;
+		//m_nCnt++;
 
 
-		if (m_nCnt == 10)
-		{
-			m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+		//if (m_nCnt == 10)
+		//{
+		//	m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
 
-			m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 24, 40, 3, "ŒR`‘O‚É“ž’…B\n‘Ò‹@‚·‚éB", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 80);
-			m_CTextWindowSub->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 410.0f, SCREEN_HEIGHT * 0.5f - 265.0f, 0.0f), 16, 40, 2, "< COM >", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 170);
-		}
+		//	m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 24, 40, 3, "ŒR`‘O‚É“ž’…B\n‘Ò‹@‚·‚éB", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 80);
+		//	m_CTextWindowSub->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 410.0f, SCREEN_HEIGHT * 0.5f - 265.0f, 0.0f), 16, 40, 2, "< COM >", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 170);
+		//}
 
-		if (m_nCnt == 220)
-		{
-			m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
-		}
+		//if (m_nCnt == 220)
+		//{
+		//	m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+		//}
 
-		if (m_nCnt == 300)
-		{
-			//			CTime::ChangeTime(CTime::GetTime());
-			CFade* pFade = pManager->GetFade();
-			pFade->SetFade(CScene::MODE_MOVIE2);
-		}
+		//if (m_nCnt == 300)
+		//{
+		//	//			CTime::ChangeTime(CTime::GetTime());
+		//	CFade* pFade = pManager->GetFade();
+		//	pFade->SetFade(CScene::MODE_MOVIE2);
+		//}
 
 	}
 }
@@ -4020,6 +4026,12 @@ HRESULT CResult::Init()
 	pManager->SetPauseState(false);
 
 	CSound* pSound = pManager->GetSound();
+
+	if (pSound != nullptr)
+	{
+		pSound->StopSound();
+	}
+
 	pSound->PlaySound(CSound::SOUND_LABEL_SE_JET);
 
 	return E_NOTIMPL;
