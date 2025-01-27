@@ -330,8 +330,9 @@ void CMissile::Update()
                 EscData.move.z = 0.0f;
 
                 // 位置を更新
-                EscData.Pos += EscData.move;
                 EscData.OldPos = EscData.Pos;
+                EscData.Pos += EscData.move;
+         
                 SetDATA(EscData);
             }
             else
@@ -563,23 +564,24 @@ void CMissile::HitCollision()
         {//上記判定に引っかからない
 
             //当たり判定計算
-            m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_NEWBULLET, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, EscData.move, this);
+            m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MISSILE, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, EscData.move, this);
 
             if (m_HitData.bHit == false)
             {
                 //当たり判定計算
-                m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_NEWBULLET, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, EscData.move, this);
+                m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MISSILE, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, EscData.move, this);
             }
 
             if (m_HitData.bHit == false)
             {
                 //当たり判定計算
-                m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_NEWBULLET, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, EscData.move, this);
+                m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MISSILE, EscData.Pos, EscData.OldPos, EscData.MinLength, EscData.MaxLength, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D, EscData.move, this);
             }
 
             if (m_HitData.bHit == true)
             {
                 CObjectShotFire::Create(EscData.Pos);
+                m_bUse = false;
             }
 
 
@@ -963,8 +965,9 @@ void CMissile::Homing()
                 SetData.move = SetMove;
 
                 // 位置を更新
-                SetData.Pos += SetData.move * MISSILEMOVESPEED * 1.2f;
                 SetData.OldPos = SetData.Pos;
+                SetData.Pos += SetData.move * MISSILEMOVESPEED * 1.2f;
+             
                SetDATA(SetData);
     }
     else  if (m_ShotType == CMissileALL::SHOTTYPE_ENEMY)
@@ -1009,9 +1012,10 @@ void CMissile::Homing()
         SetData.move = SetMove;
 
          // 位置を更新
+        SetData.OldPos = SetData.Pos;
         SetData.Pos += SetData.move * MISSILEMOVESPEED * 0.3f;
     
-        SetData.OldPos = SetData.Pos;
+
         SetDATA(SetData);
     }
 }

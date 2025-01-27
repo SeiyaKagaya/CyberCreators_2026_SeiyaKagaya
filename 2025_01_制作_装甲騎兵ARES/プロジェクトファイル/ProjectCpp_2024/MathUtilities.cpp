@@ -43,10 +43,10 @@
 CMathProc::Cell CMathProc::GRID[GRIDROW][GRIDCOL] = {};
 
 //位置番号参照型経路テーブル
- int CMathProc::RouteTable[GRIDROW * GRIDCOL][GRIDROW * GRIDCOL];
+int CMathProc::RouteTable[GRIDROW * GRIDCOL][GRIDROW * GRIDCOL];
 
- //視界不良時射撃位置
- D3DXVECTOR3 CMathProc::m_ShotPos[SHOTPOINUM];
+//視界不良時射撃位置
+D3DXVECTOR3 CMathProc::m_ShotPos[SHOTPOINUM];
 
 
 //// GRID配列の定義
@@ -68,7 +68,7 @@ COBB::COBB()
 	m_Direct[2] = D3DXVECTOR3(0.0f, 0.0f, 1.0f);  // OBB1のZ軸方向
 	for (int i = 0; i < 3; i++)
 	{
-	//	m_NormaDirect[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);   // 方向ベクトル
+		//	m_NormaDirect[i] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);   // 方向ベクトル
 		m_fLength[i] = 0.0f;             // 各軸方向の長さ
 	}
 }
@@ -125,7 +125,7 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision(D3DXVECTOR3 MyPos, floa
 	CollisionData HitData;
 
 	HitData.bHit = false;
-	HitData.HitAngle = D3DXVECTOR3(0.0f, 0.0f,0.0f);
+	HitData.HitAngle = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	HitData.ResultDistance = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	HitData.targetIndex = -1;
 
@@ -189,93 +189,93 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision(D3DXVECTOR3 MyPos, floa
 		//ここに円形当たり判定追加
 
 		// 配置物プライオリティの先頭を取得
-		CObject* pObject = CObject::GetpTop(TargetLayer);
+	CObject* pObject = CObject::GetpTop(TargetLayer);
 
-		if (pObject != nullptr)
-		{ // 先頭がない==プライオリティまるっとない
+	if (pObject != nullptr)
+	{ // 先頭がない==プライオリティまるっとない
 
-			int nIndex = 0;
+		int nIndex = 0;
 
-			while (pObject != nullptr)
-			{
-				if (pObject->GetObjectType() == TargetType)
-				{ // balletモデルのとき
-					if (pCaller != pObject)
+		while (pObject != nullptr)
+		{
+			if (pObject->GetObjectType() == TargetType)
+			{ // balletモデルのとき
+				if (pCaller != pObject)
+				{
+
+					D3DXVECTOR3 TarGet_Collision_Min_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					D3DXVECTOR3 TarGet_Collision_Max_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+					CObject::DATA EscData;
+
+					// ここで使用分宣言
+					CNewBullet* pNewBullet = {};
+
+					// ここで本来のデータ取得
+					switch (TargetType)
 					{
 
-						D3DXVECTOR3 TarGet_Collision_Min_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-						D3DXVECTOR3 TarGet_Collision_Max_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-						CObject::DATA EscData;
+					case CObject::OBJECT_NEWBULLET:
 
-						// ここで使用分宣言
-						CNewBullet* pNewBullet = {};
+						pNewBullet = (CNewBullet*)pObject;
+						EscData = pNewBullet->GetDATA();
 
-						// ここで本来のデータ取得
-						switch (TargetType)
-						{
+						if (pNewBullet->GetDeathNow() == false)
+						{//死亡判定じゃない時
 
-						
-						case CObject::OBJECT_NEWBULLET:
-
-							pNewBullet = (CNewBullet*)pObject;
-							EscData = pNewBullet->GetDATA();
-
-							if (pNewBullet->GetDeathNow() == false)
-							{//死亡判定じゃない時
-
-								EscData.Pos;//相手座標
-								EscData.Radius;//相手半径
+							EscData.Pos;//相手座標
+							EscData.Radius;//相手半径
 
 
-								//ここで衝突判定
-								//どれだけ食い込んでるかも計算
+							//ここで衝突判定
+							//どれだけ食い込んでるかも計算
 
-								D3DXVECTOR3 diff = MyPos - EscData.Pos; // 2点間の距離
-								float Distance = D3DXVec3Length(&diff);       // 距離を絶対値に
+							D3DXVECTOR3 diff = MyPos - EscData.Pos; // 2点間の距離
+							float Distance = D3DXVec3Length(&diff);       // 距離を絶対値に
 
-								float HitDistance = fMy_Radius + EscData.Radius;//半径同士足したの長さ
+							float HitDistance = fMy_Radius + EscData.Radius;//半径同士足したの長さ
 
-								if (HitDistance > Distance)
-								{//半径同士合算より現在の距離が近い時==接触
+							if (HitDistance > Distance)
+							{//半径同士合算より現在の距離が近い時==接触
 
-									HitData.bHit = true;
+								HitData.bHit = true;
 
-									switch (TargetType)
-									{
+								switch (TargetType)
+								{
 
-									
-									case CObject::OBJECT_NEWBULLET:
-										pNewBullet = (CNewBullet*)pObject;
-										//pNewBullet->SetDeath(true);
-										pNewBullet->SetGoodby();
-								//		CObjectExplosionBill::Create(EscData.Pos);
 
-									case CObject::OBJECT_MAX:
-										break;
-									}
+								case CObject::OBJECT_NEWBULLET:
+									pNewBullet = (CNewBullet*)pObject;
+									//pNewBullet->SetDeath(true);
+									pNewBullet->SetGoodby();
+									//		CObjectExplosionBill::Create(EscData.Pos);
+
+								case CObject::OBJECT_MAX:
 									break;
 								}
-
+								break;
 							}
-							break;
 
-						case CObject::OBJECT_MAX:
-							break;
 						}
+						break;
 
-
-
-
+					case CObject::OBJECT_MAX:
+						break;
 					}
-				}
 
-				CObject* pNext = pObject->GetNext();
-				pObject = pNext;
-				nIndex++;
+
+
+
+				}
 			}
+
+			CObject* pNext = pObject->GetNext();
+			pObject = pNext;
+			nIndex++;
 		}
-//	}
+	}
+	//	}
 
 	return HitData;
 }
@@ -589,57 +589,57 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 
 						switch (MyType)
 						{
-						//case CObject::OBJECT_BULLET3D://砲弾
+							//case CObject::OBJECT_BULLET3D://砲弾
 
 
-						//	// ここで本来のデータ取得
-						//	switch (TargetType)
-						//	{
+							//	// ここで本来のデータ取得
+							//	switch (TargetType)
+							//	{
 
 
-						//	case CObject::OBJECT_NEWBULLET:
-						//		pNewBullet = (CNewBullet*)pObject;
-						//		EscData = pNewBullet->GetDATA();
+							//	case CObject::OBJECT_NEWBULLET:
+							//		pNewBullet = (CNewBullet*)pObject;
+							//		EscData = pNewBullet->GetDATA();
 
-						//		//pNewBullet->SetDeath(true);//相手砲弾破壊
-						//		pNewBullet->SetGoodby();
-						//		//	CObjectExplosionBill::Create(EscData.Pos);
-						//		bBreak = true;
-						//		break;
-						//	case CObject::OBJECT_MISSILE:
-						//		pMissile = (CMissile*)pObject;
-						//		EscData = pMissile->GetDATA();
+							//		//pNewBullet->SetDeath(true);//相手砲弾破壊
+							//		pNewBullet->SetGoodby();
+							//		//	CObjectExplosionBill::Create(EscData.Pos);
+							//		bBreak = true;
+							//		break;
+							//	case CObject::OBJECT_MISSILE:
+							//		pMissile = (CMissile*)pObject;
+							//		EscData = pMissile->GetDATA();
 
-						//		//pNewBullet->SetDeath(true);//相手砲弾破壊
-						//		pMissile->SetGoodby();
-						//		//	CObjectExplosionBill::Create(EscData.Pos);
-						//		bBreak = true;
-						//		break;
+							//		//pNewBullet->SetDeath(true);//相手砲弾破壊
+							//		pMissile->SetGoodby();
+							//		//	CObjectExplosionBill::Create(EscData.Pos);
+							//		bBreak = true;
+							//		break;
 
-						//	}
+							//	}
 
-						//	if (bBreak == false)
-						//	{
-						//		//反射ベクトル生成して返す
-						//		// 反射ベクトルの計算
-						//		moveVector = Mymove;
-						//		dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
-						//		reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
+							//	if (bBreak == false)
+							//	{
+							//		//反射ベクトル生成して返す
+							//		// 反射ベクトルの計算
+							//		moveVector = Mymove;
+							//		dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
+							//		reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
 
-						//	   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
-						//		moveVectorLength = D3DXVec3Length(&moveVector);
-						//		D3DXVec3Normalize(&reflectionVector, &reflectionVector);
-						//		reflectionVector *= 12.0f;
+							//	   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
+							//		moveVectorLength = D3DXVec3Length(&moveVector);
+							//		D3DXVec3Normalize(&reflectionVector, &reflectionVector);
+							//		reflectionVector *= 12.0f;
 
-						//		HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
+							//		HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
 
-						//		break;
-						//	}
-						//	else
-						//	{//自弾も破壊
+							//		break;
+							//	}
+							//	else
+							//	{//自弾も破壊
 
-						//	}
-						//	break;
+							//	}
+							//	break;
 
 						case CObject::OBJECT_NEWBULLET://砲弾
 
@@ -684,6 +684,18 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 							break;
 
 						case CObject::OBJECT_MISSILE://砲弾
+								//反射ベクトル生成して返す
+								// 反射ベクトルの計算
+							moveVector = Mymove;
+							dotProduct = D3DXVec3Dot(&moveVector, &normal);//内積計算
+							reflectionVector = moveVector - 2 * dotProduct * normal;//ベクトル
+
+						   // 反射ベクトルの長さを元の移動ベクトルの長さで正規化
+							moveVectorLength = D3DXVec3Length(&moveVector);
+							D3DXVec3Normalize(&reflectionVector, &reflectionVector);
+							reflectionVector *= 12.0f;
+
+							HitData.ReflectionVector = reflectionVector; // 反射ベクトルを保存
 
 							break;
 
@@ -1070,7 +1082,7 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_2D(D3DXVECTOR3 MyPos, D3DX
 //=============================
 //変換処理2D--------------------------めちゃ大事
 //=============================
-float CMathProc::ConversionRot2(float NowRot,float fTargetRot)
+float CMathProc::ConversionRot2(float NowRot, float fTargetRot)
 {
 	//ケツにf
 	//fmodfとは+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1098,13 +1110,13 @@ float CMathProc::ConversionRot2(float NowRot,float fTargetRot)
 
 	NowRot += rotDiff * 0.1f;
 
-	if (NowRot> D3DX_PI)
+	if (NowRot > D3DX_PI)
 	{
-		NowRot-= (2.0f * D3DX_PI);
+		NowRot -= (2.0f * D3DX_PI);
 	}
-	else if (NowRot< -D3DX_PI)
+	else if (NowRot < -D3DX_PI)
 	{
-		NowRot+= (2.0f * D3DX_PI);
+		NowRot += (2.0f * D3DX_PI);
 	}
 	return NowRot;
 }
@@ -1202,7 +1214,17 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	obb1.SetPos(EscPos);
 	obb2.SetPos(EscPos2);
 
-
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	for (int j = 4; j < 8; ++j)
+	//	{
+	//		if (i != j)
+	//		{
+	//			Cline::Create(obb1Vertices[i], obb1Vertices[j], D3DXCOLOR(1, 0, 0, 1));
+	//			Cline::Create(obb2Vertices[i], obb2Vertices[j], D3DXCOLOR(0, 1, 0, 1));
+	//		}
+	//	}
+	//}
 #if _DEBUG
 	// 
 	////OBBの頂点間にラインを引く
@@ -1271,7 +1293,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = NAe2;
@@ -1285,7 +1307,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = NAe3;
@@ -1300,7 +1322,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = NBe1;
@@ -1329,7 +1351,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = NBe3;
@@ -1346,7 +1368,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = Cross;
@@ -1378,7 +1400,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = Cross;
@@ -1394,7 +1416,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = Cross;
@@ -1410,7 +1432,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = Cross;
@@ -1426,7 +1448,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = Cross;
@@ -1442,7 +1464,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = Cross;
@@ -1457,7 +1479,7 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = Cross;
@@ -1473,18 +1495,18 @@ bool CMathProc::ColOBBs(COBB& obb1, COBB& obb2, D3DXVECTOR3* contactPoint)
 	{
 		return false;
 	}
-	if (rA + rB - L < minPenetration) 
+	if (rA + rB - L < minPenetration)
 	{
 		minPenetration = rA + rB - L;
 		minSepAxis = Cross;
 	}
 
 
-//--------------------------------------------------------------------------------------------------------------------------------------
-//ここまで来ればあたっている
+	//--------------------------------------------------------------------------------------------------------------------------------------
+	//ここまで来ればあたっている
 
 
-	//ここで、あたったものがどれだけ食い込んでいる(押し返す量)を計算
+		//ここで、あたったものがどれだけ食い込んでいる(押し返す量)を計算
 
 	if (contactPoint != nullptr)
 	{//接触点計算----------------------------------------食い込んでる軸--食い込み深さ
@@ -1512,7 +1534,7 @@ FLOAT CMathProc::LenSegOnSeparateAxis(D3DXVECTOR3* Sep, D3DXVECTOR3* e1, D3DXVEC
 //=============================
 // 最小分離軸と最小食い込み深さを使用して接触点を計算
 //=============================
-D3DXVECTOR3 CMathProc::CalculateContactPoint(COBB& obb1, COBB& obb2, D3DXVECTOR3& minSepAxis, float minPenetration) 
+D3DXVECTOR3 CMathProc::CalculateContactPoint(COBB& obb1, COBB& obb2, D3DXVECTOR3& minSepAxis, float minPenetration)
 {
 	//------------------------------------------------------------食い込んでる軸--食い込み深さ
 	D3DXVECTOR3 contactPoint = (obb1.GetPos() + obb2.GetPos()) / 2 - minSepAxis * (minPenetration / 2);
@@ -1741,7 +1763,7 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision_Cancel(/*CObject::OBJEC
 							// データ取得再取得
 							switch (TargetType)
 							{
-						
+
 
 							case CObject::OBJECT_OBSTACLE:
 								pObstacleObject = (CObstacleSet*)pObject;
@@ -1802,10 +1824,10 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision_Cancel(/*CObject::OBJEC
 
 									break;
 
-								
+
 								}
 
-			
+
 
 								HitData.ResultDistance = direction * (overlap * 1.1f);
 
@@ -1881,7 +1903,7 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision_Cancel(/*CObject::OBJEC
 //=============================
 // 3DBoxCollisionによる3Dobject内生成防止
 //=============================
-bool CMathProc::AvoidInternalSpawn_3D_BoxCollision(CObject::OBJECTTYPE MyType, D3DXVECTOR3 MyPos,  D3DXVECTOR3 MyMinLength, D3DXVECTOR3 MyMaxLength, CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer)
+bool CMathProc::AvoidInternalSpawn_3D_BoxCollision(CObject::OBJECTTYPE MyType, D3DXVECTOR3 MyPos, D3DXVECTOR3 MyMinLength, D3DXVECTOR3 MyMaxLength, CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer)
 {
 	bool bHit = false;
 
@@ -1937,7 +1959,7 @@ bool CMathProc::AvoidInternalSpawn_3D_BoxCollision(CObject::OBJECTTYPE MyType, D
 				switch (TargetType)
 				{
 
-				
+
 
 				case CObject::OBJECT_OBSTACLE:
 					pObstacleObject = (CObstacleSet*)pObject;
@@ -2080,7 +2102,7 @@ bool CMathProc::isValid(int x, int y)
 //=============================
 void CMathProc::bfs(Point start, Point goal)
 {
-	 
+
 	//************************************************************ 
 	//初めてのキューのため理解が乏しい。要勉強。
 	//************************************************************
@@ -2103,27 +2125,27 @@ void CMathProc::bfs(Point start, Point goal)
 	GRID[start.y][start.x].Num = 0;//スタート位置を０に
 	q.push(start);//キューにpush
 
-	while (!q.empty()) 
+	while (!q.empty())
 	{//キューが空じゃないとループ
 
 		Point p = q.front();//キューの一番最初を取得
 		q.pop();//データを取り出す
 
-		if (p.x == goal.x && p.y == goal.y) 
+		if (p.x == goal.x && p.y == goal.y)
 		{
 			break; // ゴールに到達したら終了
 		}
 
-		for (int i = 0; i < 4; i++) 
+		for (int i = 0; i < 4; i++)
 		{//4方向
 			//移動
 			int nx = p.x + dx[i];
 			int ny = p.y + dy[i];
 
-			if (isValid(nx, ny)==true && GRID[ny][nx].Num == INT_MAX) 
+			if (isValid(nx, ny) == true && GRID[ny][nx].Num == INT_MAX)
 			{//有効な座標かつ初期値時
 				GRID[ny][nx].Num = GRID[p.y][p.x].Num + 1;
-			
+
 				//親の位置を保存
 				GRID[ny][nx].ParemtPoint.x = p.x;
 				GRID[ny][nx].ParemtPoint.y = p.y;
@@ -2141,18 +2163,18 @@ void CMathProc::bfs(Point start, Point goal)
 void CMathProc::writeToCSV(const char* filename)
 {
 	FILE* file = fopen(filename, "w");
-	if (file == NULL) 
+	if (file == NULL)
 	{//エラー
 		return;
 	}
 
 
-	
+
 	for (int i = 0; i < GRIDROW; i++)
 	{
 		for (int j = 0; j < GRIDCOL; j++)
 		{
-			if (GRID[i][j].Num>= INT_MAX|| GRID[i][j].Num<=-1)
+			if (GRID[i][j].Num >= INT_MAX || GRID[i][j].Num <= -1)
 			{
 				fprintf(file, "	X");//障害物
 			}
@@ -2248,8 +2270,8 @@ void CMathProc::RouteTableSet(Point StartPoint, Point GoalPoint)
 	Point EscGoalPoint = GoalPoint;
 
 	//ここに各地点の深度が入っている
-	GRID[GRIDROW-1][GRIDCOL-1];
-	
+	GRID[GRIDROW - 1][GRIDCOL - 1];
+
 	//Routeを仮格納
 	Point EscRoutePoint[GRIDCOL * GRIDROW];
 	//位置を仮格納
@@ -2276,10 +2298,10 @@ void CMathProc::RouteTableSet(Point StartPoint, Point GoalPoint)
 		//0から順に位置を格納
 		EscRoutePoint[RouteCnt].x = GRID[GoalPoint.y][GoalPoint.x].ParemtPoint.x;
 		EscRoutePoint[RouteCnt].y = GRID[GoalPoint.y][GoalPoint.x].ParemtPoint.y;
-	
-	
 
-		if (GoalPoint.y== StartPoint.y&& GoalPoint.x == StartPoint.x)
+
+
+		if (GoalPoint.y == StartPoint.y && GoalPoint.x == StartPoint.x)
 		{//現在のGRIDがSTART地点にだった時
 			break;
 		}
@@ -2288,7 +2310,7 @@ void CMathProc::RouteTableSet(Point StartPoint, Point GoalPoint)
 			//次のゴールを一つ前に
 			GoalPoint.x = EscRoutePoint[RouteCnt].x;
 			GoalPoint.y = EscRoutePoint[RouteCnt].y;
-			
+
 			if (GoalPoint.y == StartPoint.y && GoalPoint.x == StartPoint.x)
 			{//現在のGRIDがSTART地点にだった時
 				break;
@@ -2307,7 +2329,7 @@ void CMathProc::RouteTableSet(Point StartPoint, Point GoalPoint)
 	//int nNumCnt = 0;
 	for (int nCnt = 0; nCnt <= RouteCnt; nCnt++)
 	{//最短移動分
-		EscapeObjectNum[nCnt]=GetObjectNumfromPoint(EscRoutePoint[nCnt]);//経路に順番に物体番号で格納
+		EscapeObjectNum[nCnt] = GetObjectNumfromPoint(EscRoutePoint[nCnt]);//経路に順番に物体番号で格納
 	}
 
 
@@ -2339,7 +2361,7 @@ void CMathProc::RouteTableSet(Point StartPoint, Point GoalPoint)
 
 	//ここでRouteTable[自分のobject番号][ゴール地点]での経路テーブルを作成
 
-	int nCnt=0;
+	int nCnt = 0;
 	int StartNum = GetObjectNumfromPoint(StartPoint);
 	int GoalNum = GetObjectNumfromPoint(EscGoalPoint);
 
@@ -2403,30 +2425,30 @@ CMathProc::Point CMathProc::GetPointfromObjectNum(int ObjectNum)
 //=============================
 // CSV描画
 //=============================
-void CMathProc::DRAWCSV( const char* filename)
+void CMathProc::DRAWCSV(const char* filename)
 {
 	std::ofstream file(filename);
-	
-		if (!file.is_open()) 
+
+	if (!file.is_open())
+	{
+		std::cerr << "ファイルを開けませんでした: " << filename << std::endl;
+		return;
+	}
+
+	for (int y = 0; y < GRIDROW * GRIDCOL; ++y)
+	{
+		for (int x = 0; x < GRIDROW * GRIDCOL; ++x)
 		{
-			std::cerr << "ファイルを開けませんでした: " << filename << std::endl;
-			return;
-		}
-	
-		for (int y = 0; y < GRIDROW * GRIDCOL; ++y)
-		{
-			for (int x = 0; x < GRIDROW * GRIDCOL; ++x)
+			file << RouteTable[x][y];
+			if (x < (GRIDROW * GRIDCOL) - 1)
 			{
-				file << RouteTable[x][y];
-				if (x < (GRIDROW * GRIDCOL)-1)
-				{
-					file << ",";
-				}
+				file << ",";
 			}
-			file << "\n";
 		}
-	
-		file.close();
+		file << "\n";
+	}
+
+	file.close();
 }
 //=============================
 // Routeテーブル取得
@@ -2518,7 +2540,7 @@ D3DXVECTOR3 CMathProc::GetShotPos(D3DXVECTOR3 MyPos)
 {
 	//ここで4地点から一番近い地点のランダムにズレた位置を渡す
 
-	
+
 	D3DXVECTOR3 diff[SHOTPOINUM] = {};//差分
 	float fDiff[SHOTPOINUM] = {};//距離
 
@@ -2529,22 +2551,22 @@ D3DXVECTOR3 CMathProc::GetShotPos(D3DXVECTOR3 MyPos)
 	}
 
 	float fMinLength = 99999.9f;//初期値を巨大に
-	
+
 	int nMinNum = 0;
-	
+
 	for (int i = 0; i < SHOTPOINUM; i++)
 	{
-		if (fDiff[i]<= fMinLength)
+		if (fDiff[i] <= fMinLength)
 		{//最小を更新
 			fMinLength = fDiff[i];
 			nMinNum = i;//インデックスを格納
 		}
 	}
-	
+
 	int nMinNum2 = nMinNum;
 
 	fMinLength = 99999.9f;//初期値を巨大に
-	
+
 	for (int i = 0; i < SHOTPOINUM; i++)
 	{
 		if (i != nMinNum2)
@@ -2564,13 +2586,13 @@ D3DXVECTOR3 CMathProc::GetShotPos(D3DXVECTOR3 MyPos)
 	//目標地点をここにズレも含めて
 	//-30から30
 	float fX = (float)((rand() % 60) - 30);
-//	float fY = (float)((rand() % 60) - 30);
+	//	float fY = (float)((rand() % 60) - 30);
 	float fZ = (float)((rand() % 60) - 30);
 
 	D3DXVECTOR3 TargetPos = D3DXVECTOR3(m_ShotPos[nMinNum].x + fX, 0.0f, m_ShotPos[nMinNum].z + fZ);
-	
+
 	//Y座標は射手に指定させる
-	
+
 
 
 
@@ -2631,10 +2653,10 @@ CObject::DATA CMathProc::FCS_TrajectoryPredictionAiming(D3DXVECTOR3 FirePos, flo
 //===================================
 //相手と自分の間の障害物判定
 //===================================
-CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 MyPos, D3DXVECTOR3 MyMin, D3DXVECTOR3 MyMax, D3DXVECTOR3 TargetPos,float MaxLength, CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer)
+CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 MyPos, D3DXVECTOR3 MyMin, D3DXVECTOR3 MyMax, D3DXVECTOR3 TargetPos, float MaxLength, CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer)
 {
 
-	
+
 	// 必要に応じて改良、下記は試験運用段階
 	CollisionData HitData;
 
@@ -2644,7 +2666,7 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 	HitData.targetIndex = -1;
 
 	// 自分
-	MyPos.y = MyMax.y/4;//少し上げておく
+	MyPos.y = MyMax.y / 4;//少し上げておく
 	TargetPos.y = 50;
 	// あたり判定用のHitBox
 	D3DXVECTOR3 My_Collision_Min_Pos = MyPos + MyMin;
@@ -2695,8 +2717,8 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 				case CObject::OBJECT_EXPLOSION:
 					break;
 
-			
-			
+
+
 
 				case CObject::OBJECT_OBSTACLE:
 					pObstacleObject = (CObstacleSet*)pObject;
@@ -2723,7 +2745,7 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 					EscData = pEnemyNomal->GetClassData();
 					break;
 
-				
+
 
 				case CObject::OBJECT_MAX:
 					return HitData;
@@ -2738,7 +2760,7 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 
 
 
-				D3DXVECTOR3 direction = TargetPos-MyPos;//相手と自機の位置の差分でベクトル作成
+				D3DXVECTOR3 direction = TargetPos - MyPos;//相手と自機の位置の差分でベクトル作成
 				D3DXVECTOR3 normalizedDir;
 				D3DXVec3Normalize(&normalizedDir, &direction);
 
@@ -2751,7 +2773,7 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 				// プレイヤーからカメラに向かう方向にレイを飛ばして、障害物との当たり判定を行う
 				while (collision == false)
 				{
-					 rayPos = MyPos + normalizedDir * collisionDistance;
+					rayPos = MyPos + normalizedDir * collisionDistance;
 
 					if (rayPos.x < TarGet_Collision_Max_Pos.x && rayPos.x > TarGet_Collision_Min_Pos.x &&
 						rayPos.y < TarGet_Collision_Max_Pos.y && rayPos.y > TarGet_Collision_Min_Pos.y &&
@@ -2776,9 +2798,9 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 				// 衝突時にカメラの位置を調整
 				if (collision == true)
 				{
-					HitData.ContactPoint = rayPos -(normalizedDir * 0.98f);
+					HitData.ContactPoint = rayPos - (normalizedDir * 0.98f);
 					HitData.bHit = true;
-					
+
 					return HitData;
 				}
 

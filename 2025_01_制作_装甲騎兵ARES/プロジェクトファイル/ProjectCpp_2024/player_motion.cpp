@@ -2300,10 +2300,13 @@ void CObjectMotionPlayer::ControllerInput3D()
 					{
 						CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
 						pBulletMNG->SetBullet(SetData, 0, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this, CNewBulletALL::SHOTTYPE_PLAYER);
+
+						CSound* pSound = pManager->GetSound();
+						pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
 					}
 
 					m_ShotDelay = 4;
-
+					
 					CObjectShotFire::Create(SetData.Pos);
 					bShot = true;
 				}
