@@ -418,19 +418,27 @@ void CObjectMotionEnemyNomal::Update()
 				}
 			}
 		}
-		else if (NowState == CScene::MODE_MOVIE)
-		{
-		CObjectMotion::Update();//------------------更新
+		else if (NowState == CScene::MODE_MOVIE || NowState == CScene::MODE_MOVIE2)
+		{//
+			DATA ChangeData = DataInit();
+
+			// 変更データを反映
+			SetChangeDataInObjectMotion(ChangeData);
+
+			CObjectMotion::Update();//------------------更新
 
 
-		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
-		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+			SetNowMotion_Parent(MOTIONTYPE_STANDBY);
+			SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		}
-
-
 	}
 	else
 	{//待機状態
+		DATA ChangeData = DataInit();
+
+		// 変更データを反映
+		SetChangeDataInObjectMotion(ChangeData);
+
 		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		//CObjectMotion::Update();

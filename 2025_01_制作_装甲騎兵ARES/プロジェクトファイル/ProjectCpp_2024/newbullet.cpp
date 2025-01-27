@@ -16,7 +16,7 @@
 #include "enemy_motion_boss.h"
 #include "enemy_motion_guard.h"
 //#include "ReflectEffect.h"
-
+//#include "shield.h"
 // 静的メンバ変数の定義
 //CNewBullet* CNewBulletALL::m_NewBullet[CNewBulletALL::MAXBULLETALL] = { nullptr };
 
@@ -846,53 +846,62 @@ void CNewBullet::HitCollision()
                 CObjectShotFire::Create(EscData.Pos);
             }
 
-
             bool bHit = false;
 
-            if (m_ShotType == CNewBulletALL::SHOTTYPE_PLAYER)
-            {//射手がplayer
+
+            ////共通
+            // // 配置物プライオリティの先頭を取得
+            //CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_SHIELD);
+
+            //if (pObject != nullptr)
+            //{ // 先頭がない==プライオリティまるっとない
+
+            //    int nIndex = 0;
+
+            //    while (pObject != nullptr)
+            //    {
+            //        CShield* pShield = static_cast<CShield*>(pObject);
+            //        if (pShield->getDrawOk() == true)
+            //        {
+            //            COBB pObb2 = pShield->GetOBB();
+            //            D3DXVECTOR3 HitPos;
+            //            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+            //            if (bHit == true)
+            //            {
+
+            //                CObjectShotFire::Create(EscData.Pos);
+            //                m_bUse = false;
+            //                break;
+
+            //            }
+            //            else
+            //            {
+            //                CObject* pNext = pObject->GetNext();
+            //                pObject = pNext;
+            //                nIndex++;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            CObject* pNext = pObject->GetNext();
+            //            pObject = pNext;
+            //            nIndex++;
+            //        }
+
+            //    }
+            //}
 
 
-                // 配置物プライオリティの先頭を取得
-                CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_NOMAL);
-
-                if (pObject != nullptr)
-                { // 先頭がない==プライオリティまるっとない
-
-                    int nIndex = 0;
-
-                    while (pObject != nullptr)
-                    {
-                        CObjectMotionEnemyNomal* pEnemyNomal = static_cast<CObjectMotionEnemyNomal*>(pObject);
-
-                        COBB pObb2 = pEnemyNomal->GetOBB();
 
 
-                        D3DXVECTOR3 HitPos;
-                        bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
-
-                        if (bHit == true)
-                        {
-                            pEnemyNomal->SetDamage(15);
-                            CObjectShotFire::Create(EscData.Pos);
-                            m_bUse = false;
-                            break;
-                          
-                        }
-                        else
-                        {
-                            CObject* pNext = pObject->GetNext();
-                            pObject = pNext;
-                            nIndex++;
-                        }
-                    }
-                }
-                
-                if (bHit == false)
-                {//接触無し
+            if (bHit == false)
+            {//接触無し
+                if (m_ShotType == CNewBulletALL::SHOTTYPE_PLAYER)
+                {//射手がplayer
 
                     // 配置物プライオリティの先頭を取得
-                    CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_FAST);
+                    CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_NOMAL);
 
                     if (pObject != nullptr)
                     { // 先頭がない==プライオリティまるっとない
@@ -901,9 +910,9 @@ void CNewBullet::HitCollision()
 
                         while (pObject != nullptr)
                         {
-                            CObjectMotionEnemyfast* pEnemyFast = static_cast<CObjectMotionEnemyfast*>(pObject);
+                            CObjectMotionEnemyNomal* pEnemyNomal = static_cast<CObjectMotionEnemyNomal*>(pObject);
 
-                            COBB pObb2 = pEnemyFast->GetOBB();
+                            COBB pObb2 = pEnemyNomal->GetOBB();
 
 
                             D3DXVECTOR3 HitPos;
@@ -911,7 +920,164 @@ void CNewBullet::HitCollision()
 
                             if (bHit == true)
                             {
-                                pEnemyFast->SetDamage(15);
+                                pEnemyNomal->SetDamage(15);
+                                CObjectShotFire::Create(EscData.Pos);
+                                m_bUse = false;
+                                break;
+
+                            }
+                            else
+                            {
+                                CObject* pNext = pObject->GetNext();
+                                pObject = pNext;
+                                nIndex++;
+                            }
+                        }
+                    }
+
+                    if (bHit == false)
+                    {//接触無し
+
+                        // 配置物プライオリティの先頭を取得
+                        CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_FAST);
+
+                        if (pObject != nullptr)
+                        { // 先頭がない==プライオリティまるっとない
+
+                            int nIndex = 0;
+
+                            while (pObject != nullptr)
+                            {
+                                CObjectMotionEnemyfast* pEnemyFast = static_cast<CObjectMotionEnemyfast*>(pObject);
+
+                                COBB pObb2 = pEnemyFast->GetOBB();
+
+
+                                D3DXVECTOR3 HitPos;
+                                bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                                if (bHit == true)
+                                {
+                                    pEnemyFast->SetDamage(15);
+                                    CObjectShotFire::Create(EscData.Pos);
+                                    m_bUse = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    CObject* pNext = pObject->GetNext();
+                                    pObject = pNext;
+                                    nIndex++;
+                                }
+                            }
+                        }
+                    }
+
+
+                    if (bHit == false)
+                    {//接触無し
+
+                        // 配置物プライオリティの先頭を取得
+                        CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS);
+
+                        if (pObject != nullptr)
+                        { // 先頭がない==プライオリティまるっとない
+
+                            int nIndex = 0;
+
+                            while (pObject != nullptr)
+                            {
+                                CObjectMotionEnemyBoss* pEnemyBoss = static_cast<CObjectMotionEnemyBoss*>(pObject);
+
+                                COBB pObb2 = pEnemyBoss->GetOBB();
+
+
+                                D3DXVECTOR3 HitPos;
+                                bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                                if (bHit == true)
+                                {
+                                    pEnemyBoss->SetDamage(15);
+                                    CObjectShotFire::Create(EscData.Pos);
+                                    m_bUse = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    CObject* pNext = pObject->GetNext();
+                                    pObject = pNext;
+                                    nIndex++;
+                                }
+                            }
+                        }
+                    }
+
+
+                    if (bHit == false)
+                    {//接触無し
+
+                        // 配置物プライオリティの先頭を取得
+                        CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
+
+                        if (pObject != nullptr)
+                        { // 先頭がない==プライオリティまるっとない
+
+                            int nIndex = 0;
+
+                            while (pObject != nullptr)
+                            {
+                                CObjectMotionEnemyGuard* pEnemyBoss = static_cast<CObjectMotionEnemyGuard*>(pObject);
+
+                                COBB pObb2 = pEnemyBoss->GetOBB();
+
+
+                                D3DXVECTOR3 HitPos;
+                                bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                                if (bHit == true)
+                                {
+                                    pEnemyBoss->SetDamage(15);
+                                    CObjectShotFire::Create(EscData.Pos);
+                                    m_bUse = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    CObject* pNext = pObject->GetNext();
+                                    pObject = pNext;
+                                    nIndex++;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (m_ShotType == CNewBulletALL::SHOTTYPE_ENEMY)
+                {//射手がenemy
+                       // 配置物プライオリティの先頭を取得
+                    CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONPLAYER);
+
+                    if (pObject != nullptr)
+                    { // 先頭がない==プライオリティまるっとない
+
+                        int nIndex = 0;
+
+                        while (pObject != nullptr)
+                        {
+                            CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObject);
+
+                            COBB pObb2 = pPlayer->GetOBB();
+
+
+                            D3DXVECTOR3 HitPos;
+                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
+
+                            if (bHit == true)
+                            {
+                                pPlayer->SetDamage(5);
+
+                                CManager* pManager = CManager::GetInstance();
+                                pManager->GetCamera()->SetShake(15, 35);
+
                                 CObjectShotFire::Create(EscData.Pos);
                                 m_bUse = false;
                                 break;
@@ -922,135 +1088,25 @@ void CNewBullet::HitCollision()
                                 pObject = pNext;
                                 nIndex++;
                             }
-                        }
-                    }
-                }
-                
-                
-                if (bHit == false)
-                {//接触無し
-
-                    // 配置物プライオリティの先頭を取得
-                    CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS);
-
-                    if (pObject != nullptr)
-                    { // 先頭がない==プライオリティまるっとない
-
-                        int nIndex = 0;
-
-                        while (pObject != nullptr)
-                        {
-                            CObjectMotionEnemyBoss* pEnemyBoss = static_cast<CObjectMotionEnemyBoss*>(pObject);
-
-                            COBB pObb2 = pEnemyBoss->GetOBB();
-
-
-                            D3DXVECTOR3 HitPos;
-                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
-
-                            if (bHit == true)
-                            {
-                                pEnemyBoss->SetDamage(15);
-                                CObjectShotFire::Create(EscData.Pos);
-                                m_bUse = false;
-                                break;
-                            }
-                            else
-                            {
-                                CObject* pNext = pObject->GetNext();
-                                pObject = pNext;
-                                nIndex++;
-                            }
-                        }
-                    }
-                }
-                
-                
-                if (bHit == false)
-                {//接触無し
-
-                    // 配置物プライオリティの先頭を取得
-                    CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
-
-                    if (pObject != nullptr)
-                    { // 先頭がない==プライオリティまるっとない
-
-                        int nIndex = 0;
-
-                        while (pObject != nullptr)
-                        {
-                            CObjectMotionEnemyGuard* pEnemyBoss = static_cast<CObjectMotionEnemyGuard*>(pObject);
-
-                            COBB pObb2 = pEnemyBoss->GetOBB();
-
-
-                            D3DXVECTOR3 HitPos;
-                            bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
-
-                            if (bHit == true)
-                            {
-                                pEnemyBoss->SetDamage(15);
-                                CObjectShotFire::Create(EscData.Pos);
-                                m_bUse = false;
-                                break;
-                            }
-                            else
-                            {
-                                CObject* pNext = pObject->GetNext();
-                                pObject = pNext;
-                                nIndex++;
-                            }
-                        }
-                    }
-                }
-
-
-
-
-
-
-
-
-
-            }
-            else if (m_ShotType == CNewBulletALL::SHOTTYPE_ENEMY)
-            {//射手がenemy
-                   // 配置物プライオリティの先頭を取得
-                CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONPLAYER);
-
-                if (pObject != nullptr)
-                { // 先頭がない==プライオリティまるっとない
-
-                    int nIndex = 0;
-
-                    while (pObject != nullptr)
-                    {
-                        CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObject);
-
-                        COBB pObb2 = pPlayer->GetOBB();
-
-
-                        D3DXVECTOR3 HitPos;
-                        bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
-
-                        if (bHit == true)
-                        {
-                            pPlayer->SetDamage(5);
-                            CObjectShotFire::Create(EscData.Pos);
-                            m_bUse = false;
-                            break;
-                        }
-                        else
-                        {
-                            CObject* pNext = pObject->GetNext();
-                            pObject = pNext;
-                            nIndex++;
                         }
                     }
                 }
             }
         }
     }
+
+
+    if (m_bUse == false)
+    {//なにかしらあたったとき
+          //取得
+        DATA EscData = GetDATA();
+        EscData = DataInit();
+        SetDATA(EscData);
+
+        m_OBB.m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+    }
+
 }
 //=============================
 // 反射回数格納

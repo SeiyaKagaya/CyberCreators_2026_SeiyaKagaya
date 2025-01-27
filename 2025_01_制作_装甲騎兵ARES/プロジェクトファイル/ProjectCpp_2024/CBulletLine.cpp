@@ -138,48 +138,50 @@ void CBulletLine::Update()
 
     CManager* pManager = CManager::GetInstance();
 
+    if (m_bDrawOk == true)
+    {
+        if (pManager->GetbNow3DMode() == false)
+        {//2D
+          // OBBまわり
+            m_OBB.m_Pos = GetDATA().Pos;
 
-    if (pManager->GetbNow3DMode() == false)
-    {//2D
-      // OBBまわり
-        m_OBB.m_Pos = GetDATA().Pos;
+            D3DXMATRIX matRot, EscMtx, mtxTrans;
 
-        D3DXMATRIX matRot, EscMtx, mtxTrans;
+            // ワールドマトリックスの初期化
+            D3DXMatrixIdentity(&EscMtx);
 
-        // ワールドマトリックスの初期化
-        D3DXMatrixIdentity(&EscMtx);
+            // 方向ベクトル取得（回転行列の生成）
+            D3DXMatrixRotationYawPitchRoll(&matRot, GetDATA().rot.y, GetDATA().rot.x, GetDATA().rot.z);
 
-        // 方向ベクトル取得（回転行列の生成）
-        D3DXMatrixRotationYawPitchRoll(&matRot, GetDATA().rot.y, GetDATA().rot.x, GetDATA().rot.z);
+            // オフセット定義 (ローカル空間)
+            D3DXVECTOR3 localOffset(0.0f, -150.0f, -550.0f); // x方向に+500
 
-        // オフセット定義 (ローカル空間)
-        D3DXVECTOR3 localOffset(0.0f, -150.0f, -550.0f); // x方向に+500
+            // オフセットを回転行列で変換（ローカル→ワールド）
+            D3DXVECTOR3 rotatedOffset;
+            D3DXVec3TransformCoord(&rotatedOffset, &localOffset, &matRot);
 
-        // オフセットを回転行列で変換（ローカル→ワールド）
-        D3DXVECTOR3 rotatedOffset;
-        D3DXVec3TransformCoord(&rotatedOffset, &localOffset, &matRot);
+            // 回転をEscMtxに反映
+            D3DXMatrixMultiply(&EscMtx, &EscMtx, &matRot);
 
-        // 回転をEscMtxに反映
-        D3DXMatrixMultiply(&EscMtx, &EscMtx, &matRot);
+            // オフセットを反映した位置を計算
+            D3DXVECTOR3 finalPos = GetDATA().Pos + rotatedOffset;
+            D3DXMatrixTranslation(&mtxTrans, finalPos.x, finalPos.y, finalPos.z);
 
-        // オフセットを反映した位置を計算
-        D3DXVECTOR3 finalPos = GetDATA().Pos + rotatedOffset;
-        D3DXMatrixTranslation(&mtxTrans, finalPos.x, finalPos.y, finalPos.z);
+            // 最終行列を作成
+            D3DXMatrixMultiply(&EscMtx, &EscMtx, &mtxTrans);
 
-        // 最終行列を作成
-        D3DXMatrixMultiply(&EscMtx, &EscMtx, &mtxTrans);
+            // OBBの方向と位置を設定
+            m_OBB.m_Direct[0] = D3DXVECTOR3(EscMtx._11, EscMtx._12, EscMtx._13);
+            m_OBB.m_Direct[1] = D3DXVECTOR3(EscMtx._21, EscMtx._22, EscMtx._23);
+            m_OBB.m_Direct[2] = D3DXVECTOR3(EscMtx._31, EscMtx._32, EscMtx._33);
+            m_OBB.m_Pos = D3DXVECTOR3(EscMtx._41, EscMtx._42, EscMtx._43);
 
-        // OBBの方向と位置を設定
-        m_OBB.m_Direct[0] = D3DXVECTOR3(EscMtx._11, EscMtx._12, EscMtx._13);
-        m_OBB.m_Direct[1] = D3DXVECTOR3(EscMtx._21, EscMtx._22, EscMtx._23);
-        m_OBB.m_Direct[2] = D3DXVECTOR3(EscMtx._31, EscMtx._32, EscMtx._33);
-        m_OBB.m_Pos = D3DXVECTOR3(EscMtx._41, EscMtx._42, EscMtx._43);
+            HitCollision();
+        }
+        else
+        {//3D
 
-        HitCollision();
-    }
-    else
-    {//3D
-
+        }
     }
 }
 

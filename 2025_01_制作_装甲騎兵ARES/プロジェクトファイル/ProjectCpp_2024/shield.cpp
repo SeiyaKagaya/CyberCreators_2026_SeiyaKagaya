@@ -158,17 +158,51 @@ void CShield::Update()
     CRenderer* pRenderer = nullptr;
     CManager* pManager = CManager::GetInstance();
 
-    if (pManager->GetbNow3DMode() == false)
-    {//2D
-        m_Obb.m_fLength[0] = 160.0f;
-        m_Obb.m_fLength[1] = 160.0f;
-        m_Obb.m_fLength[2] = 50.0f;
+    //if (pManager->GetbNow3DMode() == false)
+    //{//2D
+    //    m_Obb.m_fLength[0] = 160.0f;
+    //    m_Obb.m_fLength[1] = 160.0f;
+    //    m_Obb.m_fLength[2] = 50.0f;
+    //}
+    //else
+    //{
+    //    m_Obb.m_fLength[0] = 150.0f;
+    //    m_Obb.m_fLength[1] = 150.0f;
+    //    m_Obb.m_fLength[2] = 150.0f;
+    //}
+    if (m_bBoss == false)
+    {
+
+        if (pManager->GetbNow3DMode() == false)
+        {//2D
+            m_Obb.m_fLength[0] = 160.0f;
+            m_Obb.m_fLength[1] = 160.0f;
+            m_Obb.m_fLength[2] = 50.0f;
+        }
+        else
+        {
+            m_Obb.m_fLength[0] = 150.0f;
+            m_Obb.m_fLength[1] = 150.0f;
+            m_Obb.m_fLength[2] = 150.0f;
+        }
+
     }
     else
     {
-        m_Obb.m_fLength[0] = 150.0f;
-        m_Obb.m_fLength[1] = 150.0f;
-        m_Obb.m_fLength[2] = 150.0f;
+
+        if (pManager->GetbNow3DMode() == false)
+        {//2D
+            m_Obb.m_fLength[0] = 160.0f;
+            m_Obb.m_fLength[1] = 160.0f;
+            m_Obb.m_fLength[2] = 50.0f;
+        }
+        else
+        {
+            m_Obb.m_fLength[0] = 1500.0f;
+            m_Obb.m_fLength[1] = 750.0f;
+            m_Obb.m_fLength[2] = 1500.0f;
+        }
+
     }
 
 
@@ -342,13 +376,36 @@ void CShield::Draw()
         
         D3DXVECTOR3 SetMag;
 
-        if (pManager->GetbNow3DMode() == false)
-        {//2D
-             SetMag = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
+        //if (pManager->GetbNow3DMode() == false)
+        //{//2D
+        //     SetMag = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
+        //}
+        //else
+        //{
+        //     SetMag = D3DXVECTOR3(1.5f, 1.5f, 1.5f);
+        //}
+
+        if (m_bBoss == false)
+        {
+            if (pManager->GetbNow3DMode() == false)
+            {//2D
+                SetMag = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
+            }
+            else
+            {
+                SetMag = D3DXVECTOR3(1.5f, 1.5f, 1.5f);
+            }
         }
         else
         {
-             SetMag = D3DXVECTOR3(1.5f, 1.5f, 1.5f);
+            if (pManager->GetbNow3DMode() == false)
+            {//2D
+                SetMag = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
+            }
+            else
+            {
+                SetMag = D3DXVECTOR3(15.0f, 15.0f, 15.0f);
+            }
         }
 
         // モデルのサイズを変更
@@ -455,7 +512,7 @@ void CShield::Draw()
 //=============================
 // 生成
 //=============================
-CShield* CShield::Create(DATA SetData, CObjectMotionPlayer* pMotion)
+CShield* CShield::Create(DATA SetData,bool Boss)
 {
     CShield* pObstacle = new CShield;
 
@@ -479,7 +536,7 @@ CShield* CShield::Create(DATA SetData, CObjectMotionPlayer* pMotion)
  //   pObstacle->SetChangeColor(D3DXCOLOR(1.0f,1.0f,0.0f,0.7f));
 
     pObstacle->SetDATA(EscData); // 格納
-    pObstacle->SetParent(pMotion);
+  //  pObstacle->SetParent(pMotion);
     return pObstacle;
 }
 

@@ -19,17 +19,21 @@
 #include "missile.h"
 //#include "movesmoke.h"
 
+int CObjectMotionEnemyGuard::m_nNumENemyAll = 0;
+
 //=============================
 // コンストラクタ
 //=============================
 CObjectMotionEnemyGuard::CObjectMotionEnemyGuard(int nPriority) :CObjectMotionEnemyBase(nPriority)
 {
+	m_nNumENemyAll++;
 }
 //=============================
 // デストラクタ
 //=============================
 CObjectMotionEnemyGuard::~CObjectMotionEnemyGuard()
 {
+	m_nNumENemyAll--;
 }
 
 //=============================
@@ -102,7 +106,7 @@ void CObjectMotionEnemyGuard::Update()
 
 			DATA classData = GetClassData();
 
-	
+
 			//相手、自分のGRID番号がかわったか
 			bool bChange = false;
 
@@ -206,14 +210,16 @@ void CObjectMotionEnemyGuard::Update()
 
 			//	classData.rot.y = 0.0f;
 
-			classData.move.x = 0.0f;
-			classData.move.y = 0.0f;
-			classData.move.z = 2.0f;
+			//CObjectMotion::Update();
+
 
 
 			classData = GetClassData();
 
 
+			classData.move.x = 0.0f;
+			classData.move.y = 0.0f;
+			classData.move.z = 8.8f;
 
 			//敵射撃管制
 			//-------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -239,11 +245,11 @@ void CObjectMotionEnemyGuard::Update()
 
 			if (m_nLife <= 0)
 			{
-			//	CScene::AddClearNum(1);
+				//	CScene::AddClearNum(1);
 
 				SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 				SetNowMotion_Sub(MOTIONTYPE_STANDBY);
-				//CObjectMotion::Update();
+
 				//Motion_Parent();
 				//Motion_Sub();
 				classData = GetClassData();
@@ -255,8 +261,8 @@ void CObjectMotionEnemyGuard::Update()
 
 				if (m_nEscCnt < 0)
 				{
-					CScore::AddScore(CScore::TANK_SCORE1*3);
-					
+					CScore::AddScore(CScore::TANK_SCORE1 * 3);
+
 					CObject* pObj = nullptr;
 					pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
 					if (pObj != nullptr)
@@ -278,7 +284,7 @@ void CObjectMotionEnemyGuard::Update()
 					{//パーツもDEATH
 						GetModelParts(i)->SetDeath(true);
 					}
-				
+
 				}
 			}
 
@@ -305,11 +311,16 @@ void CObjectMotionEnemyGuard::Update()
 		}
 		else if (NowState == CScene::MODE_MOVIE)
 		{
-		CObjectMotion::Update();//------------------更新
+			DATA ChangeData = DataInit();
+
+			// 変更データを反映
+			SetChangeDataInObjectMotion(ChangeData);
+
+			CObjectMotion::Update();//------------------更新
 
 
-		//SetNowMotion_Parent(MOTIONTYPE_STANDBY);
-		//SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+			//SetNowMotion_Parent(MOTIONTYPE_STANDBY);
+			//SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		}
 		else if (NowState == CScene::MODE_MOVIE2)
 		{
@@ -354,10 +365,14 @@ void CObjectMotionEnemyGuard::Update()
 				classData.move.y = 0.0f;
 				classData.move.z = 0.0f;
 			}
-			
+
 
 			SetClassData(classData);
 
+			DATA ChangeData = DataInit();
+
+			// 変更データを反映
+			SetChangeDataInObjectMotion(ChangeData);
 
 			//DATA Head;
 			//Head = CObject::DataInit();
@@ -374,6 +389,12 @@ void CObjectMotionEnemyGuard::Update()
 	}
 	else
 	{//待機状態
+		DATA ChangeData = DataInit();
+
+		// 変更データを反映
+		SetChangeDataInObjectMotion(ChangeData);
+
+
 		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		//CObjectMotion::Update();
@@ -381,7 +402,6 @@ void CObjectMotionEnemyGuard::Update()
 		Motion_Sub();
 	}
 	
-
 
 }
 

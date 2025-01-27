@@ -135,79 +135,79 @@ void CObjectMotionEnemyfast::Update()
 			//移動先制定
 			//---------------------------------------------------------------------------------------------------------------------------------
 
-			if (m_nOldMyGRIDNum != GetNowGRIDNum())
-			{//自分の過去の位置番号と現在の位置番号が違うとき
-				//格納
-				m_nOldMyGRIDNum = GetNowGRIDNum();
-				bChange = true;
-			}
+			//if (m_nOldMyGRIDNum != GetNowGRIDNum())
+			//{//自分の過去の位置番号と現在の位置番号が違うとき
+			//	//格納
+			//	m_nOldMyGRIDNum = GetNowGRIDNum();
+			//	bChange = true;
+			//}
 
-			if (bChange == true)
-			{//両者どちらかの位置番号に変更があった時
-				CMathProc::Point pPoint;
+			//if (bChange == true)
+			//{//両者どちらかの位置番号に変更があった時
+			//	CMathProc::Point pPoint;
 
-				int NextMoveGridNum = CMathProc::GetNextMoveGridNum(m_nOldTargetGRIDNum, m_nOldMyGRIDNum);//次の経由地
+			//	int NextMoveGridNum = CMathProc::GetNextMoveGridNum(m_nOldTargetGRIDNum, m_nOldMyGRIDNum);//次の経由地
 
-				m_nNowMoveGRIDNum = NextMoveGridNum;
-
-
-				//移動先制定の補佐------
-
-				pPoint = CMathProc::GetPointfromObjectNum(NextMoveGridNum);
-
-				if (pPoint.x == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).x && pPoint.y == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).y)
-				{//ゴールが目前
-					classData.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-					//目標位置位置を次の目標GRIDD位置
-					m_TargetPos = D3DXVECTOR3((float)((CMathProc::GRIDLEGTH)*pPoint.x) + (CMathProc::GRIDLEGTH * 0.5f), 0.0f, (float)((CMathProc::GRIDLEGTH)*pPoint.y) + (CMathProc::GRIDLEGTH * 0.5f));
-					//		SetNowMotion_Parent(1);//移動motion
-				}
-			}
-			//移動先制定ここまで
-			//---------------------------------------------------------------------------------------------------------------------------------
+			//	m_nNowMoveGRIDNum = NextMoveGridNum;
 
 
+			//	//移動先制定の補佐------
 
-			// ターゲット位置への移動処理
-			D3DXVECTOR3 direction = m_TargetPos - classData.Pos; // 方向ベクトル
+			//	pPoint = CMathProc::GetPointfromObjectNum(NextMoveGridNum);
 
-			float distance = D3DXVec3Length(&direction); // ターゲットまでの距離
+			//	if (pPoint.x == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).x && pPoint.y == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).y)
+			//	{//ゴールが目前
+			//		classData.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			//	}
+			//	else
+			//	{
+			//		//目標位置位置を次の目標GRIDD位置
+			//		m_TargetPos = D3DXVECTOR3((float)((CMathProc::GRIDLEGTH)*pPoint.x) + (CMathProc::GRIDLEGTH * 0.5f), 0.0f, (float)((CMathProc::GRIDLEGTH)*pPoint.y) + (CMathProc::GRIDLEGTH * 0.5f));
+			//		//		SetNowMotion_Parent(1);//移動motion
+			//	}
+			//}
+			////移動先制定ここまで
+			////---------------------------------------------------------------------------------------------------------------------------------
 
-			if (distance > 1.0f) // 近すぎない場合にのみ移動
-			{
-				D3DXVec3Normalize(&direction, &direction); // 方向ベクトルの正規化
-
-				float MoveSpeed = MOVESPEED;//移動速度
-
-				// 移動
-			//	classData.move.x = direction.x * MoveSpeed;
-			//	classData.move.z = direction.z * MoveSpeed;
 
 
-				// 目標方向の計算
-				float targetAngle = atan2f(direction.x, direction.z);
+			//// ターゲット位置への移動処理
+			//D3DXVECTOR3 direction = m_TargetPos - classData.Pos; // 方向ベクトル
 
-				//角度変動
-				classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, targetAngle + D3DX_PI);
+			//float distance = D3DXVec3Length(&direction); // ターゲットまでの距離
 
-				m_nMoveCnt++;
+			//if (distance > 1.0f) // 近すぎない場合にのみ移動
+			//{
+			//	D3DXVec3Normalize(&direction, &direction); // 方向ベクトルの正規化
 
-				if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
-				{
-					m_nMoveCnt = 0;
-					//CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-					CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
-				}
-			}
-			else
-			{
-				// ターゲット位置に近すぎる場合は移動を停止
-				classData.move.x = 0.0f;
-				classData.move.z = 0.0f;
-			}
+			//	float MoveSpeed = MOVESPEED;//移動速度
+
+			//	// 移動
+			////	classData.move.x = direction.x * MoveSpeed;
+			////	classData.move.z = direction.z * MoveSpeed;
+
+
+			//	// 目標方向の計算
+			//	float targetAngle = atan2f(direction.x, direction.z);
+
+			//	//角度変動
+			//	classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, targetAngle + D3DX_PI);
+
+			//	m_nMoveCnt++;
+
+			//	if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
+			//	{
+			//		m_nMoveCnt = 0;
+			//		//CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
+			//		CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
+			//	}
+			//}
+			//else
+			//{
+			//	// ターゲット位置に近すぎる場合は移動を停止
+			//	classData.move.x = 0.0f;
+			//	classData.move.z = 0.0f;
+			//}
 
 
 
@@ -428,17 +428,27 @@ void CObjectMotionEnemyfast::Update()
 				}
 			}
 		}
-		else if (NowState == CScene::MODE_MOVIE)
+		else if (NowState == CScene::MODE_MOVIE|| NowState == CScene::MODE_MOVIE2)
 		{//
-		CObjectMotion::Update();//------------------更新
+			DATA ChangeData = DataInit();
+		
+			// 変更データを反映
+			SetChangeDataInObjectMotion(ChangeData);
+
+			CObjectMotion::Update();//------------------更新
 
 
-		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
-		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+			SetNowMotion_Parent(MOTIONTYPE_STANDBY);
+			SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		}
 	}
 	else
-		{//待機状態
+	{//待機状態
+		DATA ChangeData = DataInit();
+
+		// 変更データを反映
+		SetChangeDataInObjectMotion(ChangeData);
+
 		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 

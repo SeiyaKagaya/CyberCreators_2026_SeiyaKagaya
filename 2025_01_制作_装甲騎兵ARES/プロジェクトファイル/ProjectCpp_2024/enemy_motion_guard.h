@@ -64,6 +64,7 @@ public:
 	CLockOnUIMain* GetLockOnUIMain() { return m_LockOnUI_Main; };
 
 	void SetDamage(int nDamage) { m_nLife -= nDamage; m_bDamageRedNow = true; m_nDamageFrameCnt = DAMAGEFRAME; };
+	static int GetEnemyAllNum() { return m_nNumENemyAll; };
 
 private:
 
@@ -71,8 +72,8 @@ private:
 
 	//bool btest = false;
 
-	int m_nLife=0;
-	int m_nBulletDelay=0;
+	int m_nLife = 0;
+	int m_nBulletDelay = 0;
 	int m_nMissileDelay = 0;
 
 	D3DXVECTOR3 m_TargetPos;//Œ»İ‚Ì–Ú•W’n“_
@@ -85,10 +86,10 @@ private:
 	int m_nNowMoveGRIDNum = -1;
 
 
-	bool m_bTurretRotationNow=false;//ù‰ñ’†
-	float m_fRotTurret=0.0f;//–C“ƒ‚ÌŠp“x
+	bool m_bTurretRotationNow = false;//ù‰ñ’†
+	float m_fRotTurret = 0.0f;//–C“ƒ‚ÌŠp“x
 
-	int m_nMoveCnt=0;
+	int m_nMoveCnt = 0;
 
 	//ˆÈ‰º"Šî–{‚Í3D"‚Ì‚İ
 	CLockOnUI* m_LockOnUI;
@@ -102,6 +103,8 @@ private:
 	int m_nCntFrame = 0;
 
 	int m_nEscCnt = 60;
+
+	static int m_nNumENemyAll;//“G‘”
 };
 
 #endif

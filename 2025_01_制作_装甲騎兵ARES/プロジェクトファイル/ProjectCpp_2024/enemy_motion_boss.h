@@ -20,7 +20,7 @@
 #include "enemy_motion_base.h"
 #include "LockOnUI.h"
 #include "LockOnUIMain.h"
-
+#include "shield.h"
 
 //これはCObjectMotionEnemyBaseの派生クラス
 
@@ -64,14 +64,16 @@ public:
 
 	void SetDamage(int nDamage) { m_nLife -= nDamage; m_bDamageRedNow = true; m_nDamageFrameCnt = DAMAGEFRAME; };
 
+	static int GetEnemyAllNum() { return m_nNumENemyAll; };
+
 private:
 
 	CMathProc::CollisionData m_HitData;//当たり判定データ
 
 	bool btest = false;
 
-	int m_nLife=0;
-	int m_nBulletDelay=0;
+	int m_nLife = 0;
+	int m_nBulletDelay = 0;
 
 	D3DXVECTOR3 m_TargetPos;//現在の目標地点
 	int m_nOldTargetGRIDNum = -1;//相手の過去の位置番号
@@ -83,10 +85,10 @@ private:
 	int nNowMoveGRIDNum = -1;
 
 
-	bool bTurretRotationNow=false;//旋回中
-	float fRotTurret=0.0f;//砲塔の角度
+	bool bTurretRotationNow = false;//旋回中
+	float fRotTurret = 0.0f;//砲塔の角度
 
-	int m_nMoveCnt=0;
+	int m_nMoveCnt = 0;
 
 	//以下"基本は3D"のみ
 	CLockOnUI* m_LockOnUI;
@@ -98,6 +100,11 @@ private:
 	int m_nDamageFrameCnt = 0;
 
 	int m_nEscCnt = 60;
+
+	CShield* m_pShield;//シールドを格納
+
+	int nMovieCnt = 0;
+	static int m_nNumENemyAll;//敵総数
 };
 
 #endif

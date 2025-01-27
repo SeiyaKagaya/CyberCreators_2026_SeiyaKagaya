@@ -30,7 +30,7 @@ public:
 
 	void HitCollision();//当たり判定まとめ
 
-	static CShield* Create(DATA SetData, CObjectMotionPlayer* pMotion);//オブジェクト生成
+	static CShield* Create(DATA SetData, bool Boss);//オブジェクト生成
 
 	void SetParent(CObjectMotionPlayer* pMotion) { m_pParent = pMotion; };
 	//座標変動
@@ -40,6 +40,8 @@ public:
 	void setDrawOk(bool set) { m_bDrawOk = set; };
 	bool getDrawOk() { return m_bDrawOk; };
 	void SetParent(CModelParts* pParentParts) { m_pParentParts = pParentParts; };
+
+	COBB GetOBB() { return m_Obb; };
 
 private:
 	D3DXMATRIX m_mtxWorld;
@@ -68,7 +70,7 @@ private:
 
 	int m_nLife = 300;
 
-
+	bool m_bBoss = false;
 };
 
 #endif

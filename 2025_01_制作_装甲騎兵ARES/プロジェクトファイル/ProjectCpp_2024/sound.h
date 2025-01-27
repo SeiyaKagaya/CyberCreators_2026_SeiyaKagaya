@@ -43,9 +43,7 @@ public:
 	{
 		SOUND_LABEL_BGM000 = 0,		// タイトルBGM
 		SOUND_LABEL_BGM001,			// 戦闘BGM
-		SOUND_LABEL_BGM002,			// 戦闘BGM
-		SOUND_LABEL_BGM003,			// 戦闘BGM
-		SOUND_LABEL_BGM004,			// 戦闘BGM
+		SOUND_LABEL_BGM002,			// ボス戦闘BGM
 		SOUND_LABEL_SE_SHOT,		// 弾発射音
 		SOUND_LABEL_SE_JET,		// ジェット通過
 		SOUND_LABEL_SE_ENTER1,		// 選択１
@@ -89,10 +87,8 @@ private:
 	SOUNDINFO m_aSoundInfo[SOUND_LABEL_MAX] =
 	{
 		{"DATA/SOUND/BGM/tank_title_bgm_001.wav", -1},	 // タイトルBGM//-1がループ/0が一回きり
-		{"DATA/SOUND/BGM/tank_main_bgm_001.wav", -1},	 // バトルBGM1
-		{"DATA/SOUND/BGM/tank_main_bgm_002.wav", -1},	 // バトルBGM2
-		{"DATA/SOUND/BGM/tank_main_bgm_003.wav", -1},	 // バトルBGM3
-		{"DATA/SOUND/BGM/tank_main_bgm_004.wav", -1},	 // バトルBGM4
+		{"DATA/SOUND/BGM/firstBattle000.wav", -1},	 // 通常戦闘BGM
+		{"DATA/SOUND/BGM/BossBattle000.wav", -1},	 // ボス戦BGM
 		{"DATA/SOUND/SE/Bullet002.wav", 0},		 // 弾発射音
 		{"DATA/SOUND/SE/JET.wav", 0},			 // ジェット通過
 		{"DATA/SOUND/SE/Enter001.wav", 0},		 // 選択１

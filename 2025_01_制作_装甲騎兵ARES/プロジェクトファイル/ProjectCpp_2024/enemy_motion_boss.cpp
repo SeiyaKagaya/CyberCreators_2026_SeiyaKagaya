@@ -17,19 +17,24 @@
 #include "newbullet.h"
 #include "ShotFire.h"
 #include "missile.h"
+#include "enemy_motion_guard.h"
 //#include "movesmoke.h"
+
+int CObjectMotionEnemyBoss::m_nNumENemyAll = 0;
 
 //=============================
 // コンストラクタ
 //=============================
 CObjectMotionEnemyBoss::CObjectMotionEnemyBoss(int nPriority) :CObjectMotionEnemyBase(nPriority)
 {
+	m_nNumENemyAll++;
 }
 //=============================
 // デストラクタ
 //=============================
 CObjectMotionEnemyBoss::~CObjectMotionEnemyBoss()
 {
+	m_nNumENemyAll--;
 }
 
 //=============================
@@ -57,6 +62,10 @@ HRESULT CObjectMotionEnemyBoss::Init()
 
 	m_LockOnUI = CLockOnUI::Create();
 	m_LockOnUI_Main = CLockOnUIMain::Create();
+
+	DATA setdata = DataInit();
+	m_pShield = CShield::Create(setdata,true);
+
 	return S_OK;
 }
 
@@ -103,7 +112,7 @@ void CObjectMotionEnemyBoss::Update()
 
 			classData.move.x = 0.0f;
 			classData.move.y = 0.0f;
-			classData.move.z = 2.0f;
+			classData.move.z = 8.8f;
 
 
 
@@ -117,6 +126,19 @@ void CObjectMotionEnemyBoss::Update()
 
 			m_LockOnUI_Main->SetDATA(SetData);
 			m_LockOnUI->SetDATA(SetData);
+
+			D3DXVECTOR3 ESCDATA = D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 150.0f, classData.Pos.z);
+
+			m_pShield->SetPos(ESCDATA);
+
+			if (CObjectMotionEnemyGuard::GetEnemyAllNum() > 0)
+			{
+				m_pShield->setDrawOk(true);
+			}
+			else
+			{
+				m_pShield->setDrawOk(false);
+			}
 
 
 			if (m_nLife <= 0)
@@ -135,7 +157,7 @@ void CObjectMotionEnemyBoss::Update()
 				m_nEscCnt--;
 				if (m_nEscCnt < 0)
 				{
-					CScore::AddScore(CScore::TANK_SCORE1*4);
+					CScore::AddScore(CScore::TANK_SCORE1 * 4);
 
 					CObject* pObj = nullptr;
 					pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
@@ -184,23 +206,42 @@ void CObjectMotionEnemyBoss::Update()
 				}
 			}
 		}
-		else if (NowState == CScene::MODE_MOVIE)
+		else if (NowState == CScene::MODE_MOVIE2)
 		{
+			DATA ChangeData = DataInit();
+
+			// 変更データを反映
+			SetChangeDataInObjectMotion(ChangeData);
+
+
 			CObjectMotion::Update();//------------------更新
 
+			nMovieCnt++;
 
+			if (nMovieCnt > 1200)
+			{
+				m_pShield->setDrawOk(true);
+			}
 			//SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 			//SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		}
 	}
 	else
 	{//待機状態
+		DATA ChangeData = DataInit();
+
+		// 変更データを反映
+		SetChangeDataInObjectMotion(ChangeData);
+
 		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		//CObjectMotion::Update();
 		Motion_Parent();
 		Motion_Sub();
+
+
 	}
+	
 
 
 
@@ -213,7 +254,7 @@ void CObjectMotionEnemyBoss::Update()
 void CObjectMotionEnemyBoss::Draw()
 {
 	CObjectMotion::Draw();
-
+	m_pShield->Draw();
 }
 
 //=============================

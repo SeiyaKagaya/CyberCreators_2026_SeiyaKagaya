@@ -112,7 +112,7 @@ HRESULT CObjectMotionPlayer::Init()
 	SetDATA.MaxLength = D3DXVECTOR3(3.0f, 6.0f, 3.0f);
 	SetDATA.MinLength = D3DXVECTOR3(-3.0f, 0.0f, -3.0f);
 
-	m_pShield = CShield::Create(SetDATA, this);
+	m_pShield = CShield::Create(SetDATA, false);
 	m_pShield->SetParent(GetModelParts(2));
 
 	m_pBulletLine = CBulletLine::Create(SetDATA,this);
