@@ -5,7 +5,7 @@
 //
 //=========================================================
 #include"shield.h"
-
+#include "missile.h"
 
 
 //=============================
@@ -181,9 +181,9 @@ void CShield::Update()
         }
         else
         {
-            m_Obb.m_fLength[0] = 150.0f;
-            m_Obb.m_fLength[1] = 150.0f;
-            m_Obb.m_fLength[2] = 150.0f;
+            m_Obb.m_fLength[0] = 180.0f;
+            m_Obb.m_fLength[1] = 180.0f;
+            m_Obb.m_fLength[2] = 180.0f;
         }
 
     }
@@ -223,9 +223,12 @@ void CShield::Update()
 
 
 
-
+  
     if (m_bDrawOk == true)
     {
+        bool bHit = false;
+
+
         //”í’eŒn
     //----------------------------------------------------------------------------------
         CObject* pObj = nullptr;
@@ -248,9 +251,9 @@ void CShield::Update()
                         COBB MyObb = m_Obb;
 
                         D3DXVECTOR3 HitPos;
-                        bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//“–‚½‚è”»’è
+                        bHit = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//“–‚½‚è”»’è
 
-                        if (btest == true)
+                        if (bHit == true)
                         {
                             //pBullet->SetDeath(true);
                             pBullet->SetGoodby();
@@ -258,77 +261,81 @@ void CShield::Update()
                             m_nLife -= 100;
                         }
                     }
-                    else
-                    {//—}§ŠúŠÔ
-                        if (pBullet->GetCaller() != this)
-                        {//”­ŽË‚µ‚½e‚ªŽ©g‚¶‚á‚È‚¢‚Æ‚«
-                            COBB pObb2 = pBullet->GetOBB();
-                            COBB MyObb = m_Obb;
+                    //else
+                    //{//—}§ŠúŠÔ
+                    //    if (pBullet->GetCaller() != this)
+                    //    {//”­ŽË‚µ‚½e‚ªŽ©g‚¶‚á‚È‚¢‚Æ‚«
+                    //        COBB pObb2 = pBullet->GetOBB();
+                    //        COBB MyObb = m_Obb;
 
-                            D3DXVECTOR3 HitPos;
-                            bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//“–‚½‚è”»’è
+                    //        D3DXVECTOR3 HitPos;
+                    //        bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//“–‚½‚è”»’è
 
-                            if (btest == true)
-                            {
-                                //pBullet->SetDeath(true);
-                                pBullet->SetGoodby();
+                    //        if (btest == true)
+                    //        {
+                    //            //pBullet->SetDeath(true);
+                    //            pBullet->SetGoodby();
 
-                                m_nLife -= 100;
-                            }
+                    //            m_nLife -= 100;
+                    //        }
+                    //    }
+                    //}
+                }
+            }
+        }
+        //----------------------------------------
+        pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MISSILE_MNG, CObject::OBJECT_MISSILE_MNG);
+
+        if (pObj != nullptr)
+        {
+            CMissileALL* pMissileMNG = static_cast<CMissileALL*>(pObj);
+
+            for (int i = 0; i < CMissileALL::MAXMISSILEALL; i++)
+            {
+                CMissile* pMissile = pMissileMNG->GetBulletData(i);
+
+                if (pMissile->GetbUse() == true)
+                {//’e‚ª‹@”\‚µ‚Ä‚¢‚é‚Æ‚«
+                    if (pMissile->GetHitEscapeTime() <= 0)
+                    {//Ž©”š—}§ˆÈ~‚ÌŽž
+
+                        COBB pObb2 = pMissile->GetOBB();
+                        COBB MyObb = m_Obb;
+
+                        D3DXVECTOR3 HitPos;
+                        bHit = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//“–‚½‚è”»’è
+
+                        if (bHit == true)
+                        {
+                            //pBullet->SetDeath(true);
+                            pMissile->SetGoodby();
+
+                            m_nLife -= 100;
                         }
                     }
+                      //else
+                      //{//—}§ŠúŠÔ
+                      //    if (pBullet->GetCaller() != this)
+                      //    {//”­ŽË‚µ‚½e‚ªŽ©g‚¶‚á‚È‚¢‚Æ‚«
+                      //        COBB pObb2 = pBullet->GetOBB();
+                      //        COBB MyObb = m_Obb;
+
+                      //        D3DXVECTOR3 HitPos;
+                      //        bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//“–‚½‚è”»’è
+
+                      //        if (btest == true)
+                      //        {
+                      //            //pBullet->SetDeath(true);
+                      //            pBullet->SetGoodby();
+
+                      //            m_nLife -= 100;
+                      //        }
+                      //    }
+                      //}
                 }
             }
         }
 
-
-
-
-        ////”í’eŒn------------------------------------------------------------------------------------------
-        //CObject* pObj = nullptr;
-        //pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_NEWBULLET, CObject::OBJECT_NEWBULLET);
-        //if (pObj != nullptr)
-        //{
-        //    CNewBullet* pBullet = static_cast<CNewBullet*>(pObj);
-
-        //    CObject::DATA EscData;
-
-        //    if (pBullet->GetHitEscapeTime() <= 0)
-        //    {//Ž©”š—}§ˆÈ~‚ÌŽž
-
-        //        COBB pObb2 = pBullet->GetOBB();
-        //        COBB MyObb = m_Obb;
-
-        //        D3DXVECTOR3 HitPos;
-        //        bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//“–‚½‚è”»’è
-
-        //        if (btest == true)
-        //        {
-        //            pBullet->SetDeath(true);
-        //            //pBullet->SetGoodby();
-
-        //            m_nLife -= 100;
-        //        }
-        //    }
-        //    else
-        //    {//—}§ŠúŠÔ
-        //        if (pBullet->GetCaller() != this)
-        //        {//”­ŽË‚µ‚½e‚ªŽ©g‚¶‚á‚È‚¢‚Æ‚«
-        //            COBB pObb2 = pBullet->GetOBB();
-        //            COBB MyObb = m_Obb;
-
-        //            D3DXVECTOR3 HitPos;
-        //            bool btest = CMathProc::ColOBBs(MyObb, pObb2, &HitPos);//“–‚½‚è”»’è
-
-        //            if (btest == true)
-        //            {
-        //                pBullet->SetDeath(true);
-        //                //pBullet->SetGoodby();
-
-        //                m_nLife -= 100;
-        //            }
-        //        }
-        //    }
     }
 }
 
@@ -536,6 +543,7 @@ CShield* CShield::Create(DATA SetData,bool Boss)
  //   pObstacle->SetChangeColor(D3DXCOLOR(1.0f,1.0f,0.0f,0.7f));
 
     pObstacle->SetDATA(EscData); // Ši”[
+    pObstacle->SetBossShild(Boss);
   //  pObstacle->SetParent(pMotion);
     return pObstacle;
 }

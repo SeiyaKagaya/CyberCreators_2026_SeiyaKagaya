@@ -4043,8 +4043,10 @@ void CResult::Uninit()
 {
 	CManager* pManager = CManager::GetInstance();
 	CSound* pSound = pManager->GetSound();
-	pSound->StopSound(CSound::SOUND_LABEL_SE_JET);
-
+	if (pSound != nullptr)
+	{
+		pSound->StopSound(CSound::SOUND_LABEL_SE_JET);
+	}
 }
 //===================================
 // çXêV

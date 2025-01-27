@@ -1189,7 +1189,7 @@ void CObjectMotionPlayer::Update()
 			}
 	
 		}
-		else if (NowState == CScene::MODE_TITLE)
+		else if (NowState == CScene::MODE_TITLE|| NowState == CScene::MODE_RESULT)
 		{//ƒ^ƒCƒgƒ‹
 			DATA classData = GetClassData();
 	

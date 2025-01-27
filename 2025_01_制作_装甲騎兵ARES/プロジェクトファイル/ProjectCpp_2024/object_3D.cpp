@@ -266,7 +266,7 @@ void CObject3D::Draw()
 
         if (CScene::GetStageClear() == true)
         {
-            m_texOffsetX += 0.0008f;
+            m_texOffsetX -= 0.0008f;
             // m_texOffsetY += 0.01f;
         }
 

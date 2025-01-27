@@ -1186,7 +1186,7 @@ void CNewBullet::SetBulletData(DATA SetData, int ReflectCnt, D3DXCOLOR col, void
     m_OBB.m_fLength[1] = 15.0f;
     m_OBB.m_fLength[2] = 30.0f;
 
-    m_ShotByHitEscapeTime = 30;//3フレーム当たり判定抑制
+    m_ShotByHitEscapeTime = 2;//3フレーム当たり判定抑制
 
     m_bGoodbyNow = false;
     m_bUse = true;

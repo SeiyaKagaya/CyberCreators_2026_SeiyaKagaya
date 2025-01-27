@@ -100,7 +100,7 @@ void CCamera::Update()
 	CScene::MODE NowState = CScene::GetNowScene();
 
 
-	if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3 || NowState == CScene::MODE_TITLE || NowState == CScene::MODE_TUTORIAL)
+	if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3 || NowState == CScene::MODE_TUTORIAL)
 	{//ゲーム/OP/tutorial
 		
 		if (m_bfast == false)
@@ -225,6 +225,15 @@ void CCamera::Update()
 //			m_rot = D3DXVECTOR3(-0.3293f, -2.53f, 0.0f);
 		}
 	}
+	else if (NowState == CScene::MODE_TITLE || NowState == CScene::MODE_RESULT)
+	{
+		m_posV = D3DXVECTOR3(700.0f, 800.0f, 0.0f);//視点
+		m_posR = D3DXVECTOR3(0.0f, 0.0f, 0.0f);//注視点
+		ActionUpdate3D();
+	}
+
+
+
 }
 //=============================
 //更新--2D
@@ -426,10 +435,10 @@ void  CCamera::ActionUpdate3D()
 		}
 		else if (NowState == CScene::MODE_TITLE || NowState == CScene::MODE_RESULT)
 		{//タイトル
-			m_posR = D3DXVECTOR3(0.0f, 25.0f, 0.0f);
+			m_posR = D3DXVECTOR3(0.0f, 135.0f, 0.0f);
 
 			//カメラ距離	
-			fLength = 3250.0f * 0.16f;
+			fLength = 3250.0f * 0.36f;
 
 			//角度による位置調整
 			m_rot.x = -0.42f;

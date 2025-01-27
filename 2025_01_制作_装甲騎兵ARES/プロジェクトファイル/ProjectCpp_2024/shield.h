@@ -43,6 +43,8 @@ public:
 
 	COBB GetOBB() { return m_Obb; };
 
+	void SetBossShild(bool bSet) { m_bBoss = bSet; };
+
 private:
 	D3DXMATRIX m_mtxWorld;
 
