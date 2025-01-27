@@ -238,7 +238,10 @@ void CTitle::Uninit()
 {
 	CManager* pManager = CManager::GetInstance();
 	CSound* pSound = pManager->GetSound();
-	pSound->StopSound(CSound::SOUND_LABEL_BGM000);
+	if (pSound != nullptr)
+	{
+		pSound->StopSound(CSound::SOUND_LABEL_BGM000);
+	}
 }
 //===================================
 // çXêV
