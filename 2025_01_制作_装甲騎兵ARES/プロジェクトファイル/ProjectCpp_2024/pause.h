@@ -15,7 +15,7 @@
 class CPause //: public CObject
 {
 public:
-	static const int TEXNUM = 7;
+	static const int TEXNUM = 4;
 	CPause(/*int nPriority = CObject::LAYERINDEX_OBJECT2D*/);//コンストラクタ
 	~CPause() /*override*/;//デストラクタ
 	HRESULT Init()/*override*/;
@@ -49,7 +49,7 @@ private:
 
 	int m_SelectNum = 0;
 
-	bool m_bPhase2 = false;
+	//bool m_bPhase2 = false;
 
 	int StopCnt = 0;//操作猶予フレーム
 };

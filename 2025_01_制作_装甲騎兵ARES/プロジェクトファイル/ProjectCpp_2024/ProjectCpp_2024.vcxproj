@@ -178,6 +178,7 @@
     <ClCompile Include="LinerinterUI.cpp" />
     <ClCompile Include="LockOnUI.cpp" />
     <ClCompile Include="LockOnUIMain.cpp" />
+    <ClCompile Include="LongPush.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="manager.cpp" />
     <ClCompile Include="MathUtilities.cpp" />
@@ -212,6 +213,7 @@
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="score.cpp" />
     <ClCompile Include="sea.cpp" />
+    <ClCompile Include="shadow.cpp" />
     <ClCompile Include="shield.cpp" />
     <ClCompile Include="ShotFire.cpp" />
     <ClCompile Include="sky.cpp" />
@@ -247,6 +249,7 @@
     <ClInclude Include="linerinterUI.h" />
     <ClInclude Include="LockOnUI.h" />
     <ClInclude Include="LockOnUIMain.h" />
+    <ClInclude Include="LongPush.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="manager.h" />
     <ClInclude Include="MathUtilities.h" />
@@ -273,6 +276,7 @@
     <ClInclude Include="scene.h" />
     <ClInclude Include="score.h" />
     <ClInclude Include="sea.h" />
+    <ClInclude Include="shadow.h" />
     <ClInclude Include="shield.h" />
     <ClInclude Include="ShotFire.h" />
     <ClInclude Include="sky.h" />

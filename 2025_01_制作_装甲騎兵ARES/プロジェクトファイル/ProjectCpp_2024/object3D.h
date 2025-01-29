@@ -46,7 +46,7 @@ public:
 	//’¸“_Ši”[
 	virtual	void InputpVtx();
 
-
+	void SetSubtract(bool bSet) { m_bSubtract = bSet; };
 
 
 //	static HRESULT Load();
@@ -69,8 +69,10 @@ private:
 	float m_texOffsetX = 0.0f;
 	float m_texOffsetY = 0.0f;
 
-
 	D3DXMATRIX m_mtxWorld;
+
+	bool m_bSubtract = false;
+
 };
 
 #endif

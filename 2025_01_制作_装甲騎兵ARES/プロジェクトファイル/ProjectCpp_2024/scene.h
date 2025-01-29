@@ -25,6 +25,7 @@
 
 #include "Game_UI.h"
 #include "textwindow.h"
+#include "LongPush.h"
 
 class CScene
 {
@@ -92,6 +93,7 @@ protected:
 
 	CTextWindow* m_CTextWindow;
 	CTextWindow* m_CTextWindowSub;
+	CLongPush* m_pLongPush;
 
 	int m_StayTime = STAYFRAME;//ゲーム終了後UIでるまで待機
 
@@ -110,6 +112,7 @@ protected:
 	//bool m_bSetTextWindow=false;//テキストウィンドウが描画されていたか
 
 	int m_nCnt = 0;
+
 };
 
 

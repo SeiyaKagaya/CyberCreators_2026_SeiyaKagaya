@@ -17,6 +17,7 @@
 #include "newbullet.h"
 #include "ShotFire.h"
 #include "missile.h"
+//#include "shadow.h"
 //#include "movesmoke.h"
 
 //=============================
@@ -81,16 +82,19 @@ void CObjectMotionEnemyNomal::Update()
 	if (CScene::GetStayNextStage() == false)
 	{//待機状態か
 
+
 		if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3)
-		{
+		{//ゲーム中
+
 			for (int i = 0; i < GetMaxLoadPartsNum(); i++)
 			{
-				GetModelParts(i)->ChengeRGBAbool(true, D3DXCOLOR(0.3f, 0.3f, 0.0f, 1.0f));
+				GetModelParts(i)->ChengeRGBAbool(true, D3DXCOLOR(0.3f, 0.1f, 0.3f, 1.0f));
 			}
 
 			CRenderer* pRenderer = nullptr;
 
 			CManager* pManager = CManager::GetInstance();
+
 
 
 			CObjectMotion::Update();//----------------
@@ -103,7 +107,7 @@ void CObjectMotionEnemyNomal::Update()
 			//相手、自分のGRID番号がかわったか
 			bool bChange = false;
 
-			//とりあえずplayer の方向に砲塔を向ける
+
 			//----------------------------------------------------------------------------------
 			//playerの位置を取得
 			CObject* pObj = nullptr;
@@ -132,79 +136,79 @@ void CObjectMotionEnemyNomal::Update()
 			//移動先制定
 			//---------------------------------------------------------------------------------------------------------------------------------
 
-			if (m_nOldMyGRIDNum != GetNowGRIDNum())
-			{//自分の過去の位置番号と現在の位置番号が違うとき
-				//格納
-				m_nOldMyGRIDNum = GetNowGRIDNum();
-				bChange = true;
-			}
+			//if (m_nOldMyGRIDNum != GetNowGRIDNum())
+			//{//自分の過去の位置番号と現在の位置番号が違うとき
+			//	//格納
+			//	m_nOldMyGRIDNum = GetNowGRIDNum();
+			//	bChange = true;
+			//}
 
-			if (bChange == true)
-			{//両者どちらかの位置番号に変更があった時
-				CMathProc::Point pPoint;
+			//if (bChange == true)
+			//{//両者どちらかの位置番号に変更があった時
+			//	CMathProc::Point pPoint;
 
-				int NextMoveGridNum = CMathProc::GetNextMoveGridNum(m_nOldTargetGRIDNum, m_nOldMyGRIDNum);//次の経由地
+			//	int NextMoveGridNum = CMathProc::GetNextMoveGridNum(m_nOldTargetGRIDNum, m_nOldMyGRIDNum);//次の経由地
 
-				m_nNowMoveGRIDNum = NextMoveGridNum;
-
-
-				//移動先制定の補佐------
-
-				pPoint = CMathProc::GetPointfromObjectNum(NextMoveGridNum);
-
-				if (pPoint.x == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).x && pPoint.y == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).y)
-				{//ゴールが目前
-					classData.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				}
-				else
-				{
-					//目標位置位置を次の目標GRIDD位置
-					m_TargetPos = D3DXVECTOR3((float)((CMathProc::GRIDLEGTH)*pPoint.x) + (CMathProc::GRIDLEGTH * 0.5f), 0.0f, (float)((CMathProc::GRIDLEGTH)*pPoint.y) + (CMathProc::GRIDLEGTH * 0.5f));
-					//	SetNowMotion_Parent(1);//移動motion
-				}
-			}
-			//移動先制定ここまで
-			//---------------------------------------------------------------------------------------------------------------------------------
+			//	m_nNowMoveGRIDNum = NextMoveGridNum;
 
 
+			//	//移動先制定の補佐------
 
-			// ターゲット位置への移動処理
-			D3DXVECTOR3 direction = m_TargetPos - classData.Pos; // 方向ベクトル
+			//	pPoint = CMathProc::GetPointfromObjectNum(NextMoveGridNum);
 
-			float distance = D3DXVec3Length(&direction); // ターゲットまでの距離
+			//	if (pPoint.x == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).x && pPoint.y == CMathProc::GetPointfromObjectNum(m_nOldTargetGRIDNum).y)
+			//	{//ゴールが目前
+			//		classData.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			//	}
+			//	else
+			//	{
+			//		//目標位置位置を次の目標GRIDD位置
+			//		m_TargetPos = D3DXVECTOR3((float)((CMathProc::GRIDLEGTH)*pPoint.x) + (CMathProc::GRIDLEGTH * 0.5f), 0.0f, (float)((CMathProc::GRIDLEGTH)*pPoint.y) + (CMathProc::GRIDLEGTH * 0.5f));
+			//		//		SetNowMotion_Parent(1);//移動motion
+			//	}
+			//}
+			////移動先制定ここまで
+			////---------------------------------------------------------------------------------------------------------------------------------
 
-			if (distance > 1.0f) // 近すぎない場合にのみ移動
-			{
-				D3DXVec3Normalize(&direction, &direction); // 方向ベクトルの正規化
-
-				float MoveSpeed = MOVESPEED;//移動速度
-
-				// 移動
-				classData.move.x = direction.x * MoveSpeed;
-				classData.move.z = direction.z * MoveSpeed;
 
 
-				// 目標方向の計算
-				float targetAngle = atan2f(direction.x, direction.z);
+			//// ターゲット位置への移動処理
+			//D3DXVECTOR3 direction = m_TargetPos - classData.Pos; // 方向ベクトル
 
-				//角度変動
-				classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, targetAngle + D3DX_PI);
+			//float distance = D3DXVec3Length(&direction); // ターゲットまでの距離
 
-				m_nMoveCnt++;
+			//if (distance > 1.0f) // 近すぎない場合にのみ移動
+			//{
+			//	D3DXVec3Normalize(&direction, &direction); // 方向ベクトルの正規化
 
-				if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
-				{
-					m_nMoveCnt = 0;
-					//CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
+			//	float MoveSpeed = MOVESPEED;//移動速度
+
+			//	// 移動
+			////	classData.move.x = direction.x * MoveSpeed;
+			////	classData.move.z = direction.z * MoveSpeed;
+
+
+			//	// 目標方向の計算
+			//	float targetAngle = atan2f(direction.x, direction.z);
+
+			//	//角度変動
+			//	classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, targetAngle + D3DX_PI);
+
+			//	m_nMoveCnt++;
+
+			//	if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
+			//	{
+			//		m_nMoveCnt = 0;
+			//		//CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
 			//		CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
-				}
-			}
-			else
-			{
-				// ターゲット位置に近すぎる場合は移動を停止
-				classData.move.x = 0.0f;
-				classData.move.z = 0.0f;
-			}
+			//	}
+			//}
+			//else
+			//{
+			//	// ターゲット位置に近すぎる場合は移動を停止
+			//	classData.move.x = 0.0f;
+			//	classData.move.z = 0.0f;
+			//}
 
 
 
@@ -212,7 +216,14 @@ void CObjectMotionEnemyNomal::Update()
 
 			//衝突相殺--敵と
 
-			CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_NOMAL, LAYERINDEX_MOTIONENEMY_NOMAL, this);
+			CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_FAST, LAYERINDEX_MOTIONENEMY_FAST, this);
+
+			if (HitData.bHit == true)
+			{
+				classData.Pos += HitData.ResultDistance;
+			}
+
+			HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_NOMAL, LAYERINDEX_MOTIONENEMY_NOMAL, this);
 
 			if (HitData.bHit == true)
 			{
@@ -220,13 +231,9 @@ void CObjectMotionEnemyNomal::Update()
 				HitData.bHit = false;
 			}
 
-			HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_FAST, LAYERINDEX_MOTIONENEMY_FAST, this);
 
-			if (HitData.bHit == true)
-			{
-				classData.Pos += HitData.ResultDistance;
-				HitData.bHit = false;
-			}
+
+
 
 
 			//CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONPLAYER, LAYERINDEX_MOTIONPLAYER, this);
@@ -251,6 +258,7 @@ void CObjectMotionEnemyNomal::Update()
 
 
 
+
 			////被弾系
 			////----------------------------------------------------------------------------------
 			//pObj = nullptr;
@@ -259,11 +267,11 @@ void CObjectMotionEnemyNomal::Update()
 			//if (pObj != nullptr)
 			//{
 			//	CNewBulletALL* pBulletMNG = static_cast<CNewBulletALL*>(pObj);
-
+			//	
 			//	for (int i = 0; i < CNewBulletALL::MAXBULLETALL; i++)
 			//	{
 			//		CNewBullet* pBullet = pBulletMNG->GetBulletData(i);
-
+			//	
 			//		if (pBullet->GetbUse() == true)
 			//		{//弾が機能しているとき
 
@@ -317,12 +325,12 @@ void CObjectMotionEnemyNomal::Update()
 			//}
 
 
-
-
 			//敵射撃管制
 			//-------------------------------------------------------------------------------------------------------------------------------------------------------
-
 			Attack();
+
+
+
 
 			DATA SetData = DataInit();
 			SetData.Pos = GetClassData().Pos;
@@ -330,9 +338,6 @@ void CObjectMotionEnemyNomal::Update()
 
 			m_LockOnUI_Main->SetDATA(SetData);
 			m_LockOnUI->SetDATA(SetData);
-
-
-
 
 
 
@@ -355,10 +360,12 @@ void CObjectMotionEnemyNomal::Update()
 
 				}
 
+
+
+
 				CScore::AddScore(CScore::TANK_SCORE1);
 
 				SetDeath(true);
-
 				Explosion3D::Create(GetClassData().Pos);
 				for (int i = 0; i < GetMaxLoadPartsNum(); i++)
 				{//パーツもDEATH
@@ -379,7 +386,6 @@ void CObjectMotionEnemyNomal::Update()
 				//	}
 				//	else
 				//	{
-				//		//ロックオンされてたらこれを呼び出す
 				////		m_LockOnUI->SetDrawOk(false);
 				//	}
 					//if (GetBulletLockOn())
@@ -387,18 +393,23 @@ void CObjectMotionEnemyNomal::Update()
 					//	m_LockOnUI_Main->SetPos(D3DXVECTOR3(classData.Pos.x, classData.Pos.y + 75.0f, classData.Pos.z));
 					//	//ロックオンされてたらこれを呼び出す
 					//	m_LockOnUI_Main->SetDrawOk(true);
-					//	SetPriorityAttackTarget(true);
+					//	////メインターゲットか
+					//	//SetPriorityAttackTarget(true);
 					//}
 					//else
 					//{
 					//	//ロックオンされてたらこれを呼び出す
 					//	m_LockOnUI_Main->SetDrawOk(false);
-					//	SetPriorityAttackTarget(false);
+					//	////メインターゲットか
+					//	//SetPriorityAttackTarget(false);
 					//}
 			}
 
 
+			//	classData.move.x = 10.0f;
+
 			SetClassData(classData);
+
 
 			if (m_nDamageFrameCnt > 0)
 			{
@@ -417,6 +428,10 @@ void CObjectMotionEnemyNomal::Update()
 					GetModelParts(i)->ChengeRGBAbool(false, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 			}
+
+			//D3DXVECTOR3 SetPos = GetClassData().Pos;
+			//SetPos.y += 6.0f;
+			//CShadow::Create(SetPos, true);
 		}
 		else if (NowState == CScene::MODE_MOVIE || NowState == CScene::MODE_MOVIE2)
 		{//
@@ -430,6 +445,10 @@ void CObjectMotionEnemyNomal::Update()
 
 			SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 			SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+
+			/*D3DXVECTOR3 SetPos = GetClassData().Pos;
+			SetPos.y += 6.0f;
+			CShadow::Create(SetPos, true);*/
 		}
 	}
 	else
@@ -441,13 +460,14 @@ void CObjectMotionEnemyNomal::Update()
 
 		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
-		//CObjectMotion::Update();
+
 		Motion_Parent();
 		Motion_Sub();
+
+	/*	D3DXVECTOR3 SetPos = GetClassData().Pos;
+		SetPos.y += 6.0f;
+		CShadow::Create(SetPos, true);*/
 	}
-
-
-
 
 
 
@@ -637,27 +657,17 @@ void CObjectMotionEnemyNomal::Attack()
 		D3DXVECTOR3 BulletMax = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
 
 
-
-		bool bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_NOMAL, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
+		bool bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_FAST, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
 
 		if (bNoShot == false)
 		{
-			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_NOMAL, SETDATA.Pos, BulletMim, BulletMax, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE);
+			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_FAST, SETDATA.Pos, BulletMim, BulletMax, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE);
 		}
 
 		if (bNoShot == false)
 		{
-			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_NOMAL, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D);
+			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_FAST, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D);
 		}
-
-
-
-
-
-
-
-
-
 
 
 

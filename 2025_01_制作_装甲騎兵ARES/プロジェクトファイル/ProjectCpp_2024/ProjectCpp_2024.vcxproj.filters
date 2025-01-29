@@ -205,6 +205,12 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\BulletLine">
       <UniqueIdentifier>{22933a59-cef0-4283-8686-d2c905dad6be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\SHADOW">
+      <UniqueIdentifier>{cbd599ba-66ab-4e9d-94fd-a9baba0a6708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\//SCENE//\LONG_PUSH">
+      <UniqueIdentifier>{0e3c78cd-2ab3-402e-ad8b-eabb868b12e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="renderer.cpp">
@@ -384,6 +390,12 @@
     <ClCompile Include="CBulletLine.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\BulletLine</Filter>
     </ClCompile>
+    <ClCompile Include="shadow.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\SHADOW</Filter>
+    </ClCompile>
+    <ClCompile Include="LongPush.cpp">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\LONG_PUSH</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h">
@@ -562,6 +574,12 @@
     </ClInclude>
     <ClInclude Include="CBulletLine.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\BulletLine</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\SHADOW</Filter>
+    </ClInclude>
+    <ClInclude Include="LongPush.h">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\LONG_PUSH</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

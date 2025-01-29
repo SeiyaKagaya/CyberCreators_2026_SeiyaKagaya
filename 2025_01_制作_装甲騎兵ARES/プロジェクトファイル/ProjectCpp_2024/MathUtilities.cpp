@@ -11,11 +11,9 @@
 //#include "ballet.h"
 //#include "enemy.h"
 //#include "polygon.h"
-
 //#include "item.h"
 #include "block.h"
 //#include "block3D.h"
-
 #include <cmath> // std::absを使用するために必要
 #include <vector>//OBB用
 #include "line.h"
@@ -33,11 +31,9 @@
 #include "newbullet.h"
 #include "renderer.h"
 #include "manager.h"
-
 #include"3D-2DhitObject.h"
 #include "missile.h"
 #include "enemy_motion_fast.h"
-
 
 //算出用セル
 CMathProc::Cell CMathProc::GRID[GRIDROW][GRIDCOL] = {};
@@ -47,7 +43,6 @@ int CMathProc::RouteTable[GRIDROW * GRIDCOL][GRIDROW * GRIDCOL];
 
 //視界不良時射撃位置
 D3DXVECTOR3 CMathProc::m_ShotPos[SHOTPOINUM];
-
 
 //// GRID配列の定義
 //Cell CMathProc::GRID[ROW][COL];

@@ -233,13 +233,13 @@ void CObject3D::Draw()
 
     CScene::MODE NowState = CScene::GetNowScene();
 
-    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 )
+    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3)
     {//ゲーム中
 
         
     }
     else if (NowState == CScene::MODE_TITLE)
-    {//タイトル
+    {
 
         m_texOffsetX -= 0.0008f;
        // m_texOffsetY += 0.01f;
@@ -262,7 +262,7 @@ void CObject3D::Draw()
 
     }
     else if (NowState == CScene::MODE_RESULT)
-    {//タイトル
+    {
 
         if (CScene::GetStageClear() == true)
         {
@@ -290,8 +290,13 @@ void CObject3D::Draw()
 
 
 
-
-
+    if (m_bSubtract == true)
+    {
+        //アルファブレンディングを減算合成に設定
+        EscDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
+        EscDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+        EscDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+    }
 
     //ワールドマトリックスの初期化
     D3DXMatrixIdentity(&m_mtxWorld);
@@ -319,14 +324,34 @@ void CObject3D::Draw()
 
     EscDevice->SetTexture(0, m_pTexture);
 
-    //ポリゴンの描画
-    EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
-        0,//描画する最初の頂点インデックス
-        2);//描画するプリミティブ数
+    if (m_bSubtract == true)
+    {
+        for (int i = 0; i < 1; i++)
+        {
+            //ポリゴンの描画
+            EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
+                0,//描画する最初の頂点インデックス
+                2);//描画するプリミティブ数
+        }
+    }
+    else
+    {
+        //ポリゴンの描画
+        EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
+            0,//描画する最初の頂点インデックス
+            2);//描画するプリミティブ数
+    }
 
 
+    if (m_bSubtract == true)
+    {
+        //アルファブレンディングをもとに戻す
+        EscDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+        EscDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+        EscDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+    }
 
-    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 )
+    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3)
     {//ゲーム中
     }
     else if (NowState == CScene::MODE_TITLE)

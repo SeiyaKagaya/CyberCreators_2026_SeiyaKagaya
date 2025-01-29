@@ -17,6 +17,7 @@
 #include "newbullet.h"
 #include "movesmoke.h"
 #include "missile.h"
+#include "shadow.h"
 
 
 
@@ -427,6 +428,10 @@ void CObjectMotionEnemyfast::Update()
 					GetModelParts(i)->ChengeRGBAbool(false, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 			}
+
+			D3DXVECTOR3 SetPos = GetClassData().Pos;
+			SetPos.y += 6.0f;
+			CShadow::Create(SetPos,true);
 		}
 		else if (NowState == CScene::MODE_MOVIE|| NowState == CScene::MODE_MOVIE2)
 		{//
@@ -440,6 +445,10 @@ void CObjectMotionEnemyfast::Update()
 
 			SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 			SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+
+			D3DXVECTOR3 SetPos = GetClassData().Pos;
+			SetPos.y += 6.0f;
+			CShadow::Create(SetPos,true);
 		}
 	}
 	else
@@ -454,6 +463,10 @@ void CObjectMotionEnemyfast::Update()
 
 		Motion_Parent();
 		Motion_Sub();
+
+		D3DXVECTOR3 SetPos = GetClassData().Pos;
+		SetPos.y += 6.0f;
+		CShadow::Create(SetPos,true);
 	}
 	
 

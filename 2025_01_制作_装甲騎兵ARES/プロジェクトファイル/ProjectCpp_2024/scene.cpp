@@ -511,6 +511,8 @@ HRESULT COP::Init()
 	//フォグの有効設定
 	pDevice->SetRenderState(D3DRS_FOGENABLE, TRUE);
 
+	m_pLongPush = CLongPush::Create();
+
 	return E_NOTIMPL;
 }
 //===================================
@@ -518,6 +520,7 @@ HRESULT COP::Init()
 //===================================
 void COP::Uninit()
 {
+	//m_pLongPush->Uninit();
 	//m_CGameUI->Uninit();
 	//m_CGameUI->SetDeath(true);
 	//m_CTextWindow->Uninit();
@@ -589,7 +592,18 @@ void COP::Update()
 	}
 
 
-	if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) == true)
+	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonPress(CInputKeyboard::MouseKey_Left) == true)
+	{
+		m_pLongPush->AddCnt();
+	}
+	else
+	{
+		m_pLongPush->SubCnt();
+	}
+
+	m_pLongPush->Update();
+
+	if (m_pLongPush->PushOkBool())
 	{
 		CSound* pSound = pManager->GetSound();
 		pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
@@ -597,7 +611,6 @@ void COP::Update()
 		CFade* pFade = pManager->GetFade();
 		pFade->SetFade(CScene::MODE_GAME);
 	}
-
 
 }
 //===================================
@@ -747,8 +760,8 @@ HRESULT CGame::Init()
 
 
 
-
-
+	//6500
+	//3250
 
 	//--------------------------------------------------------------------------------------------------------------------
 	//2Dステージ配置物
@@ -756,16 +769,29 @@ HRESULT CGame::Init()
 	float Zlong = 750.0f;
 
 	//左の橋
-	SetData.Pos = D3DXVECTOR3(-14200, 1600.0f, 0.0f);
-	SetData.MaxLength = D3DXVECTOR3(4500, 500.0f, Zlong - 200.0f);
-	SetData.MinLength = D3DXVECTOR3(-4500.0f, -500.0f, -Zlong - 200.0f);
+	SetData.Pos = D3DXVECTOR3(-17450, 1600.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(7750, 500.0f, Zlong - 200.0f);
+	SetData.MinLength = D3DXVECTOR3(-7750.0f, -500.0f, -Zlong - 200.0f);
 	StageCollisionBox::Create(SetData);
 	//StageCollisionBox
 
 	//stage左端進入不可
-	SetData.Pos = D3DXVECTOR3(-20000.0f, 8000.0f, 0.0f);
+	SetData.Pos = D3DXVECTOR3(-26500.0f, 8000.0f, 0.0f);
 	SetData.MaxLength = D3DXVECTOR3(1300, 8000.0f, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-1300, -8000.0f, -Zlong);
+	StageCollisionBox::Create(SetData);
+
+
+	//トラック当たり判定
+	SetData.Pos = D3DXVECTOR3(-21250.0f, 2130.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(300, 200.0f, Zlong*0.3f);	//DEBUG視認性
+	SetData.MinLength = D3DXVECTOR3(-300, -200.0f, -Zlong*0.3f);
+	StageCollisionBox::Create(SetData);
+
+	//橋上の擁壁
+	SetData.Pos = D3DXVECTOR3(-19750.0f, 2100.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(140, 1000.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-140, -1000.0f, -Zlong);
 	StageCollisionBox::Create(SetData);
 
 	//洞窟上進入不可
@@ -799,7 +825,7 @@ HRESULT CGame::Init()
 	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//慣れステ右侵入不可
-	SetData.Pos = D3DXVECTOR3(10050.0f, 2370.0f, 8350.0f);
+	SetData.Pos = D3DXVECTOR3(10050.0f, 2430.0f, 8350.0f);
 	SetData.MaxLength = D3DXVECTOR3(800.0f, 2370.0f, 9000.0f);
 	SetData.MinLength = D3DXVECTOR3(-800.0f, -2370.0f, -9000.0f);
 	StageCollisionBox::Create(SetData);
@@ -1038,7 +1064,7 @@ HRESULT CGame::Init()
 	//-------------------------------------------------------------
 	SetData = CObject::DataInit();//初期化
 //	SetData.Pos = D3DXVECTOR3(-4200.0f, 3200.0f, 0.0f);
-	SetData.Pos = D3DXVECTOR3(-18000.0f, 2700.0f, 0.0f);
+	SetData.Pos = D3DXVECTOR3(-25000.0f, 2700.0f, 0.0f);
 	CObjectMotionPlayer::Create("DATA\\motion_ARES-42.txt", SetData);
 	//-------------------------------------------------------------
 
@@ -1803,17 +1829,17 @@ HRESULT CMovie::Init()
 	SetData.Pos = D3DXVECTOR3(8750.0f, 880.0f, 7850.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(2040.0f, 3370.0f, 5290.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(3850.0f, 3370.0f, 5310.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(7280.0f, 4760.0f, 9360.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(9350.0f, 4760.0f, 12980.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(9320.0f, 4760.0f, 6400.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(9300.0f, 4760.0f, 1940.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 
 
 
@@ -1840,6 +1866,7 @@ HRESULT CMovie::Init()
 	m_CTextWindowSub = CTextWindow::Create();
 
 
+	m_pLongPush = CLongPush::Create();
 
 	return S_OK;
 }
@@ -1910,7 +1937,18 @@ void CMovie::Update()
 	}
 
 
-	if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) == true)
+	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonPress(CInputKeyboard::MouseKey_Left) == true)
+	{
+		m_pLongPush->AddCnt();
+	}
+	else
+	{
+		m_pLongPush->SubCnt();
+	}
+
+	m_pLongPush->Update();
+
+	if (m_pLongPush->PushOkBool())
 	{
 		CSound* pSound = pManager->GetSound();
 		pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
@@ -1918,7 +1956,6 @@ void CMovie::Update()
 		CFade* pFade = pManager->GetFade();
 		pFade->SetFade(CScene::MODE_GAME2);
 	}
-
 
 }
 //===================================
@@ -2053,17 +2090,31 @@ HRESULT CGame2::Init()
 	float Zlong = 750.0f;
 
 	//左の橋
-	SetData.Pos = D3DXVECTOR3(-14200, 1600.0f, 0.0f);
-	SetData.MaxLength = D3DXVECTOR3(4500, 500.0f, Zlong - 200.0f);
-	SetData.MinLength = D3DXVECTOR3(-4500.0f, -500.0f, -Zlong - 200.0f);
+	SetData.Pos = D3DXVECTOR3(-17450, 1600.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(7750, 500.0f, Zlong - 200.0f);
+	SetData.MinLength = D3DXVECTOR3(-7750.0f, -500.0f, -Zlong - 200.0f);
 	StageCollisionBox::Create(SetData);
 	//StageCollisionBox
 
 	//stage左端進入不可
-	SetData.Pos = D3DXVECTOR3(-20000.0f, 8000.0f, 0.0f);
+	SetData.Pos = D3DXVECTOR3(-26500.0f, 8000.0f, 0.0f);
 	SetData.MaxLength = D3DXVECTOR3(1300, 8000.0f, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-1300, -8000.0f, -Zlong);
 	StageCollisionBox::Create(SetData);
+
+
+	//トラック当たり判定
+	SetData.Pos = D3DXVECTOR3(-21250.0f, 2130.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(300, 200.0f, Zlong * 0.3f);	//DEBUG視認性
+	SetData.MinLength = D3DXVECTOR3(-300, -200.0f, -Zlong * 0.3f);
+	StageCollisionBox::Create(SetData);
+
+	//橋上の擁壁
+	SetData.Pos = D3DXVECTOR3(-19750.0f, 2100.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(140, 1000.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-140, -1000.0f, -Zlong);
+	StageCollisionBox::Create(SetData);
+
 
 	//洞窟上進入不可
 	SetData.Pos = D3DXVECTOR3(-9000.0f, 10300.0f, 0.0f);
@@ -2096,7 +2147,7 @@ HRESULT CGame2::Init()
 	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//慣れステ右侵入不可
-	SetData.Pos = D3DXVECTOR3(10050.0f, 2370.0f, 8350.0f);
+	SetData.Pos = D3DXVECTOR3(10050.0f, 2430.0f, 8350.0f);
 	SetData.MaxLength = D3DXVECTOR3(800.0f, 2370.0f, 9000.0f);
 	SetData.MinLength = D3DXVECTOR3(-800.0f, -2370.0f, -9000.0f);
 	StageCollisionBox::Create(SetData);
@@ -2348,28 +2399,28 @@ HRESULT CGame2::Init()
 	//SetData.Pos = D3DXVECTOR3(-7500.0f, 2100.0f, 0.0f);
 	//SetData.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	SetData.Pos = D3DXVECTOR3(8620.0f, 880.0f, 30.0f);
+	SetData.Pos = D3DXVECTOR3(8620.0f, 900.0f, 30.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
-	SetData.Pos = D3DXVECTOR3(4260.0f, 880.0f, 4760.0f);
+	SetData.Pos = D3DXVECTOR3(4260.0f, 900.0f, 4760.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
-	SetData.Pos = D3DXVECTOR3(4110.0f, 880.0f, 7720.0f);
+	SetData.Pos = D3DXVECTOR3(4110.0f, 900.0f, 7720.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
-	SetData.Pos = D3DXVECTOR3(6580.0f, 880.0f, 7860.0f);
+	SetData.Pos = D3DXVECTOR3(6580.0f, 900.0f, 7860.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
-	SetData.Pos = D3DXVECTOR3(8750.0f, 880.0f, 7850.0f);
+	SetData.Pos = D3DXVECTOR3(8750.0f, 900.0f, 7850.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(2040.0f, 3370.0f, 5290.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+	CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(3850.0f, 3370.0f, 5310.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(7280.0f, 4760.0f, 9360.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(9350.0f, 4760.0f, 12980.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(9320.0f, 4760.0f, 6400.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(9300.0f, 4760.0f, 1940.0f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_hellcpter.txt", SetData);
+		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 
 
 
@@ -2807,38 +2858,41 @@ HRESULT CMovie2::Init()
 
 
 
-	SetData.Pos = D3DXVECTOR3(28267.3f, 109.2f, 14727.2f);
+	SetData.Pos = D3DXVECTOR3(28267.3f, 130.5f, 14727.2f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(29990.5f, 134.1f, 11353.7f);
+	SetData.Pos = D3DXVECTOR3(29990.5f, 130.5f, 11353.7f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(29007.5f, 98.2f, 8101.8f);
+	SetData.Pos = D3DXVECTOR3(29007.5f, 130.5f, 8101.8f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(29471.1f, 132.4f, 1642.4f);
+	SetData.Pos = D3DXVECTOR3(29471.1f, 130.5f, 1642.4f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(25086.5f, 138.0f, 1537.6f);
+	SetData.Pos = D3DXVECTOR3(25086.5f, 130.5f, 1537.6f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(20708.3f, 102.6f, 2084.1f);
+	SetData.Pos = D3DXVECTOR3(20708.3f, 130.5f, 2084.1f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(14638.1f, 111.3f, 3419.4f);
+	SetData.Pos = D3DXVECTOR3(14638.1f, 130.5f, 3419.4f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(15514.9f, 138.0f, 6690.0f);
+	SetData.Pos = D3DXVECTOR3(15514.9f, 130.5f, 6690.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(14446.6f, 95.7f, 10788.7f);
+	SetData.Pos = D3DXVECTOR3(14446.6f, 130.5f, 10788.7f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(13519.9f, 104.4f, 14477.9f);
+	SetData.Pos = D3DXVECTOR3(13519.9f, 130.5f, 14477.9f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(15073.8f, 111.5f, 17979.7f);
+	SetData.Pos = D3DXVECTOR3(15073.8f, 130.5f, 17979.7f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	
+
+
 
 	SetData.Pos = D3DXVECTOR3(14489.6f, 867.6f, 7604.4f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
@@ -2882,7 +2936,7 @@ HRESULT CMovie2::Init()
 	m_CGameUI = CGameUI::Create();
 	m_CTextWindow = CTextWindow::Create();
 	m_CTextWindowSub = CTextWindow::Create();
-
+	m_pLongPush = CLongPush::Create();
 	return S_OK;
 }
 //===================================
@@ -2890,6 +2944,7 @@ HRESULT CMovie2::Init()
 //===================================
 void CMovie2::Uninit()
 {
+	//m_pLongPush->Uninit();
 	//m_CGameUI->Uninit();
 	//m_CGameUI->SetDeath(true);
 	//m_CTextWindow->Uninit();
@@ -2975,7 +3030,21 @@ void CMovie2::Update()
 	}
 
 
-	if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonTrigger(CInputKeyboard::MouseKey_Left) == true)
+
+
+
+	if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A) || keyboard->GetMouseButtonPress(CInputKeyboard::MouseKey_Left) == true)
+	{
+		m_pLongPush->AddCnt();
+	}
+	else
+	{
+		m_pLongPush->SubCnt();
+	}
+
+	m_pLongPush->Update();
+
+	if (m_pLongPush->PushOkBool())
 	{
 		CSound* pSound = pManager->GetSound();
 		pSound->PlaySound(CSound::SOUND_LABEL_SE_ENTER1);
@@ -2983,6 +3052,7 @@ void CMovie2::Update()
 		CFade* pFade = pManager->GetFade();
 		pFade->SetFade(CScene::MODE_GAME3);
 	}
+
 
 
 }
@@ -3115,16 +3185,29 @@ HRESULT CGame3::Init()
 	float Zlong = 750.0f;
 
 	//左の橋
-	SetData.Pos = D3DXVECTOR3(-14200, 1600.0f, 0.0f);
-	SetData.MaxLength = D3DXVECTOR3(4500, 500.0f, Zlong - 200.0f);
-	SetData.MinLength = D3DXVECTOR3(-4500.0f, -500.0f, -Zlong - 200.0f);
+	SetData.Pos = D3DXVECTOR3(-17450, 1600.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(7750, 500.0f, Zlong - 200.0f);
+	SetData.MinLength = D3DXVECTOR3(-7750.0f, -500.0f, -Zlong - 200.0f);
 	StageCollisionBox::Create(SetData);
 	//StageCollisionBox
 
 	//stage左端進入不可
-	SetData.Pos = D3DXVECTOR3(-20000.0f, 8000.0f, 0.0f);
+	SetData.Pos = D3DXVECTOR3(-26500.0f, 8000.0f, 0.0f);
 	SetData.MaxLength = D3DXVECTOR3(1300, 8000.0f, Zlong);
 	SetData.MinLength = D3DXVECTOR3(-1300, -8000.0f, -Zlong);
+	StageCollisionBox::Create(SetData);
+
+
+	//トラック当たり判定
+	SetData.Pos = D3DXVECTOR3(-21250.0f, 2130.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(300, 200.0f, Zlong * 0.3f);	//DEBUG視認性
+	SetData.MinLength = D3DXVECTOR3(-300, -200.0f, -Zlong * 0.3f);
+	StageCollisionBox::Create(SetData);
+
+	//橋上の擁壁
+	SetData.Pos = D3DXVECTOR3(-19750.0f, 2100.0f, 0.0f);
+	SetData.MaxLength = D3DXVECTOR3(140, 1000.0f, Zlong);
+	SetData.MinLength = D3DXVECTOR3(-140, -1000.0f, -Zlong);
 	StageCollisionBox::Create(SetData);
 
 	//洞窟上進入不可
@@ -3158,7 +3241,7 @@ HRESULT CGame3::Init()
 	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
 	//慣れステ右侵入不可
-	SetData.Pos = D3DXVECTOR3(10050.0f, 2370.0f, 8350.0f);
+	SetData.Pos = D3DXVECTOR3(10050.0f, 2430.0f, 8350.0f);
 	SetData.MaxLength = D3DXVECTOR3(800.0f, 2370.0f, 9000.0f);
 	SetData.MinLength = D3DXVECTOR3(-800.0f, -2370.0f, -9000.0f);
 	StageCollisionBox::Create(SetData);
@@ -3264,6 +3347,28 @@ HRESULT CGame3::Init()
 	SetData.Pos = D3DXVECTOR3(14850.0f, 68.0f, 22150.0f);
 	SetData.MaxLength = D3DXVECTOR3(2300.0f, 68.0f, 22150.0f);
 	SetData.MinLength = D3DXVECTOR3(-2300.0f, -68.0f, -22150.0f);
+	StageCollisionBox::Create(SetData);
+	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+
+	//橋左側土台
+	SetData.Pos = D3DXVECTOR3(14850.0f, 160.0f, 25350.0f);
+	SetData.MaxLength = D3DXVECTOR3(2300.0f, 2300.0f, 1100.0f);
+	SetData.MinLength = D3DXVECTOR3(-2300.0f, -2300.0f, -1100.0f);
+	StageCollisionBox::Create(SetData);
+	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+	
+	//橋真ん中
+	SetData.Pos = D3DXVECTOR3(21915.0f, 2235.0f, 25350.0f);
+	SetData.MaxLength = D3DXVECTOR3(4765.0f, 225.0f, 1100.0f);
+	SetData.MinLength = D3DXVECTOR3(-4765.0f, -225.0f, -1100.0f);
+	StageCollisionBox::Create(SetData);
+	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
+
+	//橋右側土台
+	SetData.Pos = D3DXVECTOR3(28980.0f, 160.0f, 25350.0f);
+	SetData.MaxLength = D3DXVECTOR3(2300.0f, 2300.0f, 1100.0f);
+	SetData.MinLength = D3DXVECTOR3(-2300.0f, -2300.0f, -1100.0f);
 	StageCollisionBox::Create(SetData);
 	//CStageCollisionBox3D2D::Create(SetData, CStageCollisionBox3D2D::TYPE_NOMALBLOCK);
 
@@ -3411,38 +3516,42 @@ HRESULT CGame3::Init()
 	CObjectMotionPlayer::SetPlayerNum(1);
 
 
-	SetData.Pos = D3DXVECTOR3(28267.3f, 109.2f, 14727.2f);
+
+	SetData.Pos = D3DXVECTOR3(28267.3f, 130.5f, 14727.2f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(29990.5f, 134.1f, 11353.7f);
+	SetData.Pos = D3DXVECTOR3(29990.5f, 130.5f, 11353.7f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(29007.5f, 98.2f, 8101.8f);
+	SetData.Pos = D3DXVECTOR3(29007.5f, 130.5f, 8101.8f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(29471.1f, 132.4f, 1642.4f);
+	SetData.Pos = D3DXVECTOR3(29471.1f, 130.5f, 1642.4f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(25086.5f, 138.0f, 1537.6f);
+	SetData.Pos = D3DXVECTOR3(25086.5f, 130.5f, 1537.6f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(20708.3f, 102.6f, 2084.1f);
+	SetData.Pos = D3DXVECTOR3(20708.3f, 130.5f, 2084.1f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(14638.1f, 111.3f, 3419.4f);
+	SetData.Pos = D3DXVECTOR3(14638.1f, 130.5f, 3419.4f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(15514.9f, 138.0f, 6690.0f);
+	SetData.Pos = D3DXVECTOR3(15514.9f, 130.5f, 6690.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(14446.6f, 95.7f, 10788.7f);
+	SetData.Pos = D3DXVECTOR3(14446.6f, 130.5f, 10788.7f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(13519.9f, 104.4f, 14477.9f);
+	SetData.Pos = D3DXVECTOR3(13519.9f, 130.5f, 14477.9f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(15073.8f, 111.5f, 17979.7f);
+	SetData.Pos = D3DXVECTOR3(15073.8f, 130.5f, 17979.7f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+
+
+
 
 	SetData.Pos = D3DXVECTOR3(14489.6f, 867.6f, 7604.4f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
@@ -3498,6 +3607,8 @@ HRESULT CGame3::Init()
 	pManager->SetPauseState(false);
 
 
+
+
 	CSound* pSound = pManager->GetSound();
 
 
@@ -3519,6 +3630,8 @@ HRESULT CGame3::Init()
 //===================================
 void CGame3::Uninit()
 {
+	//m_pLongPush->Uninit();
+
 	CManager* pManager = CManager::GetInstance();
 
 	CSound* pSound = pManager->GetSound();
@@ -4223,7 +4336,7 @@ void CResult::Draw()
 
 
 
-	aData = "マウス左クリック/Startボタン/Aボタン";
+	aData = "Startボタン/Aボタン";
 	if (m_bButtonBool == false)
 	{
 		m_nbuttonCnt += 2;

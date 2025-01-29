@@ -26,6 +26,7 @@
 #include "enemy_motion_boss.h"
 #include "enemy_motion_guard.h"
 #include"CBulletLine.h"
+#include "shadow.h"
 //#include "movesmoke.h"
 
 int CObjectMotionPlayer::m_nNumPlayerAll = START_PLAYER_NUM;//初期値３
@@ -1121,7 +1122,7 @@ void CObjectMotionPlayer::Update()
 						CObjectMotion::Update();//------------------更新
 					}
 				}
-	
+			
 				if (!GetIsOnGroundBool() && !GetIsLandingTriggerBool())
 				{//着地状態じゃないかつ着地瞬間じゃない
 	
@@ -1151,15 +1152,20 @@ void CObjectMotionPlayer::Update()
 				}
 	
 				
+				//GetNowMotionParent
 	
 	
 	
+				if (GetIsOnGroundBool())
+				{
+					D3DXVECTOR3 SetPos = GetClassData().Pos;
+					SetPos.y += 6.0f;
+					CShadow::Create(SetPos,false);
+				}
+				//GetNoGetNowMotionParent
+					//ZwMotionParent
 	
-	
-	
-	
-	
-	
+				//CShadow::Create
 	
 	
 				//--------------------------------------------------------------------------------
@@ -1218,6 +1224,10 @@ void CObjectMotionPlayer::Update()
 	
 			SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT);//移動motion
 			SetNowMotion_Sub(MOTIONTYPE_MOVE_FRONT);//移動motion
+
+			D3DXVECTOR3 SetPos = GetClassData().Pos;
+			SetPos.y += 15.0f;
+			CShadow::Create(SetPos,false);
 	
 	
 		}
@@ -1250,6 +1260,10 @@ void CObjectMotionPlayer::Update()
 	
 			SetNowMotion_Parent(MOTIONTYPE_MOVE_FRONT);//移動motion
 			SetNowMotion_Sub(MOTIONTYPE_MOVE_FRONT);//移動motion
+
+			D3DXVECTOR3 SetPos = GetClassData().Pos;
+			SetPos.y += 15.0f;
+			CShadow::Create(SetPos,false);
 	
 	
 		}
@@ -1322,27 +1336,33 @@ void CObjectMotionPlayer::Update()
 	
 			SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 			SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+			D3DXVECTOR3 SetPos = GetClassData().Pos;
+			SetPos.y += 15.0f;
+			CShadow::Create(SetPos,false);
 		}
 		else if (NowState == CScene::MODE_MOVIE2)
 		{//
 
-		DATA classData = GetClassData();
+			DATA classData = GetClassData();
 
-		classData.rot.y = -2.5824623f;
+			classData.rot.y = -2.5824623f;
 
-		DATA ChangeData = DataInit();
-		ChangeData.rot.y = classData.rot.y;
+			DATA ChangeData = DataInit();
+			ChangeData.rot.y = classData.rot.y;
 
-		//基底クラスからパーツにデータを受け渡し(だれも対象じゃないときは初期値が入る)
-		SetChangeDataInObjectMotion(ChangeData);
+			//基底クラスからパーツにデータを受け渡し(だれも対象じゃないときは初期値が入る)
+			SetChangeDataInObjectMotion(ChangeData);
 
-		SetClassData(classData);
+			SetClassData(classData);
 
-		CObjectMotion::Update();//------------------更新
+			CObjectMotion::Update();//------------------更新
 
 
-		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
-		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+			SetNowMotion_Parent(MOTIONTYPE_STANDBY);
+			SetNowMotion_Sub(MOTIONTYPE_STANDBY);
+			D3DXVECTOR3 SetPos = GetClassData().Pos;
+			SetPos.y += 15.0f;
+			CShadow::Create(SetPos,false);
 		}
 	
 	
@@ -1363,6 +1383,7 @@ void CObjectMotionPlayer::Update()
 				GetModelParts(i)->ChengeRGBAbool(false, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 		}
+
 	}
 	else
 	{//待機状態
@@ -1874,10 +1895,10 @@ void CObjectMotionPlayer::ControllerInput2D()
 	if (m_nBoostLife >= 1)
 	{
 		//飛翔
-		if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A))
+		if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A) || joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 		{
 			classData.move.y += 15.0f;
-			m_nBoostLife-= BOOSTJUMP_USE;
+			m_nBoostLife -= BOOSTJUMP_USE;
 		}
 	}
 
@@ -2648,7 +2669,7 @@ void CObjectMotionPlayer::ControllerInput3D()
 	//飛翔
 	if (m_nBoostLife >= 1)
 	{
-		if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A))
+		if (JoyPad->GetPress(CInputJoyPad::JOYKEY_A) || joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 		{
 			classData.move.y += 10.0f;
 			m_nBoostLife-= BOOSTJUMP_USE;
