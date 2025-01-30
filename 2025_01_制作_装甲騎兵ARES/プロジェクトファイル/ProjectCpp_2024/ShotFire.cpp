@@ -19,8 +19,8 @@ CObjectShotFire::CObjectShotFire(int nPriority) :CObjectBillBoard(nPriority), m_
 
     // m_pVtxBuff = nullptr;
     // m_pTexture = nullptr;
-
 }
+
 //=============================
 // デストラクタ
 //=============================
@@ -101,15 +101,10 @@ void CObjectShotFire::Update()
         m_nPatternAnim++;
     }
 
-
-
-
     if (m_nLife <= 0 || m_nPatternAnim > DIVISION_NUMBER)
     {
         SetDeath(true);
     }
-
-
 
     CObjectBillBoard::Update();
 }
@@ -189,8 +184,6 @@ void CObjectShotFire::InputpVtx()
     pVtx[1].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim, 0.0f);
     pVtx[2].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim - (1.0f / DIVISION_NUMBER), 1.0f);//テクスチャ分割数分右側に座標がズレてる
     pVtx[3].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim, 1.0f);
-
-
 
     //   ESCpVtxBuff->Unlock();
 

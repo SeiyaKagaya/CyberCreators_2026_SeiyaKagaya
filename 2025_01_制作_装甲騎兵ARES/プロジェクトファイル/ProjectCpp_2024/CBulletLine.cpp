@@ -4,12 +4,12 @@
 // Author seiya kagaya
 //
 //=========================================================
+
 #include"CBulletLine.h"
 #include "enemy_motion_Nomal.h"
 #include "enemy_motion_fast.h"
 #include "enemy_motion_boss.h"
 #include "enemy_motion_guard.h"
-
 
 
 //=============================
@@ -60,8 +60,6 @@ HRESULT CBulletLine::Init()
         &m_pMesh);
 
 
-
-
     D3DXMATERIAL* pMat = (D3DXMATERIAL*)m_pBuffMat->GetBufferPointer();
 
     //テクスチャ取得
@@ -84,11 +82,6 @@ HRESULT CBulletLine::Init()
     //       SetXfireData(m_pMesh[0], m_pBuffMat[0], m_dwNumMat[0]); // データ格納
 
 
-
-
-
-
-
     SetObjectType(CObject::OBJECT_BULLETLINE);
 
     m_OBB.m_fLength[0] = 80.0f;
@@ -103,7 +96,6 @@ HRESULT CBulletLine::Init()
 //=============================
 void CBulletLine::Uninit()
 {
-
         if (m_pMesh != nullptr)
         {
             m_pMesh->Release(); // メッシュ解放
@@ -123,8 +115,6 @@ void CBulletLine::Uninit()
             // CManager::GetInstance()->GetTexture()->ReleaseTexture(m_ESCpTexture);
             m_ESCpTexture = nullptr;
         }
-    
-
 
     //  CObjectX::Uninit();
 }
@@ -142,7 +132,7 @@ void CBulletLine::Update()
     {
         if (pManager->GetbNow3DMode() == false)
         {//2D
-          // OBBまわり
+            // OBBまわり
             m_OBB.m_Pos = GetDATA().Pos;
 
             D3DXMATRIX matRot, EscMtx, mtxTrans;
@@ -180,7 +170,7 @@ void CBulletLine::Update()
         }
         else
         {//3D
-
+            //else
         }
     }
 }
@@ -201,8 +191,6 @@ void CBulletLine::Draw()
 
 
 
-
-
     if (m_bDrawOk == true)
     {
         DATA EscData = GetDATA();
@@ -210,7 +198,6 @@ void CBulletLine::Draw()
 
         //SetSizeMag(D3DXVECTOR3 (2.0f,2.0f,2.0f));//倍率
         //SizeMagChangebool(true);
-
 
 
        // CObjectX::Draw();
@@ -258,54 +245,51 @@ void CBulletLine::Draw()
         EscDevice->GetMaterial(&matDef);
 
         // 通常のオブジェクトの描画
-  
-            pMat = reinterpret_cast<D3DXMATERIAL*>(m_pBuffMat->GetBufferPointer());
+        pMat = reinterpret_cast<D3DXMATERIAL*>(m_pBuffMat->GetBufferPointer());
 
-            for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
-            {
-                // ワールド行列を元に戻す
-                EscDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
+        for (int nCntMat = 0; nCntMat < (int)m_dwNumMat; nCntMat++)
+        {
+            // ワールド行列を元に戻す
+            EscDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
-                // マテリアルの設定
-                EscDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-
-
-                pMat[nCntMat].pTextureFilename = NULL;
-
-                EscDevice->SetTexture(0, nullptr);
-
-                if (m_bFast == false)
-                {//始めの一回のみ
-                    m_OriginalColor = pMat[nCntMat].MatD3D.Diffuse;
-                    m_bFast = true;
-                }
+            // マテリアルの設定
+            EscDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
 
-                // メッシュの描画
+            pMat[nCntMat].pTextureFilename = NULL;
 
+            EscDevice->SetTexture(0, nullptr);
 
-                  //  D3DXCOLOR originalColor;
-
-
-                pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(
-                    m_OriginalColor.r * SetMag.x,
-                    m_OriginalColor.g * SetMag.y,
-                    m_OriginalColor.b * SetMag.z,
-                    m_OriginalColor.a
-                );
-
-                EscDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-                pMat[nCntMat].MatD3D.Diffuse = m_OriginalColor;
-
-
-
-                m_pMesh->DrawSubset(nCntMat);
-
-                // 保存していたマテリアルを戻す
-                EscDevice->SetMaterial(&matDef);
+            if (m_bFast == false)
+            {//始めの一回のみ
+                m_OriginalColor = pMat[nCntMat].MatD3D.Diffuse;
+                m_bFast = true;
             }
 
-        
+
+            // メッシュの描画
+
+
+              //  D3DXCOLOR originalColor;
+
+
+            pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(
+                m_OriginalColor.r * SetMag.x,
+                m_OriginalColor.g * SetMag.y,
+                m_OriginalColor.b * SetMag.z,
+                m_OriginalColor.a
+            );
+
+            EscDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+            pMat[nCntMat].MatD3D.Diffuse = m_OriginalColor;
+
+
+
+            m_pMesh->DrawSubset(nCntMat);
+
+            // 保存していたマテリアルを戻す
+            EscDevice->SetMaterial(&matDef);
+        }
 
 
     }
@@ -365,7 +349,6 @@ void CBulletLine::HitCollision()
 
     //取得
     DATA EscData = GetDATA();
-
 
 
     bool bHit = false;
@@ -470,7 +453,7 @@ void CBulletLine::HitCollision()
                 D3DXVECTOR3 HitPos;
                 bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
 
-                            //リセット
+                //リセット
                 pEnemyBoss->GetLockOnUI()->SetDrawOk(false);
                 pEnemyBoss->GetLockOnUIMain()->SetDrawOk(false);
 
@@ -512,7 +495,7 @@ void CBulletLine::HitCollision()
                 D3DXVECTOR3 HitPos;
                 bHit = CMathProc::ColOBBs(m_OBB, pObb2, &HitPos);//当たり判定
 
-                            //リセット
+                //リセット
                 pEnemyBoss->GetLockOnUI()->SetDrawOk(false);
                 pEnemyBoss->GetLockOnUIMain()->SetDrawOk(false);
 

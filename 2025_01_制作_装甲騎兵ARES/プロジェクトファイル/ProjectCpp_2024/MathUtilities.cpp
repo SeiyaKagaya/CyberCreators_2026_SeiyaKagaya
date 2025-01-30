@@ -56,7 +56,7 @@ int CMathProc::dy[4] = { 1, -1, 0, 0 };
 COBB::COBB()
 {
 
-	m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);              // 位置
+	m_Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);        // 位置
 
 	m_Direct[0] = D3DXVECTOR3(1.0f, 0.0f, 0.0f);  // OBB1のX軸方向
 	m_Direct[1] = D3DXVECTOR3(0.0f, 1.0f, 0.0f);  // OBB1のY軸方向
@@ -551,6 +551,7 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 
 
 					// -Y方向の当たり判定
+					// 関数化
 					if (My_Collision_Min_Pos.x < TarGet_Collision_Max_Pos.x &&
 						My_Collision_Max_Pos.x > TarGet_Collision_Min_Pos.x &&
 						My_Collision_Min_Pos.z < TarGet_Collision_Max_Pos.z &&

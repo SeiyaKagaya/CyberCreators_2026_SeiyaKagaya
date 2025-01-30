@@ -4,8 +4,8 @@
 // Author seiya kagaya
 //
 //=========================================================
-#ifndef _SCENE_H
 
+#ifndef _SCENE_H
 #define _SCENE_H//二重インクルード防止
 
 #include "main.h"
@@ -16,7 +16,6 @@
 class CScene
 {
 public:
-
 	typedef enum
 	{
 		MODE_TITLE = 0,
@@ -26,12 +25,13 @@ public:
 	}MODE;
 
 	CScene();
-	 ~CScene();
+	~CScene();
 
-	 HRESULT Init();
-	 void Uninit();
-	 void Update();
-	 void Draw();
+	HRESULT Init();
+	void Uninit();
+	void Update();
+	void Draw();
+
 	static CScene* Create(MODE mode);//生成
 
 	void Input();//入力系
@@ -41,7 +41,4 @@ public:
 private:
 	int m_NowSetModelIndex;//設置するタイプ
 };
-
-
-
 #endif

@@ -1,47 +1,40 @@
 //=========================================================
 //
-// renderer.cpp‚Åg‚¤ŠÖ”[renderer.h]
+// renderer.cppã§ä½¿ã†é–¢æ•°[renderer.h]
 // Author seiya kagaya
 //
 //=========================================================
-#ifndef _RENDERER_H
 
-#define _RENDERER_H//“ñdƒCƒ“ƒNƒ‹[ƒh–h~
+#ifndef _RENDERER_H
+#define _RENDERER_H//äºŒé‡ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰é˜²æ­¢
 
 //#include "main.h"
 #include <Windows.h>
 #include "object.h"
-#include "d3dx9.h"//•`Êˆ—‚Ég‚¤
-
+#include "d3dx9.h"//æå†™å‡¦ç†ã«ä½¿ã†
 
 
 class CRenderer
 {
 public:
-	CRenderer();//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	~CRenderer();//ƒfƒXƒgƒ‰ƒNƒ^
+	CRenderer();//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	â€¾CRenderer();//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	HRESULT Init(HWND hWnd, BOOL bWindow);
 	void Uninit();
 	void Update();
 	void Draw();
-	LPDIRECT3DDEVICE9 GetDevice();//3DƒfƒoƒCƒX‚Ìæ“¾
-	
-
+	LPDIRECT3DDEVICE9 GetDevice();//3Dãƒ‡ãƒã‚¤ã‚¹ã®å–å¾—
 
 private:
 	LPDIRECT3D9 m_pD3D;			   //Direct3D
-	LPDIRECT3DDEVICE9 m_pD3DDevice;//Direct3DƒfƒoƒCƒX
+	LPDIRECT3DDEVICE9 m_pD3DDevice;//Direct3Dãƒ‡ãƒã‚¤ã‚¹
 
-	LPD3DXFONT m_pFont;//ƒtƒHƒ“ƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^
-
+	LPD3DXFONT m_pFont;//ãƒ•ã‚©ãƒ³ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿
 
 	CObject* m_pCObject = nullptr;
 
-	bool m_mesh;								//ƒƒCƒ„[ƒtƒŒ[ƒ€Ø‚è‘Ö‚¦—p
+	bool m_mesh;								//ãƒ¯ã‚¤ãƒ¤ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ åˆ‡ã‚Šæ›¿ãˆç”¨
 
 	void DrawFPS(void);
-
-
-
 };
 #endif
