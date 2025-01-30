@@ -3526,17 +3526,17 @@ HRESULT CGame3::Init()
 	SetData.Pos = D3DXVECTOR3(29007.5f, 130.5f, 8101.8f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(29471.1f, 130.5f, 1642.4f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	//SetData.Pos = D3DXVECTOR3(29471.1f, 130.5f, 1642.4f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(25086.5f, 130.5f, 1537.6f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	//SetData.Pos = D3DXVECTOR3(25086.5f, 130.5f, 1537.6f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(20708.3f, 130.5f, 2084.1f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	//SetData.Pos = D3DXVECTOR3(20708.3f, 130.5f, 2084.1f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(14638.1f, 130.5f, 3419.4f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	//SetData.Pos = D3DXVECTOR3(14638.1f, 130.5f, 3419.4f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
 	SetData.Pos = D3DXVECTOR3(15514.9f, 130.5f, 6690.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
@@ -3552,21 +3552,50 @@ HRESULT CGame3::Init()
 
 
 
-
-	SetData.Pos = D3DXVECTOR3(14489.6f, 867.6f, 7604.4f);
+	SetData.Pos = D3DXVECTOR3(23601.0f, 2460.0f, 24536.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(19378.0f, 2460.0f, 24421.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(24601.0f, 2460.0f, 26036.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(18378.0f, 2460.0f, 26021.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(14256.6f, 867.9f, 11816.8f);
+
+	SetData.Pos = D3DXVECTOR3(16469.0f, 1000.0f, 13094.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(15748.0f, 1000.0f, 18604.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(15714.0f, 1000.0f, 30260.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(16274.0f, 1000.0f, 36257.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(27469.0f, 1000.0f, 13094.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(27748.0f, 1000.0f, 18604.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(27714.0f, 1000.0f, 30260.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(27274.0f, 1000.0f, 36257.0f);
+	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	SetData.Pos = D3DXVECTOR3(27229.0f, 1000.0f, 31664.0f);
 	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(16592.6f, 871.9f, 3222.6f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(25563.8f, 827.2f, 3104.1f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	//SetData.Pos = D3DXVECTOR3(16489.6f, 867.6f, 7604.4f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
-	SetData.Pos = D3DXVECTOR3(29397.4f, 824.2f, 9599.4f);
-	CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+	//SetData.Pos = D3DXVECTOR3(16256.6f, 867.9f, 11816.8f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+
+	//SetData.Pos = D3DXVECTOR3(18592.6f, 871.9f, 3222.6f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+
+	//SetData.Pos = D3DXVECTOR3(23563.8f, 827.2f, 3104.1f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
+
+	//SetData.Pos = D3DXVECTOR3(24397.4f, 824.2f, 9599.4f);
+	//CObjectMotionEnemyfast::Create("DATA\\motion_Tank.txt", SetData);
 
 
 	////-----------------------------------sssss-----------------------------------------
