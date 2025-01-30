@@ -1248,7 +1248,11 @@ void CGame::Update()
 				}
 
 
+
+				//-------------------------------------------------------------------------
+				//エリアごとの処理部
 				// 配置物プライオリティの先頭を取得
+
 				CObject* pObject = CObject::GetpTop(CObject::LAYERINDEX_MOTIONPLAYER);
 
 				if (pObject != nullptr)
@@ -1275,19 +1279,105 @@ void CGame::Update()
 
 						D3DXVECTOR3 GateMin = D3DXVECTOR3(-300.0f, 780.0f, -100.0f);
 						D3DXVECTOR3 GateMax = D3DXVECTOR3(1500.0f, 2000.0f, 100.0f);
-
-						if (GateMin.x <= PlayerPos.x && GateMax.x >= PlayerPos.x)
+	
+						//エリア内にいるとき
+						if (CMathProc::Check3DBoxInPos(GateMin, GateMax, PlayerPos) == true)
 						{
-							if (GateMin.y <= PlayerPos.y && GateMax.y >= PlayerPos.y)
+							SetStayNextStage(true);//ゴール地点に到達
+						}
+
+
+						if (m_bTextSet[0] == false)
+						{
+							GateMin = D3DXVECTOR3(-24700.0f, -10000.0f, -100.0f);
+							GateMax = D3DXVECTOR3(-22700.0f, 10000.0f, 100.0f);
+
+							//エリア内にいるとき
+							if (CMathProc::Check3DBoxInPos(GateMin, GateMax, PlayerPos) == true)
 							{
-								if (GateMin.z <= PlayerPos.z && GateMax.z >= PlayerPos.z)
-								{
-									SetStayNextStage(true);
-								}
+								m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+
+								m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 24, 40, 2, "左スティックで移動\nA、LTボタンでジャンプだ！\n長押しで飛翔するぞ！", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120);
+								m_CTextWindowSub->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 410.0f, SCREEN_HEIGHT * 0.5f - 265.0f, 0.0f), 16, 40, 2, "< 司令部 >", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 230);
+								m_nTextEndCnt = 270;
+								m_bTextSet[0] = true;//1番目のコメントセットOn
+							}
+						}
+
+						if (m_bTextSet[1] == false)
+						{
+							GateMin = D3DXVECTOR3(-19100.0f, -10000.0f, -100.0f);
+							GateMax = D3DXVECTOR3(-17100.0f, 10000.0f, 100.0f);
+
+							//エリア内にいるとき
+							if (CMathProc::Check3DBoxInPos(GateMin, GateMax, PlayerPos) == true)
+							{
+								m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+
+								m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 24, 40, 2, "敵がいるぞ！\n右スティックで照準\nTRボタンで発砲だ!", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150);
+								m_CTextWindowSub->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 410.0f, SCREEN_HEIGHT * 0.5f - 265.0f, 0.0f), 16, 40, 2, "< 司令部 >", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 230);
+								m_nTextEndCnt = 300;
+								m_bTextSet[1] = true;//2番目のコメントセットOn
+							}
+						}
+
+						if (m_bTextSet[2] == false)
+						{
+							GateMin = D3DXVECTOR3(-7850.0f, -10000.0f, -100.0f);
+							GateMax = D3DXVECTOR3(-5850.0f, 10000.0f, 100.0f);
+
+							//エリア内にいるとき
+							if (CMathProc::Check3DBoxInPos(GateMin, GateMax, PlayerPos) == true)
+							{
+								m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+
+								m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 24, 40, 2, "攻撃が激しい時は\nLBボタンでガードだ!\n照準方向にバリアが出るぞ", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 150);
+								m_CTextWindowSub->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 410.0f, SCREEN_HEIGHT * 0.5f - 265.0f, 0.0f), 16, 40, 2, "< 司令部 >", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 240);
+								m_nTextEndCnt = 310;
+								m_bTextSet[2] = true;//3番目のコメントセットOn
 							}
 						}
 					}
 				}
+
+				if (m_bTextSet[0] == true)
+				{
+					if (m_bTextSetEnd[0] == false)
+					{
+						m_nTextEndCnt--;
+						if (m_nTextEndCnt <= 0)
+						{
+							m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+							m_bTextSetEnd[0] = true;
+						}
+					}
+				}
+				if (m_bTextSet[1] == true)
+				{
+					if (m_bTextSetEnd[1] == false)
+					{
+						m_nTextEndCnt--;
+						if (m_nTextEndCnt <= 0)
+						{
+							m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+							m_bTextSetEnd[1] = true;
+						}
+					}
+				}
+				if (m_bTextSet[2] == true)
+				{
+					if (m_bTextSetEnd[2] == false)
+					{
+						m_nTextEndCnt--;
+						if (m_nTextEndCnt <= 0)
+						{
+							m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+							m_bTextSetEnd[2] = true;
+						}
+					}
+				}
+				//--------------------------------------------------------------------------
+
 			}
 			else
 			{
@@ -2584,6 +2674,36 @@ void CGame2::Update()
 						}
 					}
 				}
+
+
+				//時間経過テキスト
+				//----------------------------------
+				m_nTextEndCnt++;
+
+				if (m_nTextEndCnt == 180)
+				{
+					m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+					m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 24, 40, 2, "球形バリアを解禁した。\n方向を気にせずに\nガードできるぞ！", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120);
+					m_CTextWindowSub->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 410.0f, SCREEN_HEIGHT * 0.5f - 265.0f, 0.0f), 16, 40, 2, "< 司令部 >", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 230);
+				}
+
+				if (m_nTextEndCnt == 440)
+				{
+					m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+				}
+
+				if (m_nTextEndCnt == 600)
+				{
+					m_CGameUI->SetStateChangeUi(true, CGameUI::UI_TEXTWINDOW);
+					m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 310.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 24, 40, 2, "戦闘ヘリは機敏だ\nRBボタンでミサイル発射だ\n上手く活用するんだ！", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 120);
+					m_CTextWindowSub->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 410.0f, SCREEN_HEIGHT * 0.5f - 265.0f, 0.0f), 16, 40, 2, "< 司令部 >", D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), 230);
+				}
+
+				if (m_nTextEndCnt == 900)
+				{
+					m_CGameUI->SetStateChangeUi(false, CGameUI::UI_TEXTIMAGE);
+				}
+				//----------------------------------
 			}
 			else
 			{

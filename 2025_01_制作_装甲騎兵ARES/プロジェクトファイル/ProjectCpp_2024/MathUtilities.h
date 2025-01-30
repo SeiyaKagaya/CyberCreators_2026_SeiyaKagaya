@@ -60,6 +60,9 @@ public:
 
 	//計算処理ばかりなのでクラスをあえて使わない
 
+	//エリア内に座標格納
+	static bool Check3DBoxInPos(D3DXVECTOR3 AREAMin, D3DXVECTOR3 AREAMax, D3DXVECTOR3 TargetPos);
+
 	//円形当たり判定
 	static	CollisionData CheckCircleCollision(D3DXVECTOR3 MyPos, float fMy_Radius, CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer, void* pCaller,int nID);//当たり判定結果とインデックスを返す
 

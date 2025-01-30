@@ -20,8 +20,8 @@ public:
 	const float  CAMERA_ROT_DAMPING_RATIO = 0.5f;//カメラ回転慣性
 	const float  CAMERA_ROT_SPEED = 0.015f;//カメラ旋回速度
 	const float JoyStickDiffCamera = 0.0000008f;			//スティック倍率
-	const float LOCKMISSLEDDISTANCE = 7500.0f;
-	//const float LOCKBULLETDISTANCE = 3000.0f;
+	const float LOCKMISSLEDDISTANCE = 10000.0f;
+	const float LOCKBULLETDISTANCE = 4000.0f;
 
 	CCamera();
 	~CCamera();

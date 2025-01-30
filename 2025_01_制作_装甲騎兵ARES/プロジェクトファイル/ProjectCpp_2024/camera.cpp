@@ -802,6 +802,7 @@ void CCamera::LockOnEnemy()
 
 	LPDIRECT3DDEVICE9 pDevice = pRenderer->GetDevice();
 	
+	//ソートするための構造体
 	struct LockOnTarget
 	{
 		CObject* pEnemy;
@@ -858,11 +859,7 @@ void CCamera::LockOnEnemy()
 					LockOnTarget target{ pEnemyFast, static_cast<float>(distance2D), 0 };
 					potentialTargets.push_back(target);
 				}
-				else
-				{
-				}
 			}
-
 			pObjectFast = pObjectFast->GetNext();
 		}
 	}
@@ -901,21 +898,11 @@ void CCamera::LockOnEnemy()
 
 					LockOnTarget target{ pEnemyNomal, static_cast<float>(distance2D), 1 };
 					potentialTargets.push_back(target);
-
-				}
-				else
-				{
-
 				}
 			}
-
 			pObjectNormal = pObjectNormal->GetNext();
 		}
 	}
-
-
-
-
 
 	// 通常タイプ敵を処理
 	CObject* pObjectBoss = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS);
@@ -953,18 +940,10 @@ void CCamera::LockOnEnemy()
 					potentialTargets.push_back(target);
 
 				}
-				else
-				{
-
-				}
 			}
-
 			pObjectBoss = pObjectBoss->GetNext();
 		}
 	}
-
-
-
 
 	// 通常タイプ敵を処理
 	CObject* pObjectGuard = CObject::GetpTop(CObject::LAYERINDEX_MOTIONENEMY_BOSS_GUARD);
@@ -1002,12 +981,7 @@ void CCamera::LockOnEnemy()
 					potentialTargets.push_back(target);
 
 				}
-				else
-				{
-
-				}
 			}
-
 			pObjectGuard = pObjectGuard->GetNext();
 		}
 	}
@@ -1018,19 +992,11 @@ void CCamera::LockOnEnemy()
 
 
 
-
-
-
-
-
-
-
-
-
 	// 距離順にソート
-	std::sort(potentialTargets.begin(), potentialTargets.end(), [](const LockOnTarget& a, const LockOnTarget& b) {
+	std::sort(potentialTargets.begin(), potentialTargets.end(), [](const LockOnTarget& a, const LockOnTarget& b)
+	{
 		return a.distanceSquared < b.distanceSquared;
-		});
+	});
 
 	// 8体のロックオン対象を選定
 	int lockOnCount = std::min(8, static_cast<int>(potentialTargets.size()));
@@ -1044,11 +1010,6 @@ void CCamera::LockOnEnemy()
 			{
 				//ミサイルロック
 				pEnemyFast->GetLockOnUI()->SetDrawOk(true);
-
-				//CObject::DATA SETDATA = CObject::DataInit();
-				//SETDATA.Pos = pEnemyFast->GetClassData().Pos;
-				//SETDATA.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
-				//pEnemyFast->GetLockOnUI()->SetDATA(SETDATA);
 			}
 		}
 		else if (potentialTargets[i].enemyType == 1)
@@ -1058,16 +1019,8 @@ void CCamera::LockOnEnemy()
 			{
 				//ミサイルロック
 				pEnemyNomal->GetLockOnUI()->SetDrawOk(true);
-
-				//CObject::DATA SETDATA = CObject::DataInit();
-				//SETDATA.Pos = pEnemyNomal->GetClassData().Pos;
-				//SETDATA.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
-				//pEnemyNomal->GetLockOnUI()->SetDATA(SETDATA);
-
 			}
 		}
-
-
 		else if (potentialTargets[i].enemyType == 2)
 		{
 			auto* pEnemyBoss = static_cast<CObjectMotionEnemyBoss*>(pEnemy);
@@ -1075,12 +1028,6 @@ void CCamera::LockOnEnemy()
 			{
 				//ミサイルロック
 				pEnemyBoss->GetLockOnUI()->SetDrawOk(true);
-
-				//CObject::DATA SETDATA = CObject::DataInit();
-				//SETDATA.Pos = pEnemyBoss->GetClassData().Pos;
-				//SETDATA.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
-				//pEnemyBoss->GetLockOnUI()->SetDATA(SETDATA);
-
 			}
 		}
 		else if (potentialTargets[i].enemyType == 3)
@@ -1090,16 +1037,12 @@ void CCamera::LockOnEnemy()
 			{
 				//ミサイルロック
 				pEnemyEnemyGuard->GetLockOnUI()->SetDrawOk(true);
-
-				//CObject::DATA SETDATA = CObject::DataInit();
-				//SETDATA.Pos = pEnemyEnemyGuard->GetClassData().Pos;
-				//SETDATA.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
-				//pEnemyEnemyGuard->GetLockOnUI()->SetDATA(SETDATA);
-
 			}
 		}
 	}
 
+	//LOCKBULLETDISTANCE
+	
 	// 一番中心に近い敵をバレットロックオン
 	if (lockOnCount > 0)
 	{
@@ -1107,54 +1050,37 @@ void CCamera::LockOnEnemy()
 		if (potentialTargets[0].enemyType == 0)
 		{
 			auto* pClosestEnemyFast = static_cast<CObjectMotionEnemyfast*>(pEnemy);
-			//ミサイルロック
+			//ロック
 			pClosestEnemyFast->GetLockOnUIMain()->SetDrawOk(true);
-
-	/*		CObject::DATA SETDATA = CObject::DataInit();
-			SETDATA.Pos = pClosestEnemyFast->GetClassData().Pos;
-			SETDATA.Pos.y += CObjectMotionEnemyfast::LOCKDIFF;
-			pClosestEnemyFast->GetLockOnUIMain()->SetDATA(SETDATA);*/
-
 		}
 		else if (potentialTargets[0].enemyType == 1)
 		{
 			auto* pClosestEnemyNomal = static_cast<CObjectMotionEnemyNomal*>(pEnemy);
-			//ミサイルロック
+			//ロック
 			pClosestEnemyNomal->GetLockOnUIMain()->SetDrawOk(true);
-
-		/*	CObject::DATA SETDATA = CObject::DataInit();
-			SETDATA.Pos = pClosestEnemyNomal->GetClassData().Pos;
-			SETDATA.Pos.y += CObjectMotionEnemyNomal::LOCKDIFF;
-			pClosestEnemyNomal->GetLockOnUIMain()->SetDATA(SETDATA);*/
-
 		}
-
-
 		else if (potentialTargets[0].enemyType == 2)
 		{
 			auto* pClosestEnemyBoss = static_cast<CObjectMotionEnemyBoss*>(pEnemy);
-			//ミサイルロック
+			//ロック
 			pClosestEnemyBoss->GetLockOnUIMain()->SetDrawOk(true);
-
-			/*CObject::DATA SETDATA = CObject::DataInit();
-			SETDATA.Pos = pClosestEnemyBoss->GetClassData().Pos;
-			SETDATA.Pos.y += CObjectMotionEnemyBoss::LOCKDIFF;
-			pClosestEnemyBoss->GetLockOnUIMain()->SetDATA(SETDATA);*/
-
 		}
 		else if (potentialTargets[0].enemyType == 3)
 		{
 			auto* pClosestEnemyGuard = static_cast<CObjectMotionEnemyGuard*>(pEnemy);
-			//ミサイルロック
+			//ロック
 			pClosestEnemyGuard->GetLockOnUIMain()->SetDrawOk(true);
-
-	/*		CObject::DATA SETDATA = CObject::DataInit();
-			SETDATA.Pos = pClosestEnemyGuard->GetClassData().Pos;
-			SETDATA.Pos.y += CObjectMotionEnemyGuard::LOCKDIFF;
-			pClosestEnemyGuard->GetLockOnUIMain()->SetDATA(SETDATA);*/
-
 		}
 	}
+
+
+
+
+
+
+
+
+
 }
 
 

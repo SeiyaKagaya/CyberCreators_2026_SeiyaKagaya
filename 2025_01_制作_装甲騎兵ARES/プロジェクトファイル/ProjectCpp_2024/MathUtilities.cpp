@@ -113,6 +113,26 @@ CMathProc::~CMathProc()
 {
 }
 //===================================
+// エリア内に座標がいるかどうか
+//===================================
+bool CMathProc::Check3DBoxInPos(D3DXVECTOR3 AREAMin, D3DXVECTOR3 AREAMax, D3DXVECTOR3 TargetPos)
+{
+	bool bTest = false;
+
+	if (AREAMin.x <= TargetPos.x && AREAMax.x >= TargetPos.x)
+	{
+		if (AREAMin.y <= TargetPos.y && AREAMax.y >= TargetPos.y)
+		{
+			if (AREAMin.z <= TargetPos.z && AREAMax.z >= TargetPos.z)
+			{
+				bTest = true;
+			}
+		}
+	}
+
+	return bTest;
+}
+//===================================
 //円形あたり判定
 //===================================
 CMathProc::CollisionData CMathProc::CheckCircleCollision(D3DXVECTOR3 MyPos, float fMy_Radius, CObject::OBJECTTYPE TargetType, CObject::LAYERINDEX TargetLayer, void* pCaller, int nID)

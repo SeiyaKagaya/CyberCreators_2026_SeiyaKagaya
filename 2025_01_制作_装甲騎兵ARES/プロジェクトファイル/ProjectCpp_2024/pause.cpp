@@ -428,6 +428,7 @@ void CPause::Update()
 
                     pManager->SetPauseState(false);
 
+                    m_SelectNum = 0; //値リセット
 
                     CFade* pFade = pManager->GetFade();
                     pFade->SetFade(CScene::MODE_TITLE);
@@ -458,6 +459,8 @@ void CPause::Update()
                 case 1://タイトルに戻る
 
                     pManager->SetPauseState(false);
+
+                    m_SelectNum = 0;//値リセット
 
                     CFade* pFade = pManager->GetFade();
                     pFade->SetFade(CScene::MODE_TITLE);

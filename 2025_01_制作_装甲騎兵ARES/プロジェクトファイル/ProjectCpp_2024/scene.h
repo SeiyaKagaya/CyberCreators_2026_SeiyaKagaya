@@ -113,6 +113,8 @@ protected:
 
 	int m_nCnt = 0;
 
+
+
 };
 
 
@@ -188,6 +190,9 @@ private:
 //	bool m_bNextStay = false;
 	int m_nCnt = 0;
 
+	bool m_bTextSet[3] = { false,false,false };		//テキストを描画開始か
+	bool m_bTextSetEnd[3] = { false,false,false };	//テキスト描画済みか
+	int m_nTextEndCnt = 0;
 };
 
 class CMovie :public CScene
@@ -215,6 +220,8 @@ public:
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
+
+	int m_nTextEndCnt = 0;
 };
 
 
