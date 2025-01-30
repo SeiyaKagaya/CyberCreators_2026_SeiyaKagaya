@@ -4,13 +4,12 @@
 // Author seiya kagaya
 //
 //============================================================================================
+
 #include <stdarg.h>  // 可変長引数関連のヘッダ
 #include "font.h"
 #include <stdio.h>
 #include "renderer.h"
 #include "manager.h"
-
-
 
 
 LPD3DXFONT CFont::m_pFont_Comment[MAXFONT] = {};//フォントへのポインタ
@@ -34,14 +33,9 @@ CFont::FONTINFO CFont::m_FontInfo[CFont::FONT_MAX] =
 	{"DATA\\FONT\\DS-DIGI.TTF", "DS-Digital"},
 	{"DATA\\FONT\\rycsminStencily.ttf", "略字超少明朝ステンシル風"},
 	{"DATA\\FONT\\genkai-mincho.ttf", "源界明朝"},
-	
-	
 };
 
-
 //D3DXMATRIX g_mtxWorldText;
-
-
 
 //=============================
 //コンストラクタ
@@ -49,6 +43,7 @@ CFont::FONTINFO CFont::m_FontInfo[CFont::FONT_MAX] =
 CFont::CFont()
 {
 }
+
 //=============================
 //デストラクタ
 //=============================
@@ -68,6 +63,7 @@ void CFont::InitText(void)
 	{
 		LPCSTR font_path = m_FontInfo[i].pFilePass; // ここで各フォントを使用可能に
 
+		// if
 		if (AddFontResourceEx(font_path, FR_PRIVATE, NULL) > 0)
 		{
 		}
@@ -153,10 +149,10 @@ void CFont::DrawTextSet(D3DXVECTOR3 DrawPos, int FontSize, FONT Font, D3DXCOLOR 
 
 
 	// 可変長引数の処理-------
-	va_list args;				 //可変長引数の引数リストを指定する
-	va_start(args, Text);		 //va_list を初期化--＞//可変長引数の一つ前の引数を指定
-	vsprintf_s(aStr, Text, args);//書式指定文字列を使用して可変長引数から文字列を生成するための安全な関数
-	va_end(args);				 //va_start マクロによって開始された可変長引数リストを終了するために使用
+	va_list args;				//可変長引数の引数リストを指定する
+	va_start(args, Text);			//va_list を初期化--＞//可変長引数の一つ前の引数を指定
+	vsprintf_s(aStr, Text, args);		//書式指定文字列を使用して可変長引数から文字列を生成するための安全な関数
+	va_end(args);				//va_start マクロによって開始された可変長引数リストを終了するために使用
 
 	// テキストの描画
 	m_pFont_Comment[Font]->DrawText(NULL, aStr, -1, &rect, DT_LEFT/* | DT_WORDBREAK*/, RGBA);
@@ -164,8 +160,7 @@ void CFont::DrawTextSet(D3DXVECTOR3 DrawPos, int FontSize, FONT Font, D3DXCOLOR 
 
 
 	//使用例！！
-
-	//	DrawTextSet(　座標　, フォントサイズ　, フォント名（ｈ.で作ったラベル的な）, カラー, "打ちたい文字(任意で%d.%f,%s)",(任意で変数));
+	//DrawTextSet(　座標　, フォントサイズ　, フォント名（ｈ.で作ったラベル的な）, カラー, "打ちたい文字(任意で%d.%f,%s)",(任意で変数));
 }
 
 

@@ -31,14 +31,10 @@ void UninitSound(void);
 HRESULT PlaySound(SOUND_LABEL label);
 void StopSound(SOUND_LABEL label);
 void StopSound(void);
- 
-
-
 
 class CSound
 {
 public:
-
 	typedef enum
 	{
 		SOUND_LABEL_BGM000 = 0,		// ƒ^ƒCƒgƒ‹BGM
@@ -100,8 +96,4 @@ private:
 		
 	};
 };
-
-
-
-
 #endif

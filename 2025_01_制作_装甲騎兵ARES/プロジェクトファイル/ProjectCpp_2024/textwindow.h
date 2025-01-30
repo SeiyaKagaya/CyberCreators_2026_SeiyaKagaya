@@ -1,3 +1,9 @@
+//====================================
+//
+// ヘッダコメントを書きましょう
+//
+//===================================
+
 #ifndef _TEXTWINDOW_H_
 #define _TEXTWINDOW_H_
 
@@ -23,6 +29,7 @@ public:
     bool GetCloseWindowNow() { return m_CloseWindowNow; };
 
 private:
+    // カテゴリ分け
     const char* m_pText;      // 表示する全体のテキスト
     char m_DisplayText[256];  // 現在表示中のテキスト
     int m_CurrentIndex;       // 現在表示中の位置
@@ -38,5 +45,4 @@ private:
     bool m_DelayStart = false;
     int m_TextSize = 0;
 };
-
 #endif // _TEXTWINDOW_H_

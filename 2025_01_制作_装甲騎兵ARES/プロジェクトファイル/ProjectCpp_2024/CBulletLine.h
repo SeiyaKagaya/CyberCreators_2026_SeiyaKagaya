@@ -4,8 +4,8 @@
 // Author seiya kagaya
 //
 //=========================================================
-#ifndef _BULLETLINE_H
 
+#ifndef _BULLETLINE_H
 #define _BULLETLINE_H//二重インクルード防止
 
 #include "objectX.h"
@@ -22,11 +22,11 @@ public:
 
 	CBulletLine(int nPriority = CObject::LAYERINDEX_BULLETLINE);//コンストラクタ
 	~CBulletLine() override;//デストラクタ
+
 	HRESULT Init()override;
 	void Uninit()override;
 	void Update()override;
 	void Draw()override;
-
 
 	void HitCollision();//当たり判定まとめ
 
@@ -47,7 +47,7 @@ private:
 	LPD3DXMESH m_pMesh; // Meshポインタ
 	LPD3DXBUFFER m_pBuffMat; // マテリアルへのポインタ
 	DWORD m_dwNumMat; // マテリアルの数
-		//テクスチャ読み込み
+	//テクスチャ読み込み
 	LPDIRECT3DTEXTURE9	m_ESCpTexture;
 
 	bool m_bFast;
@@ -66,19 +66,8 @@ private:
 
 	CModelParts* m_pParentParts;//親モデルへのポインタ
 
-
-
-
-
 //	int m_nLife = 300;
 	bool m_bHit = false;
-
 };
 
 #endif
-
-
-
-
-
-

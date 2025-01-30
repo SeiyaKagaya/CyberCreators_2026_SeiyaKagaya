@@ -4,17 +4,14 @@
 // Author seiya kagaya
 //
 //=========================================================
+
 #include"3D-2DhitObject.h"
 #include "manager.h"
 #include "player_motion.h"
 #include "enemy_motion_Nomal.h"
 
-
-
-
-
 //=============================
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //=============================
 CStageCollisionBox3D2D::CStageCollisionBox3D2D(int nPriority) :CObjectX(nPriority)
 {
@@ -22,14 +19,14 @@ CStageCollisionBox3D2D::CStageCollisionBox3D2D(int nPriority) :CObjectX(nPriorit
 }
 
 //=============================
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //=============================
-CStageCollisionBox3D2D::~CStageCollisionBox3D2D()
+CStageCollisionBox3D2D::â€¾CStageCollisionBox3D2D()
 {
 }
 
 //=============================
-// ‰Šú‰»
+// åˆæœŸåŒ–
 //=============================
 HRESULT CStageCollisionBox3D2D::Init()
 {
@@ -50,26 +47,20 @@ HRESULT CStageCollisionBox3D2D::Init()
     switch (m_hitbox)
     {
     case TYPE_RIGHTSLOPE:
-        aData = "DATA\\MODEL\\iwaR.x";
+        aData = "DATAÂ¥Â¥MODELÂ¥Â¥iwaR.x";
         break;
-    
     case TYPE_LEFTSLOPE:
-        aData = "DATA\\MODEL\\iwaL.x";
+        aData = "DATAÂ¥Â¥MODELÂ¥Â¥iwaL.x";
         break;
-
     case TYPE_NOMALBLOCK:
-    
-        aData = "DATA\\MODEL\\iwa.x";
+        aData = "DATAÂ¥Â¥MODELÂ¥Â¥iwa.x";
         break;
-
     case TYPE_3DSTAGE:
-
-        aData = "DATA\\MODEL\\iwa2.x";
+        aData = "DATAÂ¥Â¥MODELÂ¥Â¥iwa2.x";
         break;
-    
     }
 
-    // ƒƒbƒVƒ…‚Ì“Ç‚İ‚İ
+    // ãƒ¡ãƒƒã‚·ãƒ¥ã®èª­ã¿è¾¼ã¿
         D3DXLoadMeshFromX(aData,
             D3DXMESH_SYSTEMMEM,
             EscDevice,
@@ -79,22 +70,9 @@ HRESULT CStageCollisionBox3D2D::Init()
             &dwNumMat,
             &m_pMesh);
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
     D3DXMATERIAL* pMat = (D3DXMATERIAL*)pBuffMat->GetBufferPointer();
 
-    // ƒeƒNƒXƒ`ƒƒæ“¾
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£å–å¾—
     CAllTexture* pTexture = pManager->GetTexture();
     LPDIRECT3DTEXTURE9 m_ESCpTexture = nullptr;
 
@@ -102,14 +80,14 @@ HRESULT CStageCollisionBox3D2D::Init()
     {
         if (pMat[nCntMat].pTextureFilename != NULL)
         {
-    //        const char* TexName = "DATA\\TEXTURE\\iwa.jpg";
+    //        const char* TexName = "DATAÂ¥Â¥TEXTUREÂ¥Â¥iwa.jpg";
             int texIndex = pTexture->Regist(pMat[nCntMat].pTextureFilename, EscDevice);
 
             m_ESCpTexture = pTexture->GetAddress(texIndex);
 
             BindTexture(m_ESCpTexture, nCntMat);
 
-            // UVƒXƒP[ƒ‹‚ğ’²®iUV‚ğ2”{‚É‚·‚é‚±‚Æ‚Å600ƒTƒCƒY‚É‡‚í‚¹‚é—áj
+            // UVã‚¹ã‚±ãƒ¼ãƒ«ã‚’èª¿æ•´ï¼ˆUVã‚’2å€ã«ã™ã‚‹ã“ã¨ã§600ã‚µã‚¤ã‚ºã«åˆã‚ã›ã‚‹ä¾‹ï¼‰
             EscDevice->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
             EscDevice->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
         }
@@ -128,7 +106,7 @@ HRESULT CStageCollisionBox3D2D::Init()
 }
 
 //=============================
-// ”jŠü
+// ç ´æ£„
 //=============================
 void CStageCollisionBox3D2D::Uninit()
 {
@@ -141,7 +119,7 @@ void CStageCollisionBox3D2D::Uninit()
 }
 
 //=============================
-// XV
+// æ›´æ–°
 //=============================
 void CStageCollisionBox3D2D::Update()
 {
@@ -150,7 +128,7 @@ void CStageCollisionBox3D2D::Update()
 }
 
 //=============================
-// •`‰æ
+// æç”»
 //=============================
 void CStageCollisionBox3D2D::Draw()
 {
@@ -170,7 +148,7 @@ void CStageCollisionBox3D2D::Draw()
 }
 
 //=============================
-// ¶¬
+// ç”Ÿæˆ
 //=============================
 CStageCollisionBox3D2D* CStageCollisionBox3D2D::Create(DATA SetData, HITBOX hitman)
 {
@@ -181,45 +159,38 @@ CStageCollisionBox3D2D* CStageCollisionBox3D2D::Create(DATA SetData, HITBOX hitm
     pObstacle->SetType(hitman);
     pObstacle->Init();
 
-
-    // æ“¾
+    // å–å¾—
     DATA EscData = pObstacle->GetDATA();
-    EscData = SetData; // ˆÚ‚·
+    EscData = SetData; // ç§»ã™
 
     D3DXVECTOR3 SizeMag;
 
-    //ƒTƒCƒY•Ï“®
+    //ã‚µã‚¤ã‚ºå¤‰å‹•
     SizeMag.x = EscData.MaxLength.x / 10.0f;
     SizeMag.y = EscData.MaxLength.y / 10.0f;
     SizeMag.z = EscData.MaxLength.z / 10.0f;
 
-    pObstacle->SetSizeMag(SizeMag);//”{—¦•Ï“®
+    pObstacle->SetSizeMag(SizeMag);//å€ç‡å¤‰å‹•
 
     pObstacle->SetChangeColor(D3DXCOLOR(0.1f, 0.1f, 0.1f, 0.1f));
 
-    pObstacle->SetDATA(EscData); // Ši”[
-
-     
+    pObstacle->SetDATA(EscData); // æ ¼ç´
 
     return pObstacle;
 }
 
-
-
-
 ////=============================
-//// “–‚½‚è”»’è‚Ü‚Æ‚ß
+//// å½“ãŸã‚Šåˆ¤å®šã¾ã¨ã‚
 ////=============================
 //void CStageCollisionBox3D2D::HitCollision()
 //{
 //
 //}
 //=============================
-// ƒƒbƒVƒ…‚ÌUVÀ•W‚ğƒXƒP[ƒŠƒ“ƒO‚·‚éŠÖ”
+// ãƒ¡ãƒƒã‚·ãƒ¥ã®UVåº§æ¨™ã‚’ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã™ã‚‹é–¢æ•°
 //=============================
 LPD3DXMESH CStageCollisionBox3D2D::ScaleMeshUVs(LPD3DXMESH pMesh, float uScale, float vScale)
 {
-    
     struct Vertex
     {
         D3DXVECTOR3 position;
@@ -230,37 +201,37 @@ LPD3DXMESH CStageCollisionBox3D2D::ScaleMeshUVs(LPD3DXMESH pMesh, float uScale, 
     Vertex* pVertices = nullptr;
     pMesh->LockVertexBuffer(0, (void**)&pVertices);
 
-    // ƒƒbƒVƒ…‚Ì’¸“_”‚ğæ“¾
+    // ãƒ¡ãƒƒã‚·ãƒ¥ã®é ‚ç‚¹æ•°ã‚’å–å¾—
     DWORD numVertices = pMesh->GetNumVertices();
 
-    // Še’¸“_‚ÌUVÀ•W‚ğƒXƒP[ƒŠƒ“ƒO
+    // å„é ‚ç‚¹ã®UVåº§æ¨™ã‚’ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
     for (DWORD i = 0; i < numVertices; ++i)
     {
-        pVertices[i].u *= uScale;  // ‰¡•ûŒü‚ÌƒXƒP[ƒ‹
-        pVertices[i].v *= vScale;  // c•ûŒü‚ÌƒXƒP[ƒ‹
+        pVertices[i].u *= uScale;  // æ¨ªæ–¹å‘ã®ã‚¹ã‚±ãƒ¼ãƒ«
+        pVertices[i].v *= vScale;  // ç¸¦æ–¹å‘ã®ã‚¹ã‚±ãƒ¼ãƒ«
     }
 
-    // ƒoƒbƒtƒ@‚ğƒAƒ“ƒƒbƒN
+    // ãƒãƒƒãƒ•ã‚¡ã‚’ã‚¢ãƒ³ãƒ­ãƒƒã‚¯
     pMesh->UnlockVertexBuffer();
 
     return pMesh;
 }
 //=============================
-// ƒeƒNƒXƒ`ƒƒƒTƒCƒY
+// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚µã‚¤ã‚º
 //=============================
 void CStageCollisionBox3D2D::SetSIzeTexture(D3DXVECTOR3 TexSize)
 {
     m_TexSize = TexSize;
 }
 //=============================
-// ƒ^ƒCƒvŠi”[
+// ã‚¿ã‚¤ãƒ—æ ¼ç´
 //=============================
 void CStageCollisionBox3D2D::SetType(HITBOX type)
 {
     m_hitbox = type;
 }
 //=============================
-// ƒ^ƒCƒvæ“¾
+// ã‚¿ã‚¤ãƒ—å–å¾—
 //=============================
 CStageCollisionBox3D2D::HITBOX CStageCollisionBox3D2D::GetHitBoxType()
 {
@@ -271,7 +242,9 @@ LPD3DXMESH CStageCollisionBox3D2D::GetMesh()
 	return m_pMesh;
 }
 
-
+//=============================
+// ã‚¿ã‚¤ãƒ—å–å¾—
+//=============================
 CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D3DXVECTOR3 rayDirection, CObject::OBJECTTYPE MyType, void* pCaller)
 {
     CRenderer* pRenderer = nullptr;
@@ -295,13 +268,13 @@ CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D
     {
         bool bSkip = false;
 
-        // ƒIƒuƒWƒFƒNƒgƒ^ƒCƒv‚ÌŠm”F
+        // ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚¿ã‚¤ãƒ—ã®ç¢ºèª
         if (pObject->GetObjectType() == LAYERINDEX_HITBOX_2D3D)
         {
             CStageCollisionBox3D2D* pStageHitBox_2D3D = (CStageCollisionBox3D2D*)pObject;
             CObject::DATA EscData = pStageHitBox_2D3D->GetDATA();
 
-            // ƒXƒ[ƒvˆÈŠO‚ÌƒIƒuƒWƒFƒNƒg‚ğƒXƒLƒbƒv
+            // ã‚¹ãƒ­ãƒ¼ãƒ—ä»¥å¤–ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚¹ã‚­ãƒƒãƒ—
             if (pStageHitBox_2D3D->GetHitBoxType() != CStageCollisionBox3D2D::TYPE_LEFTSLOPE)
             {
                 bSkip = true;
@@ -312,7 +285,7 @@ CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D
                 D3DXMATRIX matWorld;
                 D3DXMatrixIdentity(&matWorld);
 
-                // ƒƒbƒVƒ…‚ÌƒXƒP[ƒŠƒ“ƒO‚Æ‰ñ“]EˆÊ’u‚ğ“K—p
+                // ãƒ¡ãƒƒã‚·ãƒ¥ã®ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã¨å›è»¢ãƒ»ä½ç½®ã‚’é©ç”¨
                 D3DXMatrixScaling(&matWorld, pStageHitBox_2D3D->GetSizeMag().x, pStageHitBox_2D3D->GetSizeMag().y, pStageHitBox_2D3D->GetSizeMag().z);
                 D3DXMatrixRotationYawPitchRoll(&matWorld, pStageHitBox_2D3D->GetDATA().rot.y, pStageHitBox_2D3D->GetDATA().rot.x, pStageHitBox_2D3D->GetDATA().rot.z);
                 D3DXMatrixTranslation(&matWorld, pStageHitBox_2D3D->GetDATA().Pos.x, pStageHitBox_2D3D->GetDATA().Pos.y, pStageHitBox_2D3D->GetDATA().Pos.z);
@@ -324,7 +297,7 @@ CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D
                     EscDevice,
                     &pMesh);
 
-                // Õ“ËŒŸo—p‚ÌÅ’Z‹——£‚ÆŒğ·î•ñ‚Ì‰Šú‰»
+                // è¡çªæ¤œå‡ºç”¨ã®æœ€çŸ­è·é›¢ã¨äº¤å·®æƒ…å ±ã®åˆæœŸåŒ–
                 float nearestDist = FLT_MAX;
                 D3DXVECTOR3 hitPoint, hitNormal;
                 BOOL hit = FALSE;
@@ -339,20 +312,20 @@ CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D
                         EscHit = true;
                         bLandingHit = true;
 
-                        // ƒ[ƒ‹ƒhs—ñ‚Ìİ’è
+                        // ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã®è¨­å®š
                         D3DXMATRIX matScale, matRot, matTrans, matWorld;
                         D3DXMatrixScaling(&matScale, pStageHitBox_2D3D->GetSizeMag().x, pStageHitBox_2D3D->GetSizeMag().y, pStageHitBox_2D3D->GetSizeMag().z);
                         D3DXMatrixRotationYawPitchRoll(&matRot, pStageHitBox_2D3D->GetDATA().rot.y, pStageHitBox_2D3D->GetDATA().rot.x, pStageHitBox_2D3D->GetDATA().rot.z);
                         D3DXMatrixTranslation(&matTrans, pStageHitBox_2D3D->GetDATA().Pos.x, pStageHitBox_2D3D->GetDATA().Pos.y, pStageHitBox_2D3D->GetDATA().Pos.z);
                         matWorld = matScale * matRot * matTrans;
 
-                        // ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Æ’¸“_ƒoƒbƒtƒ@‚©‚çŒğ·–Ê‚Ì’¸“_À•W‚ğæ“¾
+                        // ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ã¨é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‹ã‚‰äº¤å·®é¢ã®é ‚ç‚¹åº§æ¨™ã‚’å–å¾—
                         LPDIRECT3DVERTEXBUFFER9 pVertexBuffer = nullptr;
                         LPDIRECT3DINDEXBUFFER9 pIndexBuffer = nullptr;
                         pMesh->GetVertexBuffer(&pVertexBuffer);
                         pMesh->GetIndexBuffer(&pIndexBuffer);
 
-                        // OŠpŒ`‚Ì’¸“_ƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
+                        // ä¸‰è§’å½¢ã®é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—
                         WORD* pIndices = nullptr;
                         pIndexBuffer->Lock(0, 0, (void**)&pIndices, D3DLOCK_READONLY);
                         WORD i0 = pIndices[faceIndex * 3 + 0];
@@ -360,7 +333,7 @@ CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D
                         WORD i2 = pIndices[faceIndex * 3 + 2];
                         pIndexBuffer->Unlock();
 
-                        // OŠpŒ`‚Ì’¸“_À•W‚ğæ“¾
+                        // ä¸‰è§’å½¢ã®é ‚ç‚¹åº§æ¨™ã‚’å–å¾—
                         D3DXVECTOR3* pVertices = nullptr;
                         pVertexBuffer->Lock(0, 0, (void**)&pVertices, D3DLOCK_READONLY);
                         D3DXVECTOR3 v0 = pVertices[i0];
@@ -368,28 +341,28 @@ CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D
                         D3DXVECTOR3 v2 = pVertices[i2];
                         pVertexBuffer->Unlock();
 
-                        // ’¸“_À•W‚ğƒ[ƒ‹ƒhs—ñ‚Å•ÏŠ·
+                        // é ‚ç‚¹åº§æ¨™ã‚’ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã§å¤‰æ›
                         D3DXVec3TransformCoord(&v0, &v0, &matWorld);
                         D3DXVec3TransformCoord(&v1, &v1, &matWorld);
                         D3DXVec3TransformCoord(&v2, &v2, &matWorld);
 
-                        // ƒoƒŠƒ…ƒG[ƒVƒ‡ƒ“•âŠÔ‚ÅÚG“_‚ğŒvZ
+                        // ãƒãƒªãƒ¥ã‚¨ãƒ¼ã‚·ãƒ§ãƒ³è£œé–“ã§æ¥è§¦ç‚¹ã‚’è¨ˆç®—
                         D3DXVECTOR3 hitPoint = (1 - u - v) * v0 + u * v1 + v * v2;
 
-                        // –@üƒxƒNƒgƒ‹‚ğŒvZiƒNƒƒXÏ‚ğ—p‚¢‚éj
+                        // æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨ˆç®—ï¼ˆã‚¯ãƒ­ã‚¹ç©ã‚’ç”¨ã„ã‚‹ï¼‰
                         D3DXVECTOR3 edge1 = v1 - v0;
                         D3DXVECTOR3 edge2 = v2 - v0;
                         D3DXVECTOR3 hitNormal;
                         D3DXVec3Cross(&hitNormal, &edge1, &edge2);
                         D3DXVec3Normalize(&hitNormal, &hitNormal);
 
-                        // ƒqƒbƒgƒf[ƒ^‚Éî•ñ‚ğ”½‰f
+                        // ãƒ’ãƒƒãƒˆãƒ‡ãƒ¼ã‚¿ã«æƒ…å ±ã‚’åæ˜ 
                         HitData.bHit = true;
-                        HitData.HitAngle = hitNormal;  // ƒqƒbƒgŠp“x‚Æ‚µ‚Ä–@ü‚ğİ’è
-                        HitData.ResultDistance = hitPoint - pos;  // ÚG“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹
+                        HitData.HitAngle = hitNormal;  // ãƒ’ãƒƒãƒˆè§’åº¦ã¨ã—ã¦æ³•ç·šã‚’è¨­å®š
+                        HitData.ResultDistance = hitPoint - pos;  // æ¥è§¦ç‚¹ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
                         HitData.targetIndex = nIndex;
 
-                        // Œãˆ—
+                        // å¾Œå‡¦ç†
                         pVertexBuffer->Release();
                         pIndexBuffer->Release();
                     }
@@ -406,7 +379,7 @@ CMathProc::CollisionData CStageCollisionBox3D2D::bHitColision(D3DXVECTOR3 pos, D
     HitData.bHit = EscHit;
     if (bLandingHit)
     {
-        HitData.HitAngle.y = 1;  // •K—v‚É‰‚¶‚ÄY²‚ÌŠp“x‚ğC³
+        HitData.HitAngle.y = 1;  // å¿…è¦ã«å¿œã˜ã¦Yè»¸ã®è§’åº¦ã‚’ä¿®æ­£
     }
 
     return HitData;

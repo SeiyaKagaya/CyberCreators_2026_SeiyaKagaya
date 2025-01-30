@@ -1,15 +1,14 @@
 //=========================================================
 //
-// manager.cpp‚Åg‚¤ŠÖ”[manager.h]
+// manager.cppã§ä½¿ã†é–¢æ•°[manager.h]
 // Author seiya kagaya
 //
 //=========================================================
-#include "manager.h"
 
+#include "manager.h"
 
 //#include "object2D.h"
 //#include "polygon.h"
-
 //#include "player.h"
 //#include "background.h"
 //#include "enemy.h"
@@ -22,99 +21,81 @@
 //#include "block3D.h"
 #include <stdio.h>
 
-//// Ã“Iƒƒ“ƒo•Ï”
+//// é™çš„ãƒ¡ãƒ³ãƒå¤‰æ•°
 //CRenderer* CManager::m_pRenderer = nullptr;
 //CInputKeyboard* CManager::m_pKeyboard = nullptr;
-//
 //CAllTexture* CManager::m_allTexture = nullptr;
-
-
-
-
-
-
-
 CScene* CManager::m_pScene = nullptr;
-
 CAllTexture* CManager::m_allTexture = nullptr;
 
 //=============================
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //=============================
 CManager::CManager()
 {
-	m_pRenderer =nullptr;//ƒŒƒ“ƒ_ƒ‰[
+	m_pRenderer =nullptr;//ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
 	m_pScene = nullptr;
 	m_pKeyboard =nullptr;
 	m_pjoyPad = nullptr;
-	m_allTexture=nullptr;//ƒeƒNƒXƒ`ƒƒŠÇ—
-	m_pFont = nullptr;//ƒtƒHƒ“ƒg
+	m_allTexture=nullptr;//ãƒ†ã‚¯ã‚¹ãƒãƒ£ç®¡ç†
+	m_pFont = nullptr;//ãƒ•ã‚©ãƒ³ãƒˆ
 }
 //=============================
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //=============================
-CManager::~CManager()
+CManager::â€¾CManager()
 {
 }
 //=============================
-// ‰Šúİ’è
+// åˆæœŸè¨­å®š
 //=============================
 HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 {
-	//ƒŒƒ“ƒ_ƒ‰[
+	//ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
 	m_pRenderer = new CRenderer();
 	m_pRenderer->Init(hWnd,TRUE);
-
-
-	
-	
 	//	pManager->SetNewBulletAll(CNewBulletALL::Create());
-	
 
-
-	//ƒL[ƒ{[ƒh
+	//ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰
 	m_pKeyboard = new CInputKeyboard();
 	m_pKeyboard->Init(hInstance, hWnd);
 
-	//ƒpƒbƒh
+	//ãƒ‘ãƒƒãƒ‰
 	m_pjoyPad = new CInputJoyPad();
 	m_pjoyPad->Init(hInstance, hWnd);
 
-	//ƒeƒNƒXƒ`ƒƒ
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£
 	m_allTexture = new CAllTexture();
 	m_allTexture->Init();
 
-	//ƒtƒHƒ“ƒg
+	//ãƒ•ã‚©ãƒ³ãƒˆ
 	m_pFont = new CFont();
 	m_pFont->InitText();
 
-	//ƒtƒF[ƒh
+	//ãƒ•ã‚§ãƒ¼ãƒ‰
 	m_pFade = new CFade();
 	m_pFade->Init(CScene::MODE_TITLE);
 
 	
-	//Å‰‚ÌƒV[ƒ“İ’è
+	//æœ€åˆã®ã‚·ãƒ¼ãƒ³è¨­å®š
 	m_pFade->SetFade(CScene::MODE_TITLE);
-
 	
 	//	SetMode(CScene::MODE_TITLE);
 
 //	m_pScene->Init();
 
-	//ƒ‰ƒCƒg
+	//ãƒ©ã‚¤ãƒˆ
 	m_pLight = new CLight();
 	m_pLight->Init();
 
-	//ƒJƒƒ‰
+	//ã‚«ãƒ¡ãƒ©
 	m_pCamera = new CCamera();
 	m_pCamera->Init();
-
 
 	m_Pause = CPause::Create();
 	m_StayUI = CStayUI::Create();
 
 	m_Sound = CSound::Create(hWnd);
-
 
 //	m_pScore=CScore::Create();
 
@@ -127,12 +108,10 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	return S_OK;
 }
 //=============================
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 //=============================
 void CManager::Uninit()
 {
-	
-
 	m_Sound->UninitSound();
 	if (m_Sound != nullptr)
 	{
@@ -204,7 +183,7 @@ void CManager::Uninit()
 		m_pFont = nullptr;
 	}
 
-	CObject::ReleaseAll();//‘SƒIƒuƒWƒFƒNƒgŠJ•ú
+	CObject::ReleaseAll();//å…¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé–‹æ”¾
 
 	if (m_pRenderer!=nullptr)
 	{
@@ -213,9 +192,7 @@ void CManager::Uninit()
 		m_pRenderer = nullptr;
 	}
 
-
-
-	//I—¹ˆ—
+	//çµ‚äº†å‡¦ç†
 	if (m_pScene != nullptr)
 	{
 		m_pScene->Uninit();
@@ -224,7 +201,7 @@ void CManager::Uninit()
 	}
 }
 //=============================
-// XV(ƒŒƒ“ƒ_ƒ‰[)
+// æ›´æ–°(ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼)
 //=============================
 void CManager::Update()
 {
@@ -250,19 +227,11 @@ void CManager::Update()
 	//	m_pFade->SetFade(CScene::MODE_GAME3);
 	//}
 
-
-
-
-
 	m_pCamera->Update();
 	
 	m_pKeyboard->Update();
 	m_pjoyPad->Update();
-	m_pRenderer->Update();//-------------‚±‚±‚Éobject‚·‚×‚Ä‚ÌXV‚ª“ü‚Á‚Ä‚é
-	
-	
-
-	
+	m_pRenderer->Update();//-------------ã“ã“ã«objectã™ã¹ã¦ã®æ›´æ–°ãŒå…¥ã£ã¦ã‚‹
 	
 	if (GetPauseState() == false)
 	{
@@ -273,27 +242,24 @@ void CManager::Update()
 		}
 		XINPUT_STATE joykeystate;
 
-		//ƒVƒ‡ƒCƒpƒbƒg‚Ìó‘Ô‚ğæ“¾
+		//ã‚·ãƒ§ã‚¤ãƒ‘ãƒƒãƒˆã®çŠ¶æ…‹ã‚’å–å¾—
 		DWORD dwResult = XInputGetState(0, &joykeystate);
-
 
 		CScene::MODE NowState = m_pScene->GetNowScene();
 
-
 		if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3)
-		{//ƒQ[ƒ€’†
-		//PAUSE‹N“®
+		{//ã‚²ãƒ¼ãƒ ä¸­
+		//PAUSEèµ·å‹•
 			if (bGetInputState() == true)
-			{//‘€ì•û–@--true‚ÅƒRƒ“ƒgƒ[ƒ‰[
+			{//æ“ä½œæ–¹æ³•--trueã§ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
 				if (m_pjoyPad->GetTrigger(CInputJoyPad::JOYKEY_START) == true || m_pKeyboard->GetTrigger(DIK_SPACE))
 				{
 					m_Sound->PlaySound(CSound::SOUND_LABEL_SE_ENTER2);
-
 					SetPauseState(true);
 				}
 			}
 			else
-			{//ƒL[ƒ{[ƒh“ü—Í”½‰f(ˆÚ“®)
+			{//ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰å…¥åŠ›åæ˜ (ç§»å‹•)
 				if (m_pKeyboard->GetTrigger(DIK_SPACE))
 				{
 					SetPauseState(true);
@@ -316,56 +282,49 @@ void CManager::Update()
 	m_pFade->Update();
 
 	m_pLight->Update();
-
-
-	
 }
 //=============================
-// •`‰æˆ—(ƒŒƒ“ƒ_ƒ‰[)
+// æç”»å‡¦ç†(ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼)
 //=============================
 void CManager::Draw()
 {
 	m_pRenderer->Draw();
-
-	
-
 }
 //=============================
-// ƒŒƒ“ƒ_ƒ‰[æ“¾
+// ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼å–å¾—
 //=============================
 CRenderer* CManager::GetRenderer()
 {
 	return m_pRenderer;
 }
 //=============================
-// ƒL[ƒ{[ƒhæ“¾
+// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰å–å¾—
 //=============================
 CInputKeyboard* CManager::GetKeyboard()
 {
 	return m_pKeyboard;
 }
 //=============================
-// ƒL[ƒ{[ƒhæ“¾
+// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰å–å¾—
 //=============================
 CInputJoyPad* CManager::GetJoyPad()
 {
 	return m_pjoyPad;
 }
 //=============================
-// Ã“IƒCƒ“ƒXƒ^ƒ“ƒX¶¬
+// é™çš„ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ç”Ÿæˆ
 //=============================
 CManager* CManager::GetInstance()
 {
 	static CManager instance;
-
 	return &instance;
 }
 //=============================
-// ƒV[ƒ“İ’è
+// ã‚·ãƒ¼ãƒ³è¨­å®š
 //=============================
 void CManager::SetMode(CScene::MODE mode)
 {
-	//I—¹ˆ—
+	//çµ‚äº†å‡¦ç†
 	if (m_pScene != nullptr)
 	{
 		m_pScene->Uninit();
@@ -378,35 +337,39 @@ void CManager::SetMode(CScene::MODE mode)
 }
 
 //=============================
-//ƒJƒƒ‰æ“¾
+//ã‚«ãƒ¡ãƒ©å–å¾—
 //=============================
 CCamera* CManager::GetCamera()
 {
 	return m_pCamera;
 }
+
 //==========================
-//ƒ‰ƒCƒgæ“¾
+//ãƒ©ã‚¤ãƒˆå–å¾—
 //==========================
 CLight* CManager::GetLight()
 {
 	return m_pLight;
 }
+
 //==========================
-//ƒV[ƒ“æ“¾
+//ã‚·ãƒ¼ãƒ³å–å¾—
 //==========================
 CScene* CManager::GetScene()
 {
 	return m_pScene;
 }
+
 //==========================
-//ƒtƒF[ƒhæ“¾
+//ãƒ•ã‚§ãƒ¼ãƒ‰å–å¾—
 //==========================
 CFade* CManager::GetFade()
 {
 	return m_pFade;
 }
+
 ////==========================
-////ƒoƒŒƒbƒgŠÇ—æ“¾
+////ãƒãƒ¬ãƒƒãƒˆç®¡ç†å–å¾—
 ////==========================
 //CNewBulletALL* CManager::GetNewBulletAll()
 //{
@@ -420,27 +383,31 @@ CFade* CManager::GetFade()
 //{
 //	return m_pScore;
 //}
+
 //==========================
-//ƒeƒNƒXƒ`ƒƒæ“¾
+//ãƒ†ã‚¯ã‚¹ãƒãƒ£å–å¾—
 //==========================
 CAllTexture* CManager::GetTexture()
 {
 	return m_allTexture;
 }
+
 //==========================
-//“ü—Í•û®æ“¾
+//å…¥åŠ›æ–¹å¼å–å¾—
 //==========================
 bool CManager::bGetInputState()
 {
 	return m_bInputState;
 }
+
 //==========================
-//“ü—Í•û®Ši”[
+//å…¥åŠ›æ–¹å¼æ ¼ç´
 //==========================
 void CManager::bSetInputState(bool InputState)
 {
 	m_bInputState = InputState;
 }
+
 void CManager::SetPauseState(bool Pause)
 {
 	m_bStopNow = Pause;
@@ -495,5 +462,3 @@ CSound* CManager::GetSound()
 {
 	return m_Sound;
 }
-
-

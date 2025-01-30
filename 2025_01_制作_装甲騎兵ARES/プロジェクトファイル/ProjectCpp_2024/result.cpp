@@ -1,6 +1,6 @@
 //=======================================================
 //
-// result‚ÉŠÖ‚·‚éˆ—[result.cpp]
+// resultã«é–¢ã™ã‚‹å‡¦ç†[result.cpp]
 // Auther seiya kagaya
 //
 //=======================================================
@@ -13,7 +13,7 @@
 
 
 //=============================
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //=============================
 CResultUI::CResultUI(int nPriority) :CObject(nPriority)
 {
@@ -31,18 +31,18 @@ CResultUI::CResultUI(int nPriority) :CObject(nPriority)
 
 }
 //=============================
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //=============================
-CResultUI::~CResultUI()
+CResultUI::â€¾CResultUI()
 {
     Uninit();
 }
 //=============================
-// ‰Šúİ’è(’¸“_ƒoƒbƒtƒ@¶¬)
+// åˆæœŸè¨­å®š(é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ)
 //=============================
 HRESULT CResultUI::Init()
 {
-    // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ•\¦‚É‚·‚é
+    // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’è¡¨ç¤ºã«ã™ã‚‹
  //   ShowCursor(TRUE);
 
     CRenderer* pRenderer = nullptr;
@@ -68,15 +68,15 @@ HRESULT CResultUI::Init()
         }
 
 
-        // ‰Šúİ’è
+        // åˆæœŸè¨­å®š
         VERTEX_2D* pVtx;
 
 
         switch (nCnt)
         {
         case 0:
-            //ƒeƒNƒXƒ`ƒƒ‚Ì“Ç‚İ‚İ
-        //    D3DXCreateTextureFromFile(EscDevice, "DATA\\TEXTURE\\yuka.jpg", &m_pTexture[nCnt]);//’Êí
+            //ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®èª­ã¿è¾¼ã¿
+        //    D3DXCreateTextureFromFile(EscDevice, "DATAÂ¥Â¥TEXTUREÂ¥Â¥yuka.jpg", &m_pTexture[nCnt]);//é€šå¸¸æ™‚
 
 
             m_pVtxBuff[nCnt]->Lock(0, 0, (void**)&pVtx, 0);
@@ -118,11 +118,11 @@ HRESULT CResultUI::Init()
     return S_OK;
 }
 //=============================
-// I—¹ˆ—(’¸“_ƒoƒbƒtƒ@”jŠü)
+// çµ‚äº†å‡¦ç†(é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç ´æ£„)
 //=============================
 void CResultUI::Uninit()
 {
-    // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ”ñ•\¦‚É‚·‚é
+    // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’éè¡¨ç¤ºã«ã™ã‚‹
 //    ShowCursor(FALSE);
 
     for (int nCnt = 0; nCnt < TEXNUM; nCnt++)
@@ -134,13 +134,13 @@ void CResultUI::Uninit()
         }
         if (m_pTexture[nCnt] != nullptr)
         {
-            m_pTexture[nCnt]->Release();//-----ƒeƒNƒXƒ`ƒƒcpp‚Å‚â‚é‚±‚Æ
+            m_pTexture[nCnt]->Release();//-----ãƒ†ã‚¯ã‚¹ãƒãƒ£cppã§ã‚„ã‚‹ã“ã¨
             m_pTexture[nCnt] = nullptr;
         }
     }
 }
 //=============================
-// XV(’¸“_î•ñ‚ÌXV)
+// æ›´æ–°(é ‚ç‚¹æƒ…å ±ã®æ›´æ–°)
 //=============================
 void CResultUI::Update()
 {
@@ -148,7 +148,7 @@ void CResultUI::Update()
 
 }
 //=============================
-// •`‰æˆ—(POLYGON•`‰æ)
+// æç”»å‡¦ç†(POLYGONæç”»)
 //=============================
 void CResultUI::Draw()
 {
@@ -180,13 +180,13 @@ void CResultUI::Draw()
 
 
         XINPUT_STATE joykeystate;
-        //ƒVƒ‡ƒCƒpƒbƒg‚Ìó‘Ô‚ğæ“¾
+        //ã‚·ãƒ§ã‚¤ãƒ‘ãƒƒãƒˆã®çŠ¶æ…‹ã‚’å–å¾—
         DWORD dwResult = XInputGetState(0, &joykeystate);
 
 
         switch (nCnt)
         {
-        case 0://”wŒi
+        case 0://èƒŒæ™¯
             hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
             break;
 
@@ -205,7 +205,7 @@ void CResultUI::Draw()
 
 }
 //=============================
-// Object¶¬
+// Objectç”Ÿæˆ
 //=============================
 CResultUI* CResultUI::Create()
 {

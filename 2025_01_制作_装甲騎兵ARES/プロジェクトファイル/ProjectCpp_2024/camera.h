@@ -1,14 +1,14 @@
 //=========================================================
 //
-//ƒJƒƒ‰ŠÖŒWg‚¤éŒ¾‚È‚Ç[camera.h]
+//ã‚«ãƒ¡ãƒ©é–¢ä¿‚ä½¿ã†å®£è¨€ãªã©[camera.h]
 // Author seiya kagaya
 //
 //=========================================================
-#ifndef _CAMERA_H_//‚±‚Ìƒ}ƒNƒ‚ª’è‹`‚³‚ê‚Ä‚È‚©‚Á‚½‚ç
 
-//ƒ}ƒNƒ’è‹`
-#define _CAMERA_H_//“ñdƒCƒ“ƒNƒ‹[ƒh–h~‚Ìƒ}ƒNƒ’è‹`
+#ifndef _CAMERA_H_//ã“ã®ãƒã‚¯ãƒ­ãŒå®šç¾©ã•ã‚Œã¦ãªã‹ã£ãŸã‚‰
+#define _CAMERA_H_//äºŒé‡ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰é˜²æ­¢ã®ãƒã‚¯ãƒ­å®šç¾©
 
+//ãƒã‚¯ãƒ­å®šç¾©
 #include"main.h"
 #include "LockOnUI.h"
 #include "LockOnUIMain.h"
@@ -16,29 +16,29 @@ class CCamera
 {
 public:
 
-	const float CAMERA_MOVE_DAMPING_RATIO = 0.5f;//ƒJƒƒ‰ˆÚ“®Šµ«
-	const float  CAMERA_ROT_DAMPING_RATIO = 0.5f;//ƒJƒƒ‰‰ñ“]Šµ«
-	const float  CAMERA_ROT_SPEED = 0.015f;//ƒJƒƒ‰ù‰ñ‘¬“x
-	const float JoyStickDiffCamera = 0.0000008f;			//ƒXƒeƒBƒbƒN”{—¦
+	const float CAMERA_MOVE_DAMPING_RATIO = 0.5f;//ã‚«ãƒ¡ãƒ©ç§»å‹•æ…£æ€§
+	const float  CAMERA_ROT_DAMPING_RATIO = 0.5f;//ã‚«ãƒ¡ãƒ©å›è»¢æ…£æ€§
+	const float  CAMERA_ROT_SPEED = 0.015f;//ã‚«ãƒ¡ãƒ©æ—‹å›é€Ÿåº¦
+	const float JoyStickDiffCamera = 0.0000008f;	//ã‚¹ãƒ†ã‚£ãƒƒã‚¯å€ç‡
 	const float LOCKMISSLEDDISTANCE = 7500.0f;
 	//const float LOCKBULLETDISTANCE = 3000.0f;
 
 	CCamera();
-	~CCamera();
+	â€¾CCamera();
 	HRESULT Init();
 	void Uninit();
 	void Update();
 
-	void ActionUpdate2D();//2D‚É‚¨‚¯‚éAction
-	void ActionUpdate3D();//3D‚É‚¨‚¯‚éAction
+	void ActionUpdate2D();//2Dã«ãŠã‘ã‚‹Action
+	void ActionUpdate3D();//3Dã«ãŠã‘ã‚‹Action
 
-	void Input3DCamera();//3D‚Ì‚İ‚ÌƒJƒƒ‰‘€ì
+	void Input3DCamera();//3Dã®ã¿ã®ã‚«ãƒ¡ãƒ©æ“ä½œ
 
 
-	void SetCamera();//CAMERAİ’è
-	void SetShake(int nShakeFlame, float fMagnitude);//ƒJƒƒ‰—h‚ê
+	void SetCamera();//CAMERAè¨­å®š
+	void SetShake(int nShakeFlame, float fMagnitude);//ã‚«ãƒ¡ãƒ©æºã‚Œ
 
-	D3DXMATRIX GetViewMatrix() const { return m_mtxView; }//‚±‚±‚Å‚à‚©‚¯‚é‚ç‚µ‚¢
+	D3DXMATRIX GetViewMatrix() const { return m_mtxView; }//ã“ã“ã§ã‚‚ã‹ã‘ã‚‹ã‚‰ã—ã„
 	D3DXMATRIX GetProjectionMatrix() const { return m_mtxProjection; }
 	static void SetScreenSize(float screenWidth, float screenHeight);
 
@@ -48,15 +48,15 @@ public:
 	static D3DXVECTOR3 GetCameraPos() { return CameraPos; };
 
 
-	void LockOnEnemy();//ƒƒbƒNƒIƒ““Gˆ—
-	void SetAllEnemyScreenPos();//ƒXƒNƒŠ[ƒ“À•W•ÏŠ·ƒZƒbƒg
+	void LockOnEnemy();//ãƒ­ãƒƒã‚¯ã‚ªãƒ³æ•µå‡¦ç†
+	void SetAllEnemyScreenPos();//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™å¤‰æ›ã‚»ãƒƒãƒˆ
 
-	void LockOnEnemy2D();//2D—pƒƒbƒNƒIƒ“
+	void LockOnEnemy2D();//2Dç”¨ãƒ­ãƒƒã‚¯ã‚ªãƒ³
 
-	// ƒXƒNƒŠ[ƒ“À•W‚ª‰æ–Ê“à‚É‚ ‚é‚©‚Ç‚¤‚©‚ğ”»’è
+	// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ãŒç”»é¢å†…ã«ã‚ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®š
 	bool IsInScreen(D3DXVECTOR3 screenPosition);
 
-	// ƒJƒƒ‰‚ª‘ÎÛ‚Ì•û‚ğŒü‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’è
+	// ã‚«ãƒ¡ãƒ©ãŒå¯¾è±¡ã®æ–¹ã‚’å‘ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®š
 	bool IsFacingCamera(D3DXVECTOR3 enemyPosition);
 
 	bool IntersectRayAABB(const D3DXVECTOR3& rayStart, const D3DXVECTOR3& rayDir, const D3DXVECTOR3& boxMin, const D3DXVECTOR3& boxMax, float& tMin, float& tMax);
@@ -64,16 +64,16 @@ public:
 	static void ResetCount() { m_nCntFrame = 0;};
 
 private:
-	D3DXVECTOR3 m_posV;//‹“_
-	D3DXVECTOR3 m_posR;//’‹“_
+	D3DXVECTOR3 m_posV;//è¦–ç‚¹
+	D3DXVECTOR3 m_posR;//æ³¨è¦–ç‚¹
 	D3DXVECTOR3 m_Move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	D3DXVECTOR3 m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	D3DXVECTOR3 m_rotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-	D3DXVECTOR3 m_vecU;//ã•ûŒüƒxƒNƒgƒ‹
-	D3DXMATRIX m_mtxProjection;//ƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒbƒNƒX
-	D3DXMATRIX m_mtxView;		//ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒX
+	D3DXVECTOR3 m_vecU;//ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
+	D3DXMATRIX m_mtxProjection;//ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒˆãƒªãƒƒã‚¯ã‚¹
+	D3DXMATRIX m_mtxView;		//ãƒ“ãƒ¥ãƒ¼ãƒãƒˆãƒªãƒƒã‚¯ã‚¹
 	int m_nShakeFlame = 0;
 	float m_fMag = 0.0f;
 
@@ -86,18 +86,12 @@ private:
 
 	static D3DXVECTOR3 CameraPos;
 
-	////ˆÈ‰º"Šî–{‚Í3D"‚Ì‚İ
-	//CLockOnUI* m_LockOnUI[8] ={};	       //--ƒƒbƒNƒIƒ“
-	//CLockOnUIMain* m_LockOnUI_Main;//---ƒoƒŒƒbƒgƒƒbƒNƒIƒ“
+	////ä»¥ä¸‹"åŸºæœ¬ã¯3D"ã®ã¿
+	//CLockOnUI* m_LockOnUI[8] ={};	       //--ãƒ­ãƒƒã‚¯ã‚ªãƒ³
+	//CLockOnUIMain* m_LockOnUI_Main;//---ãƒãƒ¬ãƒƒãƒˆãƒ­ãƒƒã‚¯ã‚ªãƒ³
 	
 
 
 	float DebuCameraLength = 300.0f;
 };
-
-
-
-
-
-
 #endif

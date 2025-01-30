@@ -174,7 +174,6 @@ void CObjectMotionEnemyBoss::Update()
 						{ // 先頭がない==プライオリティまるっとない
 							pMissile->KillMissileTarget(this);
 						}
-
 					}
 
 					CScore::AddScore(CScore::TANK_SCORE1);
@@ -247,11 +246,6 @@ void CObjectMotionEnemyBoss::Update()
 
 
 	}
-	
-
-
-
-
 }
 
 //=============================
@@ -279,7 +273,6 @@ CObjectMotionEnemyBoss* CObjectMotionEnemyBoss::Create(std::string pfilePass, DA
 	SetData.MaxLength = D3DXVECTOR3((float)(CObjectMotionEnemyBase::AABB_BOX), (float)(CObjectMotionEnemyBase::AABB_BOX) * 2.0f, (float)(CObjectMotionEnemyBase::AABB_BOX));
 	SetData.MinLength = D3DXVECTOR3(-(float)(CObjectMotionEnemyBase::AABB_BOX), 0.0f, -(float)(CObjectMotionEnemyBase::AABB_BOX));
 	pObstacle->SetClassData(SetData);
-
 
 	return pObstacle;
 }
@@ -410,19 +403,16 @@ void CObjectMotionEnemyBoss::Attack()
 			}
 		}
 
-
 		CObjectShotFire::Create(SETDATA.Pos);
 		CObjectShotFire::Create(SETDATA.Pos);
 
 		m_nBulletDelay = BULLETSHOTDELAY;
-
 	}
 	else
 	{
 		m_nBulletDelay--;
 	}
 }
-
 
 //==================================
 // 砲塔旋回
@@ -474,5 +464,4 @@ void CObjectMotionEnemyBoss::TurretRotation(D3DXVECTOR3 ShotPos, D3DXVECTOR3 Tar
 
 	// 変更データを反映
 	SetChangeDataInObjectMotion(ChangeData);
-
 }

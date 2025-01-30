@@ -1,6 +1,6 @@
 //=======================================================
 //
-// Game_UI‚ÉŠÖ‚·‚éˆ—[Game_UI.cpp]
+// Game_UIã«é–¢ã™ã‚‹å‡¦ç†[Game_UI.cpp]
 // Auther seiya kagaya
 //
 //=======================================================
@@ -14,14 +14,14 @@
 
 
 
-////‚ ‚â‚µ‚¢cpp‚Ì‚¹‚ñ‚Æ‚¤‚É‚±‚¢‚Â‚ğ
+////ã‚ã‚„ã—ã„cppã®ã›ã‚“ã¨ã†ã«ã“ã„ã¤ã‚’
 //#define _CRTDBG_MAP_ALLOC
 //#include <stdlib.h>
 //#include <crtdbg.h>
 //#define new ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
 
 //=============================
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //=============================
 CLongPush::CLongPush(int nPriority) :CObject(nPriority)
 {
@@ -40,20 +40,21 @@ CLongPush::CLongPush(int nPriority) :CObject(nPriority)
 
     SetObjectType(OBJECT_LONGPUSH);
 }
+
 //=============================
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 //=============================
-CLongPush::~CLongPush()
+CLongPush::â€¾CLongPush()
 {
     Uninit();
 }
 
 //=============================
-// ‰Šúİ’è(’¸“_ƒoƒbƒtƒ@¶¬)
+// åˆæœŸè¨­å®š(é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ)
 //=============================
 HRESULT CLongPush::Init()
 {
-    // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ•\¦‚É‚·‚é
+    // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’è¡¨ç¤ºã«ã™ã‚‹
  //   ShowCursor(TRUE);
 
     CRenderer* pRenderer = nullptr;
@@ -77,7 +78,7 @@ HRESULT CLongPush::Init()
         {
             return E_FAIL;
         }
-        // ‰Šúİ’è
+        // åˆæœŸè¨­å®š
         VERTEX_2D* pVtx;
 
         m_pVtxBuff[nCnt]->Lock(0, 0, (void**)&pVtx, 0);
@@ -102,7 +103,7 @@ HRESULT CLongPush::Init()
         switch (nCnt)
         {
         case UI_BOOST_BACK:
-            //ƒ}ƒbƒv”wŒi
+            //ãƒãƒƒãƒ—èƒŒæ™¯
             m_UiType[UI_BOOST_BACK] = UI_BOOST_BACK;
 
             m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.75f, SCREEN_HEIGHT - 40.0f, 0.0f);
@@ -116,12 +117,11 @@ HRESULT CLongPush::Init()
 
         case UI_BOOST_MAIN:
 
-            //‘€ìUI
+            //æ“ä½œUI
             m_UiType[UI_BOOST_MAIN] = UI_BOOST_MAIN;
 
             m_Pos[nCnt] = D3DXVECTOR3(SCREEN_WIDTH * 0.75f + 2.5f, SCREEN_HEIGHT - 40.0f, 0.0f);
 
-         
 
             pVtx[0].pos = D3DXVECTOR3(m_Pos[nCnt].x, m_Pos[nCnt].y - 10.0f, 0.0f);
             pVtx[1].pos = D3DXVECTOR3(m_Pos[nCnt].x + m_fLength[nCnt], m_Pos[nCnt].y - 10.0f, 0.0f);
@@ -135,16 +135,15 @@ HRESULT CLongPush::Init()
         m_pVtxBuff[nCnt]->Unlock();
 
     }
-    
 
     return S_OK;
 }
 //=============================
-// I—¹ˆ—(’¸“_ƒoƒbƒtƒ@”jŠü)
+// çµ‚äº†å‡¦ç†(é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç ´æ£„)
 //=============================
 void CLongPush::Uninit()
 {
-    // ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ğ”ñ•\¦‚É‚·‚é
+    // ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã‚’éè¡¨ç¤ºã«ã™ã‚‹
 //    ShowCursor(FALSE);
 
     for (int nCnt = 0; nCnt < UI_MAX; nCnt++)
@@ -157,7 +156,7 @@ void CLongPush::Uninit()
     }
 }
 //=============================
-// XV(’¸“_î•ñ‚ÌXV)
+// æ›´æ–°(é ‚ç‚¹æƒ…å ±ã®æ›´æ–°)
 //=============================
 void CLongPush::Update()
 {
@@ -173,18 +172,18 @@ void CLongPush::Update()
 
     for (int i = 0; i < UI_MAX; i++)
     {
-        InputpVtx(i);//ƒ}ƒbƒv•`‰æSystem‚Ì‚İ
+        InputpVtx(i);//ãƒãƒƒãƒ—æç”»Systemã®ã¿
     } 
 }
 //=============================
-// •`‰æˆ—(POLYGON•`‰æ)
+// æç”»å‡¦ç†(POLYGONæç”»)
 //=============================
 void CLongPush::Draw()
 {
     CScene::MODE NowState = CScene::GetNowScene();
 
     if (NowState != CScene::MODE_TITLE && NowState != CScene::MODE_RESULT)
-    {//ƒ^ƒCƒgƒ‹
+    {//ã‚¿ã‚¤ãƒˆãƒ«
 
         CRenderer* pRenderer = nullptr;
 
@@ -204,13 +203,13 @@ void CLongPush::Draw()
             HRESULT hr = {};
 
             XINPUT_STATE joykeystate;
-            //ƒVƒ‡ƒCƒpƒbƒg‚Ìó‘Ô‚ğæ“¾
+            //ã‚·ãƒ§ã‚¤ãƒ‘ãƒƒãƒˆã®çŠ¶æ…‹ã‚’å–å¾—
             DWORD dwResult = XInputGetState(0, &joykeystate);
 
             hr = EscDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
         }
     
-        const char* aData = "A’·‰Ÿ‚µ‚ÅƒXƒLƒbƒv";
+        const char* aData = "Aé•·æŠ¼ã—ã§ã‚¹ã‚­ãƒƒãƒ—";
         
         if (m_nCnt <= 0)
         {
@@ -226,7 +225,7 @@ void CLongPush::Draw()
 
 }
 //=============================
-// Object¶¬
+// Objectç”Ÿæˆ
 //=============================
 CLongPush* CLongPush::Create()
 {
@@ -236,14 +235,14 @@ CLongPush* CLongPush::Create()
     return pObject;
 }
 //=============================
-// ’¸“_î•ñ
+// é ‚ç‚¹æƒ…å ±
 //=============================
 void CLongPush::InputpVtx(int nCnt)
 {
     int nEscRGBA[4] = { 0,0,0,0 };
-    float EscLength = 0.0f;//ƒQ[ƒW‚Ì‚İg—p
+    float EscLength = 0.0f;//ã‚²ãƒ¼ã‚¸ã®ã¿ä½¿ç”¨
 
-    // ‰Šúİ’è
+    // åˆæœŸè¨­å®š
     VERTEX_2D* pVtx;
 
  //   m_nCnt++;
@@ -302,7 +301,7 @@ void CLongPush::InputpVtx(int nCnt)
     m_pVtxBuff[nCnt]->Unlock();
 }
 //=============================
-// ‰ÁZˆ—
+// åŠ ç®—å‡¦ç†
 //=============================
 void CLongPush::AddCnt()
 {
@@ -314,7 +313,7 @@ void CLongPush::AddCnt()
     }
 }
 //=============================
-// Œ¸Zˆ—
+// æ¸›ç®—å‡¦ç†
 //=============================
 void CLongPush::SubCnt()
 {

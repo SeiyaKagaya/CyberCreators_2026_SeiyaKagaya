@@ -1,12 +1,12 @@
 //=========================================================
 //
-// manager.cpp‚Åg‚¤ŠÖ”[manager.h]
+// manager.cppã§ä½¿ã†é–¢æ•°[manager.h]
 // Author seiya kagaya
 //
 //=========================================================
-#ifndef _MANAGER_H
 
-#define _MANAGER_H//“ñdƒCƒ“ƒNƒ‹[ƒh–h~
+#ifndef _MANAGER_H
+#define _MANAGER_H//äºŒé‡ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰é˜²æ­¢
 
 //#include "main.h"
 #include "renderer.h"
@@ -23,7 +23,6 @@
 #include "sound.h"
 #include "newbullet.h"
 
-
 #define _CRTDBG_MAP_ALLOC
 #include <stdlib.h>
 #include <crtdbg.h>
@@ -33,16 +32,16 @@
 class CManager
 {
 private:
-	CManager();//ƒRƒ“ƒXƒgƒ‰ƒNƒ^//ŠO•”¶¬•s‰Â‚É
+	CManager();//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿//å¤–éƒ¨ç”Ÿæˆä¸å¯ã«
 public:
-	~CManager();//ƒfƒXƒgƒ‰ƒNƒ^
+	â€¾CManager();//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);
 	void Uninit();
 	void Update();
 	void Draw();
 
 	static CManager* GetInstance();
-	static void SetMode(CScene::MODE mode);//ƒV[ƒ“İ’è
+	static void SetMode(CScene::MODE mode);//ã‚·ãƒ¼ãƒ³è¨­å®š
 
 	CRenderer* GetRenderer();
 	CInputKeyboard* GetKeyboard();
@@ -61,7 +60,7 @@ public:
 
 	static CAllTexture* GetTexture();
 	
-	//“ü—Í•û®æ“¾
+	//å…¥åŠ›æ–¹å¼å–å¾—
 	bool bGetInputState();
 
 	void bSetInputState(bool InputState);
@@ -72,14 +71,11 @@ public:
 	void SetStayState(bool Stay);
 	bool GetStayState();
 
-
 	void SetStayStatusState(bool Stay);
 	bool GetStayStatusState();
 
 	void SetEndStatusState(bool Stay);
 	bool GetEndStatusState();
-
-
 
 	CPause* GetPause();
 	CStayUI* GetStayUI();
@@ -87,24 +83,23 @@ public:
 
 //	CNewBullet* GetNewBullet();
 
-	//3Dƒ‚[ƒh‚©‚Ç‚¤‚©
+	//3Dãƒ¢ãƒ¼ãƒ‰ã‹ã©ã†ã‹
 	void SetbNow3DMode(bool Set) { m_bNow3DMode = Set; };
 	bool GetbNow3DMode() { return m_bNow3DMode; };
 
 private:
+	static CScene* m_pScene;//ã‚·ãƒ¼ãƒ³
 
-	static CScene* m_pScene;//ƒV[ƒ“
-
-	CRenderer* m_pRenderer;//ƒŒƒ“ƒ_ƒ‰[
+	CRenderer* m_pRenderer;//ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
 	CInputKeyboard* m_pKeyboard;
 	CInputJoyPad* m_pjoyPad;
 
-	static CAllTexture* m_allTexture;//ƒeƒNƒXƒ`ƒƒŠÇ—
+	static CAllTexture* m_allTexture;//ãƒ†ã‚¯ã‚¹ãƒãƒ£ç®¡ç†
 
-	CFont* m_pFont;//ƒtƒHƒ“ƒgŠÇ—
+	CFont* m_pFont;//ãƒ•ã‚©ãƒ³ãƒˆç®¡ç†
 
-	CCamera* m_pCamera;//ƒrƒ…[î•ñ
-	CLight* m_pLight;//ƒ‰ƒCƒgî•ñ
+	CCamera* m_pCamera;//ãƒ“ãƒ¥ãƒ¼æƒ…å ±
+	CLight* m_pLight;//ãƒ©ã‚¤ãƒˆæƒ…å ±
 	CFade* m_pFade;
 
 	CPause* m_Pause;
@@ -117,20 +112,19 @@ private:
 
 //	CNewBullet* m_NewBullet;
 
-	//“ü—Íƒ^ƒCƒvFalse‚ÅƒL[ƒ}ƒE
+	//å…¥åŠ›ã‚¿ã‚¤ãƒ—Falseã§ã‚­ãƒ¼ãƒã‚¦
 	bool m_bInputState = true;
 
 	bool m_bStopNow = false;
 
 	bool m_bStaybool = false;
-	
 
-	//false‚Å”s‘Ş/true‚ÅŸ—˜
+	//falseã§æ•—é€€/trueã§å‹åˆ©
 	bool m_bStayStatus = false;
 
-	//true‚ÅŸ—˜
+	//trueã§å‹åˆ©
 	bool m_EndState = false;
 
-	bool m_bNow3DMode = false;//Œ»İ3Dƒ‚[ƒh‚©
+	bool m_bNow3DMode = false;//ç¾åœ¨3Dãƒ¢ãƒ¼ãƒ‰ã‹
 };
 #endif
