@@ -18,6 +18,7 @@
 #include "ShotFire.h"
 #include "missile.h"
 #include "enemy_motion_guard.h"
+#include "enemy_motion_Nomal.h"
 //#include "movesmoke.h"
 
 int CObjectMotionEnemyBoss::m_nNumENemyAll = 0;
@@ -114,7 +115,12 @@ void CObjectMotionEnemyBoss::Update()
 			classData.move.y = 0.0f;
 			classData.move.z = 8.8f;
 
-
+			m_nEnemyCreateCnt++;
+			if (m_nEnemyCreateCnt > EMNEMY_DROPCOUNT)
+			{
+				m_nEnemyCreateCnt = 0;
+				CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", GetClassData());
+			}
 
 
 			//------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -216,9 +222,9 @@ void CObjectMotionEnemyBoss::Update()
 
 			CObjectMotion::Update();//------------------XV
 
-			nMovieCnt++;
+			m_nMovieCnt++;
 
-			if (nMovieCnt > 1200)
+			if (m_nMovieCnt > 1200)
 			{
 				m_pShield->setDrawOk(true);
 			}

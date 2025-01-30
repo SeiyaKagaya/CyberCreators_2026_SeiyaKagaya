@@ -103,6 +103,12 @@ void CObjectMotionEnemyNomal::Update()
 
 			DATA classData = GetClassData();
 
+			if (classData.Pos.y < 0)
+			{
+				classData.Pos.y = 0;
+			}
+
+
 
 			//相手、自分のGRID番号がかわったか
 			bool bChange = false;
@@ -209,6 +215,69 @@ void CObjectMotionEnemyNomal::Update()
 			//	classData.move.x = 0.0f;
 			//	classData.move.z = 0.0f;
 			//}
+
+			m_nMoveCnt++;
+			if (MAXMOVECNT <= m_nMoveCnt)
+			{
+				m_nMoveCnt = 0;
+
+				int fRandomShot = ((rand() % 100) - 50);//(50~-50)までの乱数
+
+
+				if (classData.Pos.y < 800)
+				{//高度600以下
+											//行動方向の選別と倍率
+					float fRandom = (float)((rand() % 4) - 2);//(2~-2)までの乱数
+					float fRandom3 = (float)((rand() % 4) - 2);//(2~-2)までの乱数
+					
+					float fRandomY = fRandom;//Y方向用
+					if (fRandom < 0)
+					{//マイナス方向の時
+						fRandomY *= -1.6f;
+					}
+
+					float fRando2 = (float)((rand() % 10) - 5);//(5~-5)までの乱数
+
+					fRando2 *= 0.2f;//少し小さく
+
+
+
+
+					classData.move = D3DXVECTOR3(AIRMOVESPEED * fRandom * fRando2, AIRMOVESPEED * 4.0f, AIRMOVESPEED * fRandom * fRandom3);
+				}
+				else
+				{
+					//行動方向の選別と倍率
+					float fRandom = (float)((rand() % 4) - 2);//(2~-2)までの乱数
+					float fRandom3 = (float)((rand() % 4) - 2);//(2~-2)までの乱数
+
+					float	fRandomY = fRandom;//Y方向用
+					if (fRandom < 0)
+					{//マイナス方向の時
+						fRandomY *= -1.2f;
+					}
+
+					float fRando2 = (float)((rand() % 10) - 5);//(5~-5)までの乱数
+
+					fRando2 *= 0.2f;//少し小さく
+
+
+
+
+					classData.move = D3DXVECTOR3(AIRMOVESPEED * fRandom * fRando2, AIRMOVESPEED * fRandomY, AIRMOVESPEED * fRandom * fRandom3);
+				}
+				SetClassData(classData);
+			}
+			else
+			{
+				//重力
+				classData.move.y -= GRAVITY * 0.1f;
+			}
+
+
+
+
+
 
 
 

@@ -34,6 +34,7 @@ public:
 	static const int  reflectNum = 0;
 	static const int DAMAGEFRAME = 3;
 	static const int LOCKDIFF = 200;
+	static const int EMNEMY_DROPCOUNT = 300;
 
 	CObjectMotionEnemyBoss(int nPriority = CObject::LAYERINDEX_MOTIONENEMY_BOSS);//コンストラクタ
 
@@ -103,8 +104,11 @@ private:
 
 	CShield* m_pShield;//シールドを格納
 
-	int nMovieCnt = 0;
+	int m_nMovieCnt = 0;
 	static int m_nNumENemyAll;//敵総数
+
+	int m_nEnemyCreateCnt = 0;
+
 };
 
 #endif

@@ -34,6 +34,9 @@ public:
 	 static const int  reflectNum = 0;
 	 static const int DAMAGEFRAME = 3;
 	 static const int LOCKDIFF = 40;
+	 static const int AIRMOVESPEED = 10;
+	 static const int MAXMOVECNT = 85;
+	 static const int GRAVITY = 3;				//重力
 
 	CObjectMotionEnemyNomal(int nPriority = CObject::LAYERINDEX_MOTIONENEMY_NOMAL);//コンストラクタ
 
@@ -112,6 +115,8 @@ private:
 
 	bool m_bDamageRedNow = false;
 	int m_nDamageFrameCnt = 0;
+
+	int nMoveCnt = 0;
 };
 
 #endif
