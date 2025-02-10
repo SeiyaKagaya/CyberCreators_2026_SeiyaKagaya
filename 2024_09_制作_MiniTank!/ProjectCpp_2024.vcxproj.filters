@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT">
+      <UniqueIdentifier>{7230ed9e-e9f2-485e-b0e1-a66a9948c27d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D">
+      <UniqueIdentifier>{68f722cc-8403-4540-8f53-2be7c1ca8244}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM">
+      <UniqueIdentifier>{a6d0b208-64d0-47f1-8377-978bf55ec803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\MANAGER">
+      <UniqueIdentifier>{71523d86-9989-4c49-ae8c-5c55c451fe93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\BG">
+      <UniqueIdentifier>{21dc1dd8-f783-4c5c-89bc-089f36e592b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\ALL_TEXTURE">
+      <UniqueIdentifier>{0782a2c6-9714-42eb-8bc6-fe886d940967}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\FONT">
+      <UniqueIdentifier>{d6566b43-94ec-46d6-baa2-d749bb02c489}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_3D">
+      <UniqueIdentifier>{e8a96119-1422-438c-ad7e-7a6529ccb55c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\-------MAIN----------">
+      <UniqueIdentifier>{79117254-d93c-4904-932a-89b0ddc2528b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\3D---SYSTEM">
+      <UniqueIdentifier>{8b90d610-9a3b-445b-823d-6aadf1a2ad0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\3D---SYSTEM\LIGHT">
+      <UniqueIdentifier>{2ebf1a3a-877b-49be-8c30-89b2cb8d863e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\3D---SYSTEM\CAMERA">
+      <UniqueIdentifier>{1206e496-e817-420b-8f80-77fe9296ca53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\-------MAIN----------\FADE">
+      <UniqueIdentifier>{2b8edc7b-c4e3-46ee-838b-c70677a603d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---">
+      <UniqueIdentifier>{b5b7adce-9ad8-42e0-ac31-c09ae089c2c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\PARTICLE">
+      <UniqueIdentifier>{bf49c61b-eb8f-4992-86ae-5f4b94e54fac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\EXPLOSION">
+      <UniqueIdentifier>{9bc08e07-2595-45d2-b21d-41ed86b6165c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--">
+      <UniqueIdentifier>{6f388ca7-643e-4402-b0d9-a6ee840e3dbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--\BLOCK">
+      <UniqueIdentifier>{23b1de09-18e1-4d14-a798-7ed85d3fb9b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--\BULLET">
+      <UniqueIdentifier>{4803db56-8c78-47aa-910f-e10eb563205c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--\ENEMY">
+      <UniqueIdentifier>{a356b408-af05-4486-8db5-09e75563654a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--\ITEM">
+      <UniqueIdentifier>{a4f9eb2e-7848-452c-8cc7-eda273935a88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--\POLYGON">
+      <UniqueIdentifier>{7757941b-d036-49a4-9d43-00695ea238c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\FONT\---UI---">
+      <UniqueIdentifier>{bb9a2e4e-0728-42e8-b9f3-6e4c255fd2ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\FONT\---UI---\SCORE">
+      <UniqueIdentifier>{08c21b1f-5d18-4dec-b317-79b84507a00a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\FONT\---UI---\TIME">
+      <UniqueIdentifier>{e0c7a4d8-688f-429a-8a04-366fbd284885}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_3D\LINE">
+      <UniqueIdentifier>{d44d692a-716b-43c1-9050-3cc9f1ecd6c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\リソース ファイル\ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\リソース ファイル\ヘッダー ファイル\封印中">
+      <UniqueIdentifier>{1e6750ac-3868-46bd-9728-da74190f6073}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\//SCENE//">
+      <UniqueIdentifier>{f4080c23-4064-45b4-b3f9-b6ae56eb28fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_3D\TANKFOOTPRINTS">
+      <UniqueIdentifier>{f120f49e-2294-4eb1-97ac-9e745bc41a00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X">
+      <UniqueIdentifier>{8a908955-0534-4df9-903a-5a2968e5ce09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\Player3D">
+      <UniqueIdentifier>{41e42398-fec4-477f-8c66-5b42bcb74c52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\BLOCK3D">
+      <UniqueIdentifier>{130df296-582b-451a-bc8c-f315156df40b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\OBSTACLE_SET">
+      <UniqueIdentifier>{5078bd42-0679-4d01-b6c2-7c66803a7535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\StageCollisionBox">
+      <UniqueIdentifier>{763c007c-502c-42b8-8c50-50594328cda1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION">
+      <UniqueIdentifier>{6144d29b-ebb9-4553-9567-2da0b31b4068}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\PLAYER_MOTION">
+      <UniqueIdentifier>{21c19b49-526e-463c-9ff8-b6ab33339731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE">
+      <UniqueIdentifier>{cbb59b0e-8aa4-4387-9119-2243cf9c3704}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE\ENEMY_NOMAL">
+      <UniqueIdentifier>{b59a4c03-4f61-42e9-8c4d-3a2af899ce2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\MODEL_PARTS">
+      <UniqueIdentifier>{9b8680a7-737a-4f9d-8509-209d3ad05d94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD">
+      <UniqueIdentifier>{78bdc36a-854e-455b-9114-36cde04c828a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\SMOKE">
+      <UniqueIdentifier>{5cd3442f-6d7e-4cbf-8727-be55836cdc29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\PARTICLE">
+      <UniqueIdentifier>{c03d003e-6739-4de1-a8e9-9e2ea49c98ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\SHOTFIRE">
+      <UniqueIdentifier>{2917d4f2-ced0-4c3d-9053-2f5f1c7ea689}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\REFLECT_EFECT">
+      <UniqueIdentifier>{fa2542db-c7bf-4e7a-a512-df47ea38bfa3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\EXPLOSION_BILL">
+      <UniqueIdentifier>{44009b67-a028-4af7-9be9-c88e343567b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE\ENEMY_FAST">
+      <UniqueIdentifier>{ebcbfac2-4eba-4b79-92da-cedf6909673e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\TARGET_UI">
+      <UniqueIdentifier>{e9f10ca0-429a-4545-a236-1fa399e3dee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\-------MAIN----------\INPUT">
+      <UniqueIdentifier>{a939d433-71c0-4a23-a255-7cab06786340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\LineInter_UI">
+      <UniqueIdentifier>{ae87a0d4-bc98-44c6-9205-f3802e753d23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\HPLETTER">
+      <UniqueIdentifier>{c2398f98-b2ed-40d4-aa65-6043ed97395c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\HP_Gauge">
+      <UniqueIdentifier>{86dbbfa2-54fd-4154-a6df-e0a3e6fbe84a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\EXPLOSION3D">
+      <UniqueIdentifier>{dc18373c-0b3b-4e68-ab76-4b487a6df206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\//SCENE//\RESULT">
+      <UniqueIdentifier>{55135ce7-2461-4739-b7c1-7070eb339d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\//SCENE//\TUTORIAL">
+      <UniqueIdentifier>{56f98c93-eb09-49b1-9896-0ac4b6e51123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\//SCENE//\GAME_STAYUI">
+      <UniqueIdentifier>{ababf3fb-fefa-4df7-aa6d-d3d9e0651cc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\//SCENE//\GAME_UI">
+      <UniqueIdentifier>{b44c154b-3386-4364-b209-32eb213fa427}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\//SCENE//\PAUSE">
+      <UniqueIdentifier>{bd4e5140-18ef-462c-9219-96bce04a594b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\SOUND">
+      <UniqueIdentifier>{36af9d60-501c-485b-8ef2-e20bab4824f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\RESUSCITATION">
+      <UniqueIdentifier>{1a8ef1ea-9c6b-408a-be91-e5c0a24795ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\NEWBULLET">
+      <UniqueIdentifier>{adc94e6e-ad58-4bde-8d1e-9d10c37fcad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\MATH_UTILITIES">
+      <UniqueIdentifier>{a0a9aebf-7513-4b52-8a48-0b2782793488}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_BILLBOARD\MoveSmoke">
+      <UniqueIdentifier>{09dc99e7-6757-47a8-bc53-e5f830c5ac64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\SYSTEM\RENDERER">
+      <UniqueIdentifier>{09b08ee8-1ac3-4307-b7d5-76ef12824be5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--\PLAYER">
+      <UniqueIdentifier>{a9c27ccf-e3a1-4686-9961-32223d8709aa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="renderer.cpp">
+      <Filter>ソース ファイル\SYSTEM\RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="object2D.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D</Filter>
+    </ClCompile>
+    <ClCompile Include="polygon.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\POLYGON</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>ソース ファイル\OBJECT</Filter>
+    </ClCompile>
+    <ClCompile Include="Pch.cpp">
+      <Filter>ソース ファイル\リソース ファイル\ヘッダー ファイル\封印中</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\PLAYER</Filter>
+    </ClCompile>
+    <ClCompile Include="background.cpp">
+      <Filter>ソース ファイル\OBJECT\BG</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル\SYSTEM\-------MAIN----------</Filter>
+    </ClCompile>
+    <ClCompile Include="manager.cpp">
+      <Filter>ソース ファイル\SYSTEM\MANAGER</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>ソース ファイル\SYSTEM\-------MAIN----------\INPUT</Filter>
+    </ClCompile>
+    <ClCompile Include="ballet.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\BULLET</Filter>
+    </ClCompile>
+    <ClCompile Include="explosion.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\EXPLOSION</Filter>
+    </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\PARTICLE</Filter>
+    </ClCompile>
+    <ClCompile Include="all_texture.cpp">
+      <Filter>ソース ファイル\SYSTEM\ALL_TEXTURE</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\ENEMY</Filter>
+    </ClCompile>
+    <ClCompile Include="MathUtilities.cpp">
+      <Filter>ソース ファイル\SYSTEM\MATH_UTILITIES</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\ITEM</Filter>
+    </ClCompile>
+    <ClCompile Include="block.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\BLOCK</Filter>
+    </ClCompile>
+    <ClCompile Include="font.cpp">
+      <Filter>ソース ファイル\SYSTEM\FONT</Filter>
+    </ClCompile>
+    <ClCompile Include="score.cpp">
+      <Filter>ソース ファイル\SYSTEM\FONT\---UI---\SCORE</Filter>
+    </ClCompile>
+    <ClCompile Include="object_3D.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_3D</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>ソース ファイル\SYSTEM\3D---SYSTEM\LIGHT</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>ソース ファイル\SYSTEM\3D---SYSTEM\CAMERA</Filter>
+    </ClCompile>
+    <ClCompile Include="objectX.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X</Filter>
+    </ClCompile>
+    <ClCompile Include="player3D.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\Player3D</Filter>
+    </ClCompile>
+    <ClCompile Include="block3D.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\BLOCK3D</Filter>
+    </ClCompile>
+    <ClCompile Include="scene.cpp">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//</Filter>
+    </ClCompile>
+    <ClCompile Include="fade.cpp">
+      <Filter>ソース ファイル\SYSTEM\-------MAIN----------\FADE</Filter>
+    </ClCompile>
+    <ClCompile Include="time.cpp">
+      <Filter>ソース ファイル\SYSTEM\FONT\---UI---\TIME</Filter>
+    </ClCompile>
+    <ClCompile Include="ObstacleSet.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBSTACLE_SET</Filter>
+    </ClCompile>
+    <ClCompile Include="object_motion.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION</Filter>
+    </ClCompile>
+    <ClCompile Include="player_motion.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\PLAYER_MOTION</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelParts.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\MODEL_PARTS</Filter>
+    </ClCompile>
+    <ClCompile Include="line.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_3D\LINE</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_motion_base.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_motion_Nomal.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE\ENEMY_NOMAL</Filter>
+    </ClCompile>
+    <ClCompile Include="StageCollisionBox.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\StageCollisionBox</Filter>
+    </ClCompile>
+    <ClCompile Include="tankfootprint.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_3D\TANKFOOTPRINTS</Filter>
+    </ClCompile>
+    <ClCompile Include="object_billboard.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD</Filter>
+    </ClCompile>
+    <ClCompile Include="smoke.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\SMOKE</Filter>
+    </ClCompile>
+    <ClCompile Include="3DParticle.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\PARTICLE</Filter>
+    </ClCompile>
+    <ClCompile Include="ShotFire.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\SHOTFIRE</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectEffect.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\REFLECT_EFECT</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion_Bill.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\EXPLOSION_BILL</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy_motion_fast.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE\ENEMY_FAST</Filter>
+    </ClCompile>
+    <ClCompile Include="target_UI.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\TARGET_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="LinerinterUI.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\LineInter_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="HpLatter.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\HPLETTER</Filter>
+    </ClCompile>
+    <ClCompile Include="HP_gauge.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\HP_Gauge</Filter>
+    </ClCompile>
+    <ClCompile Include="pause.cpp">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\PAUSE</Filter>
+    </ClCompile>
+    <ClCompile Include="Explosion3D.cpp">
+      <Filter>ソース ファイル\OBJECT\EXPLOSION3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Tutorial.cpp">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\TUTORIAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Game_UI.cpp">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\GAME_UI</Filter>
+    </ClCompile>
+    <ClCompile Include="result.cpp">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\RESULT</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStayUI.cpp">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\GAME_STAYUI</Filter>
+    </ClCompile>
+    <ClCompile Include="sound.cpp">
+      <Filter>ソース ファイル\SYSTEM\SOUND</Filter>
+    </ClCompile>
+    <ClCompile Include="resuscitation.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\RESUSCITATION</Filter>
+    </ClCompile>
+    <ClCompile Include="newbullet.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\NEWBULLET</Filter>
+    </ClCompile>
+    <ClCompile Include="movesmoke.cpp">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\MoveSmoke</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="renderer.h">
+      <Filter>ソース ファイル\SYSTEM\RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>ソース ファイル\OBJECT</Filter>
+    </ClInclude>
+    <ClInclude Include="object2D.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D</Filter>
+    </ClInclude>
+    <ClInclude Include="polygon.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\POLYGON</Filter>
+    </ClInclude>
+    <ClInclude Include="Pch.h">
+      <Filter>ソース ファイル\リソース ファイル\ヘッダー ファイル\封印中</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\PLAYER</Filter>
+    </ClInclude>
+    <ClInclude Include="background.h">
+      <Filter>ソース ファイル\OBJECT\BG</Filter>
+    </ClInclude>
+    <ClInclude Include="manager.h">
+      <Filter>ソース ファイル\SYSTEM\MANAGER</Filter>
+    </ClInclude>
+    <ClInclude Include="ballet.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\BULLET</Filter>
+    </ClInclude>
+    <ClInclude Include="explosion.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\EXPLOSION</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\PARTICLE</Filter>
+    </ClInclude>
+    <ClInclude Include="all_texture.h">
+      <Filter>ソース ファイル\SYSTEM\ALL_TEXTURE</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\ENEMY</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtilities.h">
+      <Filter>ソース ファイル\SYSTEM\MATH_UTILITIES</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\ITEM</Filter>
+    </ClInclude>
+    <ClInclude Include="block.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\BLOCK</Filter>
+    </ClInclude>
+    <ClInclude Include="font.h">
+      <Filter>ソース ファイル\SYSTEM\FONT</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>ソース ファイル\SYSTEM\-------MAIN----------\INPUT</Filter>
+    </ClInclude>
+    <ClInclude Include="score.h">
+      <Filter>ソース ファイル\SYSTEM\FONT\---UI---\SCORE</Filter>
+    </ClInclude>
+    <ClInclude Include="object3D.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_3D</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>ソース ファイル\SYSTEM\-------MAIN----------</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>ソース ファイル\SYSTEM\3D---SYSTEM\LIGHT</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>ソース ファイル\SYSTEM\3D---SYSTEM\CAMERA</Filter>
+    </ClInclude>
+    <ClInclude Include="player3D.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\Player3D</Filter>
+    </ClInclude>
+    <ClInclude Include="block3D.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\BLOCK3D</Filter>
+    </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//</Filter>
+    </ClInclude>
+    <ClInclude Include="fade.h">
+      <Filter>ソース ファイル\SYSTEM\-------MAIN----------\FADE</Filter>
+    </ClInclude>
+    <ClInclude Include="time.h">
+      <Filter>ソース ファイル\SYSTEM\FONT\---UI---\TIME</Filter>
+    </ClInclude>
+    <ClInclude Include="ObstacleSet.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBSTACLE_SET</Filter>
+    </ClInclude>
+    <ClInclude Include="object_motion.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelParts.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\MODEL_PARTS</Filter>
+    </ClInclude>
+    <ClInclude Include="line.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_3D\LINE</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_motion_base.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_motion_Nomal.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE\ENEMY_NOMAL</Filter>
+    </ClInclude>
+    <ClInclude Include="StageCollisionBox.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\StageCollisionBox</Filter>
+    </ClInclude>
+    <ClInclude Include="player_motion.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\PLAYER_MOTION</Filter>
+    </ClInclude>
+    <ClInclude Include="tankfootprint.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_3D\TANKFOOTPRINTS</Filter>
+    </ClInclude>
+    <ClInclude Include="object_billboard.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD</Filter>
+    </ClInclude>
+    <ClInclude Include="smoke.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\SMOKE</Filter>
+    </ClInclude>
+    <ClInclude Include="3DParticle.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\PARTICLE</Filter>
+    </ClInclude>
+    <ClInclude Include="ShotFire.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\SHOTFIRE</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectEffect.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\REFLECT_EFECT</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion_Bill.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\EXPLOSION_BILL</Filter>
+    </ClInclude>
+    <ClInclude Include="objectX.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_motion_fast.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\OBJECT_MOTION\ENEMY_MOTION_BASE\ENEMY_FAST</Filter>
+    </ClInclude>
+    <ClInclude Include="target_UI.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\TARGET_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="linerinterUI.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\LineInter_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="HpLatter.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\HPLETTER</Filter>
+    </ClInclude>
+    <ClInclude Include="HP_gauge.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\HP_Gauge</Filter>
+    </ClInclude>
+    <ClInclude Include="pause.h">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\PAUSE</Filter>
+    </ClInclude>
+    <ClInclude Include="Explosion3D.h">
+      <Filter>ソース ファイル\OBJECT\EXPLOSION3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Tutorial.h">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\TUTORIAL</Filter>
+    </ClInclude>
+    <ClInclude Include="Game_UI.h">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\GAME_UI</Filter>
+    </ClInclude>
+    <ClInclude Include="result.h">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\RESULT</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStayUI.h">
+      <Filter>ソース ファイル\SYSTEM\//SCENE//\GAME_STAYUI</Filter>
+    </ClInclude>
+    <ClInclude Include="sound.h">
+      <Filter>ソース ファイル\SYSTEM\SOUND</Filter>
+    </ClInclude>
+    <ClInclude Include="resuscitation.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\RESUSCITATION</Filter>
+    </ClInclude>
+    <ClInclude Include="newbullet.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_X\NEWBULLET</Filter>
+    </ClInclude>
+    <ClInclude Include="movesmoke.h">
+      <Filter>ソース ファイル\OBJECT\OBJECT_BILLBOARD\MoveSmoke</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

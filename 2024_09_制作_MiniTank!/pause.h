@@ -1,0 +1,40 @@
+//=========================================================
+//
+// pause.cppで使う関数[pause.h]
+// Author seiya kagaya
+//
+//=========================================================
+#ifndef _PAUSE_H
+#define _PAUSE_H//二重インクルード防止
+
+#include "object.h"
+#include "d3dx9.h"//描写処理に使う
+#include "main.h"
+
+class CPause 
+{
+public:
+	static const int TEXNUM = 7;
+	CPause();//コンストラクタ
+	~CPause() ;//デストラクタ
+	HRESULT Init();
+	void Uninit();
+	void Update();
+	void Draw();
+
+	static CPause* Create();//object生成
+
+	void AddSelectNum(int addnum);	//選択肢加算格納
+	void DirectSetNum(int Num);		//選択肢直接格納
+	int GetSelectNum();				//選択肢取得
+private:
+
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff[TEXNUM] = {};//頂点バッファ
+	LPDIRECT3DTEXTURE9 m_pTexture[TEXNUM] = {};		//テクスチャ
+	D3DXVECTOR3 m_Pos[TEXNUM] = {};					//座標
+	int m_nTexIdx[TEXNUM] = {};						//テクスチャID
+	int m_SelectNum = 0;							//選択肢番号
+	bool m_bPhase2 = false;							//Pause第二段階か
+};
+
+#endif
