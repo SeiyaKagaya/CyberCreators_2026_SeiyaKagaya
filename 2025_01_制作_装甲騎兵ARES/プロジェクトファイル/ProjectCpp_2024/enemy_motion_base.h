@@ -5,7 +5,6 @@
 //
 //=========================================================
 #ifndef _MOTIONENEMYBASE_H
-
 #define _MOTIONENEMYBASE_H//二重インクルード防止
 
 #include "object.h"
@@ -16,7 +15,6 @@
 #include "MathUtilities.h"
 #include <vector>
 #include "object_motion.h"
-
 
 //基底クラス
 class CObjectMotionEnemyBase : public CObjectMotion
@@ -34,8 +32,8 @@ public:
 
 
 	CObjectMotionEnemyBase(int nPriority = CObject::LAYERINDEX_MOTIONENEMY_BASE);//コンストラクタ
-
 	CObjectMotionEnemyBase(ENEMYTYPE Enemytype,int nPriority = CObject::LAYERINDEX_MOTIONENEMY_BASE);//オーバーロード
+
 	virtual ~CObjectMotionEnemyBase() override;//デストラクタ
 
 	virtual HRESULT Init()override;
@@ -45,7 +43,7 @@ public:
 
 	static CObjectMotionEnemyBase* Create(std::string pfilePass, DATA SetData);//オブジェクト生成
 
-	static int GetEnemyAllNum();
+	static int GetEnemyAllNum();//総数取得
 
 	//MainTargetか
 	void SetPriorityAttackTarget(bool bSet) { m_bPriorityAttackTarget = bSet; };
@@ -58,8 +56,6 @@ public:
 private:
 
 	CMathProc::CollisionData m_HitData;//当たり判定データ
-
-//	bool btest = false;
 
 	int m_nLife=0;
 

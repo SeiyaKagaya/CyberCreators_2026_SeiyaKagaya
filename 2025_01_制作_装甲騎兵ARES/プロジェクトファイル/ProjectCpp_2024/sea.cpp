@@ -1,6 +1,6 @@
 //=======================================================
 //
-// tankfootprintに関する処理[tankfootprint.cpp]
+// seaに関する処理[sea.cpp]
 // Auther seiya kagaya
 //
 //=======================================================
@@ -14,31 +14,24 @@
 CSea::CSea(int nPriority) :CObject3D(nPriority)
 {
     SetObjectType(CObject::OBJECT_SEA);
-    // m_pVtxBuff = nullptr;
-    // m_pTexture = nullptr;
-
 }
+
 //=============================
 // デストラクタ
 //=============================
 CSea::~CSea()
 {
-    
-
     Uninit();
 }
+
 //=============================
 // 初期設定(頂点バッファ生成)
 //=============================
 HRESULT CSea::Init()
 {
     CRenderer* pRenderer = nullptr;
-
     CManager* pManager = CManager::GetInstance();
-
     pRenderer = pManager->GetRenderer();
-
-
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
 
     LPDIRECT3DVERTEXBUFFER9 ESCpVtxBuff;//頂点バッファ
@@ -64,73 +57,62 @@ HRESULT CSea::Init()
 
     int texIndex = pTexture->Regist("DATA\\TEXTURE\\umi1.jpg", EscDevice);//テクスチャ登録
 
-    m_ESCpTexture = pTexture->GetAddress(texIndex);
+    m_ESCpTexture = pTexture->GetAddress(texIndex);//テクスチャのアドレスを格納
 
     BindTexture(m_ESCpTexture);//設定
 
     return S_OK;
 }
+
 //=============================
 // 終了処理(頂点バッファ破棄)
 //=============================
 void CSea::Uninit()
-{
- 
+{ 
     CObject3D::Uninit();
 }
+
 //=============================
 // 更新(頂点情報の更新)
 //=============================
 void CSea::Update()
 {
-    InputpVtx();
+    InputpVtx();//頂点情報を更新し格納
 
     CScene::MODE NowState = CScene::GetNowScene();
-
 
     if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3 || NowState == CScene::MODE_MOVIE || NowState == CScene::MODE_MOVIE2)
     {//ゲーム中
 
      // テクスチャオフセットの更新 (アニメーション速度)
-        m_texOffsetX += 0.00002f;  // X方向に少しずつ移動
-        m_texOffsetY += 0.00001f;  // X方向に少しずつ移動
+        m_texOffsetX += 0.00004f;  // X方向に少しずつ移動
+        m_texOffsetY += 0.00002f;  // X方向に少しずつ移動
 
     }
     else if (NowState == CScene::MODE_OP)
-    {
+    {//出撃前演出
         // テクスチャオフセットの更新 (アニメーション速度)
         m_texOffsetX += 0.0002f;  // X方向に少しずつ移動
         m_texOffsetY += 0.0009f;  // X方向に少しずつ移動
-
     }
-
-
-    /*if (m_nCnt >= 60)
-    {
-        m_texOffsetX = 0.0f;
-
-        m_nCnt = 0;
-    }*/
 
     CObject3D::Update();
 }
+
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
 void CSea::Draw()
 {
-
     CRenderer* pRenderer = nullptr;
     CManager* pManager = CManager::GetInstance();
     pRenderer = pManager->GetRenderer();
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
 
-
     D3DXMATRIX mtxRot, mtxTrans;
 
     // テクスチャ変換行列
     D3DXMATRIX matTexTransform;
-
 
     D3DXMatrixScaling(&matTexTransform, 1.0f, 1.0f, 1.0f);  // 0.5倍にスケーリング
     matTexTransform._31 = m_texOffsetX; // X方向のオフセット設定
@@ -140,34 +122,26 @@ void CSea::Draw()
     EscDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2); // 2D変換
     EscDevice->SetTransform(D3DTS_TEXTURE0, &matTexTransform);  // テクスチャ行列を設定
 
-
-
-
     CObject3D::Draw();
 
-
-
     EscDevice->SetTextureStageState(0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE); // テクスチャ変換を無効にする
-
 }
+
 //=============================
 // 座標設定
 //=============================
 void CSea::SetPos_Rot(D3DXVECTOR3 Pos, D3DXVECTOR3 rot)
 {
-
-
     //取得
     DATA EscData = GetDATA();
 
     EscData.Pos = Pos;
     EscData.rot = rot;
+
     //取得
     SetDATA(EscData);
-
-
-
 }
+
 //=============================
 // 頂点情報
 //=============================
@@ -179,15 +153,11 @@ void CSea::InputpVtx()
     //取得
     DATA EscData = GetDATA();
 
-    float fTest = 9900.0f * 5.6f;
-    float fTest2 = 9900.0f * 5.6f;
-
     //頂点座標の設定
-    pVtx[0].pos = D3DXVECTOR3(-fTest2, 0.0f, fTest);
-    pVtx[1].pos = D3DXVECTOR3(fTest2, 0.0f, fTest);
-    pVtx[2].pos = D3DXVECTOR3(-fTest2, 0.0f, -fTest);
-    pVtx[3].pos = D3DXVECTOR3(fTest2, 0.0f, -fTest);
-
+    pVtx[0].pos = D3DXVECTOR3((float)-PRINTSIZE, 0.0f, (float)PRINTSIZE);
+    pVtx[1].pos = D3DXVECTOR3((float)PRINTSIZE, 0.0f, (float)PRINTSIZE);
+    pVtx[2].pos = D3DXVECTOR3((float)-PRINTSIZE, 0.0f, (float)-PRINTSIZE);
+    pVtx[3].pos = D3DXVECTOR3((float)PRINTSIZE, 0.0f, (float)-PRINTSIZE);
 
     //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -207,14 +177,9 @@ void CSea::InputpVtx()
     pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
     pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
 
-
-
- //   ESCpVtxBuff->Unlock();
-
-//    BindVtxBuffer(ESCpVtxBuff);
-
-    SetpVtx(pVtx);
+    SetpVtx(pVtx);//頂点情報格納
 }
+
 //=============================
 // Object生成
 //=============================

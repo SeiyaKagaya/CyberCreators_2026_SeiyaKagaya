@@ -212,7 +212,7 @@ CMissile::CMissile(int nPriority) :CObjectX(nPriority)
 {
     //  m_nNumBulletAll++;
 
-    m_nLife = 200;
+    m_nLife = 250;
 
     m_bUse = false;
 
@@ -337,6 +337,7 @@ void CMissile::Update()
             }
             else
             {
+                //誘導処理
                 Homing();
             }
 
@@ -1002,7 +1003,7 @@ void CMissile::Homing()
         D3DXVECTOR3 SetMove = GetDATA().move;
 
         // ミサイルの移動方向を変更
-        ChangeVectorDirection(SetMove, targetDirection, D3DX_PI / 180.0f * MISSILEROT * 0.15f); // 適切な値に変更してください
+        ChangeVectorDirection(SetMove, targetDirection, D3DX_PI / 180.0f * MISSILEROT * 0.25f); // 適切な値に変更してください
 
         // ミサイルの速さを調整するための倍率
        // float missileSpeedMultiplier = MISSILEMOVESPEED; // 適切な値に変更してください

@@ -1244,9 +1244,7 @@ void CObjectMotion::SetMatrix(D3DXMATRIX mtx)
 //=============================
 void CObjectMotion::SetChangeDataInObjectMotion(DATA ChangeData)
 {
-	
 	m_pModelParts[m_ChangeDataModelIndex]->ChangeDataSet(ChangeData);
-
 }
 //=============================
 // ƒp[ƒcæ“¾

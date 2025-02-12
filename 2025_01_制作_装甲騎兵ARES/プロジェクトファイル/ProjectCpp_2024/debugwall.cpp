@@ -1,6 +1,6 @@
 //=======================================================
 //
-// tankfootprintに関する処理[tankfootprint.cpp]
+// debugwallに関する処理[debugwall.cpp]
 // Auther seiya kagaya
 //
 //=======================================================
@@ -14,10 +14,8 @@
 CDebugwall::CDebugwall(int nPriority) :CObject3D(nPriority)
 {
     SetObjectType(CObject::OBJECT_DEBUGWALL);
-    // m_pVtxBuff = nullptr;
-    // m_pTexture = nullptr;
-
 }
+
 //=============================
 // デストラクタ
 //=============================
@@ -25,20 +23,16 @@ CDebugwall::~CDebugwall()
 {
     Uninit();
 }
+
 //=============================
 // 初期設定(頂点バッファ生成)
 //=============================
 HRESULT CDebugwall::Init()
 {
     CRenderer* pRenderer = nullptr;
-
     CManager* pManager = CManager::GetInstance();
-
     pRenderer = pManager->GetRenderer();
-
-
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
-
     LPDIRECT3DVERTEXBUFFER9 ESCpVtxBuff;//頂点バッファ
 
     if (FAILED(EscDevice->CreateVertexBuffer(
@@ -52,6 +46,7 @@ HRESULT CDebugwall::Init()
         return E_FAIL;
     }
 
+    //バッファ格納
     BindVtxBuffer(ESCpVtxBuff);
 
     //テクスチャ読み込み
@@ -62,12 +57,13 @@ HRESULT CDebugwall::Init()
 
     int texIndex = pTexture->Regist("DATA\\TEXTURE\\iwaWall.png", EscDevice);//テクスチャ登録
 
-    m_ESCpTexture = pTexture->GetAddress(texIndex);
+    m_ESCpTexture = pTexture->GetAddress(texIndex);//テクスチャのアドレスを取得
 
     BindTexture(m_ESCpTexture);//設定
 
     return S_OK;
 }
+
 //=============================
 // 終了処理(頂点バッファ破棄)
 //=============================
@@ -75,18 +71,18 @@ void CDebugwall::Uninit()
 {
     CObject3D::Uninit();
 }
+
 //=============================
 // 更新(頂点情報の更新)
 //=============================
 void CDebugwall::Update()
 {
-  
-
+    //頂点情報を更新
     InputpVtx();
 
     CObject3D::Update();
-
 }
+
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
@@ -94,24 +90,20 @@ void CDebugwall::Draw()
 {
     CObject3D::Draw();
 }
+
 //=============================
 // 座標設定
 //=============================
 void CDebugwall::SetPos_Rot(D3DXVECTOR3 Pos, D3DXVECTOR3 rot)
 {
-
-
-    //取得
     DATA EscData = GetDATA();
 
     EscData.Pos = Pos;
     EscData.rot = rot;
-    //取得
+    
     SetDATA(EscData);
-
-
-
 }
+
 //=============================
 // 頂点情報
 //=============================
@@ -128,7 +120,6 @@ void CDebugwall::InputpVtx()
     pVtx[1].pos = D3DXVECTOR3((float)PRINTSIZE, EscData.Pos.y, (float)PRINTSIZE);
     pVtx[2].pos = D3DXVECTOR3((float)-PRINTSIZE, EscData.Pos.y, (float)-PRINTSIZE);
     pVtx[3].pos = D3DXVECTOR3((float)PRINTSIZE, EscData.Pos.y, (float)-PRINTSIZE);
-
 
     //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -148,14 +139,9 @@ void CDebugwall::InputpVtx()
     pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
     pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
 
-
-
- //   ESCpVtxBuff->Unlock();
-
-//    BindVtxBuffer(ESCpVtxBuff);
-
-    SetpVtx(pVtx);
+    SetpVtx(pVtx);//格納
 }
+
 //=============================
 // Object生成
 //=============================

@@ -5,24 +5,18 @@
 //
 //=========================================================
 #ifndef _MODELPARTS_H
-
 #define _MODELPARTS_H//二重インクルード防止
 
 #include "object.h"
 #include "objectX.h"
-
 #include <Windows.h>
 #include "d3dx9.h"//描写処理に使う
 
 class CObjectMotion;//前方宣言
 
-//
 class CModelParts : public CObjectX
 {
 public:
-
-
-
 	CModelParts(int nPriority = CObject::LAYERINDEX_MODELPARTS);//コンストラクタ
 	~CModelParts() override;//デストラクタ
 	HRESULT Init()override;
@@ -42,7 +36,6 @@ public:
 	D3DXMATRIX GetMtxWorld();//マトリックス取得
 
 	CModelParts* GetParent();//親取得
-	//void SetPartsNum(int nNum) {}
 
 	void SetNowData(DATA data);//現行データ
 	DATA GetNowData();
@@ -85,9 +78,7 @@ public:
 	bool IsValid() const;
 
 private:
-//	LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE_XFILE];//テクスチャ
 
-	//ここではDATAを最終的な描画などに使用。
 	//下地用(親マトリックスとの融合など)は別の変数に入れる
 	D3DXMATRIX m_mtxWorld;
 
@@ -96,9 +87,6 @@ private:
 
 	DATA m_ChangeDATA;
 
-//	int INDEX;//自分の番号
-// 
-//		int PEARENT;		//自分の親番号
 	CModelParts* m_pParentParts;//親モデルへのポインタ
 
 	std::string m_PartfilePass;					//各modelごとのpass
@@ -118,7 +106,6 @@ private:
 	bool m_bChengeCol = false;
 
 	int m_nPartNum = 0;
-
 };
 
 #endif

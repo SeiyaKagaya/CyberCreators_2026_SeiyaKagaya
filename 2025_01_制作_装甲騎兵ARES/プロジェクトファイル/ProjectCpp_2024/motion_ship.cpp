@@ -7,12 +7,8 @@
 #include "motion_ship.h"
 #include "renderer.h"
 #include "manager.h"
-//#include "ballet3D.h"
 #include "tankfootprint.h"
-//#include "ShotFire.h"
 #include "score.h"
-//#include "target_UI.h"
-//#include "linerinterUI.h"
 #include "Explosion3D.h"
 #include "ShotFire.h"
 #include "movesmoke.h"
@@ -23,12 +19,8 @@
 #include "enemy_motion_Nomal.h"
 #include "enemy_motion_fast.h"
 #include "missile.h"
-//#include "movesmoke.h"
 
 int CObjectShip::m_nNumPlayerAll = START_PLAYER_NUM;//初期値３
-
-
-
 
 //=============================
 // コンストラクタ
@@ -52,7 +44,6 @@ HRESULT CObjectShip::Init()
 {
 	CObjectMotion::Init();
 
-
 	SetObjectType(CObject::OBJECT_MOTIONB2);
 
 	float fLength[3];
@@ -60,14 +51,9 @@ HRESULT CObjectShip::Init()
 	fLength[1] = 140.0f;
 	fLength[2] = 60.0f;
 
-	//	m_nMoveCnt = 0;
-
 	SetOBBLength(fLength);//OBB長さ格納
 
-
 	DATA classData = GetClassData();
-
-	//	classData.Pos = m_RESTART_POS;
 
 	SetClassData(classData);
 

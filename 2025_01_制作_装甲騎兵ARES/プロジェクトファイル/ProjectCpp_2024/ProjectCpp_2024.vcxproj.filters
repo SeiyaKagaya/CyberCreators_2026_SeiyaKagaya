@@ -163,9 +163,6 @@
     <Filter Include="ソース ファイル\SYSTEM\FONT\TextWIndow">
       <UniqueIdentifier>{9c6abbaf-c9db-40cd-9282-d5d185a3e66a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST%282D%29">
-      <UniqueIdentifier>{2cd5c5ad-82f5-42db-8eaa-d9661e939f07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\SEA">
       <UniqueIdentifier>{a0b7e959-50b6-4ee7-9ae2-40f0f4fee11d}</UniqueIdentifier>
     </Filter>
@@ -210,6 +207,9 @@
     </Filter>
     <Filter Include="ソース ファイル\SYSTEM\//SCENE//\LONG_PUSH">
       <UniqueIdentifier>{0e3c78cd-2ab3-402e-ad8b-eabb868b12e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST">
+      <UniqueIdentifier>{2cd5c5ad-82f5-42db-8eaa-d9661e939f07}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -361,7 +361,7 @@
       <Filter>ソース ファイル\SYSTEM\FONT\TextWIndow</Filter>
     </ClCompile>
     <ClCompile Include="enemy_motion_fast.cpp">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST%282D%29</Filter>
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST</Filter>
     </ClCompile>
     <ClCompile Include="sea.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\SEA</Filter>
@@ -439,9 +439,6 @@
     </ClInclude>
     <ClInclude Include="score.h">
       <Filter>ソース ファイル\SYSTEM\FONT\---UI---\SCORE</Filter>
-    </ClInclude>
-    <ClInclude Include="object3D.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_3D/</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
       <Filter>ソース ファイル\SYSTEM\-------MAIN----------</Filter>
@@ -546,7 +543,7 @@
       <Filter>ソース ファイル\SYSTEM\FONT\TextWIndow</Filter>
     </ClInclude>
     <ClInclude Include="enemy_motion_fast.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST%282D%29</Filter>
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST</Filter>
     </ClInclude>
     <ClInclude Include="sea.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\SEA</Filter>
@@ -580,6 +577,9 @@
     </ClInclude>
     <ClInclude Include="LongPush.h">
       <Filter>ソース ファイル\SYSTEM\//SCENE//\LONG_PUSH</Filter>
+    </ClInclude>
+    <ClInclude Include="object3D.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_3D/</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

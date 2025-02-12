@@ -15,12 +15,9 @@ CObjectShotFire::CObjectShotFire(int nPriority) :CObjectBillBoard(nPriority), m_
 {
     SetObjectType(CObject::OBJECT_SHOTFIRE);
 
-    ChengeAddDrawMode(true);
-
-    // m_pVtxBuff = nullptr;
-    // m_pTexture = nullptr;
-
+    ChengeAddDrawMode(true);//加算合成On
 }
+
 //=============================
 // デストラクタ
 //=============================
@@ -28,18 +25,15 @@ CObjectShotFire::~CObjectShotFire()
 {
     Uninit();
 }
+
 //=============================
 // 初期設定(頂点バッファ生成)
 //=============================
 HRESULT CObjectShotFire::Init()
 {
     CRenderer* pRenderer = nullptr;
-
     CManager* pManager = CManager::GetInstance();
-
     pRenderer = pManager->GetRenderer();
-
-
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
 
     LPDIRECT3DVERTEXBUFFER9 ESCpVtxBuff;//頂点バッファ
@@ -65,18 +59,15 @@ HRESULT CObjectShotFire::Init()
 
     int texIndex = pTexture->Regist("DATA\\TEXTURE\\ShotFire2.png", EscDevice);//テクスチャ登録
 
-    m_ESCpTexture = pTexture->GetAddress(texIndex);
+    m_ESCpTexture = pTexture->GetAddress(texIndex);//テクスチャアドレス取得
 
     BindTexture(m_ESCpTexture);//設定
 
-
- //   SetpVtx(pVtx);
-
-  //  InputpVtx();
-    m_nLife = 30;
-    m_nDelay = 0;
+    m_nLife = START_LIFE;
+  
     return S_OK;
 }
+
 //=============================
 // 終了処理(頂点バッファ破棄)
 //=============================
@@ -84,6 +75,7 @@ void CObjectShotFire::Uninit()
 {
     CObjectBillBoard::Uninit();
 }
+
 //=============================
 // 更新(頂点情報の更新)
 //=============================
@@ -91,43 +83,30 @@ void CObjectShotFire::Update()
 {
     InputpVtx();
 
-    //  m_nLife--;
-
-    m_nDelay++;
-
-    if (m_nDelay >= 0)
-    {
-        m_nDelay = 0;
-        m_nPatternAnim++;
-    }
-
-
-
+  
+     m_nPatternAnim++;
+  
 
     if (m_nLife <= 0 || m_nPatternAnim > DIVISION_NUMBER)
     {
         SetDeath(true);
     }
 
-
-
     CObjectBillBoard::Update();
 }
+
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
 void CObjectShotFire::Draw()
 {
- //   SetZDrawDeth(true);
-
     CObjectBillBoard::Draw();
-
-  //  SetZDrawDeth(false);
 }
+
 //=============================
 // 座標設定
 //=============================
-void CObjectShotFire::SetPos_Rot(D3DXVECTOR3 Pos)
+void CObjectShotFire::SetPos(D3DXVECTOR3 Pos)
 {
     //取得
     DATA EscData = GetDATA();
@@ -135,8 +114,8 @@ void CObjectShotFire::SetPos_Rot(D3DXVECTOR3 Pos)
     EscData.Pos = Pos;
     //取得
     SetDATA(EscData);
-
 }
+
 //=============================
 // 頂点情報
 //=============================
@@ -148,18 +127,11 @@ void CObjectShotFire::InputpVtx()
     //取得
     DATA EscData = GetDATA();
 
-    //頂点座標の設定
-    //pVtx[0].pos = D3DXVECTOR3((float)-PRINTSIZE_X, 10.0f, (float)PRINTSIZE_Z);
-    //pVtx[1].pos = D3DXVECTOR3((float)PRINTSIZE_X, 10.0f, (float)PRINTSIZE_Z);
-    //pVtx[2].pos = D3DXVECTOR3((float)-PRINTSIZE_X, 10.0f, (float)-PRINTSIZE_Z);
-    //pVtx[3].pos = D3DXVECTOR3((float)PRINTSIZE_X, 10.0f, (float)-PRINTSIZE_Z);
-
      //頂点座標の設定
-    pVtx[0].pos = D3DXVECTOR3(-PRINTSIZE_X, PRINTSIZE_Z, 0.0f);
-    pVtx[1].pos = D3DXVECTOR3(PRINTSIZE_X, PRINTSIZE_Z, 0.0f);
-    pVtx[2].pos = D3DXVECTOR3(-PRINTSIZE_X, -PRINTSIZE_Z, 0.0f);
-    pVtx[3].pos = D3DXVECTOR3(PRINTSIZE_X, -PRINTSIZE_Z, 0.0f);
-
+    pVtx[0].pos = D3DXVECTOR3(-PRINTSIZE, PRINTSIZE, 0.0f);
+    pVtx[1].pos = D3DXVECTOR3(PRINTSIZE, PRINTSIZE, 0.0f);
+    pVtx[2].pos = D3DXVECTOR3(-PRINTSIZE, -PRINTSIZE, 0.0f);
+    pVtx[3].pos = D3DXVECTOR3(PRINTSIZE, -PRINTSIZE, 0.0f);
 
     //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
@@ -167,44 +139,27 @@ void CObjectShotFire::InputpVtx()
     pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
     pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 
-    ////法線ベクトルの設定
-    //pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
     //頂点カラーの設定
     pVtx[0].col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
     pVtx[1].col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
     pVtx[2].col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
     pVtx[3].col = D3DXCOLOR(1.0f, 0.3f, 0.3f, 1.0f);
 
-    //テクスチャ座標を設定
-    //pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
-    //pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);//右上
-    //pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
-    //pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
-
     pVtx[0].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim - (1.0f / DIVISION_NUMBER), 0.0f);//テクスチャ分割数分右側に座標がズレてる
     pVtx[1].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim, 0.0f);
     pVtx[2].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim - (1.0f / DIVISION_NUMBER), 1.0f);//テクスチャ分割数分右側に座標がズレてる
     pVtx[3].tex = D3DXVECTOR2((1.0f / DIVISION_NUMBER) * m_nPatternAnim, 1.0f);
 
-
-
-    //   ESCpVtxBuff->Unlock();
-
-   //    BindVtxBuffer(ESCpVtxBuff);
-
     SetpVtx(pVtx);
 }
+
 //=============================
 // Object生成
 //=============================
 CObjectShotFire* CObjectShotFire::Create(D3DXVECTOR3 Pos)
 {
     CObjectShotFire* pObject3D = new CObjectShotFire;
-    pObject3D->SetPos_Rot(Pos);
+    pObject3D->SetPos(Pos);
     pObject3D->Init();
     return pObject3D;
 }

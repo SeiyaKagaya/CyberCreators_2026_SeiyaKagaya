@@ -5,7 +5,6 @@
 //
 //=========================================================
 #ifndef _OBJECTBILL_H
-
 #define _OBJECTBILL_H//二重インクルード防止
 
 #include "object.h"
@@ -34,8 +33,8 @@ public:
 	LPDIRECT3DVERTEXBUFFER9 GetpVtxBuffer();//バッファ取得
 
 	DATA GetDATA();//基礎情報取得
-	void SetDATA(DATA data);//基礎情報設定
 
+	void SetDATA(DATA data);//基礎情報設定
 
 	void ChangeRGBA(D3DCOLOR col);//色
 
@@ -56,22 +55,18 @@ public:
 	void SetLight(bool bSet) { bSetLight = bSet; };
 
 private:
-	//protected:
 
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;//頂点バッファ
-	LPDIRECT3DTEXTURE9 m_pTexture;//テクスチャ
-	
+	LPDIRECT3DTEXTURE9 m_pTexture;//テクスチャ	
 	DATA m_Data;
-
-
 
 	//テクスチャや頂点座標などの保持
 	VERTEX_3D m_pVtx[BASE_INDEX];
 
 	bool m_AddDrawMode;//加算合成モード
 	bool m_ZDethDrawMode;//Zバッファを無効に
-	int nAddDrawCnt = 1;
 
+	int nAddDrawCnt = 1;//最低回数
 
 	D3DXMATRIX m_mtxWorld;
 

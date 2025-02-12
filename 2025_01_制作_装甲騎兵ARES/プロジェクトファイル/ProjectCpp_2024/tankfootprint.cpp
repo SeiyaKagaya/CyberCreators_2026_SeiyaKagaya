@@ -14,10 +14,8 @@
 CObjectFootPrint::CObjectFootPrint(int nPriority) :CObject3D(nPriority)
 {
     SetObjectType(CObject::OBJECT_FOOTPRINT);
-   // m_pVtxBuff = nullptr;
-   // m_pTexture = nullptr;
-
 }
+
 //=============================
 // デストラクタ
 //=============================
@@ -25,18 +23,15 @@ CObjectFootPrint::~CObjectFootPrint()
 {
     Uninit();
 }
+
 //=============================
 // 初期設定(頂点バッファ生成)
 //=============================
 HRESULT CObjectFootPrint::Init()
 {
     CRenderer* pRenderer = nullptr;
-
     CManager* pManager = CManager::GetInstance();
-
     pRenderer = pManager->GetRenderer();
-
-
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
 
     LPDIRECT3DVERTEXBUFFER9 ESCpVtxBuff;//頂点バッファ
@@ -52,7 +47,7 @@ HRESULT CObjectFootPrint::Init()
         return E_FAIL;
     }
 
-    BindVtxBuffer(ESCpVtxBuff);
+    BindVtxBuffer(ESCpVtxBuff);//頂点を格納
 
     //テクスチャ読み込み
     LPDIRECT3DTEXTURE9	m_ESCpTexture = nullptr;
@@ -62,17 +57,15 @@ HRESULT CObjectFootPrint::Init()
 
     int texIndex = pTexture->Regist("DATA\\TEXTURE\\TankMove.png", EscDevice);//テクスチャ登録
 
-    m_ESCpTexture = pTexture->GetAddress(texIndex);
+    m_ESCpTexture = pTexture->GetAddress(texIndex);//テクスチャのアドレスを取得
 
-    BindTexture(m_ESCpTexture);//設定
+    BindTexture(m_ESCpTexture);//テクスチャ格納
 
-
- //   SetpVtx(pVtx);
-
-  //  InputpVtx();
     m_nLife = STANPLIFE;
+
     return S_OK;
 }
+
 //=============================
 // 終了処理(頂点バッファ破棄)
 //=============================
@@ -80,6 +73,7 @@ void CObjectFootPrint::Uninit()
 {
 	CObject3D::Uninit();
 }
+
 //=============================
 // 更新(頂点情報の更新)
 //=============================
@@ -87,11 +81,7 @@ void CObjectFootPrint::Update()
 {
     CScene::MODE NowState = CScene::GetNowScene();
 
-    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 )
-    {//ゲーム中
-
-    }
-    else if (NowState == CScene::MODE_TITLE)
+    if (NowState == CScene::MODE_TITLE)
     {//タイトル
 
       //取得
@@ -114,24 +104,18 @@ void CObjectFootPrint::Update()
 
     }
 
-
-     InputpVtx();
+     InputpVtx();//頂点情報を格納
 
      CObject3D::Update();
 
-   
         m_nLife--;
 
         if (m_nLife <= 0)
         {
             SetDeath(true);
-        }
-
-
-
-   
-    
+        }    
 }
+
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
@@ -139,13 +123,12 @@ void CObjectFootPrint::Draw()
 {
 	CObject3D::Draw();
 }
+
 //=============================
 // 座標設定
 //=============================
 void CObjectFootPrint::SetPos_Rot(D3DXVECTOR3 Pos, D3DXVECTOR3 rot)
 {
-
-
     //取得
     DATA EscData = GetDATA();
 
@@ -153,10 +136,8 @@ void CObjectFootPrint::SetPos_Rot(D3DXVECTOR3 Pos, D3DXVECTOR3 rot)
     EscData.rot = rot;
     //取得
     SetDATA(EscData);
-
-
-
 }
+
 //=============================
 // 頂点情報
 //=============================
@@ -173,7 +154,6 @@ void CObjectFootPrint::InputpVtx()
     pVtx[1].pos = D3DXVECTOR3((float)PRINTSIZE_X, 10.0f, (float)PRINTSIZE_Z);
     pVtx[2].pos = D3DXVECTOR3((float)-PRINTSIZE_X, 10.0f, (float)-PRINTSIZE_Z);
     pVtx[3].pos = D3DXVECTOR3((float)PRINTSIZE_X, 10.0f, (float)-PRINTSIZE_Z);
-
 
     //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -193,14 +173,9 @@ void CObjectFootPrint::InputpVtx()
     pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
     pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
 
-
-
- //   ESCpVtxBuff->Unlock();
-
-//    BindVtxBuffer(ESCpVtxBuff);
-
-    SetpVtx(pVtx);
+    SetpVtx(pVtx);//格納
 }
+
 //=============================
 // Object生成
 //=============================

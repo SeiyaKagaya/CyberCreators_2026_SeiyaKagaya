@@ -16,22 +16,22 @@
 CObjectBillBoard::CObjectBillBoard(int nPriority) :CObjectX(nPriority)
 {
     SetObjectType(CObject::OBJECT_BILLBOARD);
+
     m_pVtxBuff = nullptr;
     m_pTexture = nullptr;
-
+    m_AddDrawMode = false;
+    m_ZDethDrawMode = false;
     m_AddDrawMode = false;
 
     m_Data.Pos = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
     m_Data.OldPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_Data.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_Data.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_AddDrawMode = false;
-
     m_Data.MinLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_Data.MaxLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     m_Data.Radius = 0.0f;
-    m_ZDethDrawMode = false;
 }
+
 //=============================
 // デストラクタ
 //=============================
@@ -39,18 +39,15 @@ CObjectBillBoard::~CObjectBillBoard()
 {
     Uninit();
 }
+
 //=============================
 // 初期設定(頂点バッファ生成)
 //=============================
 HRESULT CObjectBillBoard::Init()
 {
     CRenderer* pRenderer = nullptr;
-
     CManager* pManager = CManager::GetInstance();
-
     pRenderer = pManager->GetRenderer();
-
-
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
 
     if (FAILED(EscDevice->CreateVertexBuffer(
@@ -71,28 +68,13 @@ HRESULT CObjectBillBoard::Init()
     float fTest = 2400.0f/2;
     float fTest2 = 3300.0f/2;
 
-    ////頂点座標の設定
-    //pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, fTest);
-    //pVtx[1].pos = D3DXVECTOR3(fTest2, 0.0f, fTest);
-    //pVtx[2].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    //pVtx[3].pos = D3DXVECTOR3(fTest2, 0.0f, 0.0f);
-
     //頂点座標の設定
     pVtx[0].pos = D3DXVECTOR3(-fTest2, fTest2, 0.0f);
     pVtx[1].pos = D3DXVECTOR3(fTest2, fTest2, 0.0f);
     pVtx[2].pos = D3DXVECTOR3(-fTest2, -fTest2, 0.0f);
     pVtx[3].pos = D3DXVECTOR3(fTest2, -fTest2, 0.0f);
 
-
-
-    ////法線ベクトルの設定
-    //pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-
-
-        //法線ベクトルの設定
+    //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
     pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
     pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
@@ -110,7 +92,6 @@ HRESULT CObjectBillBoard::Init()
     pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
     pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
 
-
     m_pVtxBuff->Unlock();
 
     //テクスチャ読み込み
@@ -125,11 +106,11 @@ HRESULT CObjectBillBoard::Init()
 
     BindTexture(m_ESCpTexture);//設定
 
-
     SetpVtx(pVtx);
 
     return S_OK;
 }
+
 //=============================
 // 終了処理(頂点バッファ破棄)
 //=============================
@@ -144,28 +125,21 @@ void CObjectBillBoard::Uninit()
     }
     if (m_pTexture != nullptr)
     {
-        //    m_pTexture->Release();//-----テクスチャcppでやること
         m_pTexture = nullptr;
     }
-
-  //  CObjectX::Uninit;
 }
+
 //=============================
 // 更新(頂点情報の更新)
 //=============================
 void CObjectBillBoard::Update()
 {
     // 更新処理
-
-
     VERTEX_3D* pVtx;
 
     m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-
-
     //頂点座標の更新-----------------------------------
-
     for (int nCnt = 0; nCnt < BASE_INDEX; nCnt++)
     {
         pVtx[nCnt].pos = m_pVtx[nCnt].pos;//左上
@@ -174,9 +148,9 @@ void CObjectBillBoard::Update()
         pVtx[nCnt].col = m_pVtx[nCnt].col;
     }
 
-
     m_pVtxBuff->Unlock();
 }
+
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
@@ -228,7 +202,7 @@ void CObjectBillBoard::Draw()
     EscDevice->SetTransform(D3DTS_WORLD, &m_mtxWorld);
 
     if (m_AddDrawMode)
-    {
+    {//加算合成か
         EscDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
         EscDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
         EscDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -283,6 +257,7 @@ CObjectBillBoard* CObjectBillBoard::Create()
     pObject3D->Init();
     return pObject3D;
 }
+
 //=============================
 // テクスチャ設定
 //=============================
@@ -290,6 +265,7 @@ void CObjectBillBoard::BindTexture(LPDIRECT3DTEXTURE9 pTex)
 {
     m_pTexture = pTex;
 }
+
 //=============================
 // テクスチャ取得
 //=============================
@@ -297,6 +273,7 @@ LPDIRECT3DTEXTURE9 CObjectBillBoard::GetTexture()
 {
     return m_pTexture;
 }
+
 //=============================
 // バッファ設定
 //=============================
@@ -304,6 +281,7 @@ void CObjectBillBoard::BindVtxBuffer(LPDIRECT3DVERTEXBUFFER9 pVtx)
 {
     m_pVtxBuff = pVtx;
 }
+
 //=============================
 // バッファ取得
 //=============================
@@ -311,6 +289,7 @@ LPDIRECT3DVERTEXBUFFER9 CObjectBillBoard::GetpVtxBuffer()
 {
     return m_pVtxBuff;
 }
+
 //=============================
 // 基礎情報取得
 //=============================
@@ -318,6 +297,7 @@ CObjectBillBoard::DATA CObjectBillBoard::GetDATA()
 {
     return m_Data;
 }
+
 //=============================
 // 基礎情報設定
 //=============================
@@ -325,6 +305,7 @@ void CObjectBillBoard::SetDATA(DATA data)
 {
     m_Data = data;
 }
+
 //=============================
 // 色変更
 //=============================
@@ -340,6 +321,7 @@ void CObjectBillBoard::ChangeRGBA(D3DCOLOR col)
 
     m_pVtxBuff->Unlock();
 }
+
 //=============================
 // 加算合成切り替え
 //=============================
@@ -347,6 +329,7 @@ void CObjectBillBoard::ChengeAddDrawMode(bool bSet)
 {
     m_AddDrawMode = bSet;
 }
+
 //=============================
 // 頂点、テクスチャ座標切り替え
 //=============================
@@ -357,13 +340,16 @@ void CObjectBillBoard::SetpVtx(VERTEX_3D pVtx[BASE_INDEX])
         m_pVtx[nCnt] = pVtx[nCnt];
     }
 }
+
 //=============================
 // 頂点座標入れ
 //=============================
 void CObjectBillBoard::InputpVtx()
 {
 }
-
+//=============================
+// Zバッファへの書き込みを無効化するか
+//=============================
 void CObjectBillBoard::SetZDrawDeth(bool bDraw)
 {
     m_ZDethDrawMode = bDraw;

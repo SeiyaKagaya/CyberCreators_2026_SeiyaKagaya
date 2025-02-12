@@ -1662,11 +1662,7 @@ void CObjectMotionPlayer::ControllerInput2D()
 	{
 		m_nMoveCnt++;
 
-		if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
-		{
-			m_nMoveCnt = 0;
-			//CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-		}
+
 
 		if (GetBoostNow() == true)
 		{
@@ -2395,13 +2391,7 @@ void CObjectMotionPlayer::ControllerInput3D()
 	//ˆÚ“®‚·‚éó‘Ô‚Ì
 	if (MoveNowCom == true)
 	{
-		m_nMoveCnt++;
-
-		if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
-		{
-			m_nMoveCnt = 0;
-			//CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-		}
+	
 
 
 		//ƒJƒƒ‰‚ÌŠp“xæ“¾

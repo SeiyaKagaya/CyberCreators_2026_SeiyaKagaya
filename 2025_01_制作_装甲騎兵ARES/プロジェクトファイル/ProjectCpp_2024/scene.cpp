@@ -1284,6 +1284,10 @@ void CGame::Update()
 						if (CMathProc::Check3DBoxInPos(GateMin, GateMax, PlayerPos) == true)
 						{
 							SetStayNextStage(true);//ゴール地点に到達
+
+							m_bTextSetEnd[0] = true;
+							m_bTextSetEnd[1] = true;
+							m_bTextSetEnd[2] = true;
 						}
 
 
@@ -1354,6 +1358,8 @@ void CGame::Update()
 				}
 				if (m_bTextSet[1] == true)
 				{
+					m_bTextSetEnd[0] = true;
+
 					if (m_bTextSetEnd[1] == false)
 					{
 						m_nTextEndCnt--;
@@ -1366,6 +1372,9 @@ void CGame::Update()
 				}
 				if (m_bTextSet[2] == true)
 				{
+					m_bTextSetEnd[0] = true;
+					m_bTextSetEnd[1] = true;
+
 					if (m_bTextSetEnd[2] == false)
 					{
 						m_nTextEndCnt--;
@@ -2503,13 +2512,13 @@ HRESULT CGame2::Init()
 	CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 	SetData.Pos = D3DXVECTOR3(3850.0f, 3370.0f, 5310.0f);
 		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
-	SetData.Pos = D3DXVECTOR3(7280.0f, 4760.0f, 9360.0f);
+	SetData.Pos = D3DXVECTOR3(7280.0f, 4960.0f, 9360.0f);
 		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
-	SetData.Pos = D3DXVECTOR3(9350.0f, 4760.0f, 12980.0f);
+	SetData.Pos = D3DXVECTOR3(9350.0f, 4960.0f, 12980.0f);
 		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
-	SetData.Pos = D3DXVECTOR3(9320.0f, 4760.0f, 6400.0f);
+	SetData.Pos = D3DXVECTOR3(9320.0f, 4960.0f, 6400.0f);
 		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
-	SetData.Pos = D3DXVECTOR3(9300.0f, 4760.0f, 1940.0f);
+	SetData.Pos = D3DXVECTOR3(9300.0f, 4960.0f, 1940.0f);
 		CObjectMotionEnemyNomal::Create("DATA\\motion_hellcpter.txt", SetData);
 
 

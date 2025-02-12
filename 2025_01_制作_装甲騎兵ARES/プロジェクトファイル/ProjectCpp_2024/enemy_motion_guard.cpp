@@ -8,16 +8,13 @@
 #include "renderer.h"
 #include "manager.h"
 #include "player_motion.h"
-//#include "ballet3D.h"
 #include "line.h"
 #include "tankfootprint.h"
-//#include "ShotFire.h"
 #include "score.h"
 #include "Explosion3D.h"
 #include "newbullet.h"
 #include "ShotFire.h"
 #include "missile.h"
-//#include "movesmoke.h"
 
 int CObjectMotionEnemyGuard::m_nNumENemyAll = 0;
 
@@ -44,8 +41,6 @@ HRESULT CObjectMotionEnemyGuard::Init()
 	CObjectMotion::Init();
 	SetObjectType(CObject::OBJECT_MOTIONENEMY_BOSS_GUARD);
 
-	//	LoadRouteTable();
-
 	m_nLife = 1000;
 
 	float fLength[3];
@@ -59,8 +54,10 @@ HRESULT CObjectMotionEnemyGuard::Init()
 	m_fRotTurret = 0.0f;
 	m_nBulletDelay = BULLETSHOTDELAY;
 
+	//ロックオン系
 	m_LockOnUI = CLockOnUI::Create();
 	m_LockOnUI_Main = CLockOnUIMain::Create();
+
 	return S_OK;
 }
 
@@ -84,7 +81,6 @@ void CObjectMotionEnemyGuard::Update()
 {
 	CScene::MODE NowState = CScene::GetNowScene();
 
-
 	if (CScene::GetStayNextStage() == false)
 	{//待機状態か
 
@@ -96,93 +92,13 @@ void CObjectMotionEnemyGuard::Update()
 			}
 
 			CRenderer* pRenderer = nullptr;
-
 			CManager* pManager = CManager::GetInstance();
-
 
 			CObjectMotion::Update();//----------------
 
-
-
 			DATA classData = GetClassData();
 
-
-			//相手、自分のGRID番号がかわったか
-			bool bChange = false;
-
-			//とりあえずplayer の方向に砲塔を向ける
-			//----------------------------------------------------------------------------------
-			//playerの位置を取得
-			CObject* pObj = nullptr;
-			pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
-
-			D3DXVECTOR3 TargetPos = {};
-
-			if (pObj != nullptr)
-			{
-				CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
-
-				CObject::DATA EscData;
-
-				EscData = pPlayer->GetClassData();
-
-				TargetPos = EscData.Pos;//注視点
-
-				if (m_nOldTargetGRIDNum != pPlayer->GetNowGRIDNum())
-				{//過去の相手位置番号といまの相手位置番号が一緒じゃない時
-					//格納
-					m_nOldTargetGRIDNum = pPlayer->GetNowGRIDNum();
-					bChange = true;
-				}
-			}
-
-
-			////移動先制定ここまで
-			////---------------------------------------------------------------------------------------------------------------------------------
-			//// ターゲット位置への移動処理
-			//D3DXVECTOR3 direction = m_TargetPos - classData.Pos; // 方向ベクトル
-
-			//float distance = D3DXVec3Length(&direction); // ターゲットまでの距離
-
-			//if (distance > 1.0f) // 近すぎない場合にのみ移動
-			//{
-			//	D3DXVec3Normalize(&direction, &direction); // 方向ベクトルの正規化
-
-			//	float MoveSpeed = MOVESPEED;//移動速度
-
-			//	// 移動
-			//	classData.move.x = direction.x * MoveSpeed;
-			//	classData.move.z = direction.z * MoveSpeed;
-
-
-			//	// 目標方向の計算
-			//	float targetAngle = atan2f(direction.x, direction.z);
-
-			//	//角度変動
-			//	classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, targetAngle + D3DX_PI);
-
-			//	m_nMoveCnt++;
-
-			//	if (m_nMoveCnt >= CObjectFootPrint::STANPFLAME)
-			//	{
-			//		m_nMoveCnt = 0;
-			//		//CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-			////		CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
-			//	}
-			//}
-			//else
-			//{
-			//	// ターゲット位置に近すぎる場合は移動を停止
-			//	classData.move.x = 0.0f;
-			//	classData.move.z = 0.0f;
-			//}
-			////------------------------------------------------------------------------------------------------------------------
-
-
-
-
 			//衝突相殺--敵と
-
 			CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_NOMAL, LAYERINDEX_MOTIONENEMY_NOMAL, this);
 
 			if (HitData.bHit == true)
@@ -199,7 +115,6 @@ void CObjectMotionEnemyGuard::Update()
 				HitData.bHit = false;
 			}
 
-
 			SetClassData(classData);
 
 			//当たり判定計算
@@ -208,24 +123,14 @@ void CObjectMotionEnemyGuard::Update()
 			//当たり判定計算
 			m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONENEMY_NOMAL, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
 
-			//	classData.rot.y = 0.0f;
-
-			//CObjectMotion::Update();
-
-
-
 			classData = GetClassData();
-
 
 			classData.move.x = 0.0f;
 			classData.move.y = 0.0f;
 			classData.move.z = 8.8f;
 
 			//敵射撃管制
-			//-------------------------------------------------------------------------------------------------------------------------------------------------------
-
 			Attack();
-
 
 			DATA SetData = DataInit();
 			SetData.Pos = GetClassData().Pos;
@@ -234,24 +139,13 @@ void CObjectMotionEnemyGuard::Update()
 			m_LockOnUI_Main->SetDATA(SetData);
 			m_LockOnUI->SetDATA(SetData);
 
-
-
-
-
-
-			//------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
+			//死亡時
 			if (m_nLife <= 0)
 			{
-				//	CScene::AddClearNum(1);
-
+				//モーションセット
 				SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 				SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 
-				//Motion_Parent();
-				//Motion_Sub();
 				classData = GetClassData();
 
 				classData.move.y = -1;
@@ -272,7 +166,6 @@ void CObjectMotionEnemyGuard::Update()
 						{ // 先頭がない==プライオリティまるっとない
 							pMissile->KillMissileTarget(this);
 						}
-
 					}
 
 					CScore::AddScore(CScore::TANK_SCORE1);
@@ -284,10 +177,8 @@ void CObjectMotionEnemyGuard::Update()
 					{//パーツもDEATH
 						GetModelParts(i)->SetDeath(true);
 					}
-
 				}
 			}
-
 
 			SetClassData(classData);
 
@@ -317,44 +208,15 @@ void CObjectMotionEnemyGuard::Update()
 			SetChangeDataInObjectMotion(ChangeData);
 
 			CObjectMotion::Update();//------------------更新
-
-
-			//SetNowMotion_Parent(MOTIONTYPE_STANDBY);
-			//SetNowMotion_Sub(MOTIONTYPE_STANDBY);
 		}
 		else if (NowState == CScene::MODE_MOVIE2)
 		{
 			m_nCntFrame++;
 
 			DATA classData = GetClassData();
-			//classData.rot.x = -1.57f;
-			//classData.move.z = -7.0f;
-
-			if (m_nCntFrame >= 300 && m_nCntFrame < 450)
-			{
-				//  SetNowMotion_Parent(MOTIONTYPE_OP1);
-				//	SetNowMotion_Sub();
-			}
-
-			if (m_nCntFrame == 450)
-			{
-				//			m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 320.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 25, 20, 3, "....!!\n12時よりアクティブソナー！\n魚雷接近！回避！", D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240);
-			}
-
-			if (m_nCntFrame == 650)
-			{//爆発
-				//Explosion3D::Create(D3DXVECTOR3(classData.Pos.x, classData.Pos.y, classData.Pos.z));
-			}
-
-			if (m_nCntFrame > 650)
-			{//
-
-			}
 
 			if (m_nCntFrame >= 800 && m_nCntFrame < 1260)
 			{
-				//			m_CTextWindow->SetText(D3DXVECTOR3(SCREEN_WIDTH * 0.5f - 320.0f, SCREEN_HEIGHT * 0.5f - 345.0f, 0.0f), 25, 40, 2, "クソッ............総員退艦！\n.........................\n...............", D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), 240);
-
 				classData.move.y = +0.5f;
 				classData.move.z = 1.2f;
 
@@ -366,22 +228,12 @@ void CObjectMotionEnemyGuard::Update()
 				classData.move.z = 0.0f;
 			}
 
-
 			SetClassData(classData);
 
 			DATA ChangeData = DataInit();
 
 			// 変更データを反映
 			SetChangeDataInObjectMotion(ChangeData);
-
-			//DATA Head;
-			//Head = CObject::DataInit();
-			////Head.rot.x = 1.57f;
-
-			////基底クラスからパーツにデータを受け渡し
-			//SetChangeDataInObjectMotion(Head);
-
-
 
 			CObjectMotion::Update();//------------------更新
 		}
@@ -394,10 +246,11 @@ void CObjectMotionEnemyGuard::Update()
 		// 変更データを反映
 		SetChangeDataInObjectMotion(ChangeData);
 
-
+		//モーションセット
 		SetNowMotion_Parent(MOTIONTYPE_STANDBY);
 		SetNowMotion_Sub(MOTIONTYPE_STANDBY);
-		//CObjectMotion::Update();
+	
+		//モーション再生
 		Motion_Parent();
 		Motion_Sub();
 	}
@@ -411,12 +264,6 @@ void CObjectMotionEnemyGuard::Update()
 void CObjectMotionEnemyGuard::Draw()
 {
 	CObjectMotion::Draw();
-
-	//char cData2[100] = {};
-	//snprintf(cData2, sizeof(cData2), "敵現在のGRID/%d移動先GRID%d", m_OldMyGRIDNum, NowMoveGRIDNum); // 数値を文字列に変換してCDataにコピー
-	//// mousePos.x と mousePos.y がマウスの位置
-	//CFont::DrawTextSet(D3DXVECTOR3(1000.0f, 320.0f, 0.0f), 20, CFont::FONT_DIGITAL, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), cData2);
-
 }
 
 //=============================
@@ -436,7 +283,6 @@ CObjectMotionEnemyGuard* CObjectMotionEnemyGuard::Create(std::string pfilePass, 
 	SetData.MinLength = D3DXVECTOR3(-(float)(CObjectMotionEnemyBase::AABB_BOX), 0.0f, -(float)(CObjectMotionEnemyBase::AABB_BOX));
 	pObstacle->SetClassData(SetData);
 
-
 	return pObstacle;
 }
 
@@ -448,7 +294,6 @@ void CObjectMotionEnemyGuard::Attack()
 	CRenderer* pRenderer = nullptr;
 
 	CManager* pManager = CManager::GetInstance();
-
 
 	DATA TargetData = DataInit();
 
@@ -481,11 +326,8 @@ void CObjectMotionEnemyGuard::Attack()
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &pMat);
 
 	D3DXVECTOR3 SetPos = D3DXVECTOR3(EscMtxWorld._41, EscMtxWorld._42, EscMtxWorld._43);//砲弾射出口	
-	//-----------------------------------------------------------------------------------------------
 
-	//+エリアに対し跳弾予測射撃
 
-	//+精密予測照準射撃
 
 	//----------------------------------------------------------------------------------
 	//playerの位置を取得
@@ -521,10 +363,6 @@ void CObjectMotionEnemyGuard::Attack()
 		pMissile->SetMissile(Setdata, 0, D3DXCOLOR(0.0f, 1.0f, 0.0f, 1.0f), nullptr, CMissileALL::SHOTTYPE_ENEMY);
 
 		m_nMissileDelay = MISSILESHOTDELAY;
-
-
-
-
 
 		CSound* pSound = pManager->GetSound();
 		pSound->PlaySound(CSound::SOUND_LABEL_SE_SHOTFIRE);
@@ -565,7 +403,7 @@ void CObjectMotionEnemyGuard::Attack()
 		D3DXVECTOR3 BulletMax = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
 
 
-
+		//射撃地点埋もれてないか
 		bool bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_NOMAL, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
 
 		if (bNoShot == false)
@@ -578,9 +416,9 @@ void CObjectMotionEnemyGuard::Attack()
 			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONENEMY_NOMAL, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX_2D3D, LAYERINDEX_HITBOX_2D3D);
 		}
 
+		//射撃
 		if (bNoShot == false)
 		{
-
 			// 現在の砲塔位置からの発射時砲弾moveベクトル
 			D3DXVECTOR3 direction = D3DXVECTOR3(EscData.Pos.x, EscData.Pos.y, EscData.Pos.z) - SetPos;
 			D3DXVec3Normalize(&direction, &direction); // 方向ベクトルを正規化

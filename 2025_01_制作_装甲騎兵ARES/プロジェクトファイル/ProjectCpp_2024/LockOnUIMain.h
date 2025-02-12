@@ -5,30 +5,17 @@
 //
 //=========================================================
 #ifndef _LOCKONUIMAIN_H
-
 #define _LOCKONUIMAIN_H//二重インクルード防止
 
 #include "Object_billboard.h"
 #include "d3dx9.h"//描写処理に使う
 #include "main.h"
-//#include "LockOnUI.h"
-///
 
 class CLockOnUIMain : public CObjectBillBoard
 {
 public:
-
-//	static const int EX_WIDE = 140;
-//	static const int EX_HEIGHT = 140;
-
-//	const int START_LIFE = 120;
-//	const int DIVISION_NUMBER = 15;	//テクスチャ分割数
-
-
-//	static const int STANPLIFE = 2 * 60;
-	static const int  PRINTSIZE = 80;
+	const float  PRINTSIZE = 80.0f;
 	
-
 	CLockOnUIMain(int nPriority = CObject::LAYERINDEX_LOCKONUIMAIN);//コンストラクタ
 	~CLockOnUIMain() override;//デストラクタ
 	HRESULT Init()override;
@@ -38,8 +25,6 @@ public:
 
 	static CLockOnUIMain* Create();//object生成
 
-
-
 	//頂点格納
 	void InputpVtx()override;
 
@@ -47,8 +32,9 @@ public:
 	void SetDrawOk(bool bSet) { m_bDrawOk = bSet; };
 	bool bGetDrawOk() { return m_bDrawOk; };
 
-	void SetPos(D3DXVECTOR3 Pos);
-	void SetCol(D3DXCOLOR col) { m_col = col; };
+	void SetPos(D3DXVECTOR3 Pos);//座標格納
+
+	void SetCol(D3DXCOLOR col) { m_col = col; };//色格納
 
 private:
 
@@ -56,9 +42,7 @@ private:
 
 	D3DXCOLOR m_col = D3DXCOLOR(1.0f, 0.5f, 0.0f, 0.95f);
 
-	//int m_nLife = 6;
-	bool m_bDrawOk = false;
-
+	bool m_bDrawOk = false;//描画可能か
 };
 
 #endif

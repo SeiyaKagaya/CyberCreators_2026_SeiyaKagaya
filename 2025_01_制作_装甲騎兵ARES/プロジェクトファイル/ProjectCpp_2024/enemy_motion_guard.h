@@ -5,17 +5,8 @@
 //
 //=========================================================
 #ifndef _MOTIONENEMY_GUARD_H
-
 #define _MOTIONENEMY_GUARD_H//二重インクルード防止
 
-//#include "object.h"
-//#include "objectX.h"
-//
-//#include <Windows.h>
-//#include "d3dx9.h"//描写処理に使う
-//#include "MathUtilities.h"
-//#include <vector>
-//#include "object_motion.h"
 
 #include "enemy_motion_base.h"
 #include "LockOnUI.h"

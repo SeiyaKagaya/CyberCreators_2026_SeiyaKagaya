@@ -5,25 +5,21 @@
 //
 //=========================================================
 #ifndef _TANKFOOTPRINT_H
-
 #define _TANKFOOTPRINT_H//二重インクルード防止
 
 #include "object3D.h"
 #include "d3dx9.h"//描写処理に使う
 #include "main.h"
 
-//
-
 class CObjectFootPrint : public CObject3D
 {
 public:
 
-	static const int STANPFLAME = 15;
+	static const int STANPLIFE = 480;//体力
 
-	static const int STANPLIFE = 8 * 60;
+	//頂点までの距離
 	static const int  PRINTSIZE_X= 85;
 	static const int  PRINTSIZE_Z = 40;
-
 
 	CObjectFootPrint(int nPriority = CObject::LAYERINDEX_FOOTPRINT);//コンストラクタ
 	~CObjectFootPrint() override;//デストラクタ
@@ -34,15 +30,14 @@ public:
 
 	static CObjectFootPrint* Create(D3DXVECTOR3 Pos, D3DXVECTOR3 rot);//object生成
 
-	void SetPos_Rot(D3DXVECTOR3 Pos,D3DXVECTOR3 rot);
+	void SetPos_Rot(D3DXVECTOR3 Pos,D3DXVECTOR3 rot);//座標と角度を格納
 
 	//頂点格納
 	void InputpVtx()override;
 
-
 private:
 	
-	int m_nLife;//寿命で消す
+	int m_nLife = 0;//寿命で消す
 };
 
 #endif

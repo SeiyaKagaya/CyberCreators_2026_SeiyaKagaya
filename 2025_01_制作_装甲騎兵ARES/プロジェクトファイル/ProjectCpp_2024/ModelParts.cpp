@@ -11,18 +11,12 @@
 #include "3DParticle.h"
 #include "player_motion.h"
 
-
-
-
-
 //=============================
 // コンストラクタ
 //=============================
 CModelParts::CModelParts(int nPriority) :CObjectX(nPriority), m_ChangeDatabool(false), m_pParentParts(nullptr), pMotion(nullptr), m_calculationExecution(false)
 {
-    
     m_MotionParent = {};
-
 
     m_ChangeDATA = {};
 
@@ -33,6 +27,7 @@ CModelParts::CModelParts(int nPriority) :CObjectX(nPriority), m_ChangeDatabool(f
      D3DXMatrixIdentity(&m_mtxWorld);
 
 }
+
 //=============================
 //デストラクタ
 //=============================
@@ -41,18 +36,16 @@ CModelParts::~CModelParts()
     m_pParentParts = nullptr;
     pMotion = nullptr;
 }
+
 //=============================
 //初期化
 //=============================
 HRESULT CModelParts::Init()
 {
-
     CObjectX::Init();
 
     CRenderer* pRenderer = nullptr;
-
     CManager* pManager = CManager::GetInstance();
-
     pRenderer = pManager->GetRenderer();
 
     LPD3DXMESH pMesh = nullptr;//Meshポインタ
@@ -76,7 +69,6 @@ HRESULT CModelParts::Init()
     //テクスチャ読み込み
     LPDIRECT3DTEXTURE9	m_ESCpTexture = nullptr;
 
-
     ////テクスチャ取得
     CAllTexture* pTexture = pManager->GetTexture();
 
@@ -94,40 +86,28 @@ HRESULT CModelParts::Init()
 
     SetXfireData(pMesh, pBuffMat, dwNumMat);//データ格納
 
-    //m_pMesh = pMesh;
-    //m_pBuffMat = pBuffMat;
-    //m_dwNumMat = dwNumMat;
-
     SetObjectType(CObject::OBJECT_MODELPARTS);
 
     return S_OK;
 }
+
 //=============================
 //破棄
 //=============================
 void CModelParts::Uninit()
 {
-    //if (m_PartfilePass != nullptr)
-    //{
-    //    delete m_PartfilePass;
-    //    m_PartfilePass = nullptr;
-    //}
-
-
-
     CObjectX::Uninit();
 }
+
 //=============================
 //更新
 //=============================
 void CModelParts::Update()
 {
+    //親がプレイヤー型のとき
     if (typeid(*pMotion) == typeid(CObjectMotionPlayer))
     {
-
-
-
-
+        //ブースト位置周り
         if (m_nPartNum == 9 || m_nPartNum == 10 || m_nPartNum == 17 || m_nPartNum == 18)
         {
             CRenderer* pRenderer = nullptr;
@@ -353,13 +333,12 @@ void CModelParts::Update()
         }
     }
 }
+
 //=============================
 //描画
 //=============================
 void CModelParts::Draw()
 {
-
-    
     CRenderer* pRenderer = nullptr;
 
     CManager* pManager = CManager::GetInstance();
@@ -425,22 +404,7 @@ void CModelParts::Draw()
         D3DXMATRIX m_mtxWorldParent = m_pParentParts->GetMtxWorld();
         // 自分の親のマトリックス欠けてる
         D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxWorldParent);
-
-
-        //if (m_pParentParts->IsValid()) 
-        //{
-        //    D3DXMATRIX m_mtxWorldParent = m_pParentParts->GetMtxWorld();
-        //    D3DXMatrixMultiply(&m_mtxWorld, &m_mtxWorld, &m_mtxWorldParent);
-        //}
-        //else 
-        //{
-        //    // 親が無効な場合の処理（必要であれば）
-        //    D3DXMatrixIdentity(&m_mtxWorld);
-        //}
     }
-
-
-
 
     ChangeModelPartsbool(true);//パーツ描画じマトリックス変更
     SetModelMtxWorld(m_mtxWorld);//マトリックス格納
@@ -475,8 +439,9 @@ void CModelParts::Draw()
     {
         int test = 0;
     }
-  //  CObjectX::Draw();
+
 }
+
 //=============================
 //生成
 //=============================
@@ -489,19 +454,16 @@ CModelParts* CModelParts::Create(std::string FilePass, int PartsNum)
     pModelParts->SetPartsNum(PartsNum);
     return pModelParts;
 }
+
 //=============================
 // パス格納//init前にやる
 //=============================
 void CModelParts::SetFilePass(std::string FilePass)
-{
-   // char* filePass = new char[strlen(FilePass) + 1];//長さ分確保
-   // strcpy(filePass, FilePass);//コピー
-    
+{   
     std::string filePass = FilePass;                // std::stringを使用してコピー
     m_PartfilePass = filePass;    // そのまま格納
-
-  //  m_PartfilePass = filePass;
 }
+
 //=============================
 // 親を格納
 //=============================
@@ -509,6 +471,7 @@ void CModelParts::SetParent(CModelParts* pParentParts)
 {
     m_pParentParts = pParentParts;
 }
+
 //=============================
 // Offset格納
 //=============================
@@ -516,6 +479,7 @@ void CModelParts::SetOffSetData(DATA offSetData)
 {
     m_offSetData = offSetData;
 }
+
 //=============================
 // Offset取得
 //=============================
@@ -523,6 +487,7 @@ CModelParts::DATA CModelParts::GetOffSetData()
 {
     return m_offSetData;
 }
+
 //=============================
 // マトリックス取得
 //=============================
@@ -530,6 +495,7 @@ D3DXMATRIX CModelParts::GetMtxWorld()
 {
     return m_mtxWorld;
 }
+
 //=============================
 // 親を取得
 //=============================
@@ -537,6 +503,7 @@ CModelParts* CModelParts::GetParent()
 {
     return m_pParentParts;
 }
+
 //=============================
 // 通常データ格納
 //=============================
@@ -544,6 +511,7 @@ void CModelParts::SetNowData(DATA data)
 {
     m_NowData=data;
 }
+
 //=============================
 // 通常データを取得
 //=============================
@@ -551,6 +519,7 @@ CModelParts::DATA CModelParts::GetNowData()
 {
     return m_NowData;
 }
+
 //=============================
 // 補正値取得POS
 //=============================
@@ -558,6 +527,7 @@ D3DXVECTOR3 CModelParts::GetCorrectCorrectionPosMove()
 {
     return m_CorrectCorrectionPosMove;
 }
+
 //=============================
 // 補正値取得ROT
 //=============================
@@ -565,6 +535,7 @@ D3DXVECTOR3 CModelParts::GetCorrectCorrectionRotMove()
 {
     return m_CorrectCorrectionRotMove;
 }
+
 //=============================
 // 補正値計算済みか取得
 //=============================
@@ -572,6 +543,7 @@ bool CModelParts::GetcalculationExecution()
 {
     return m_calculationExecution;
 }
+
 //=============================
 // 補正値格納POS
 //=============================
@@ -579,6 +551,7 @@ void CModelParts::SetCorrectCorrectionPosMove(D3DXVECTOR3 pos)
 {
     m_CorrectCorrectionPosMove = pos;
 }
+
 //=============================
 // 補正値格納ROT
 //=============================
@@ -586,6 +559,7 @@ void CModelParts::SetCorrectCorrectionRotMove(D3DXVECTOR3 Rot)
 {
     m_CorrectCorrectionRotMove = Rot;
 }
+
 //=============================
 // 補正値計算済みかを格納
 //=============================
@@ -593,6 +567,7 @@ void CModelParts::SetcalculationExecution(bool calculationExecution)
 {
     m_calculationExecution = calculationExecution;
 }
+
 //=============================
 // motionPos
 //=============================
@@ -601,6 +576,7 @@ void CModelParts::UpdatePosMotion()
     //親のときしか動作しない
     m_NowData.Pos += m_CorrectCorrectionPosMove;
 }
+
 //=============================
 //MotionRot
 //=============================
@@ -609,55 +585,82 @@ void CModelParts::UpdateRotMotion()
     m_NowData.rot += m_CorrectCorrectionRotMove;
 }
 
+//=============================
+// 親を格納
+//=============================
 void CModelParts::SetMotionPoint(CObjectMotion* Motion)
 {
     pMotion = Motion;//すべての親のポインタ
 
 }
 
+//=============================
+//マトリックス取得
+//=============================
 D3DXMATRIX CModelParts::GetPartsMtx()
 {
     return m_mtxWorld;
 }
 
+//=============================
+// マトリックス格納
+//=============================
 void CModelParts::SetPartsMtx(D3DXMATRIX mtxWorld)
 {
     m_mtxWorld = mtxWorld;
 }
 
-
+//=============================
 //データ変更モデルbool
+//=============================
 void CModelParts::m_DataChangeModel(bool changebool)
 {
     m_ChangeDatabool = changebool; 
 }
 
+//=============================
 //変更データ格納
+//=============================
 void CModelParts::ChangeDataSet(DATA data)
 {
     m_ChangeDATA = data; 
 }
 
+//=============================
+// モーション格納
+//=============================
 void CModelParts::SetMotion_Parent(int Check)
 {
     m_MotionParent = Check;
 }
 
+//=============================
+// 親取得
+//=============================
 int CModelParts::GetMotion_Parent()
 {
     return m_MotionParent;
 }
-
+//=============================
+// 描画OKか
+//=============================
 void CModelParts::DrawOkBool(bool Draw)
 {
     m_bDrawBool = Draw;
 }
 
+//=============================
+// 色変更格納
+//=============================
 void CModelParts::ChengeRGBAbool(bool chenge, D3DXCOLOR col)
 {
     m_bChengeCol = chenge;
     m_ChengeCol = col;
 }
+
+//=============================
+// ポインタが有効か
+//=============================
 bool CModelParts::IsValid() const 
 {
     // 条件: ポインタが有効であり、関連するリソースも正しい状態

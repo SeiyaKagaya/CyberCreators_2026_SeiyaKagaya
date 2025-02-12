@@ -8,20 +8,20 @@
 #include "renderer.h"
 #include "manager.h"
 
-
 //=============================
 // コンストラクタ
 //=============================
 CObject3DParticleAll::CObject3DParticleAll(int nPriority) : CObjectX(nPriority)
 {
-
 }
+
 //=============================
 // デストラクタ
 //=============================
 CObject3DParticleAll::~CObject3DParticleAll()
 {
 }
+
 //=============================
 // 初期化
 //=============================
@@ -36,20 +36,13 @@ HRESULT CObject3DParticleAll::Init()
     for (int i = 0; i < MAXPARTICLEALL; i++)
     {
         m_NewParticle[i] = CObject3DParticle::Create();
-        //   pBlock3D->Init();
-
-    //    m_NewParticle[i]->SetID(i);
-
-        //m_NewParticle[i] = pBlock3D;
-
     }
-
 
     SetObjectType(CObject::OBJECT_3DPARTICLE_MNG);
 
-
     return E_NOTIMPL;
 }
+
 //=============================
 // 終了
 //=============================
@@ -59,8 +52,8 @@ void CObject3DParticleAll::Uninit()
     {
         m_NewParticle[i]->SetDeath(true);
     }
-
 }
+
 //=============================
 // Create
 //=============================
@@ -70,6 +63,7 @@ CObject3DParticleAll* CObject3DParticleAll::Create()
     pNewBulletALL->Init();
     return pNewBulletALL;
 }
+
 //=============================
 // Release
 //=============================
@@ -86,10 +80,10 @@ void CObject3DParticleAll::AllClean()
 {
     for (int i = 0; i < MAXPARTICLEALL; i++)
     {
-        m_NewParticle[i]->SetbUse(false);
+        m_NewParticle[i]->SetUse(false);
     }
-
 }
+
 //=============================
 // 取得
 //=============================
@@ -97,6 +91,7 @@ CObject3DParticle* CObject3DParticleAll::GetParticleData(int nNum)
 {
     return m_NewParticle[nNum];
 }
+
 //=============================
 // 静的にバレットをセット
 //=============================
@@ -111,47 +106,17 @@ void CObject3DParticleAll::SetParticle(D3DXVECTOR3 Pos, D3DXCOLOR col, int nLife
             m_NewParticle[i]->SetCOL(col);
             m_NewParticle[i]->SetPos(Pos);
             m_NewParticle[i]->SetLife(nLife);
+            m_NewParticle[i]->SetSize(Size);
             m_NewParticle[i]->SetUse(true);
 
-            m_NewParticle[i]->SetSize(Size);
-
             CRenderer* pRenderer = nullptr;
-
             CManager* pManager = CManager::GetInstance();
 
             break;
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//----------------------------------------------------------------------------------------------------------------------------------------------
 
 //=============================
 // コンストラクタ
@@ -159,11 +124,11 @@ void CObject3DParticleAll::SetParticle(D3DXVECTOR3 Pos, D3DXCOLOR col, int nLife
 CObject3DParticle::CObject3DParticle(int nPriority) :CObjectBillBoard(nPriority)
 {
     SetObjectType(CObject::OBJECT_3DPARTICLE);
-    ChengeAddDrawMode(true);
-    // m_pVtxBuff = nullptr;
-    // m_pTexture = nullptr;
-    SetAddDrawCnt(4);
+
+    ChengeAddDrawMode(true);//加算合成On
+    SetAddDrawCnt(4);//加算回数
 }
+
 //=============================
 // デストラクタ
 //=============================
@@ -171,18 +136,15 @@ CObject3DParticle::~CObject3DParticle()
 {
     Uninit();
 }
+
 //=============================
 // 初期設定(頂点バッファ生成)
 //=============================
 HRESULT CObject3DParticle::Init()
 {
     CRenderer* pRenderer = nullptr;
-
     CManager* pManager = CManager::GetInstance();
-
     pRenderer = pManager->GetRenderer();
-
-
     LPDIRECT3DDEVICE9 EscDevice = pRenderer->GetDevice();
 
     LPDIRECT3DVERTEXBUFFER9 ESCpVtxBuff;//頂点バッファ
@@ -207,19 +169,14 @@ HRESULT CObject3DParticle::Init()
     CAllTexture* pTexture = pManager->GetTexture();
 
     int texIndex = pTexture->Regist("DATA\\TEXTURE\\effect000.jpg", EscDevice);//テクスチャ登録
-    //int texIndex = pTexture->Regist("DATA\\TEXTURE\\explosion000.png", EscDevice);//テクスチャ登録
-
+    
     m_ESCpTexture = pTexture->GetAddress(texIndex);
 
     BindTexture(m_ESCpTexture);//設定
 
-
- //   SetpVtx(pVtx);
-
-  //  InputpVtx();
-    m_nLife = START_LIFE;
     return S_OK;
 }
+
 //=============================
 // 終了処理(頂点バッファ破棄)
 //=============================
@@ -227,6 +184,7 @@ void CObject3DParticle::Uninit()
 {
     CObjectBillBoard::Uninit();
 }
+
 //=============================
 // 更新(頂点情報の更新)
 //=============================
@@ -238,7 +196,6 @@ void CObject3DParticle::Update()
 
         if (m_nLife <= 0)
         {
-           // SetDeath(true);
             m_bUse = false;
         }
 
@@ -247,6 +204,7 @@ void CObject3DParticle::Update()
         m_nLife--;
     }
 }
+
 //=============================
 // 描画処理(POLYGON描画)
 //=============================
@@ -254,12 +212,11 @@ void CObject3DParticle::Draw()
 {
     if (m_bUse == true)
     {
-    //    SetZDrawDeth(true);
         SetLight(true);
         CObjectBillBoard::Draw();
-     //   SetZDrawDeth(false);
     }
 }
+
 //=============================
 // 座標設定
 //=============================
@@ -273,6 +230,7 @@ void CObject3DParticle::SetPos(D3DXVECTOR3 Pos)
     SetDATA(EscData);
 
 }
+
 //=============================
 // 頂点情報
 //=============================
@@ -285,36 +243,17 @@ void CObject3DParticle::InputpVtx()
     DATA EscData = GetDATA();
 
     //頂点座標の設定
-    //pVtx[0].pos = D3DXVECTOR3((float)-PRINTSIZE_X, 10.0f, (float)PRINTSIZE_Z);
-    //pVtx[1].pos = D3DXVECTOR3((float)PRINTSIZE_X, 10.0f, (float)PRINTSIZE_Z);
-    //pVtx[2].pos = D3DXVECTOR3((float)-PRINTSIZE_X, 10.0f, (float)-PRINTSIZE_Z);
-    //pVtx[3].pos = D3DXVECTOR3((float)PRINTSIZE_X, 10.0f, (float)-PRINTSIZE_Z);
-
-     //頂点座標の設定
     pVtx[0].pos = D3DXVECTOR3(-m_Size, m_Size, 0.0f);
     pVtx[1].pos = D3DXVECTOR3(m_Size, m_Size, 0.0f);
     pVtx[2].pos = D3DXVECTOR3(-m_Size, -m_Size, 0.0f);
     pVtx[3].pos = D3DXVECTOR3(m_Size, -m_Size, 0.0f);
     
-
     //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
     pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
     pVtx[2].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
     pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 
-    ////法線ベクトルの設定
-    //pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    //pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-    
-    //テクスチャ座標を設定
-    //pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
-    //pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);//右上
-    //pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
-    //pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
-    
     //頂点カラーの設定
     pVtx[0].col = m_col;
     pVtx[1].col = m_col;
@@ -327,14 +266,9 @@ void CObject3DParticle::InputpVtx()
     pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
     pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
 
-
-
-    //   ESCpVtxBuff->Unlock();
-
-   //    BindVtxBuffer(ESCpVtxBuff);
-
     SetpVtx(pVtx);
 }
+
 //=============================
 // 色変更
 //=============================
@@ -342,15 +276,15 @@ void CObject3DParticle::SetCOL(D3DXCOLOR col)
 {
     m_col = col;
 }
+
 //=============================
 // Object生成
 //=============================
-CObject3DParticle* CObject3DParticle::Create(/*D3DXVECTOR3 Pos,D3DXCOLOR col*/)
+CObject3DParticle* CObject3DParticle::Create()
 {
     CObject3DParticle* pObject3D = new CObject3DParticle;
- //   pObject3D->SetPos_Rot(Pos);
-    pObject3D->Init();
- //   pObject3D->SetCOL(col);
-    return pObject3D;
 
+    pObject3D->Init();
+
+    return pObject3D;
 }

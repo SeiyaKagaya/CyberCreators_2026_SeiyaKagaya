@@ -12,11 +12,9 @@
 #include <cstring>
 #include <iostream> // デバッグ用
 #include "line.h"
-//#include "ballet3D.h"
 #include "Explosion3D.h"
 
 int CObjectMotionEnemyBase::m_nNumENemyAll = 0;
-
 
 //=============================
 // コンストラクタ
@@ -25,13 +23,12 @@ CObjectMotionEnemyBase::CObjectMotionEnemyBase(int nPriority) :CObjectMotion(nPr
 {
 	m_nNumENemyAll++;
 }
+
 //=============================
 //オーバーロードコンストラクタ
 //=============================
 CObjectMotionEnemyBase::CObjectMotionEnemyBase(ENEMYTYPE Enemytype, int nPriority) :CObjectMotion(nPriority)
 {
-
-
 	switch (Enemytype)
 	{
 	case ENEMYTYPE_NOMAL:
@@ -87,15 +84,12 @@ void CObjectMotionEnemyBase::Uninit()
 void CObjectMotionEnemyBase::Update()
 {
 	CRenderer* pRenderer = nullptr;
-
 	CManager* pManager = CManager::GetInstance();
-
 
 	CObjectMotion::Update();
 
 	DATA classData = GetClassData();
 
-	
 	if (m_nLife <= 0)
 	{
 		SetDeath(true);
