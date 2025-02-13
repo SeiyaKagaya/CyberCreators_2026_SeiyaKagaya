@@ -15,6 +15,8 @@ class CObject3D : public CObject
 {
 public:
 	const float TEX_MOVE = 0.0008f;//テクスチャ移動量
+	const float SIZE_1 = 9900.0f;  //サイズ
+	const float SIZE_2 = 13300.0f;
 
 	CObject3D(int nPriority = CObject::LAYERINDEX_OBJECT3D);//コンストラクタ
 	~CObject3D() override;//デストラクタ
@@ -49,13 +51,13 @@ public:
 
 private:
 
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;//頂点バッファ
-	LPDIRECT3DTEXTURE9 m_pTexture;//テクスチャ
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff = nullptr;//頂点バッファ
+	LPDIRECT3DTEXTURE9 m_pTexture = nullptr;//テクスチャ
 
-	DATA m_Data;
+	DATA m_Data = CObject::DataInit();
 
 	//テクスチャや頂点座標などの保持
-	VERTEX_3D m_pVtx[BASE_INDEX];
+	VERTEX_3D m_pVtx[BASE_INDEX] = {};
 
 	bool m_AddDrawMode = false;//加算合成モード
 
@@ -63,7 +65,7 @@ private:
 	float m_texOffsetX = 0.0f;
 	float m_texOffsetY = 0.0f;
 
-	D3DXMATRIX m_mtxWorld;
+	D3DXMATRIX m_mtxWorld = {};
 
 	bool m_bSubtract = false;//減産合成モード
 };

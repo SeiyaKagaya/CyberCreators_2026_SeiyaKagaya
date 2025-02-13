@@ -15,7 +15,7 @@
 class CObjectBillBoard : public CObjectX
 {
 public:
-
+	const float SIZE = 1650.0f;
 	CObjectBillBoard(int nPriority = CObject::LAYERINDEX_BILLBOARD);//コンストラクタ
 	~CObjectBillBoard() override;//デストラクタ
 	HRESULT Init()override;
@@ -56,19 +56,19 @@ public:
 
 private:
 
-	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;//頂点バッファ
-	LPDIRECT3DTEXTURE9 m_pTexture;//テクスチャ	
-	DATA m_Data;
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff=nullptr;//頂点バッファ
+	LPDIRECT3DTEXTURE9 m_pTexture = nullptr;//テクスチャ	
+	DATA m_Data = CObject::DataInit();
 
 	//テクスチャや頂点座標などの保持
-	VERTEX_3D m_pVtx[BASE_INDEX];
+	VERTEX_3D m_pVtx[BASE_INDEX] = {};
 
-	bool m_AddDrawMode;//加算合成モード
-	bool m_ZDethDrawMode;//Zバッファを無効に
+	bool m_AddDrawMode=false;//加算合成モード
+	bool m_ZDethDrawMode=false;//Zバッファを無効に
 
 	int nAddDrawCnt = 1;//最低回数
 
-	D3DXMATRIX m_mtxWorld;
+	D3DXMATRIX m_mtxWorld = {};
 
 	bool bSetLight = false;
 };

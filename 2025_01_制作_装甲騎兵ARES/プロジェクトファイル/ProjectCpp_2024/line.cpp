@@ -13,12 +13,6 @@
 //=============================
 Cline::Cline(int nPriority) :CObject3D(nPriority), m_pVtxBuff(nullptr)
 {
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	 m_startPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	 m_endPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	 m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_col= D3DXCOLOR(0.0f,0.0f,0.0f,0.0f);
-	m_Life = 3;
 }
 
 //=============================
@@ -55,8 +49,8 @@ HRESULT Cline::Init()
         pVtx[1].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 
         // 頂点カラー
-        pVtx[0].col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
-        pVtx[1].col = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);
+        pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+        pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
         // テクスチャ座標の設定
         pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);

@@ -15,7 +15,7 @@ class CDebugwall : public CObject3D
 {
 public:
 
-	static const int  PRINTSIZE = 3300/2;//頂点の長さ
+	const float  PRINTSIZE = 1650;//頂点の長さ
 
 	CDebugwall(int nPriority = CObject::LAYERINDEX_DEBUGWALL);//コンストラクタ
 	~CDebugwall() override;//デストラクタ

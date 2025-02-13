@@ -9,7 +9,7 @@
 #include "manager.h"
 #include "player_motion.h"
 #include "line.h"
-#include "tankfootprint.h"
+//#include "tankfootprint.h"
 #include "score.h"
 #include "Explosion3D.h"
 #include "newbullet.h"

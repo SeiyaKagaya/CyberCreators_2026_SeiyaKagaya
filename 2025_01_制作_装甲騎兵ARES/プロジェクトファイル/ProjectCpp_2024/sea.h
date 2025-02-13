@@ -14,7 +14,11 @@
 class CSea : public CObject3D
 {
 public:
-	static const int  PRINTSIZE = 60000;//頂点までの長さ
+	const float PRINTSIZE = 60000.0f;	//頂点までの長さ
+	const float TEXMOVE_X1 = 0.00004f;	//テクスチャのmove値
+	const float TEXMOVE_Y1 = 0.00002f;
+	const float TEXMOVE_X2 = 0.0002f;
+	const float TEXMOVE_Y2 = 0.0009f;
 
 	CSea(int nPriority = CObject::LAYERINDEX_SEA);//コンストラクタ
 	~CSea() override;//デストラクタ
@@ -39,7 +43,6 @@ private:
 	//テクスチャの位置用
 	float m_texOffsetX = 0.0f;
 	float m_texOffsetY = 0.0f;
-
 	float m_rgbA = 0.0f;//アルファ値格納
 };
 

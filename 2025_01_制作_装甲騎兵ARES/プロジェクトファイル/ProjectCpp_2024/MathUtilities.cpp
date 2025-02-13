@@ -12,7 +12,7 @@
 //#include "enemy.h"
 //#include "polygon.h"
 //#include "item.h"
-#include "block.h"
+//#include "block.h"
 //#include "block3D.h"
 #include <cmath> // std::absを使用するために必要
 #include <vector>//OBB用
@@ -407,11 +407,11 @@ CMathProc::CollisionData CMathProc::CheckBoxCollision_3D(CObject::OBJECTTYPE MyT
 				// ここで本来のデータ取得
 				switch (TargetType)
 				{
-				case CObject::OBJECT_PARTICLE:
-					break;
+				//case CObject::OBJECT_PARTICLE:
+				//	break;
 
-				case CObject::OBJECT_EXPLOSION:
-					break;
+				//case CObject::OBJECT_EXPLOSION:
+				//	break;
 
 				case CObject::OBJECT_NEWBULLET:
 					pNewBullet = (CNewBullet*)pObject;
@@ -1654,11 +1654,11 @@ CMathProc::CollisionData CMathProc::CheckCircleCollision_Cancel(/*CObject::OBJEC
 				// ここで本来のデータ取得
 				switch (TargetType)
 				{
-				case CObject::OBJECT_PARTICLE:
-					break;
+			/*	case CObject::OBJECT_PARTICLE:
+					break;*/
 
-				case CObject::OBJECT_EXPLOSION:
-					break;
+			/*	case CObject::OBJECT_EXPLOSION:
+					break;*/
 
 				case CObject::OBJECT_NEWBULLET:
 					pNewBullet = (CNewBullet*)pObject;
@@ -2726,11 +2726,11 @@ CMathProc::CollisionData CMathProc::AdjustMyPosToCollision_Partner(D3DXVECTOR3 M
 				// ここで本来のデータ取得
 				switch (TargetType)
 				{
-				case CObject::OBJECT_PARTICLE:
-					break;
+			/*	case CObject::OBJECT_PARTICLE:
+					break;*/
 
-				case CObject::OBJECT_EXPLOSION:
-					break;
+			/*	case CObject::OBJECT_EXPLOSION:
+					break;*/
 
 
 

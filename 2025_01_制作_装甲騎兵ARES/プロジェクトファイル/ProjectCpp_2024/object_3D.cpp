@@ -65,35 +65,29 @@ HRESULT CObject3D::Init()
 
     CScene::MODE NowState = CScene::GetNowScene();
 
-    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 )
+    if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2)
     {//ゲーム中
-
-        float fTest = 9900.0f;
-        float fTest2 = 9900.0f;
-
         //頂点座標の設定
-        pVtx[0].pos = D3DXVECTOR3(0.0f, 30.0f, fTest);
-        pVtx[1].pos = D3DXVECTOR3(fTest2, 30.0f, fTest);
-        pVtx[2].pos = D3DXVECTOR3(0.0f, 30.0f, 0.0f);
-        pVtx[3].pos = D3DXVECTOR3(fTest2, 30.0f, 0.0f);
+        pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, SIZE_1);
+        pVtx[1].pos = D3DXVECTOR3(SIZE_1, 0.0f, SIZE_1);
+        pVtx[2].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        pVtx[3].pos = D3DXVECTOR3(SIZE_1, 0.0f, 0.0f);
     }
     else if (NowState == CScene::MODE_TITLE)
     {//タイトル
-        float fTest = 13300.0f;
         //頂点座標の設定
-        pVtx[0].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z + fTest);
-        pVtx[1].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z + fTest);
-        pVtx[2].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z - fTest);
-        pVtx[3].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z - fTest);
+        pVtx[0].pos = D3DXVECTOR3(POS.x - SIZE_2, 0.0f, POS.z + SIZE_2);
+        pVtx[1].pos = D3DXVECTOR3(POS.x + SIZE_2, 0.0f, POS.z + SIZE_2);
+        pVtx[2].pos = D3DXVECTOR3(POS.x - SIZE_2, 0.0f, POS.z - SIZE_2);
+        pVtx[3].pos = D3DXVECTOR3(POS.x + SIZE_2, 0.0f, POS.z - SIZE_2);
     }
     else if (NowState == CScene::MODE_RESULT)
     {//リザルト
-        float  fTest = 13300.0f;
         //頂点座標の設定
-        pVtx[0].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z + fTest);
-        pVtx[1].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z + fTest);
-        pVtx[2].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z - fTest);
-        pVtx[3].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z - fTest);
+        pVtx[0].pos = D3DXVECTOR3(POS.x - SIZE_2, 0.0f, POS.z + SIZE_2);
+        pVtx[1].pos = D3DXVECTOR3(POS.x + SIZE_2, 0.0f, POS.z + SIZE_2);
+        pVtx[2].pos = D3DXVECTOR3(POS.x - SIZE_2, 0.0f, POS.z - SIZE_2);
+        pVtx[3].pos = D3DXVECTOR3(POS.x + SIZE_2, 0.0f, POS.z - SIZE_2);
     }
 
     //法線ベクトルの設定
@@ -103,10 +97,10 @@ HRESULT CObject3D::Init()
     pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
     //頂点カラーの設定
-    pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
-    pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
-    pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
-    pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
+    pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
     //テクスチャ座標を設定
     pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
@@ -383,33 +377,27 @@ void CObject3D::InputpVtx()
 
     if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2)
     {//ゲーム中
-
-        float fTest = 9900.0f;
-        float fTest2 = 9900.0f;
-
         //頂点座標の設定
-        pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, fTest);
-        pVtx[1].pos = D3DXVECTOR3(fTest2, 0.0f, fTest);
+        pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, SIZE_1);
+        pVtx[1].pos = D3DXVECTOR3(SIZE_1, 0.0f, SIZE_1);
         pVtx[2].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        pVtx[3].pos = D3DXVECTOR3(fTest2, 0.0f, 0.0f);
+        pVtx[3].pos = D3DXVECTOR3(SIZE_1, 0.0f, 0.0f);
     }
     else if (NowState == CScene::MODE_TITLE)
     {//タイトル
-        float fTest = 13300.0f;
         //頂点座標の設定
-        pVtx[0].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z + fTest);
-        pVtx[1].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z + fTest);
-        pVtx[2].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z - fTest);
-        pVtx[3].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z - fTest);
+        pVtx[0].pos = D3DXVECTOR3(POS.x - SIZE_2, 0.0f, POS.z + SIZE_2);
+        pVtx[1].pos = D3DXVECTOR3(POS.x + SIZE_2, 0.0f, POS.z + SIZE_2);
+        pVtx[2].pos = D3DXVECTOR3(POS.x - SIZE_2, 0.0f, POS.z - SIZE_2);
+        pVtx[3].pos = D3DXVECTOR3(POS.x + SIZE_2, 0.0f, POS.z - SIZE_2);
     }
     else if (NowState == CScene::MODE_RESULT)
     {//リザルト
-        float  fTest = 13300.0f;
         //頂点座標の設定
-        pVtx[0].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z + fTest);
-        pVtx[1].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z + fTest);
-        pVtx[2].pos = D3DXVECTOR3(POS.x - fTest, 0.0f, POS.z - fTest);
-        pVtx[3].pos = D3DXVECTOR3(POS.x + fTest, 0.0f, POS.z - fTest);
+        pVtx[0].pos = D3DXVECTOR3(POS.x - SIZE_2, 0.0f, POS.z + SIZE_2);
+        pVtx[1].pos = D3DXVECTOR3(POS.x + SIZE_2, 0.0f, POS.z + SIZE_2);
+        pVtx[2].pos = D3DXVECTOR3(POS.x - SIZE_2, 0.0f, POS.z - SIZE_2);
+        pVtx[3].pos = D3DXVECTOR3(POS.x + SIZE_2, 0.0f, POS.z - SIZE_2);
     }
 
     //法線ベクトルの設定
@@ -419,10 +407,10 @@ void CObject3D::InputpVtx()
     pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 
     //頂点カラーの設定
-    pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
-    pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
-    pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
-    pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.5f);
+    pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+    pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
     //テクスチャ座標を設定
     pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上

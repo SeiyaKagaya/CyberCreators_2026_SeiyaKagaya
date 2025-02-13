@@ -17,9 +17,6 @@
     <Filter Include="ソース ファイル\SYSTEM\MANAGER">
       <UniqueIdentifier>{71523d86-9989-4c49-ae8c-5c55c451fe93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\BG">
-      <UniqueIdentifier>{21dc1dd8-f783-4c5c-89bc-089f36e592b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\SYSTEM\ALL_TEXTURE">
       <UniqueIdentifier>{0782a2c6-9714-42eb-8bc6-fe886d940967}</UniqueIdentifier>
     </Filter>
@@ -44,21 +41,6 @@
     </Filter>
     <Filter Include="ソース ファイル\SYSTEM\-------MAIN----------\FADE">
       <UniqueIdentifier>{2b8edc7b-c4e3-46ee-838b-c70677a603d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---">
-      <UniqueIdentifier>{b5b7adce-9ad8-42e0-ac31-c09ae089c2c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\PARTICLE">
-      <UniqueIdentifier>{bf49c61b-eb8f-4992-86ae-5f4b94e54fac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\EXPLOSION">
-      <UniqueIdentifier>{9bc08e07-2595-45d2-b21d-41ed86b6165c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--">
-      <UniqueIdentifier>{6f388ca7-643e-4402-b0d9-a6ee840e3dbf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\OBJECT\OBJECT_2D\--others--\BLOCK">
-      <UniqueIdentifier>{23b1de09-18e1-4d14-a798-7ed85d3fb9b1}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\SYSTEM\FONT\---UI---">
       <UniqueIdentifier>{bb9a2e4e-0728-42e8-b9f3-6e4c255fd2ee}</UniqueIdentifier>
@@ -145,14 +127,8 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\3D-2DHitObject">
       <UniqueIdentifier>{07396408-dd58-4ec4-a3eb-0dbc33d3fd77}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke">
-      <UniqueIdentifier>{e0b436ca-e4e7-4596-b956-5eda5c02992b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\RENDERER">
       <UniqueIdentifier>{09b08ee8-1ac3-4307-b7d5-76ef12824be5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\LineUI">
-      <UniqueIdentifier>{9f23bdb6-ecbd-48ce-a9ac-d0f435d0d25a}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\SKY">
       <UniqueIdentifier>{cdee272f-5860-443b-a830-75f9c20f444a}</UniqueIdentifier>
@@ -165,9 +141,6 @@
     </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\SEA">
       <UniqueIdentifier>{a0b7e959-50b6-4ee7-9ae2-40f0f4fee11d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\TANKFOOTPRINTS">
-      <UniqueIdentifier>{f120f49e-2294-4eb1-97ac-9e745bc41a00}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\LockOnUI">
       <UniqueIdentifier>{c36b311b-ac76-4003-9703-47b115a8e878}</UniqueIdentifier>
@@ -199,9 +172,6 @@
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTIOM_SHIP">
       <UniqueIdentifier>{30881b3f-0b62-4754-b52b-8c14b7c31130}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\BulletLine">
-      <UniqueIdentifier>{22933a59-cef0-4283-8686-d2c905dad6be}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_3D/\SHADOW">
       <UniqueIdentifier>{cbd599ba-66ab-4e9d-94fd-a9baba0a6708}</UniqueIdentifier>
     </Filter>
@@ -210,6 +180,9 @@
     </Filter>
     <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\ENEMY_MOTION_BASE\ENEMY_FAST">
       <UniqueIdentifier>{2cd5c5ad-82f5-42db-8eaa-d9661e939f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\OBJECT\/OBJECT_X/\BULLETLINE">
+      <UniqueIdentifier>{5f60d12d-da81-4c62-94a6-3c1c441c5943}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -225,9 +198,6 @@
     <ClCompile Include="Pch.cpp">
       <Filter>ソース ファイル\リソース ファイル\ヘッダー ファイル\封印中</Filter>
     </ClCompile>
-    <ClCompile Include="background.cpp">
-      <Filter>ソース ファイル\OBJECT\BG</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル\SYSTEM\-------MAIN----------</Filter>
     </ClCompile>
@@ -237,20 +207,11 @@
     <ClCompile Include="input.cpp">
       <Filter>ソース ファイル\SYSTEM\-------MAIN----------\INPUT</Filter>
     </ClCompile>
-    <ClCompile Include="explosion.cpp">
-      <Filter>ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\EXPLOSION</Filter>
-    </ClCompile>
-    <ClCompile Include="particle.cpp">
-      <Filter>ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\PARTICLE</Filter>
-    </ClCompile>
     <ClCompile Include="all_texture.cpp">
       <Filter>ソース ファイル\SYSTEM\ALL_TEXTURE</Filter>
     </ClCompile>
     <ClCompile Include="MathUtilities.cpp">
       <Filter>ソース ファイル\SYSTEM\MATH_UTILITIES</Filter>
-    </ClCompile>
-    <ClCompile Include="block.cpp">
-      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\BLOCK</Filter>
     </ClCompile>
     <ClCompile Include="font.cpp">
       <Filter>ソース ファイル\SYSTEM\FONT</Filter>
@@ -303,9 +264,6 @@
     <ClCompile Include="StageCollisionBox.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\StageCollisionBox</Filter>
     </ClCompile>
-    <ClCompile Include="tankfootprint.cpp">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\TANKFOOTPRINTS</Filter>
-    </ClCompile>
     <ClCompile Include="object_billboard.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/</Filter>
     </ClCompile>
@@ -345,12 +303,6 @@
     <ClCompile Include="ShotFire.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\shotfire</Filter>
     </ClCompile>
-    <ClCompile Include="movesmoke.cpp">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke</Filter>
-    </ClCompile>
-    <ClCompile Include="LinerinterUI.cpp">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\LineUI</Filter>
-    </ClCompile>
     <ClCompile Include="sky.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\SKY</Filter>
     </ClCompile>
@@ -387,14 +339,14 @@
     <ClCompile Include="motion_ship.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTIOM_SHIP</Filter>
     </ClCompile>
-    <ClCompile Include="CBulletLine.cpp">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\BulletLine</Filter>
-    </ClCompile>
     <ClCompile Include="shadow.cpp">
       <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\SHADOW</Filter>
     </ClCompile>
     <ClCompile Include="LongPush.cpp">
       <Filter>ソース ファイル\SYSTEM\//SCENE//\LONG_PUSH</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletLine.cpp">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\BULLETLINE</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -410,26 +362,14 @@
     <ClInclude Include="Pch.h">
       <Filter>ソース ファイル\リソース ファイル\ヘッダー ファイル\封印中</Filter>
     </ClInclude>
-    <ClInclude Include="background.h">
-      <Filter>ソース ファイル\OBJECT\BG</Filter>
-    </ClInclude>
     <ClInclude Include="manager.h">
       <Filter>ソース ファイル\SYSTEM\MANAGER</Filter>
-    </ClInclude>
-    <ClInclude Include="explosion.h">
-      <Filter>ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\EXPLOSION</Filter>
-    </ClInclude>
-    <ClInclude Include="particle.h">
-      <Filter>ソース ファイル\OBJECT\OBJECT_2D\---EFFECT---\PARTICLE</Filter>
     </ClInclude>
     <ClInclude Include="all_texture.h">
       <Filter>ソース ファイル\SYSTEM\ALL_TEXTURE</Filter>
     </ClInclude>
     <ClInclude Include="MathUtilities.h">
       <Filter>ソース ファイル\SYSTEM\MATH_UTILITIES</Filter>
-    </ClInclude>
-    <ClInclude Include="block.h">
-      <Filter>ソース ファイル\OBJECT\OBJECT_2D\--others--\BLOCK</Filter>
     </ClInclude>
     <ClInclude Include="font.h">
       <Filter>ソース ファイル\SYSTEM\FONT</Filter>
@@ -479,9 +419,6 @@
     <ClInclude Include="StageCollisionBox.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\StageCollisionBox</Filter>
     </ClInclude>
-    <ClInclude Include="tankfootprint.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\TANKFOOTPRINTS</Filter>
-    </ClInclude>
     <ClInclude Include="object_billboard.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/</Filter>
     </ClInclude>
@@ -524,12 +461,6 @@
     <ClInclude Include="ShotFire.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\shotfire</Filter>
     </ClInclude>
-    <ClInclude Include="movesmoke.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\movesmoke</Filter>
-    </ClInclude>
-    <ClInclude Include="linerinterUI.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_BILLBOARD/\PARTICLE\LineUI</Filter>
-    </ClInclude>
     <ClInclude Include="player_motion.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\PLAYER_MOTION</Filter>
     </ClInclude>
@@ -569,9 +500,6 @@
     <ClInclude Include="motion_ship.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_X/\/OBJECT_MOTION/\MOTIOM_SHIP</Filter>
     </ClInclude>
-    <ClInclude Include="CBulletLine.h">
-      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\BulletLine</Filter>
-    </ClInclude>
     <ClInclude Include="shadow.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_3D/\SHADOW</Filter>
     </ClInclude>
@@ -580,6 +508,9 @@
     </ClInclude>
     <ClInclude Include="object3D.h">
       <Filter>ソース ファイル\OBJECT\/OBJECT_3D/</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletLine.h">
+      <Filter>ソース ファイル\OBJECT\/OBJECT_X/\BULLETLINE</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

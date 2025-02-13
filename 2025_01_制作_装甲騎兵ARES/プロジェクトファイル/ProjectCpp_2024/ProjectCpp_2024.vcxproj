@@ -156,17 +156,14 @@
     <ClCompile Include="3D-2DhitObject.cpp" />
     <ClCompile Include="3DParticle.cpp" />
     <ClCompile Include="all_texture.cpp" />
-    <ClCompile Include="background.cpp" />
-    <ClCompile Include="block.cpp" />
+    <ClCompile Include="BulletLine.cpp" />
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="CBulletLine.cpp" />
     <ClCompile Include="debugwall.cpp" />
     <ClCompile Include="enemy_motion_base.cpp" />
     <ClCompile Include="enemy_motion_boss.cpp" />
     <ClCompile Include="enemy_motion_fast.cpp" />
     <ClCompile Include="enemy_motion_guard.cpp" />
     <ClCompile Include="enemy_motion_Nomal.cpp" />
-    <ClCompile Include="explosion.cpp" />
     <ClCompile Include="Explosion3D.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="font.cpp" />
@@ -175,7 +172,6 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="line.cpp" />
-    <ClCompile Include="LinerinterUI.cpp" />
     <ClCompile Include="LockOnUI.cpp" />
     <ClCompile Include="LockOnUIMain.cpp" />
     <ClCompile Include="LongPush.cpp" />
@@ -185,7 +181,6 @@
     <ClCompile Include="missile.cpp" />
     <ClCompile Include="ModelParts.cpp" />
     <ClCompile Include="motion_ship.cpp" />
-    <ClCompile Include="movesmoke.cpp" />
     <ClCompile Include="newbullet.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="object2D.cpp" />
@@ -195,7 +190,6 @@
     <ClCompile Include="object_billboard.cpp" />
     <ClCompile Include="object_motion.cpp" />
     <ClCompile Include="ObstacleSet.cpp" />
-    <ClCompile Include="particle.cpp" />
     <ClCompile Include="pause.cpp" />
     <ClCompile Include="Pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -219,7 +213,6 @@
     <ClCompile Include="sky.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="StageCollisionBox.cpp" />
-    <ClCompile Include="tankfootprint.cpp" />
     <ClCompile Include="textwindow.cpp" />
     <ClCompile Include="time.cpp" />
     <ClCompile Include="Tutorial.cpp" />
@@ -228,16 +221,13 @@
     <ClInclude Include="3D-2DhitObject.h" />
     <ClInclude Include="3DParticle.h" />
     <ClInclude Include="all_texture.h" />
-    <ClInclude Include="background.h" />
-    <ClInclude Include="block.h" />
+    <ClInclude Include="BulletLine.h" />
     <ClInclude Include="camera.h" />
-    <ClInclude Include="CBulletLine.h" />
     <ClInclude Include="debugwall.h" />
     <ClInclude Include="enemy_motion_base.h" />
     <ClInclude Include="enemy_motion_fast.h" />
     <ClInclude Include="enemy_motion_guard.h" />
     <ClInclude Include="enemy_motion_Nomal.h" />
-    <ClInclude Include="explosion.h" />
     <ClInclude Include="Explosion3D.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="font.h" />
@@ -246,7 +236,6 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="line.h" />
-    <ClInclude Include="linerinterUI.h" />
     <ClInclude Include="LockOnUI.h" />
     <ClInclude Include="LockOnUIMain.h" />
     <ClInclude Include="LongPush.h" />
@@ -256,7 +245,6 @@
     <ClInclude Include="missile.h" />
     <ClInclude Include="ModelParts.h" />
     <ClInclude Include="motion_ship.h" />
-    <ClInclude Include="movesmoke.h" />
     <ClInclude Include="enemy_motion_boss.h" />
     <ClInclude Include="newbullet.h" />
     <ClInclude Include="object.h" />
@@ -267,7 +255,6 @@
     <ClInclude Include="object_billboard.h" />
     <ClInclude Include="object_motion.h" />
     <ClInclude Include="ObstacleSet.h" />
-    <ClInclude Include="particle.h" />
     <ClInclude Include="pause.h" />
     <ClInclude Include="Pch.h" />
     <ClInclude Include="player_motion.h" />
@@ -282,7 +269,6 @@
     <ClInclude Include="sky.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="StageCollisionBox.h" />
-    <ClInclude Include="tankfootprint.h" />
     <ClInclude Include="textwindow.h" />
     <ClInclude Include="time.h" />
     <ClInclude Include="Tutorial.h" />

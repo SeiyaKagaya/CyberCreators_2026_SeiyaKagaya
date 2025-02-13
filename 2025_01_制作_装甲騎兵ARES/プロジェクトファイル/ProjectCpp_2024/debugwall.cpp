@@ -116,10 +116,10 @@ void CDebugwall::InputpVtx()
     DATA EscData = GetDATA();
 
     //頂点座標の設定
-    pVtx[0].pos = D3DXVECTOR3((float)-PRINTSIZE, EscData.Pos.y, (float)PRINTSIZE);
-    pVtx[1].pos = D3DXVECTOR3((float)PRINTSIZE, EscData.Pos.y, (float)PRINTSIZE);
-    pVtx[2].pos = D3DXVECTOR3((float)-PRINTSIZE, EscData.Pos.y, (float)-PRINTSIZE);
-    pVtx[3].pos = D3DXVECTOR3((float)PRINTSIZE, EscData.Pos.y, (float)-PRINTSIZE);
+    pVtx[0].pos = D3DXVECTOR3(-PRINTSIZE, EscData.Pos.y, PRINTSIZE);
+    pVtx[1].pos = D3DXVECTOR3(PRINTSIZE, EscData.Pos.y, PRINTSIZE);
+    pVtx[2].pos = D3DXVECTOR3(-PRINTSIZE, EscData.Pos.y,-PRINTSIZE);
+    pVtx[3].pos = D3DXVECTOR3(PRINTSIZE, EscData.Pos.y, -PRINTSIZE);
 
     //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);

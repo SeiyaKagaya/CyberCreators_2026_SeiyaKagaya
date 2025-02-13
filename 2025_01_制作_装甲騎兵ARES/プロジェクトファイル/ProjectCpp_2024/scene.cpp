@@ -18,7 +18,7 @@
 #include "player_motion.h"
 #include "enemy_motion_Nomal.h"
 #include "StageCollisionBox.h"
-#include "tankfootprint.h"
+//#include "tankfootprint.h"
 #include "player_motion.h"
 //#include "enemy_motion_fast.h"
 //#include "target_UI.h"

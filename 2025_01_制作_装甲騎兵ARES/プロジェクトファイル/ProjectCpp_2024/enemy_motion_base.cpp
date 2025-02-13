@@ -7,7 +7,7 @@
 #include "enemy_motion_base.h"
 #include "renderer.h"
 #include "manager.h"
-#include "explosion.h"
+//#include "explosion.h"
 #include <stdio.h>
 #include <cstring>
 #include <iostream> // デバッグ用

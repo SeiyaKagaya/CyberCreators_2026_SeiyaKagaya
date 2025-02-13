@@ -32,7 +32,7 @@ public:
 
         //LAYERINDEX_PARTICLE = 0,
         LAYERINDEX_SKY,
-        LAYERINDEX_PARTICLE,
+//        LAYERINDEX_PARTICLE,
         LAYERINDEX_HITBOX,
         LAYERINDEX_HITBOX_2D3D,
         LAYERINDEX_DEBUGWALL,
@@ -42,9 +42,9 @@ public:
         LAYERINDEX_ITEM,
         LAYERINDEX_ENEMY,
         LAYERINDEX_PLAYER,
-        LAYERINDEX_EXPLOSION,
+//        LAYERINDEX_EXPLOSION,
         LAYERINDEX_POLYGON  ,
-        LAYERINDEX_BLOCK,
+//        LAYERINDEX_BLOCK,
         LAYERINDEX_OBJECT,
         LAYERINDEX_OBJECT2D,
 
@@ -76,7 +76,6 @@ public:
 
         LAYERINDEX_FADE,
         LAYERINDEX_LINE,
-        LAYERINDEX_FOOTPRINT,
         LAYERINDEX_SHADOW,
         LAYERINDEX_BILLBOARD,
         LAYERINDEX_SMOKE,
@@ -84,7 +83,7 @@ public:
         LAYERINDEX_ReflectEffect,
         LAYERINDEX_EXPRO_BILL,
         LAYERINDEX_TARGETUI,
-        LAYERINDEX_LINEUI,
+//        LAYERINDEX_LINEUI,
 
         LAYERINDEX_HPLATTERUI,
         LAYERINDEX_HPGAUGEUI,
@@ -121,14 +120,13 @@ public:
         OBJECT_OBSTACLE,
         OBJECT_PLAYER,
         OBJECT_BULLET,
-        OBJECT_PARTICLE,
-        OBJECT_EXPLOSION,
+//        OBJECT_PARTICLE,
+//        OBJECT_EXPLOSION,
         OBJECT_ENEMY,
         OBJECT_POLYGON,
-        OBJECT_BLOCK,
+//        OBJECT_BLOCK,
         OBJECT_ITEM,
         OBJECT_OBJECT3D,
-        OBJECT_FOOTPRINT,
         OBJECT_SHADOW,
         OBJECT_BILLBOARD,
         OBJECT_SMOKE,
@@ -136,7 +134,7 @@ public:
         OBJECT_ReflectEffect,
         OBJECT_EXPRO_BILL,
         OBJECT_TARGETUI,
-        OBJECT_LINEUI,
+//        OBJECT_LINEUI,
      
         OBJECT_HPLATTER,
         OBJECT_HPGAUGE,
@@ -187,7 +185,7 @@ public:
 
     static const int MAX_OBJECT = 1000; // OBJECT最大数
 
-    CObject(int nPriority = LAYERINDEX_PARTICLE); // コンストラクタ
+    CObject(int nPriority = LAYERINDEX_SKY); // コンストラクタ
     virtual ~CObject(); // デストラクタ
     virtual HRESULT Init() = 0;
     virtual void Uninit() = 0;

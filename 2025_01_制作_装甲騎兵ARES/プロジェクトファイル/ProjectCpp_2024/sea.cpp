@@ -85,15 +85,15 @@ void CSea::Update()
     {//ゲーム中
 
      // テクスチャオフセットの更新 (アニメーション速度)
-        m_texOffsetX += 0.00004f;  // X方向に少しずつ移動
-        m_texOffsetY += 0.00002f;  // X方向に少しずつ移動
+        m_texOffsetX += TEXMOVE_X1;  // X方向に少しずつ移動
+        m_texOffsetY += TEXMOVE_Y1;  // X方向に少しずつ移動
 
     }
     else if (NowState == CScene::MODE_OP)
     {//出撃前演出
         // テクスチャオフセットの更新 (アニメーション速度)
-        m_texOffsetX += 0.0002f;  // X方向に少しずつ移動
-        m_texOffsetY += 0.0009f;  // X方向に少しずつ移動
+        m_texOffsetX += TEXMOVE_X2;  // X方向に少しずつ移動
+        m_texOffsetY += TEXMOVE_Y2;  // X方向に少しずつ移動
     }
 
     CObject3D::Update();
@@ -154,10 +154,10 @@ void CSea::InputpVtx()
     DATA EscData = GetDATA();
 
     //頂点座標の設定
-    pVtx[0].pos = D3DXVECTOR3((float)-PRINTSIZE, 0.0f, (float)PRINTSIZE);
-    pVtx[1].pos = D3DXVECTOR3((float)PRINTSIZE, 0.0f, (float)PRINTSIZE);
-    pVtx[2].pos = D3DXVECTOR3((float)-PRINTSIZE, 0.0f, (float)-PRINTSIZE);
-    pVtx[3].pos = D3DXVECTOR3((float)PRINTSIZE, 0.0f, (float)-PRINTSIZE);
+    pVtx[0].pos = D3DXVECTOR3(-PRINTSIZE, 0.0f, PRINTSIZE);
+    pVtx[1].pos = D3DXVECTOR3(PRINTSIZE, 0.0f, PRINTSIZE);
+    pVtx[2].pos = D3DXVECTOR3(-PRINTSIZE, 0.0f, -PRINTSIZE);
+    pVtx[3].pos = D3DXVECTOR3(PRINTSIZE, 0.0f, -PRINTSIZE);
 
     //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
