@@ -22,7 +22,9 @@ public:
 	static const int MAXSHOTDERAY = 7;		//発砲ディレイ値
 	static const int PLAYER_WIDE = 75;		//幅
 	static const int PLAYER_HEIGHT = 100;	//高さ
-	static const int DISTANCE = 2;					//調整幅
+	static const int DISTANCE = 2;			//調整幅
+	const float ROT_MOVE = 0.03f;			//旋回
+	const float BULLET_DIFF = -35.0f;		//射撃差分
 
 	CPlayer(int nPriority=CObject::LAYERINDEX_PLAYER);//コンストラクタ
 	~CPlayer() override;//デストラクタ

@@ -122,9 +122,9 @@ StageCollisionBox* StageCollisionBox::Create(DATA SetData)
     D3DXVECTOR3 SizeMag;
 
        //ƒTƒCƒY•Ï“®
-    SizeMag.x = EscData.MaxLength.x / 10.0f;
-    SizeMag.y = EscData.MaxLength.y / 20.0f;
-    SizeMag.z = EscData.MaxLength.z / 10.0f;
+    SizeMag.x = EscData.MaxLength.x / (float)SIZE;
+    SizeMag.y = EscData.MaxLength.y / (float)SIZE*2.0f;
+    SizeMag.z = EscData.MaxLength.z / (float)SIZE;
     
     pObstacle->SetSizeMag(SizeMag);//”{—¦•Ï“®
 

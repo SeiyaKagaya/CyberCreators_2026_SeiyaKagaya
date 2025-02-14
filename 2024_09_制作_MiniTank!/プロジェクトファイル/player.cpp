@@ -296,12 +296,12 @@ void CPlayer::Action_Keyboard()
 
 	if (keyboard->GetPress(DIK_LEFT) == true)
 	{
-		EscData.rot.z += 0.03f;
+		EscData.rot.z += ROT_MOVE;
 
 	}
 	if (keyboard->GetPress(DIK_RIGHT) == true)
 	{
-		EscData.rot.z -= 0.03f;
+		EscData.rot.z -= ROT_MOVE;
 	}
 
 	SetDATA(EscData);//Ši”[
@@ -312,7 +312,7 @@ void CPlayer::Action_Keyboard()
 		if (MAXSHOTDERAY <= m_BulletShotDelay)
 		{
 			DATA SetData;
-			SetData.Pos = EscData.Pos + D3DXVECTOR3(0.0f, -35.0f, 0.0f);
+			SetData.Pos = EscData.Pos + D3DXVECTOR3(0.0f, BULLET_DIFF, 0.0f);
 
 			SetData.move = D3DXVECTOR3(cos(-EscData.rot.z * D3DX_PI), sin(-EscData.rot.z * D3DX_PI), 0.0f);//Šp“x§’è
 			CBullet::Create(SetData);
@@ -432,7 +432,7 @@ void CPlayer::Action_JoyPad()
 
 	if (JoyPad->GetTrigger(CInputJoyPad::JOYKEY_A)== true)
 	{
-		EscData.move.y = cosf(-0.75f * D3DX_PI) * (2.0f * 15.0f);
+		EscData.move.y = cosf(-0.75f * D3DX_PI) * (30.0f);
 	}
 
 	//“ü—Í‚Ì—L–³‚ðŠm”F‚µ‚Ä•ªŠò
@@ -442,7 +442,7 @@ void CPlayer::Action_JoyPad()
 		if (MAXSHOTDERAY <= m_BulletShotDelay)
 		{
 			DATA SetData;
-			SetData.Pos = EscData.Pos + D3DXVECTOR3(0.0f, -35.0f, 0.0f);
+			SetData.Pos = EscData.Pos + D3DXVECTOR3(0.0f, BULLET_DIFF, 0.0f);
 
 			SetData.move = D3DXVECTOR3(cos(-EscData.rot.z * D3DX_PI), sin(-EscData.rot.z * D3DX_PI), 0.0f);//Šp“x§’è
 			CBullet::Create(SetData);

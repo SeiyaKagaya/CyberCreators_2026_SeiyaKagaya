@@ -13,6 +13,7 @@
 class StageCollisionBox : public CObjectX
 {
 public:
+	static const int SIZE = 10;//サイズ
 
 	StageCollisionBox(int nPriority = CObject::LAYERINDEX_HITBOX);//コンストラクタ
 	~StageCollisionBox() override;//デストラクタ

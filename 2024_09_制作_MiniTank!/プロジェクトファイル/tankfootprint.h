@@ -19,8 +19,10 @@ public:
 	static const int  PRINTSIZE_X = 85;	//サイズ
 	static const int  PRINTSIZE_Y = 10;
 	static const int  PRINTSIZE_Z = 40;
-
+	
+	const float PRINT_MOVE_X = 13.0f;	//Y方向にズ
 	const float COL_A = 0.55f;			//rgbaカラーA
+
 
 	CObjectFootPrint(int nPriority = CObject::LAYERINDEX_FOOTPRINT);//コンストラクタ
 	~CObjectFootPrint() override;//デストラクタ

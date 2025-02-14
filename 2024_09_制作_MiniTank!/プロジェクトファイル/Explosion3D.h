@@ -15,7 +15,19 @@ class Explosion3D : public CObject
 {
 public:
 
-	static const int ANIMNUM = 60;//アニメーション分割数
+	static const int ANIMNUM = 60;			//アニメーション分割数
+	static const int FARST_ACTION_CNT = 18;	//初めのアクションするカウント
+	static const int SECOND_ACTION_CNT = 40;//2個目のアクションするカウント
+
+	static const int SET_SAKE_FARST = 85;	//変動震度1
+	static const int SET_SAKE_SECOND = 55;	//変動震度2
+	static const int SET_SAKE_SARD = 5;		//変動震度3
+
+	const float SIZE_MAG = 3.0f;			//倍率
+	const float SET_SIZE_FARST = 2.3f;		//変動倍率1
+	const float SET_SIZE_SECOND = 0.7f;		//変動倍率2
+	const float SET_SIZE_SARD = 0.3f;		//変動倍率3
+	const float ROT_MOVE = 0.03f;			//回転
 
 	Explosion3D(int nPriority = CObject::LAYERINDEX_EXPLOSION3D);//コンストラクタ
 	~Explosion3D() override;//デストラクタ

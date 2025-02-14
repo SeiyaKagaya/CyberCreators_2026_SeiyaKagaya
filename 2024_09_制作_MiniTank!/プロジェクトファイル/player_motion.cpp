@@ -153,8 +153,7 @@ void CObjectMotionPlayer::Update()
 			if (pManager->bGetInputState() == true)
 			{//操作方法--trueでコントローラー
 				D3DXVECTOR3 PlayerPos = GetClassData().Pos;
-				float fRadius = 500.0f;
-
+				
 				//ベクトル計算
 				D3DXVECTOR3 VEC = m_TargetPos - PlayerPos;
 
@@ -162,13 +161,13 @@ void CObjectMotionPlayer::Update()
 				float fDistance = D3DXVec3Length(&VEC);
 
 				//長さが半径を超えた
-				if (fDistance > fRadius)
+				if (fDistance > STICK_RADIUS)
 				{
 					// ベクトルを正規化
 					D3DXVec3Normalize(&VEC, &VEC);
 
 					// ベクトルの方向に半径切りまで動かす
-					m_TargetPos = PlayerPos + VEC * fRadius;
+					m_TargetPos = PlayerPos + VEC * STICK_RADIUS;
 				}
 			}
 			//--------------------------------------
@@ -177,7 +176,7 @@ void CObjectMotionPlayer::Update()
 			CObjectTargetUI::Create(m_TargetPos);
 			CObjectTargetUI::Create(m_TargetPos);
 
-			CObjectMotion::Update();//------------------更新
+			CObjectMotion::Update();//更新
 
 			DATA classData = GetClassData();
 
@@ -229,25 +228,18 @@ void CObjectMotionPlayer::Update()
 				}
 			}
 
-			//UI用の位置差分
-			D3DXVECTOR3 SetPos = classData.Pos;
-			SetPos.x -= 150.0f;
-			SetPos.y += 400.0f;
-			SetPos.z += 100.0f;
+		
+			m_pHPUI->SetPos(classData.Pos + UI_POS[0]);
+	
+			m_pHPGauge[0]->SetPos(classData.Pos + UI_POS[1]);
+	
+			m_pHPGauge[1]->SetPos(classData.Pos + UI_POS[2]);
+	
+			m_pHPGauge[0]->SetSize(UI_SIZE[0]);
+			m_pHPGauge[1]->SetSize(D3DXVECTOR3((float)m_nLife, UI_SIZE[1].y, UI_SIZE[1].z));
 
-			m_pHPUI->SetPos(SetPos);
-			SetPos.x += 50.0f;
-
-			m_pHPGauge[0]->SetPos(SetPos);
-			SetPos.x += 5.0f;
-
-			m_pHPGauge[1]->SetPos(SetPos);
-			SetPos.x += 15.0f;
-
-			m_pHPGauge[0]->SetSize(D3DXVECTOR3(320.0f, 18.0f, 0.0f));
-			m_pHPGauge[1]->SetSize(D3DXVECTOR3((float)m_nLife, 14.0f, 0.0f));
-			m_pHPGauge[0]->SetCol(D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.6f));
-			m_pHPGauge[1]->SetCol(D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.9f));
+			m_pHPGauge[0]->SetCol(HP_UI_COLOR[0]);
+			m_pHPGauge[1]->SetCol(HP_UI_COLOR[1]);
 
 			if (m_nLife <= 0)
 			{
@@ -278,7 +270,7 @@ void CObjectMotionPlayer::Update()
 				}
 				else
 				{
-					m_Resue = CRescue::Create(SetPos);
+					m_Resue = CRescue::Create(classData.Pos + UI_POS[3]);
 				}
 			}
 			//衝突相殺--敵と
@@ -312,10 +304,6 @@ void CObjectMotionPlayer::Update()
 
 			DATA ChangeData = DataInit();
 
-			float minYAngle = -0.1f; // 下側の角度の限界
-			float maxYAngle = 0.1f;  // 上側の角度の限界
-
-
 			//方向
 			D3DXVECTOR3 enemyDirection = D3DXVECTOR3(TargetPos.x, TargetPos.y, TargetPos.z) - classData.Pos;
 
@@ -323,20 +311,20 @@ void CObjectMotionPlayer::Update()
 			float angleXZ = atan2f(enemyDirection.z, enemyDirection.x);
 
 			ChangeData.rot.x = 0.0f; // よじりを防ぐために必要な調整
-			ChangeData.rot.y = -(angleXZ + 1.57f); // 腰を向ける
+			ChangeData.rot.y = -(angleXZ + D3DX_PI*0.5f); // 腰を向ける
 			ChangeData.rot.z = 0.0f;
 
 			//		 Y軸の角度
 			float angleY = atan2f(enemyDirection.y, sqrtf(enemyDirection.x * enemyDirection.x + enemyDirection.z * enemyDirection.z));
 
 			// Y軸角度をクランプ
-			if (angleY < minYAngle)
+			if (angleY < MIN_ANGLE_Y)
 			{
-				angleY = minYAngle;
+				angleY = MIN_ANGLE_Y;
 			}
-			else if (angleY > maxYAngle)
+			else if (angleY > MAX_ANGLE_Y)
 			{
-				angleY = maxYAngle;
+				angleY = MAX_ANGLE_Y;
 			}
 
 			ChangeData.rot.x = angleY; // Y方向を向ける
@@ -382,20 +370,20 @@ void CObjectMotionPlayer::Update()
 		DATA classData = GetClassData();
 
 		EscCntFootPrint++;
-		if (EscCntFootPrint >= 5)
+		if (EscCntFootPrint >= FOOTPRINT)
 		{
 			EscCntFootPrint = 0;
 			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z), classData.rot);
-			CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z));
+			//CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z));
 		}
 
-		classData.rot.y = 1.57f;
+		classData.rot.y = D3DX_PI*0.5f;
 
 		SetClassData(classData);
 
 		DATA Head;
 		Head = CObject::DataInit();
-		Head.rot.y = 1.57f;
+		Head.rot.y = D3DX_PI*0.5f;
 
 		//基底クラスからパーツにデータを受け渡し
 		SetChangeDataInObjectMotion(Head);
@@ -411,20 +399,20 @@ void CObjectMotionPlayer::Update()
 		DATA classData = GetClassData();
 
 		EscCntFootPrint++;
-		if (EscCntFootPrint >= 5)
+		if (EscCntFootPrint >= FOOTPRINT)
 		{
 			EscCntFootPrint = 0;
 			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z), classData.rot);
-			CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z));
+		//	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, -8.5f, classData.Pos.z));
 		}
 
-		classData.rot.y = -1.57f;
+		classData.rot.y = -D3DX_PI*0.5f;
 
 		SetClassData(classData);
 
 		DATA Head;
 		Head = CObject::DataInit();
-		Head.rot.y = -1.57f;
+		Head.rot.y = -D3DX_PI*0.5f;
 
 		//基底クラスからパーツにデータを受け渡し
 		SetChangeDataInObjectMotion(Head);
@@ -478,14 +466,6 @@ void CObjectMotionPlayer::Input()
 
 	CInputKeyboard* keyboard = pManager->GetKeyboard();
 
-	//中間点までの距離
-	float fEscape = (32000 - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000) / 2.0f;//差分を半分に
-
-	//中間点をたしてデッドゾーンと最大点の中間点を算出(通常入力、微入力の判別分岐点)
-	float BranchPoint = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 + fEscape;
-
-	float MoveSpeed = 4.5f*1.8f;
-
 	DATA classData = GetClassData();
 	
 	bool bMoveNow = false;
@@ -538,8 +518,8 @@ void CObjectMotionPlayer::Input()
 		//------これは差分
 		fRotDest = (Angle - CameraRot.y - (1.0f * D3DX_PI));
 		
-		classData.move.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed;//三角関数利用して移動の長さを代入
-		classData.move.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed;//三角関数利用して移動の長さを代入
+		classData.move.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
+		classData.move.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
 		
 		//変換
 		classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, fRotDest + D3DX_PI);
@@ -565,7 +545,7 @@ void CObjectMotionPlayer::Input()
 			D3DXMatrixIdentity(&EscMtxWorld);
 
 			//位置を反映
-			D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
+			D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, TANKFIRE_OFFSETPOS_Z);
 
 			D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
@@ -591,8 +571,7 @@ void CObjectMotionPlayer::Input()
 			// 方向ベクトルを正規化（単位ベクトルにする）
 			D3DXVec3Normalize(&direction, &direction);
 
-			float speed = 14.0f;//速度(後々変更)
-			SetData.move = direction * speed;//速度をかける
+			SetData.move = direction * BULLETMOVE;//速度をかける
 
 			// SetData.rot.y をターゲットの方向に合わせる
 			SetData.rot.x = 0.0f;
@@ -601,8 +580,8 @@ void CObjectMotionPlayer::Input()
 
 			//----------------------------------------------------------------------------------
 
-			D3DXVECTOR3 SetHitMin = D3DXVECTOR3(-9.0f, -9.0f, -9.0f);
-			D3DXVECTOR3 SetHitMax = D3DXVECTOR3(9.0f, 9.0f, 9.0f);
+			D3DXVECTOR3 SetHitMin = D3DXVECTOR3(-BULLETSIZE, -BULLETSIZE, -BULLETSIZE);
+			D3DXVECTOR3 SetHitMax = D3DXVECTOR3(BULLETSIZE, BULLETSIZE, BULLETSIZE);
 
 			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SetData.Pos, SetHitMin, SetHitMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
 
@@ -621,9 +600,9 @@ void CObjectMotionPlayer::Input()
 
 				CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
 
-				pBulletAll->SetBullet(SetData, 2, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
+				pBulletAll->SetBullet(SetData, 2,BULLET_COLOR, this);
 					
-				ShotDelay = 20;
+				ShotDelay = BULLETSHOTDELAY;
 
 				CObjectShotFire::Create(SetData.Pos);
 				CObjectShotFire::Create(SetData.Pos);
@@ -635,11 +614,13 @@ void CObjectMotionPlayer::Input()
 
 #endif // 1
 
-	if (m_nMoveCnt>= CObjectFootPrint::STANPLIFE)
+	
+
+	if (m_nMoveCnt>= FOOTPRINT)
 	{
 		m_nMoveCnt = 0;
-		CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x,3.0f, classData.Pos.z), classData.rot);
-		CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
+		CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, POSY, classData.Pos.z), classData.rot);
+	//	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
 	}
 
 	SetClassData(classData);
@@ -668,11 +649,6 @@ void CObjectMotionPlayer::ControllerInput()
 		//ショイパットの状態を取得
 		DWORD dwResult = XInputGetState(0, &joykeystate);
 
-	//中間点までの距離
-	float fEscape = (32000 - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000) / 2.0f;//差分を半分に
-
-	//中間点をたしてデッドゾーンと最大点の中間点を算出(通常入力、微入力の判別分岐点)
-	float BranchPoint = XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 + fEscape;
 
 	bool bMoveNow = false;
 
@@ -683,7 +659,6 @@ void CObjectMotionPlayer::ControllerInput()
 
 	bool MoveNow = false;//移動入力できてるか
 
-	float MoveSpeed = 4.5f * 1.8f;
 
 	DATA classData = GetClassData();
 
@@ -736,8 +711,8 @@ void CObjectMotionPlayer::ControllerInput()
 		//------これは差分
 		fRotDest = (Angle - CameraRot.y - (1.0f * D3DX_PI));
 
-		classData.move.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed;//三角関数利用して移動の長さを代入
-		classData.move.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed;//三角関数利用して移動の長さを代入
+		classData.move.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
+		classData.move.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
 
 	//変換
 		classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, fRotDest + D3DX_PI);
@@ -764,7 +739,7 @@ void CObjectMotionPlayer::ControllerInput()
 			D3DXMatrixIdentity(&EscMtxWorld);
 
 			//位置を反映
-			D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
+			D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, TANKFIRE_OFFSETPOS_Z);
 
 			D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
@@ -791,8 +766,7 @@ void CObjectMotionPlayer::ControllerInput()
 			// 方向ベクトルを正規化（単位ベクトルにする）
 			D3DXVec3Normalize(&direction, &direction);
 
-			float speed = 14.0f;//速度(後々変更)
-			SetData.move = direction * speed;//速度をかける
+			SetData.move = direction * BULLETMOVE;//速度をかける
 
 			// SetData.rot.y をターゲットの方向に合わせる
 			SetData.rot.x = 0.0f;
@@ -800,8 +774,8 @@ void CObjectMotionPlayer::ControllerInput()
 			SetData.rot.z = 0.0f;
 
 			//----------------------------------------------------------------------------------
-			D3DXVECTOR3 SetHitMin = D3DXVECTOR3(-9.0f, -9.0f, -9.0f);
-			D3DXVECTOR3 SetHitMax = D3DXVECTOR3(9.0f, 9.0f, 9.0f);
+			D3DXVECTOR3 SetHitMin = D3DXVECTOR3(-BULLETSIZE, -BULLETSIZE, -BULLETSIZE);
+			D3DXVECTOR3 SetHitMax = D3DXVECTOR3(BULLETSIZE, BULLETSIZE, BULLETSIZE);
 
 			bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SetData.Pos, SetHitMin, SetHitMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
 
@@ -820,9 +794,9 @@ void CObjectMotionPlayer::ControllerInput()
 
 				CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
 
-				pBulletAll->SetBullet(SetData, 2, D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f), this);
+				pBulletAll->SetBullet(SetData, 2,BULLET_COLOR, this);
 
-				ShotDelay = 20;
+				ShotDelay = BULLETSHOTDELAY;
 
 				CObjectShotFire::Create(SetData.Pos);
 				CObjectShotFire::Create(SetData.Pos);
@@ -834,11 +808,11 @@ void CObjectMotionPlayer::ControllerInput()
 
 #endif // 1
 
-	if (m_nMoveCnt >= CObjectFootPrint::STANPLIFE)
+	if (m_nMoveCnt >= FOOTPRINT)
 	{
 		m_nMoveCnt = 0;
-		CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-		CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
+		CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, POSY, classData.Pos.z), classData.rot);
+		//CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
 	}
 
 	SetClassData(classData);
@@ -846,22 +820,22 @@ void CObjectMotionPlayer::ControllerInput()
 	////----------------------------------------------------------------------------------------------------------コントローラー	
 	bool MoveNowCom = false;//入力の有無(コントローラ)
 
-	if (joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
+	if (joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - STICK_SUB))
 	{//Aがおされた(左)
 	//	Xdate = 1;
 		MoveNowCom = true;
 	}
-	else if (joykeystate.Gamepad.sThumbLX >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbLX >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - STICK_SUB))
 	{//Dがおされた(右)
 	//	Xdate = -1;
 		MoveNowCom = true;
 	}
-	else if (joykeystate.Gamepad.sThumbLY >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbLY >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - STICK_SUB))
 	{//Wがおされた(上)
 		//Zdate = -1.0f;
 		MoveNowCom = true;
 	}
-	else if (joykeystate.Gamepad.sThumbLY <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbLY <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - STICK_SUB))
 	{//Sがおされた(下)
 		//Zdate = 1.0f;
 		MoveNowCom = true;
@@ -877,8 +851,8 @@ void CObjectMotionPlayer::ControllerInput()
 			//------これは差分
 			fRotDest = (Angle - CameraRot.y - (1.0f * D3DX_PI));
 
-			classData.move.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed;//三角関数利用して移動の長さを代入
-			classData.move.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed;//三角関数利用して移動の長さを代入
+			classData.move.x = sinf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
+			classData.move.z = cosf(Angle - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
 
 		//変換
 			classData.rot.y = CMathProc::ConversionRot2(classData.rot.y, fRotDest + D3DX_PI);
@@ -894,21 +868,20 @@ void CObjectMotionPlayer::ControllerInput()
 
 		fRotDest = (Angle2 - CameraRot.y - (1.0f * D3DX_PI));
 
-		classData.move.x = sinf(Angle2 - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed;//三角関数利用して移動の長さを代入
-		classData.move.z = cosf(Angle2 - CameraRot.y - (1.0f * D3DX_PI)) * MoveSpeed;//三角関数利用して移動の長さを代入
+		classData.move.x = sinf(Angle2 - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
+		classData.move.z = cosf(Angle2 - CameraRot.y - (1.0f * D3DX_PI)) * MOVESPEED;//三角関数利用して移動の長さを代入
 		MoveNow = true;
 	}
 
 	//移動する状態の時
 	if (MoveNow == true)
 	{
-		m_nMoveCnt++;
 
-		if (m_nMoveCnt >= CObjectFootPrint::STANPLIFE)
+		if (m_nMoveCnt >= FOOTPRINT)
 		{
 			m_nMoveCnt = 0;
-			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-			CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
+			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, POSY, classData.Pos.z), classData.rot);
+		//	CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, POSY, classData.Pos.z));
 		}
 
 		classData.move = D3DXVECTOR3(joykeystate.Gamepad.sThumbLX * 0.0002f, 0.0f, joykeystate.Gamepad.sThumbLY * 0.0002f);
@@ -921,22 +894,22 @@ void CObjectMotionPlayer::ControllerInput()
 
 	 bool MoveNowCom2 = false;//入力の有無(コントローラ)
 
-	if (joykeystate.Gamepad.sThumbRX <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	if (joykeystate.Gamepad.sThumbRX <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - STICK_SUB))
 	{//Aがおされた(左)
 	//	Xdate = 1;
 		MoveNowCom2 = true;
 	}
-	else if (joykeystate.Gamepad.sThumbRX >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbRX >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - STICK_SUB))
 	{//Dがおされた(右)
 	//	Xdate = -1;
 		MoveNowCom2 = true;
 	}
-	else if (joykeystate.Gamepad.sThumbRY >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbRY >= (XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - STICK_SUB))
 	{//Wがおされた(上)
 		//Zdate = -1.0f;
 		MoveNowCom2 = true;
 	}
-	else if (joykeystate.Gamepad.sThumbRY <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - 6000))
+	else if (joykeystate.Gamepad.sThumbRY <= -(XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE - STICK_SUB))
 	{//Sがおされた(下)
 		//Zdate = 1.0f;
 		MoveNowCom2 = true;
@@ -978,7 +951,7 @@ void CObjectMotionPlayer::ControllerInput()
 	//移動する状態の時
 	if (MoveNow == true)
 	{
-		m_BulletPosMove = D3DXVECTOR3(joykeystate.Gamepad.sThumbRX * 0.0015f, 0.0f, joykeystate.Gamepad.sThumbRY * 0.0015f);
+		m_BulletPosMove = D3DXVECTOR3(joykeystate.Gamepad.sThumbRX * STICK_MAG, 0.0f, joykeystate.Gamepad.sThumbRY * STICK_MAG);
 	}
 	//-------------------------------------------------------------------------------------------------------------------------
 
@@ -1041,7 +1014,7 @@ void CObjectMotionPlayer::SetLinearInterpolation()
 	D3DXMatrixIdentity(&EscMtxWorld);
 
 	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
+	D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, TANKFIRE_OFFSETPOS_Z);
 
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
@@ -1068,15 +1041,14 @@ void CObjectMotionPlayer::SetLinearInterpolation()
 	// 方向ベクトルを正規化（単位ベクトルにする）
 	D3DXVec3Normalize(&direction, &direction);
 
-	float speed = 14.0f;//速度(後々変更)
-	SetData.move = direction * speed;//速度をかける
+	SetData.move = direction * BULLETMOVE;//速度をかける
 
 	// SetData.rot.y をターゲットの方向に合わせる
 	SetData.rot.x = 0.0f;
 	SetData.rot.y = (float)atan2(direction.x, direction.z) + D3DX_PI;
 	SetData.rot.z = 0.0f;
 
-	D3DXVECTOR3 Pos[7];
+	D3DXVECTOR3 Pos[POINTER_NUM];
 
 	// 発射地点（SetData.Pos）と照準地点（m_TargetPos）を使って5つの中間地点を計算
 	D3DXVECTOR3 startPos = SetData.Pos;  // 発射地点
@@ -1086,16 +1058,16 @@ void CObjectMotionPlayer::SetLinearInterpolation()
 	direction = targetPos - startPos;
 
 	// 方向ベクトルを5等分する
-	float step = 1.0f / 6.0f; // 5箇所の中間地点を計算するためのステップ（0, 0.25, 0.5, 0.75, 1.0）
+	float step = 1.0f / (float)(POINTER_NUM-1); // 5箇所の中間地点を計算するためのステップ（0, 0.25, 0.5, 0.75, 1.0）
 
 	// 5箇所の中間地点を格納
-	for (int i = 0; i < 7; ++i) 
+	for (int i = 0; i < POINTER_NUM; ++i)
 	{
 		float t = i * step; // 線形補間の割合
 		Pos[i] = startPos + direction * t; // 線形補間により中間地点を計算
 	}
 
-	for (int i = 1; i < 7; ++i)
+	for (int i = 1; i < POINTER_NUM; ++i)
 	{
 		CObjectLINEUI::Create(Pos[i]);
 	}

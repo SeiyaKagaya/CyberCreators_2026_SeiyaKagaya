@@ -63,14 +63,11 @@ HRESULT CObjectBillBoard::Init()
     VERTEX_3D* pVtx;
     m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-    float fTest = 2400.0f/2;
-    float fTest2 = 3300.0f/2;
-
     //頂点座標の設定
-    pVtx[0].pos = D3DXVECTOR3(-fTest2, fTest2, 0.0f);
-    pVtx[1].pos = D3DXVECTOR3(fTest2, fTest2, 0.0f);
-    pVtx[2].pos = D3DXVECTOR3(-fTest2, -fTest2, 0.0f);
-    pVtx[3].pos = D3DXVECTOR3(fTest2, -fTest2, 0.0f);
+    pVtx[0].pos = D3DXVECTOR3(-SIZE, SIZE, 0.0f);
+    pVtx[1].pos = D3DXVECTOR3(SIZE, SIZE, 0.0f);
+    pVtx[2].pos = D3DXVECTOR3(-SIZE, -SIZE, 0.0f);
+    pVtx[3].pos = D3DXVECTOR3(SIZE, -SIZE, 0.0f);
 
     //法線ベクトルの設定
     pVtx[0].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);

@@ -65,20 +65,20 @@ void CObjectMotionEnemyfast::Uninit()
 void CObjectMotionEnemyfast::Update()
 {
 	for (int i = 0; i < GetMaxLoadPartsNum(); i++)
-	{//パーツもDEATH
-		GetModelParts(i)->ChengeRGBAbool(true, D3DXCOLOR(0.3f, 0.1f, 0.3f, 1.0f));
+	{//パーツカラー
+		GetModelParts(i)->ChengeRGBAbool(true, ENEMY_COLOR);
 	}
 
 	CRenderer* pRenderer = nullptr;
 	CManager* pManager = CManager::GetInstance();
-	CObjectMotion::Update();//----------------
+
+	CObjectMotion::Update();
+
 	DATA classData = GetClassData();
 
 	//相手、自分のGRID番号がかわったか
 	bool bChange = false;
 
-	//とりあえずplayer の方向に砲塔を向ける
-	//----------------------------------------------------------------------------------
 	//playerの位置を取得
 	CObject* pObj = nullptr;
 	pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
@@ -134,6 +134,7 @@ void CObjectMotionEnemyfast::Update()
 	}
 	//移動先制定ここまで
 	//---------------------------------------------------------------------------------------------------------------------------------
+	
 	// ターゲット位置への移動処理
 	D3DXVECTOR3 direction = m_TargetPos - classData.Pos; // 方向ベクトル
 
@@ -158,11 +159,11 @@ void CObjectMotionEnemyfast::Update()
 
 		m_nMoveCnt++;
 
-		if (m_nMoveCnt >= CObjectFootPrint::STANPLIFE)
+		if (m_nMoveCnt >= STAMPCNT)
 		{
 			m_nMoveCnt = 0;
-			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z), classData.rot);
-			CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
+			CObjectFootPrint::Create(D3DXVECTOR3(classData.Pos.x, POSY, classData.Pos.z), classData.rot);
+			//CMoveSmoke::Create(D3DXVECTOR3(classData.Pos.x, 3.0f, classData.Pos.z));
 		}
 	}
 	else
@@ -172,7 +173,7 @@ void CObjectMotionEnemyfast::Update()
 		classData.move.z = 0.0f;
 	}
 
-	//衝突相殺--敵と
+	//衝突相殺--敵と----------------------------------
 	CMathProc::CollisionData HitData = CMathProc::CheckCircleCollision_Cancel(classData.Pos, classData.Radius, CObject::OBJECT_MOTIONENEMY_FAST, LAYERINDEX_MOTIONENEMY_FAST, this);
 
 	if (HitData.bHit == true)
@@ -190,10 +191,11 @@ void CObjectMotionEnemyfast::Update()
 
 	SetClassData(classData);
 
-	//当たり判定計算
+
+
+	//当たり判定計算------------------------------------
 	m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONENEMY_NOMAL, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_HITBOX, LAYERINDEX_HITBOX, classData.move, this);
 
-	//当たり判定計算
 	m_HitData = CMathProc::CheckBoxCollision_3D(OBJECT_MOTIONENEMY_NOMAL, classData.Pos, classData.OldPos, classData.MinLength, classData.MaxLength, OBJECT_OBSTACLE, LAYERINDEX_OBSTACLE, classData.move, this);
 
 	classData = GetClassData();
@@ -246,7 +248,7 @@ void CObjectMotionEnemyfast::Update()
 		}
 	}
 	
-	Attack();
+	Attack();//攻撃
 
 	if (m_nLife <= 0)
 	{
@@ -254,6 +256,7 @@ void CObjectMotionEnemyfast::Update()
 		SetDeath(true);
 
 		Explosion3D::Create(GetClassData().Pos);
+
 		for (int i = 0; i < GetMaxLoadPartsNum(); i++)
 		{//パーツもDEATH
 			GetModelParts(i)->SetDeath(true);
@@ -318,7 +321,7 @@ void CObjectMotionEnemyfast::Attack()
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
 	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
+	D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, TANKFIRE_OFFSETPOS_Z);
 
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
@@ -421,11 +424,11 @@ void CObjectMotionEnemyfast::Attack()
 		{
 			// StatRot.yは角度（ラジアン）で与えられると仮定
 			// 回転角度に基づいて進行方向の単位ベクトルを計算
-			float dirX = cosf(classData.rot.y + 1.57f);
-			float dirZ = -sinf(classData.rot.y + 1.57f);
+			float dirX = cosf(classData.rot.y + D3DX_PI*0.5f);
+			float dirZ = -sinf(classData.rot.y + D3DX_PI*0.5f);
 
 			// 進行距離ベクトルを計算
-			D3DXVECTOR3 directionVectorESC = D3DXVECTOR3(dirX, 0.0f, dirZ) * 1500.0f;
+			D3DXVECTOR3 directionVectorESC = D3DXVECTOR3(dirX, 0.0f, dirZ) * TARGETSPEED;
 
 			// 新しい座標を計算
 			D3DXVECTOR3 destinationESC = SetPos + directionVectorESC;
@@ -458,7 +461,7 @@ void CObjectMotionEnemyfast::Attack()
 			D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
 			//位置を反映
-			D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
+			D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, TANKFIRE_OFFSETPOS_Z);
 
 			D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
@@ -470,8 +473,10 @@ void CObjectMotionEnemyfast::Attack()
 			SETDATA.Pos = SetPos;
 			SETDATA.rot.y = fRotTurret;
 
-			D3DXVECTOR3 BulletMim = D3DXVECTOR3(-30.0f, -30.0f, -30.0f);
-			D3DXVECTOR3 BulletMax = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
+			
+
+			D3DXVECTOR3 BulletMim = D3DXVECTOR3(-BULLETSIZE, -BULLETSIZE, -BULLETSIZE);
+			D3DXVECTOR3 BulletMax = D3DXVECTOR3(BULLETSIZE, BULLETSIZE, BULLETSIZE);
 
 			//食い込み防止
 			bool bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SETDATA.Pos, BulletMim, BulletMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
@@ -500,7 +505,7 @@ void CObjectMotionEnemyfast::Attack()
 
 				CNewBulletALL* pBulletAll = pManager->GetNewBulletAll();
 
-				pBulletAll->SetBullet(SETDATA, 0, D3DXCOLOR(0.7f, 0.3f, 0.3f, 1.0f), this);
+				pBulletAll->SetBullet(SETDATA, 0, BULLET_COLOR, this);
 
 				CObjectShotFire::Create(SETDATA.Pos);
 				CObjectShotFire::Create(SETDATA.Pos);
@@ -528,11 +533,11 @@ void CObjectMotionEnemyfast::Attack()
 
 	// StatRot.yは角度（ラジアン）で与えられると仮定
    // 回転角度に基づいて進行方向の単位ベクトルを計算
-	float dirX = cosf(fRotTurret + 1.57f);
-	float dirZ = -sinf(fRotTurret + 1.57f);
+	float dirX = cosf(fRotTurret + D3DX_PI*0.5f);
+	float dirZ = -sinf(fRotTurret + D3DX_PI*0.5f);
 
 	// 進行距離ベクトルを計算
-	D3DXVECTOR3 directionVector = D3DXVECTOR3(dirX, 0.0f, dirZ) * 1500.0f;
+	D3DXVECTOR3 directionVector = D3DXVECTOR3(dirX, 0.0f, dirZ) * TARGETSPEED;
 
 	// 新しい座標を計算
 	D3DXVECTOR3 destination = SetPos + directionVector;
@@ -635,7 +640,7 @@ CObject::DATA CObjectMotionEnemyfast::phase2()
 
 	float GoodRot = 0.0f;
 	float GoodRength = 99999.0f;
-	int GoodFrame = 999;
+	//int GoodFrame = 999;
 
 	typedef struct
 	{
@@ -671,7 +676,7 @@ CObject::DATA CObjectMotionEnemyfast::phase2()
 		D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxRot);
 
 		//位置を反映
-		D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
+		D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, TANKFIRE_OFFSETPOS_Z);
 
 		D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
@@ -684,8 +689,8 @@ CObject::DATA CObjectMotionEnemyfast::phase2()
 
 		bool bBulletUpdate = false;
 		int UpdateLifeCnt = 0;
-		D3DXVECTOR3 Min = D3DXVECTOR3(-30.0f, -30.0f, -30.0f);
-		D3DXVECTOR3 Max = D3DXVECTOR3(30.0f, 30.0f, 30.0f);
+		D3DXVECTOR3 Min = D3DXVECTOR3(-BULLETSIZE, -BULLETSIZE, -BULLETSIZE);
+		D3DXVECTOR3 Max = D3DXVECTOR3(BULLETSIZE, BULLETSIZE, BULLETSIZE);
 
 		int EscReflect = CNewBullet::NEWMAXREFLECTION - 1;
 
@@ -774,7 +779,7 @@ CObject::DATA CObjectMotionEnemyfast::phase2()
 				if (GoodRength >= MaxLength)
 				{
 					GoodRength = MaxLength;//最小値更新
-					GoodFrame = UpdateLifeCnt;//この時のフレーム数
+					//GoodFrame = UpdateLifeCnt;//この時のフレーム数
 					GoodRot = calculationRot;//このときの角度
 
 				}
@@ -788,7 +793,7 @@ CObject::DATA CObjectMotionEnemyfast::phase2()
 
 			UpdateLifeCnt++;
 
-			if (UpdateLifeCnt > 80)
+			if (UpdateLifeCnt > BULLET_LINE_LENGTH)
 			{
 				ESCLine[2].Pos2 = SetPos;
 				break;
@@ -888,7 +893,7 @@ void CObjectMotionEnemyfast::ShotBullet(D3DXVECTOR3 ShotPos, D3DXVECTOR3 TargetP
 	D3DXMatrixIdentity(&EscMtxWorld);
 
 	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, -190.0f);
+	D3DXMatrixTranslation(&mtxTrans, 0.0f, 0.0f, TANKFIRE_OFFSETPOS_Z);
 
 	D3DXMatrixMultiply(&EscMtxWorld, &EscMtxWorld, &mtxTrans);
 
@@ -913,8 +918,8 @@ void CObjectMotionEnemyfast::ShotBullet(D3DXVECTOR3 ShotPos, D3DXVECTOR3 TargetP
 	D3DXVec3Normalize(&direction, &direction);
 
 
-	float speed = 12.0f;//速度(後々変更)
-	SetData.move = direction * speed;//速度をかける
+	//float speed = 12.0f;//速度(後々変更)
+	//SetData.move = direction * speed;//速度をかける
 
 
 	// SetData.rot.y をターゲットの方向に合わせる
@@ -923,8 +928,8 @@ void CObjectMotionEnemyfast::ShotBullet(D3DXVECTOR3 ShotPos, D3DXVECTOR3 TargetP
 	SetData.rot.z = 0.0f;
 
 	//----------------------------------------------------------------------------------
-	D3DXVECTOR3 SetHitMin = D3DXVECTOR3(-10.0f, -10.0f, -10.0f);
-	D3DXVECTOR3 SetHitMax = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
+	D3DXVECTOR3 SetHitMin = D3DXVECTOR3(-BULLETSIZE, -BULLETSIZE, -BULLETSIZE);
+	D3DXVECTOR3 SetHitMax = D3DXVECTOR3(BULLETSIZE, BULLETSIZE, BULLETSIZE);
 
 	bool bNoShot = CMathProc::AvoidInternalSpawn_3D_BoxCollision(OBJECT_MOTIONPLAYER, SetData.Pos, SetHitMin, SetHitMax, OBJECT_HITBOX, LAYERINDEX_HITBOX);
 

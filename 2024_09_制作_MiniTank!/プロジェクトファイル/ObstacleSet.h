@@ -14,6 +14,8 @@ class CObstacleSet : public CObjectX
 {
 public:
 
+	static const int STAGE_HITSIZE = 150;//ステージ配置物のサイズ
+
 	//objectPass管理構造体
 	typedef struct
 	{
@@ -43,7 +45,7 @@ public:
 	void Draw()override;
 
 
-	void HitCollision();																//当たり判定まとめ
+	//void HitCollision();																//当たり判定まとめ
 
 	bool GetStageBlockbool();															//状態取得
 

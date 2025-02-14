@@ -203,7 +203,7 @@ void CStayUI::Draw()
 
             snprintf(aData2, sizeof(aData2), "ステージクリア！！"); // 数値を文字列に変換してCDataにコピー
 
-            CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 380.0f, SCREEN_HEIGHT / 2.0f - 50.0f, 0.0f), 100, CFont::FONT_KEIFONT, D3DXCOLOR(0.2f, 1.0f, 0.2f, 1.0f), aData2);
+            CFont::DrawTextSet(SETPOS[0], 100, CFont::FONT_KEIFONT, D3DXCOLOR(0.2f, 1.0f, 0.2f, 1.0f), aData2);
         }
         else
         {
@@ -220,7 +220,7 @@ void CStayUI::Draw()
 
             snprintf(aData2, sizeof(aData2), "敗北！！"); // 数値を文字列に変換してCDataにコピー
 
-            CFont::DrawTextSet(D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 150.0f, SCREEN_HEIGHT / 2.0f - 50.0f, 0.0f), 100, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData2);
+            CFont::DrawTextSet(SETPOS[1], 100, CFont::FONT_GENKAI, D3DXCOLOR(1.0f, 0.2f, 0.2f, 1.0f), aData2);
         }
 
         EscDevice->SetTexture(0, nullptr);

@@ -91,7 +91,7 @@ void CObjectFootPrint::Update()
       //Žæ“¾
         DATA EscData = GetDATA();
 
-        EscData.Pos.x += 13.0f;
+        EscData.Pos.x += PRINT_MOVE_X;
         //Žæ“¾
         SetDATA(EscData);
     }
@@ -100,7 +100,7 @@ void CObjectFootPrint::Update()
       //Žæ“¾
         DATA EscData = GetDATA();
 
-        EscData.Pos.x -= 13.0f;
+        EscData.Pos.x -= PRINT_MOVE_X;
         //Žæ“¾
         SetDATA(EscData);
     }

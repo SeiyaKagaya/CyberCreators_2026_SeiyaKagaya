@@ -48,21 +48,21 @@ public:
 	static bool GetStageClear();		    //ステージクリアかどうか取得
 
 private:
-	static  MODE m_NowState;	//現在のモード
-	static bool m_bStageClear;	//ステージクリアかbool
+	static  MODE m_NowState;				//現在のモード
+	static bool m_bStageClear;				//ステージクリアかbool
 
 protected:
 
-	CPause* m_Pause = nullptr;		//ポーズ
-	CStayUI* m_StayUI = nullptr;	//待機UI
+	CPause* m_Pause = nullptr;				//ポーズ
+	CStayUI* m_StayUI = nullptr;			//待機UI
 
-	int m_StayTime = STAYFRAME;		//待機時間
-	int m_Stay2 = STAYFRAME2;		//待機時間2
-	int m_nbuttonCnt = 0;			//ボタン表示までのフレーム数
-	bool m_StayPush = false;		//待機ボタン押したか
-	bool m_bStay2BOOL = false;		//待機状態か
-	bool m_bNext = false;			//次のステージに進めるか
-	bool m_bButtonBool = false;		//ボタンを押したか
+	int m_StayTime = STAYFRAME;				//待機時間
+	int m_Stay2 = STAYFRAME2;				//待機時間2
+	int m_nbuttonCnt = 0;					//ボタン表示までのフレーム数
+	bool m_StayPush = false;				//待機ボタン押したか
+	bool m_bStay2BOOL = false;				//待機状態か
+	bool m_bNext = false;					//次のステージに進めるか
+	bool m_bButtonBool = false;				//ボタンを押したか
 };
 
 //++++++++++++++++++++++

@@ -15,10 +15,11 @@ class CObjectSmoke: public CObjectBillBoard
 {
 public:
 
-	static const int  PRINTSIZE_X = 30;//サイズ
+	static const int  PRINTSIZE_X = 30;		//サイズ
 	static const int  PRINTSIZE_Z = 15;
-	static const int START_LIFE = 60;		   //寿命
-	static const int DIVISION_NUMBER = 8;	   //テクスチャ分割数
+	static const int START_LIFE = 60;		//寿命
+	static const int DIVISION_NUMBER = 8;	//テクスチャ分割数
+	const float RGB_A = 0.35f;				//アルファ値
 
 	CObjectSmoke(int nPriority = CObject::LAYERINDEX_SMOKE);//コンストラクタ
 	~CObjectSmoke() override;//デストラクタ

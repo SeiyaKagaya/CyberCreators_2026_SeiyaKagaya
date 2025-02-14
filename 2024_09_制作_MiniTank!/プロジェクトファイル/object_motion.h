@@ -27,7 +27,7 @@ public:
 	static const int MAX_MOTION = 5;	   //最大モーション数
 	static const int MAX_TEXTURE = 10;	   //最大テクスチャ数
 	static const int BRENDFLAME = 2;	   //モーションブレンド時のフレーム数
-
+	static const int RUN_CNT = 15;		   //移動カウント
 
 	//------------------------------------------------------------------------------------------------------------------------------
 	typedef struct

@@ -20,7 +20,41 @@ public:
 	static const int RESET_CNT = 90;					//リスタートカウンタ
 	static const int DAMAGE = 100;						//ダメージ
 	static const int LIFE = 300;						//寿命
+	static const int FOOTPRINT = 10;					//履帯後のスタンプ
+	static const int BULLETSHOTDELAY = 20;							 //発砲間隔
+	static const int POINTER_NUM = 7;					//線形補間ポインターの数
+
+	const float BULLETSIZE = 10.0f;						//砲弾予測サイズ
+	const float TANKFIRE_OFFSETPOS_Z = -190.0f;			//砲塔の先端位置までのoffset
 	const float OBB_LENGTH[3] = { 90.0f,90.0f,120.0f };	//OBBの長さ
+	const float STICK_RADIUS = 500.0f;					//照準半径
+	const float MOVESPEED = 8.1f;						//移動速度
+	const float BULLETMOVE = 14.0f;						//弾丸速度
+	const float STICK_MAG = 0.0015f;					//スティック倍率
+	const float STICK_SUB = 6000.0f;					//デッドゾーンから
+	const float MIN_ANGLE_Y = -0.1f;					//砲塔旋回時の上下の限界アングル
+	const float MAX_ANGLE_Y = 0.1f;
+	const float POSY = 4.0f;							//固定の高さ
+
+	const D3DXCOLOR BULLET_COLOR = D3DXCOLOR(0.7f, 0.7f, 0.0f, 1.0f);//弾の色
+
+	const D3DXVECTOR3 UI_POS[4] = {						//UI用座標
+		D3DXVECTOR3(-150.0f,400.0f,100.0f),
+		D3DXVECTOR3(-100.0f,400.0f,100.0f) ,
+		D3DXVECTOR3(-95.0f,400.0f,100.0f),
+		D3DXVECTOR3(-70.0f,400.0f,100.0f)
+	};
+
+	const D3DXVECTOR3 UI_SIZE[2] = {					//HPUI用サイズ
+	D3DXVECTOR3(320.0f, 18.0f, 0.0f),
+	D3DXVECTOR3(-9999.9f, 14.0f, 0.0f) ,
+	};
+
+	const D3DXCOLOR HP_UI_COLOR[2] = {					//HPUI用カラー
+		D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.6f),
+		D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.9f)
+	}; //敵の色
+
 
 	CObjectMotionPlayer(int nPriority = CObject::LAYERINDEX_MOTIONPLAYER);//コンストラクタ
 	~CObjectMotionPlayer() override;//デストラクタ

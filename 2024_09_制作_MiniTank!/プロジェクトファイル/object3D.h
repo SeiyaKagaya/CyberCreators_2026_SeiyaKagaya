@@ -48,13 +48,13 @@ private:
 	DATA m_Data = DataInit();
 
 	//テクスチャや頂点座標などの保持
-	VERTEX_3D m_pVtx[BASE_INDEX];
+	VERTEX_3D m_pVtx[BASE_INDEX] = {};
 
 	bool m_AddDrawMode = false;//加算合成モード
 	float m_texOffsetX = 0.0f; //テクスチャ位置
 	float m_texOffsetY = 0.0f;
 
-	D3DXMATRIX m_mtxWorld;
+	D3DXMATRIX m_mtxWorld = {};
 };
 
 #endif

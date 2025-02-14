@@ -186,7 +186,7 @@ HRESULT CNewBullet::Init()
         // ディフューズカラーをサイズに基づいて変更
         D3DXCOLOR originalColor = pMat[nCntMat].MatD3D.Diffuse;
 
-        pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f);//色をここで指定
+        pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);//色をここで指定
     }
 
     SetXfireData(pMesh, pBuffMat, dwNumMat);//データ格納
@@ -480,10 +480,12 @@ void* CNewBullet::GetCaller()
 void CNewBullet::SetGoodby()
 { //取得
 
+    float fSet = -9999.9f;//彼方に送る
+
     int Test = m_nID;
 
     DATA EscData = GetDATA();
-    EscData.Pos = D3DXVECTOR3(-3000.0, -3000.0f, -3000.0f);
+    EscData.Pos = D3DXVECTOR3(fSet, fSet, fSet);
     EscData.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     EscData.Radius = SIZE;
     EscData.MinLength = D3DXVECTOR3(-SIZE, -SIZE, -SIZE);

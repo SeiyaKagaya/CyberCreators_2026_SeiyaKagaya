@@ -12,6 +12,11 @@
 class CCamera
 {
 public:
+	const float TITLE_Y = 25.0f;//タイトルでの高さ
+	const float ROT_X[2] = { -1.35f, -0.42f };//カメラのrot
+
+	const float CAMERA_LENGTH[2] = { 3250.0f ,520.0f };//カメラの長さ
+
 	CCamera();
 	~CCamera();
 	HRESULT Init();

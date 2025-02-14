@@ -204,7 +204,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="player3D.cpp" />
     <ClCompile Include="player_motion.cpp" />
     <ClCompile Include="polygon.cpp" />
     <ClCompile Include="ReflectEffect.cpp" />
@@ -264,7 +263,6 @@
     <ClInclude Include="pause.h" />
     <ClInclude Include="Pch.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="player3D.h" />
     <ClInclude Include="player_motion.h" />
     <ClInclude Include="polygon.h" />
     <ClInclude Include="ReflectEffect.h" />

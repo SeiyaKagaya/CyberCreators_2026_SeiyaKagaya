@@ -38,15 +38,6 @@ Explosion3D::~Explosion3D()
 //=============================
 HRESULT Explosion3D::Init()
 {
-    m_Data.Pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.OldPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.MinLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.MaxLength = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-    m_Data.Radius = 0.0f;
-
-
     SetObjectType(CObject::OBJECT_EXPLOSION3D);
 
     CRenderer* pRenderer = nullptr;
@@ -75,22 +66,16 @@ HRESULT Explosion3D::Init()
         pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);//色をここで指定
     }
 
-    m_SetSize = D3DXVECTOR3(3.0f, 3.0f, 3.0f);
+    m_SetSize = D3DXVECTOR3(SIZE_MAG, SIZE_MAG, SIZE_MAG);
     
     SetSizeMag(m_SetSize);//大きさ倍率
     
-    m_Data.MinLength = D3DXVECTOR3(-50.0f, 0.0f, -50.0f);
-    m_Data.MaxLength = D3DXVECTOR3(50.0f, 50.0f, 50.0f);
-
     //テクスチャ取得
     CAllTexture* pTexture = pManager->GetTexture();
 
     int texIndex = pTexture->Regist("DATA\\TEXTURE\\EXPLOSION3D_2.png", EscDevice);//テクスチャ登録
 
     m_ESCpTexture = pTexture->GetAddress(texIndex);
-
-    m_Data.rot.y = 4.5f;
-    m_Data.rot.x = 4.5f;
 
     CSound* pSound = pManager->GetSound();
     pSound->PlaySound(CSound::SOUND_LABEL_SE_EXPLOSION);
@@ -124,35 +109,35 @@ void Explosion3D::Update()
 {
     CManager* pManager = CManager::GetInstance();
 
-    if (m_nCnt <= 18)
+    if (m_nCnt <= FARST_ACTION_CNT)
     {
-        pManager->GetCamera()->SetShake(85, 85);
+        pManager->GetCamera()->SetShake(SET_SAKE_FARST, SET_SAKE_FARST);
 
-        m_SetSize.x += 2.3f;
-        m_SetSize.y += 2.3f;
-        m_SetSize.z += 2.3f;
+        m_SetSize.x += SET_SIZE_FARST;
+        m_SetSize.y += SET_SIZE_FARST;
+        m_SetSize.z += SET_SIZE_FARST;
     }
-    else if (m_nCnt > 18 || m_nCnt <= 40)
+    else if (m_nCnt > FARST_ACTION_CNT || m_nCnt <= SECOND_ACTION_CNT)
     {
-        pManager->GetCamera()->SetShake(55, 55);
+        pManager->GetCamera()->SetShake(SET_SAKE_SECOND, SET_SAKE_SECOND);
 
-        m_SetSize.x += 0.7f;
-        m_SetSize.y += 0.7f;
-        m_SetSize.z += 0.7f;
+        m_SetSize.x += SET_SIZE_SECOND;
+        m_SetSize.y += SET_SIZE_SECOND;
+        m_SetSize.z += SET_SIZE_SECOND;
     }
     else
     {
-        pManager->GetCamera()->SetShake(5, 5);
+        pManager->GetCamera()->SetShake(SET_SAKE_SARD, SET_SAKE_SARD);
 
-        m_SetSize.x += 0.3f;
-        m_SetSize.y += 0.3f;
-        m_SetSize.z += 0.3f;
+        m_SetSize.x += SET_SIZE_SARD;
+        m_SetSize.y += SET_SIZE_SARD;
+        m_SetSize.z += SET_SIZE_SARD;
     }
 
     SetSizeMag(m_SetSize);//大きさ倍率
 
-    m_Data.rot.y += 0.03f;
-    m_Data.rot.x += 0.03f;
+    m_Data.rot.y += ROT_MOVE;
+    m_Data.rot.x += ROT_MOVE;
 
     m_nCnt++;
 
@@ -265,7 +250,7 @@ void Explosion3D::Draw()
                     originalColor = m_OriginalColor;
                 }
 
-                if (m_nCnt >= 40)
+                if (m_nCnt >= SECOND_ACTION_CNT)
                 {//透過率
                     originalColor.a = ((float)ANIMNUM - m_nCnt) * 0.5f;
                 }

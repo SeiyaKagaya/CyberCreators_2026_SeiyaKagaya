@@ -13,6 +13,8 @@
 class CObject
 {
 public:
+
+    //よく使う基本セットを作っておく
     typedef struct
     {
         D3DXVECTOR3 Pos;
@@ -42,7 +44,7 @@ public:
         LAYERINDEX_OBSTACLE,
         LAYERINDEX_OBJECT3D,
         LAYERINDEX_OBJECTX,
-        LAYERINDEX_PLAYER3D,
+        //LAYERINDEX_PLAYER3D,
         LAYERINDEX_MODELPARTS,
         LAYERINDEX_NEWBULLET,
         LAYERINDEX_MOTIONMODEL,
@@ -106,7 +108,7 @@ public:
         OBJECT_RESCUE,
         OBJECT_OBJECT2D,
         OBJECT_OBJECTX,
-        OBJECT_PLAYER3D,
+        //OBJECT_PLAYER3D,
         OBJECT_BLOCK3D,
         OBJECT_MODELPARTS,
         OBJECT_NEWBULLET,

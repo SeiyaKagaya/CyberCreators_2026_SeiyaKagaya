@@ -60,52 +60,42 @@ void CCamera::Update()
 {
 	float fLength;
 
-	m_posR = D3DXVECTOR3(0.0f, 25.0f, 0.0f);
-
-	//カメラ距離	
-	fLength = 3250.0f * 0.16f;
-
-	//角度による位置調整
-	m_rot.x = -0.42f;
-	m_rot.y = 0.0f;
-	m_rot.z = 0.0f;
-
-	//playerの位置を取得
-	CObject* pObj = nullptr;
-	pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
-
-	if (pObj != nullptr)
-	{
-		CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
-
-		CObject::DATA EscData;
-
-		EscData = pPlayer->GetClassData();
-
-		m_posR = EscData.Pos;//注視点
-	}
-
 	CScene::MODE NowState = CScene::GetNowScene();
 
 	if (NowState == CScene::MODE_GAME || NowState == CScene::MODE_GAME2 || NowState == CScene::MODE_GAME3 || NowState == CScene::MODE_GAME4)
 	{//ゲーム中
-	//カメラ距離	
-		fLength = 3250.0f;
+		//playerの位置を取得
+		CObject* pObj = nullptr;
+		pObj = CObject::GetObjectPoint(CObject::LAYERINDEX_MOTIONPLAYER, CObject::OBJECT_MOTIONPLAYER);
+
+		if (pObj != nullptr)
+		{
+			CObjectMotionPlayer* pPlayer = static_cast<CObjectMotionPlayer*>(pObj);
+
+			CObject::DATA EscData;
+
+			EscData = pPlayer->GetClassData();
+
+			m_posR = EscData.Pos;//注視点
+		}
+	 
+	 //カメラ距離	
+		fLength = CAMERA_LENGTH[0];
 
 		//角度による位置調整
-		m_rot.x = -1.35f;
+		m_rot.x = ROT_X[0];
 		m_rot.y = 0.0f;
 		m_rot.z = 0.0f;
 	}
 	else if (NowState == CScene::MODE_TITLE|| NowState == CScene::MODE_RESULT)
 	{//タイトル
-		m_posR = D3DXVECTOR3(0.0f, 25.0f, 0.0f);
+		m_posR = D3DXVECTOR3(0.0f, TITLE_Y, 0.0f);
 
 		//カメラ距離	
-		fLength = 3250.0f*0.16f;
+		fLength = CAMERA_LENGTH[1];
 
 		//角度による位置調整
-		m_rot.x = -0.42f;
+		m_rot.x = ROT_X[1];
 		m_rot.y = 0.0f;
 		m_rot.z = 0.0f;
 	}

@@ -14,7 +14,7 @@
 class CObjectBillBoard : public CObject
 {
 public:
-	static const int SIZE = 1650;//サイズ
+	const float SIZE = 1650.0f;//サイズ
 
 	CObjectBillBoard(int nPriority = CObject::LAYERINDEX_BILLBOARD);//コンストラクタ
 	~CObjectBillBoard() override;//デストラクタ

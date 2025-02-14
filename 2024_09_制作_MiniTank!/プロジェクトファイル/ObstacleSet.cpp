@@ -191,8 +191,8 @@ CObstacleSet* CObstacleSet::Create(DATA SetData, int SetType, bool bBreak, bool 
     {//最大値のモデルタイプのとき
         pObstacle->m_StageBlock = true;//ステージblock扱い
 
-        EscData.MinLength = D3DXVECTOR3(-150.0f, 0.0f, -150.0f);
-        EscData.MaxLength = D3DXVECTOR3(150.0f, 300.0f, 150.0f);
+        EscData.MinLength = D3DXVECTOR3((float)-STAGE_HITSIZE, 0.0f, (float)-STAGE_HITSIZE);
+        EscData.MaxLength = D3DXVECTOR3((float)STAGE_HITSIZE, (float)STAGE_HITSIZE*2.0f, (float)STAGE_HITSIZE);
     }
     else
     {
@@ -610,13 +610,6 @@ void CObstacleSet::ObstacleScanMapping()
 
     //CSVに書き出し
     CMathProc::DRAWCSV("DATA\\ForDevelopment\\RouteResult.csv");
-}
-
-//=============================
-// 当たり判定まとめ
-//=============================
-void CObstacleSet::HitCollision()
-{
 }
 
 //=============================

@@ -103,9 +103,6 @@
     <Filter Include="ソース ファイル\OBJECT\OBJECT_X">
       <UniqueIdentifier>{8a908955-0534-4df9-903a-5a2968e5ce09}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\OBJECT\OBJECT_X\Player3D">
-      <UniqueIdentifier>{41e42398-fec4-477f-8c66-5b42bcb74c52}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\OBJECT\OBJECT_X\BLOCK3D">
       <UniqueIdentifier>{130df296-582b-451a-bc8c-f315156df40b}</UniqueIdentifier>
     </Filter>
@@ -279,9 +276,6 @@
     <ClCompile Include="objectX.cpp">
       <Filter>ソース ファイル\OBJECT\OBJECT_X</Filter>
     </ClCompile>
-    <ClCompile Include="player3D.cpp">
-      <Filter>ソース ファイル\OBJECT\OBJECT_X\Player3D</Filter>
-    </ClCompile>
     <ClCompile Include="block3D.cpp">
       <Filter>ソース ファイル\OBJECT\OBJECT_X\BLOCK3D</Filter>
     </ClCompile>
@@ -454,9 +448,6 @@
     </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>ソース ファイル\SYSTEM\3D---SYSTEM\CAMERA</Filter>
-    </ClInclude>
-    <ClInclude Include="player3D.h">
-      <Filter>ソース ファイル\OBJECT\OBJECT_X\Player3D</Filter>
     </ClInclude>
     <ClInclude Include="block3D.h">
       <Filter>ソース ファイル\OBJECT\OBJECT_X\BLOCK3D</Filter>
