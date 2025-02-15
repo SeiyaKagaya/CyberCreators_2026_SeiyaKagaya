@@ -23,11 +23,11 @@ public:
 	LPDIRECT3DDEVICE9 GetDevice();//3Dデバイスの取得
 	
 private:
-	LPDIRECT3D9 m_pD3D;			   //Direct3D
-	LPDIRECT3DDEVICE9 m_pD3DDevice;//Direct3Dデバイス
-	LPD3DXFONT m_pFont;//フォントへのポインタ
+	LPDIRECT3D9 m_pD3D;				//Direct3D
+	LPDIRECT3DDEVICE9 m_pD3DDevice;	//Direct3Dデバイス
+	LPD3DXFONT m_pFont;				//フォントへのポインタ
 	CObject* m_pCObject = nullptr;
-	bool m_mesh;								//ワイヤーフレーム切り替え用
+	bool m_mesh;					//ワイヤーフレーム切り替え用
 	void DrawFPS(void);
 };
 #endif

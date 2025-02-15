@@ -144,10 +144,10 @@ public:
 	bool IsJoyPadConnected();
 
 private:
-	XINPUT_STATE m_JoykeyState;								//ゲームパッドのプレス情報
-	XINPUT_STATE m_JoykeyStateTrigger;						//ゲームパッドのトリガー情報
-	XINPUT_STATE m_JoykeyStateRelease;						//ゲームパッドのリリース情報
-	XINPUT_STATE m_JoykeyStateRepeat;						//ゲームパッドのリピート情報
+	XINPUT_STATE m_JoykeyState = {};							//ゲームパッドのプレス情報
+	XINPUT_STATE m_JoykeyStateTrigger = {};						//ゲームパッドのトリガー情報
+	XINPUT_STATE m_JoykeyStateRelease = {};						//ゲームパッドのリリース情報
+	XINPUT_STATE m_JoykeyStateRepeat = {};						//ゲームパッドのリピート情報
 
 };
 #endif

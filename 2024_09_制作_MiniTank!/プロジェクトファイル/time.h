@@ -34,7 +34,7 @@ private:
 	static int m_LimitTime;
 	static int m_flame;
 	char m_cData[MAXWORD_TIME] = {};//•¶Žš—ñŠi”[
-	DATA m_Data;
+	DATA m_Data = DataInit();
 	int m_StartLimitTime = 0;//Œã‚ÉŽg—p
 };
 

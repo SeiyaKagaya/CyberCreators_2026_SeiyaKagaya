@@ -16,7 +16,7 @@ class CStayUI
 public:
 	static const int TEXNUM = 2;
 
-	const D3DXVECTOR3 SETPOS[2] = {
+	const D3DXVECTOR3 SETPOS[TEXNUM] = {
 	D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 380.0f, SCREEN_HEIGHT / 2.0f - 50.0f, 0.0f),
 		D3DXVECTOR3(SCREEN_WIDTH / 2.0f - 150.0f, SCREEN_HEIGHT / 2.0f - 50.0f, 0.0f) };//UIÇÃç¿ïW
 	

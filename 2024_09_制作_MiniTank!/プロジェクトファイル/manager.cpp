@@ -8,7 +8,6 @@
 
 #include "polygon.h"
 #include "object3D.h"
-//#include "player3D.h"
 #include "block3D.h"
 #include <stdio.h>
 

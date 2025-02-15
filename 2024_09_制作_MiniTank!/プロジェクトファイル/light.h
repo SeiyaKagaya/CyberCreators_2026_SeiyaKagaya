@@ -12,10 +12,17 @@
 class CLight
 {
 public:
-	CLight();
-	~CLight();
 
 	static const int LIGHTNUM = 3;//ÉâÉCÉgÇÃêî
+	const D3DXVECTOR3 LIGHT_POS[LIGHTNUM] =
+	{
+		D3DXVECTOR3(0.2f,-0.8f,0.4f),
+		D3DXVECTOR3(0.4f,0.8f,0.4f),
+		D3DXVECTOR3(-0.2f,-0.8f,-0.4f),
+	};
+
+	CLight();
+	~CLight();
 
 	HRESULT Init(void);
 	void Uninit(void);
